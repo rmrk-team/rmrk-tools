@@ -1,0 +1,44 @@
+{
+  "name": "rmrk-tools",
+  "version": "0.1",
+  "description": "Suite of libraries implementing RMRK.app specs",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc --outDir build",
+    "clean": "rm -rf build",
+    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
+    "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "start": "ts-node src/index start",
+    "fetch": "ts-node src/index fetch",
+    "test": "ava"
+  },
+  "author": "Logan Saether <x@logansether.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/node": "^14.11.2",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "ava": "^3.12.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-security": "^1.4.0",
+    "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@polkadot/api": "^2.1.1",
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "winston": "^3.3.3"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  }
+}
