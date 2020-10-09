@@ -1,4 +1,4 @@
-import { Options } from "./types";
+import { Options, BlockRemarks } from "./types";
 import { getApi, getLatestBlock } from "./utils";
 import { stringToHex } from "@polkadot/util";
 
@@ -19,10 +19,11 @@ export const fetchRemarks = async (opts: Options): Promise<void> => {
       ? opts.prefix
       : stringToHex(opts.prefix);
   console.log(`Processing block range from ${from} to ${to}.`);
-  const remarks: string[] = [];
+  const remarks: BlockRemarks[] = [];
   for (let i = from; i <= to; i++) {
     const blockHash = await api.rpc.chain.getBlockHash(i);
     const block = await api.rpc.chain.getBlock(blockHash);
+    const blockRemarks: string[] = [];
     block.block.extrinsics.forEach((ex) => {
       const {
         method: { args, method, section },
@@ -30,10 +31,17 @@ export const fetchRemarks = async (opts: Options): Promise<void> => {
       if (section === "system" && method === "remark") {
         const remark = args.toString();
         if (remark.indexOf(prefix) === 0) {
-          remarks.push(remark);
+          blockRemarks.push(remark);
         }
       }
     });
+    if (blockRemarks.length) {
+      const br: BlockRemarks = {
+        block: i,
+        remarks: blockRemarks,
+      };
+      remarks.push(br);
+    }
   }
   console.log(remarks);
   process.exit(0);
