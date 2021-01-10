@@ -32,7 +32,7 @@ export class Collection {
     if (this.block) {
       throw new Error("An already existing collection cannot be minted!");
     }
-    return `RMRK::MINT::${this.version}::${encodeURI(
+    return `RMRK::MINT::${this.version}::${encodeURIComponent(
       JSON.stringify({
         version: this.version,
         name: this.name,
@@ -56,7 +56,7 @@ export class Collection {
     return `RMRK::CHANGEISSUER::${this.version}::${this.id}::${address}`;
   }
 
-  static generateId(pubkey: string, symbol: string) {
+  static generateId(pubkey: string, symbol: string): string {
     if (!pubkey.startsWith("0x")) {
       throw new Error("This is not a valid pubkey, it does not start with 0x");
     }
