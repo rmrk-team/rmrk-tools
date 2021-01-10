@@ -3,9 +3,17 @@ export type Options = {
   from: string;
   to: string;
   prefix: string;
+  blocks: string;
+  json: string;
 };
 
-export type BlockRemarks = {
+export type BlockCalls = {
   block: number;
-  remarks: string[];
+  calls: BlockCall[];
+};
+
+export type BlockCall = {
+  call: string;
+  value: string;
+  caller: string;
 };

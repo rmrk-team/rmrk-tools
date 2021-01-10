@@ -10,3 +10,19 @@ export const getLatestBlock = async (api: ApiPromise): Promise<number> => {
   const header = await api.rpc.chain.getHeader();
   return header.number.toNumber();
 };
+
+export const getLatestFinalizedBlock = async (
+  api: ApiPromise
+): Promise<number> => {
+  const hash = await api.rpc.chain.getFinalizedHead();
+  const header = await api.rpc.chain.getHeader(hash);
+  if (header.number.toNumber() === 0) {
+    console.error("Unable to retrieve finalized head - returned genesis block");
+    process.exit(1);
+  }
+  return header.number.toNumber();
+};
+
+export const deeplog = function (obj: any): void {
+  console.log(JSON.stringify(obj, null, 2));
+};

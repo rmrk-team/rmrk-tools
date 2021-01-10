@@ -1,48 +1,103 @@
-import { Options, BlockRemarks } from "./types";
-import { getApi, getLatestBlock } from "./utils";
-import { stringToHex } from "@polkadot/util";
+import { BlockCall, BlockCalls } from "./types";
+import { deeplog } from "../tools/utils";
+import { ApiPromise } from "@polkadot/api";
+import { Call } from "@polkadot/types/interfaces";
 
-export const fetchRemarks = async (opts: Options): Promise<void> => {
-  const api = await getApi(opts.ws);
-  console.log("Connecting to " + opts.ws);
-  const from = parseInt(opts.from);
-  const to =
-    opts.to !== "latest" ? parseInt(opts.to) : await getLatestBlock(api);
-  if (from > to) {
-    console.error("Starting block must be less than ending block.");
-    process.exit(1);
-  }
-  const prefix =
-    opts.prefix === ""
-      ? ""
-      : opts.prefix.indexOf("0x") === 0
-      ? opts.prefix
-      : stringToHex(opts.prefix);
-  console.log(`Processing block range from ${from} to ${to}.`);
-  const remarks: BlockRemarks[] = [];
+export default async (
+  api: ApiPromise,
+  from: number,
+  to: number,
+  prefix: string
+): Promise<BlockCalls[]> => {
+  const bcs: BlockCalls[] = [];
   for (let i = from; i <= to; i++) {
+    if (i % 1000 === 0) {
+      const event = new Date();
+      console.log(`Block ${i} at time ${event.toTimeString()}`);
+      if (i % 5000 === 0) {
+        console.log(`Currently at ${bcs.length} remarks.`);
+      }
+    }
+
     const blockHash = await api.rpc.chain.getBlockHash(i);
     const block = await api.rpc.chain.getBlock(blockHash);
-    const blockRemarks: string[] = [];
-    block.block.extrinsics.forEach((ex) => {
+    const bc: BlockCall[] = [];
+
+    if (block.block === undefined) {
+      console.error("block.block is undefined for block " + i);
+      deeplog(block);
+      continue;
+    }
+
+    let exIndex = 0;
+    exLoop: for (const ex of block.block.extrinsics) {
+      if (ex.isEmpty || !ex.isSigned) {
+        exIndex++;
+        continue;
+      }
       const {
         method: { args, method, section },
       } = ex;
+
       if (section === "system" && method === "remark") {
         const remark = args.toString();
         if (remark.indexOf(prefix) === 0) {
-          blockRemarks.push(remark);
+          bc.push({
+            call: "system.remark",
+            value: remark,
+            caller: ex.signer.toString(),
+          } as BlockCall);
+        }
+      } else if (
+        section === "utility" &&
+        (method === "batch" || method == "batchAll")
+      ) {
+        // @ts-ignore
+        const batchargs: Call[] = args[0];
+        let remarkExists = false;
+        batchargs.forEach((el) => {
+          if (
+            el.section === "system" &&
+            el.method === "remark" &&
+            el.args.toString().indexOf(prefix) === 0
+          ) {
+            remarkExists = true;
+          }
+        });
+        if (remarkExists) {
+          const records = await api.query.system.events.at(blockHash);
+          const events = records.filter(
+            ({ phase, event }) =>
+              phase.isApplyExtrinsic &&
+              phase.asApplyExtrinsic.eq(exIndex) &&
+              event.method.toString() === "BatchInterrupted"
+          );
+          if (events.length) {
+            console.log(
+              `Skipping batch ${i}-${exIndex} due to BatchInterrupted`
+            );
+            exIndex++;
+            continue exLoop;
+          }
+
+          batchargs.forEach((el) => {
+            bc.push({
+              call: `${el.section}.${el.method}`,
+              value: el.args.toString(),
+              caller: ex.signer.toString(),
+            } as BlockCall);
+          });
         }
       }
-    });
-    if (blockRemarks.length) {
-      const br: BlockRemarks = {
+      exIndex++;
+    }
+
+    if (bc.length) {
+      bcs.push({
         block: i,
-        remarks: blockRemarks,
-      };
-      remarks.push(br);
+        calls: bc,
+      } as BlockCalls);
     }
   }
-  console.log(remarks);
-  process.exit(0);
+  return bcs;
 };

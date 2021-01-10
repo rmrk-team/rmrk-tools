@@ -37,6 +37,51 @@ yarn fetch
 Optional parameters:
 
 - `--ws URL`: websocket URL to connecto to, defaults to `127.0.0.1:9944`
-- `--from FROM`: block from which to start, defaults to 0
+- `--from FROM`: block from which to start, defaults to 0 (note that for RMRK, canonically the block 4892957 is genesis)
 - `--to TO`: block until which to search, defaults to latest
 - `--prefix PREFIX`: limit return data to only remarks with this prefix
+
+The return data will look like this:
+
+```js
+[
+  {
+    block: 8,
+    call: [
+      {
+        call: "system.remark",
+        value: "0x13371337",
+      },
+      {
+        call: "balances.transfer",
+        value:
+          "5CK8D1sKNwF473wbuBP6NuhQfPaWUetNsWUNAAzVwTfxqjfr,10000000000000000",
+      },
+    ],
+  },
+  {
+    block: 20,
+    call: [
+      {
+        call: "system.remark",
+        value: "0x13371338",
+      },
+    ],
+  },
+];
+```
+
+## Consolidate
+
+Takes as input a JSON file and processes all remarks within it to reach a final state of the NFT ecosystem based on that JSON.
+
+```bash
+ yarn consolidate --json=dumps/remarks-4892957-5437981-0x726d726b.json
+```
+
+Todo:
+
+- [ ] Write adapter interface
+- [ ] Support multiple adapters apart from JSON (SQL?)
+- [ ] Write exporters for SQL (ready-to-execute, or even direct to DB)
+- [ ] Write class for a single RMRK entry so it's easy to iterate through across these different adapters and consolidators
