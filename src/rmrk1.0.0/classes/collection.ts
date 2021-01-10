@@ -1,3 +1,5 @@
+// @todo: add data!
+
 export class Collection {
   readonly block: number;
   readonly version: string;
