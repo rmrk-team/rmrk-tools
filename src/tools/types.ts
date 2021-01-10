@@ -5,6 +5,7 @@ export type Options = {
   prefix: string;
   blocks: string;
   json: string;
+  folder: string;
 };
 
 export type BlockCalls = {

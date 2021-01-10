@@ -5,6 +5,7 @@ import program from "commander";
 import fetchRemarks from "./tools/fetchRemarks";
 import JsonAdapter from "./tools/consolidator/adapters/json";
 import Consolidator from "./tools/consolidator/consolidator";
+import { Seeder } from "../test/seed/seeder";
 import * as fs from "fs";
 
 program
@@ -69,6 +70,21 @@ program
     const ja = new JsonAdapter(file);
     const con = new Consolidator(ja);
     con.consolidate();
+  });
+
+program
+  .command("seed")
+  .option("--folder <folder>", "The folder from which to read seeds", "default")
+  .action(async (opts: Options) => {
+    let folder = opts.folder;
+    if (!folder.startsWith("test/seed")) folder = "test/seed/" + folder;
+    console.log("Connecting to local chain...");
+    const api = await getApi("ws://127.0.0.1:9944");
+    console.log("Connected.");
+    console.log("Looking for seed files inside " + folder);
+    const s = new Seeder(api);
+    await s.seedFromFolder(folder);
+    process.exit(0);
   });
 
 program

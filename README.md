@@ -85,3 +85,19 @@ Todo:
 - [ ] Support multiple adapters apart from JSON (SQL?)
 - [ ] Write exporters for SQL (ready-to-execute, or even direct to DB)
 - [ ] Write class for a single RMRK entry so it's easy to iterate through across these different adapters and consolidators
+
+## Seed
+
+> Note, none of the below is true, this is still VERY much a work in progress.
+
+A local chain must be running in `--dev` mode for this to work.
+
+```bash
+yarn seed --folder=[folder]
+```
+
+When running a local chain, you can run `yarn seed` to populate the chain with pre-written NFT configurations. This is good for testing UIs, wallets, etc. It will use the unlocked ALICE, BOB, and CHARLIE accounts so `--dev` is required here.
+
+You can see how the seeders are written in `test/seed/default`. `yarn seed` will by default execute all the seeds in the `default` folder. If you want to execute only your own seeders, put them into a subfolder inside `test/seed` and provide the folder name: `yarn seed myfolder`.
+
+Check that all edge cases are covered by running [Consolidate](#consolidate).

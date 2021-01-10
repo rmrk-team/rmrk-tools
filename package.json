@@ -11,6 +11,7 @@
     "start": "ts-node src/index start",
     "fetch": "ts-node src/index fetch",
     "consolidate": "ts-node src/index consolidate",
+    "seed": "ts-node src/index seed",
     "getevents": "ts-node src/index getevents",
     "test": "ava"
   },
