@@ -81,6 +81,49 @@ export class Seeder {
         }
       });
 
+    const c3 = new Collection(
+      0,
+      "Test Batch",
+      5,
+      this.accounts[0].address,
+      "TB",
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      "https://some.url"
+    );
+    await this.api.tx.utility
+      .batchAll([
+        this.api.tx.system.remark(c3.mint()),
+        this.api.tx.system.remark("foo"),
+      ])
+      .signAndSend(this.accounts[2], { nonce: -1 });
+
+    const c4 = new Collection(
+      0,
+      "Test Batch 2",
+      5,
+      this.accounts[0].address,
+      "TB2",
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      "https://some.url"
+    );
+
+    const c5 = new Collection(
+      0,
+      "Test Batch 3",
+      5,
+      this.accounts[0].address,
+      "TB3",
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      "https://some.url"
+    );
+
+    await this.api.tx.utility
+      .batchAll([
+        this.api.tx.system.remark(c4.mint()),
+        this.api.tx.system.remark(c5.mint()),
+      ])
+      .signAndSend(this.accounts[1], { nonce: -1 });
+
     await sleep(10000);
 
     // @todo
