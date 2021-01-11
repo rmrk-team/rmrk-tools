@@ -1,3 +1,6 @@
+// @todo add data field
+// @todo add method to retrieve current owner
+
 export class NFT {
   readonly block: number;
   readonly collection: string;
@@ -27,9 +30,15 @@ export class NFT {
     this.version = "1.0.0";
   }
 
+  public getId(): string {
+    if (!this.block)
+      throw new Error("This token is not minted, so it cannot have an ID.");
+    return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
+  }
+
   public mintnft(): string {
     if (this.block) {
-      throw new Error("An already existing collection cannot be minted!");
+      throw new Error("An already existing NFT cannot be minted!");
     }
     return `RMRK::MINTNFT::${this.version}::${encodeURIComponent(
       JSON.stringify({
@@ -41,6 +50,51 @@ export class NFT {
         metadata: this.metadata,
       })
     )}`;
+  }
+
+  public send(recipient: string): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only send an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `RMRK::SEND::${this.version}::${this.getId()}::${recipient}`;
+  }
+
+  /**
+   * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
+   */
+  public list(price: number): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only list an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `RMRK::LIST::${this.version}::${this.getId()}::${
+      price > 0 ? price : "cancel"
+    }`;
+  }
+
+  public buy(): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only buy an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `RMRK::BUY::${this.version}::${this.getId()}`;
+  }
+
+  public consume(): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only consume an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `RMRK::CONSUME::${this.version}::${this.getId()}`;
   }
 
   /**
