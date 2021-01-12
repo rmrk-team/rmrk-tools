@@ -1,9 +1,9 @@
 import JsonAdapter from './adapters/json';
 import { Collection as C100 } from '../../rmrk1.0.0/classes/collection';
 import { NFT as N100 } from '../../rmrk1.0.0/classes/nft';
-import * as fs from 'fs';
 import { Remark } from './remark';
 
+import { stringIsAValidUrl } from '../utils';
 import { decodeAddress } from '@polkadot/keyring';
 import { u8aToHex } from '@polkadot/util';
 
@@ -28,38 +28,48 @@ export default class Consolidator {
           console.log('Instantiating collection from ' + remark.remark);
           const c = C100.fromRemark(remark.remark, remark.block);
 
-          if (typeof c === 'boolean') {
-            console.log('Collection was not instantiated OK');
-            break;
-          } else {
-            console.log('Collection instantiated OK');
-            const pubkey = decodeAddress(remark.caller);
-            const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-
-            if (this.collections.find((el) => el.id === c.id)) {
-              this.invalidCalls.push(
-                createInvalidCall(
-                  'Attempt to mint already existing collection',
-                  c,
-                  remark
-                )
-              );
-              break;
-            } else if (id !== c.id) {
-              this.invalidCalls.push(
-                createInvalidCall(
-                  `Caller's pubkey ${u8aToHex(
-                    pubkey
-                  )} does not match generated ID`,
-                  c,
-                  remark
-                )
-              );
-              break;
-            }
-            this.collections.push(c);
+          if (typeof c === 'string') {
+            // console.log(
+            //   "Collection was not instantiated OK from " + remark.remark
+            // );
+            this.invalidCalls.push({
+              message: `Dead before instantiation: ${c}`,
+              caller: remark.caller,
+              object_id: remark.remark,
+              block: remark.block,
+              op_type: 'MINT',
+            } as InvalidCall);
+            continue;
           }
 
+          //console.log("Collection instantiated OK from " + remark.remark);
+          const pubkey = decodeAddress(remark.caller);
+          const id = C100.generateId(u8aToHex(pubkey), c.symbol);
+
+          if (this.collections.find((el) => el.id === c.id)) {
+            this.invalidCalls.push({
+              message: 'Attempt to mint already existing collection',
+              caller: remark.caller,
+              object_id: c.id,
+              block: remark.block,
+              op_type: 'MINT',
+            } as InvalidCall);
+            continue;
+          }
+          if (id !== c.id) {
+            this.invalidCalls.push({
+              message: `Caller's pubkey ${u8aToHex(
+                pubkey
+              )} does not match generated ID`,
+              caller: remark.caller,
+              object_id: c.id,
+              block: remark.block,
+              op_type: 'MINT',
+            } as InvalidCall);
+            continue;
+          }
+
+          this.collections.push(c);
           break;
         case 'MINTNFT':
           // A new NFT was minted into a collection

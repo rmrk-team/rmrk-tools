@@ -1,4 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { URL } from "url";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -25,4 +26,13 @@ export const getLatestFinalizedBlock = async (
 
 export const deeplog = function (obj: any): void {
   console.log(JSON.stringify(obj, null, 2));
+};
+
+export const stringIsAValidUrl = (s: string): boolean => {
+  try {
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
