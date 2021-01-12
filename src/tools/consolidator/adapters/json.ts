@@ -23,7 +23,8 @@ export default class JsonAdapter {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const rawdata = fs.readFileSync(filePath);
     this.inputData = JSON.parse(rawdata.toString());
-    console.log(`Loaded ${this.inputData.length} raw remarks`);
+    //console.log(this.inputData);
+    console.log(`Loaded ${this.inputData.length} blocks with remark calls`);
   }
 
   public getInputDataRaw(): JsonRow[] {

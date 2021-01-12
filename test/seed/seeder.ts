@@ -87,7 +87,7 @@ export class Seeder {
       5,
       this.accounts[0].address,
       "TB",
-      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      Collection.generateId(u8aToHex(this.accounts[2].publicKey), "TB"),
       "https://some.url"
     );
     await this.api.tx.utility
@@ -103,7 +103,7 @@ export class Seeder {
       5,
       this.accounts[0].address,
       "TB2",
-      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB2"),
       "https://some.url"
     );
 
@@ -113,7 +113,7 @@ export class Seeder {
       5,
       this.accounts[0].address,
       "TB3",
-      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB3"),
       "https://some.url"
     );
 
