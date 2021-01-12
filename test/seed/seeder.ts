@@ -87,7 +87,7 @@ export class Seeder {
       5,
       this.accounts[0].address,
       "TB",
-      Collection.generateId(u8aToHex(this.accounts[2].publicKey), "TB"),
+      Collection.generateId(u8aToHex(this.accounts[0].publicKey), "TB"),
       "https://some.url"
     );
     await this.api.tx.utility

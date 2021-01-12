@@ -8,52 +8,54 @@ import { u8aToHex } from "@polkadot/util";
 
 export default class Consolidator {
   private adapter: JsonAdapter;
+  private invalidCalls: InvalidCall[];
+  private collections: C100[];
   constructor(initializedAdapter: JsonAdapter) {
     this.adapter = initializedAdapter;
+    this.invalidCalls = [];
+    this.collections = [];
   }
 
   public consolidate(): void {
     const remarks = this.adapter.getRemarks();
-    const collections: C100[] = [];
-    const invalidCalls: InvalidCall[] = [];
     const nfts: N100[] = [];
     //console.log(remarks);
     for (const remark of remarks) {
       switch (remark.interaction_type) {
         case "MINT":
           // A new collection was created
+          console.log("Instantiating collection from " + remark.remark);
           const c = C100.fromRemark(remark.remark, remark.block);
+
           if (typeof c !== "boolean") {
-            // Check if collection already minted
-            if (collections.find((el) => el.id === c.id)) {
-              invalidCalls.push({
+            console.log("Collection instantiated OK");
+            const pubkey = decodeAddress(remark.caller);
+            const id = C100.generateId(u8aToHex(pubkey), c.symbol);
+
+            if (this.collections.find((el) => el.id === c.id)) {
+              this.invalidCalls.push({
                 message: "Attempt to mint already existing collection",
                 caller: remark.caller,
                 object_id: c.id,
                 block: remark.block,
                 op_type: "MINT",
               } as InvalidCall);
-              console.log(invalidCalls.length);
+              continue;
+            } else if (id !== c.id) {
+              this.invalidCalls.push({
+                message: `Caller's pubkey ${u8aToHex(
+                  pubkey
+                )} does not match generated ID`,
+                caller: remark.caller,
+                object_id: c.id,
+                block: remark.block,
+                op_type: "MINT",
+              } as InvalidCall);
               continue;
             }
-            // Check if collection ID matches expected format (pubkey + symbol)
-            // const pubkey = decodeAddress(remark.caller);
-            // const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-            // if (id !== c.id) {
-            // invalidCalls.push({
-            //   message: `Caller's pubkey ${u8aToHex(
-            //     pubkey
-            //   )} does not match generated ID`,
-            //   caller: remark.caller,
-            //   object_id: c.id,
-            //   block: remark.block,
-            //   op_type: "MINT",
-            // } as InvalidCall);
-            // console.log("skip");
-            // continue;
-            // }
-            collections.push(c);
+            this.collections.push(c);
           }
+          console.log("Collection was not instantiated OK");
           break;
         case "MINTNFT":
           // A new NFT was minted into a collection
@@ -75,10 +77,6 @@ export default class Consolidator {
           // The ownership of a collection has changed
 
           break;
-        case "MIGRATE":
-          // A collection and its NFT children are being migrated to a new version of the standard
-
-          break;
         default:
           console.error(
             "Unable to process this remark - wrong type: " +
@@ -87,8 +85,8 @@ export default class Consolidator {
           continue;
       }
     }
-    console.log(collections);
-    console.log(invalidCalls);
+    console.log(this.collections);
+    console.log(this.invalidCalls);
   }
 }
 
