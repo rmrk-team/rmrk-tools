@@ -27,35 +27,40 @@ export default class Consolidator {
           console.log("Instantiating collection from " + remark.remark);
           const c = C100.fromRemark(remark.remark, remark.block);
 
-          if (typeof c !== "boolean") {
-            console.log("Collection instantiated OK");
-            const pubkey = decodeAddress(remark.caller);
-            const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-
-            if (this.collections.find((el) => el.id === c.id)) {
-              this.invalidCalls.push({
-                message: "Attempt to mint already existing collection",
-                caller: remark.caller,
-                object_id: c.id,
-                block: remark.block,
-                op_type: "MINT",
-              } as InvalidCall);
-              continue;
-            } else if (id !== c.id) {
-              this.invalidCalls.push({
-                message: `Caller's pubkey ${u8aToHex(
-                  pubkey
-                )} does not match generated ID`,
-                caller: remark.caller,
-                object_id: c.id,
-                block: remark.block,
-                op_type: "MINT",
-              } as InvalidCall);
-              continue;
-            }
-            this.collections.push(c);
+          if (typeof c === "boolean") {
+            console.log(
+              "Collection was not instantiated OK from " + remark.remark
+            );
+            continue;
           }
-          console.log("Collection was not instantiated OK");
+
+          console.log("Collection instantiated OK from " + remark.remark);
+          const pubkey = decodeAddress(remark.caller);
+          const id = C100.generateId(u8aToHex(pubkey), c.symbol);
+
+          if (this.collections.find((el) => el.id === c.id)) {
+            this.invalidCalls.push({
+              message: "Attempt to mint already existing collection",
+              caller: remark.caller,
+              object_id: c.id,
+              block: remark.block,
+              op_type: "MINT",
+            } as InvalidCall);
+            continue;
+          }
+          if (id !== c.id) {
+            this.invalidCalls.push({
+              message: `Caller's pubkey ${u8aToHex(
+                pubkey
+              )} does not match generated ID`,
+              caller: remark.caller,
+              object_id: c.id,
+              block: remark.block,
+              op_type: "MINT",
+            } as InvalidCall);
+            continue;
+          }
+          this.collections.push(c);
           break;
         case "MINTNFT":
           // A new NFT was minted into a collection
@@ -85,8 +90,8 @@ export default class Consolidator {
           continue;
       }
     }
-    console.log(this.collections);
-    console.log(this.invalidCalls);
+    //console.log(this.collections);
+    //console.log(this.invalidCalls);
   }
 }
 
