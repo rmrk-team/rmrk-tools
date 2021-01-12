@@ -72,7 +72,7 @@ export class Collection {
     );
   }
 
-  static fromRemark(remark: string, block?: number): Collection | boolean {
+  static fromRemark(remark: string, block?: number): Collection | string {
     if (!block) {
       block = 0;
     }
@@ -114,11 +114,10 @@ export class Collection {
         obj.metadata
       );
     } catch (e) {
-      console.error(e);
-      console.log(`Input was ${data}`);
+      console.error(e.message);
+      console.log(`Full Input was ${data}`);
+      return e.message;
     }
-
-    return false;
   }
 
   /**
