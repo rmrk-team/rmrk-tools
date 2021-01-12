@@ -1,10 +1,11 @@
-import JsonAdapter from "./adapters/json";
-import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
-import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
-import * as fs from "fs";
+import JsonAdapter from './adapters/json';
+import { Collection as C100 } from '../../rmrk1.0.0/classes/collection';
+import { NFT as N100 } from '../../rmrk1.0.0/classes/nft';
+import * as fs from 'fs';
+import { Remark } from './remark';
 
-import { decodeAddress } from "@polkadot/keyring";
-import { u8aToHex } from "@polkadot/util";
+import { decodeAddress } from '@polkadot/keyring';
+import { u8aToHex } from '@polkadot/util';
 
 export default class Consolidator {
   private adapter: JsonAdapter;
@@ -22,64 +23,67 @@ export default class Consolidator {
     //console.log(remarks);
     for (const remark of remarks) {
       switch (remark.interaction_type) {
-        case "MINT":
+        case 'MINT':
           // A new collection was created
-          console.log("Instantiating collection from " + remark.remark);
+          console.log('Instantiating collection from ' + remark.remark);
           const c = C100.fromRemark(remark.remark, remark.block);
 
-          if (typeof c !== "boolean") {
-            console.log("Collection instantiated OK");
+          if (typeof c === 'boolean') {
+            console.log('Collection was not instantiated OK');
+            break;
+          } else {
+            console.log('Collection instantiated OK');
             const pubkey = decodeAddress(remark.caller);
             const id = C100.generateId(u8aToHex(pubkey), c.symbol);
 
             if (this.collections.find((el) => el.id === c.id)) {
-              this.invalidCalls.push({
-                message: "Attempt to mint already existing collection",
-                caller: remark.caller,
-                object_id: c.id,
-                block: remark.block,
-                op_type: "MINT",
-              } as InvalidCall);
-              continue;
+              this.invalidCalls.push(
+                createInvalidCall(
+                  'Attempt to mint already existing collection',
+                  c,
+                  remark
+                )
+              );
+              break;
             } else if (id !== c.id) {
-              this.invalidCalls.push({
-                message: `Caller's pubkey ${u8aToHex(
-                  pubkey
-                )} does not match generated ID`,
-                caller: remark.caller,
-                object_id: c.id,
-                block: remark.block,
-                op_type: "MINT",
-              } as InvalidCall);
-              continue;
+              this.invalidCalls.push(
+                createInvalidCall(
+                  `Caller's pubkey ${u8aToHex(
+                    pubkey
+                  )} does not match generated ID`,
+                  c,
+                  remark
+                )
+              );
+              break;
             }
             this.collections.push(c);
           }
-          console.log("Collection was not instantiated OK");
+
           break;
-        case "MINTNFT":
+        case 'MINTNFT':
           // A new NFT was minted into a collection
 
           break;
-        case "SEND":
+        case 'SEND':
           // An NFT was sent to a new owner
 
           break;
-        case "BUY":
+        case 'BUY':
           // An NFT was bought after being LISTed
 
           break;
-        case "LIST":
+        case 'LIST':
           // An NFT was listed for sale
 
           break;
-        case "CHANGEISSUER":
+        case 'CHANGEISSUER':
           // The ownership of a collection has changed
 
           break;
         default:
           console.error(
-            "Unable to process this remark - wrong type: " +
+            'Unable to process this remark - wrong type: ' +
               remark.interaction_type
           );
           continue;
@@ -89,6 +93,19 @@ export default class Consolidator {
     console.log(this.invalidCalls);
   }
 }
+
+const createInvalidCall = (
+  message: string,
+  c: C100,
+  remark: Remark,
+  op_type?: string
+): InvalidCall => ({
+  message,
+  caller: remark.caller,
+  object_id: c.id,
+  block: remark.block,
+  op_type: op_type || 'MINT',
+});
 
 type InvalidCall = {
   message: string;
