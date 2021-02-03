@@ -1,9 +1,10 @@
 import JsonAdapter from "./adapters/json";
 import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
 import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
+import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
+import { Change } from "../../rmrk1.0.0/changelog";
 import * as fs from "fs";
 
-import { stringIsAValidUrl } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 
@@ -89,7 +90,21 @@ export default class Consolidator {
           break;
         case "CHANGEISSUER":
           // The ownership of a collection has changed
-
+          const ci = ChangeIssuer.fromRemark(remark.remark);
+          if (typeof ci === "string") {
+            // console.log(
+            //   "ChangeIssuer was not instantiated OK from " + remark.remark
+            // );
+            this.invalidCalls.push({
+              message: `Dead before instantiation: ${ci}`,
+              caller: remark.caller,
+              object_id: remark.remark,
+              block: remark.block,
+              op_type: "MINT",
+            } as InvalidCall);
+            continue;
+          }
+          const coll = this.collections.find((el: C100) => el.id === ci.id);
           break;
         default:
           console.error(

@@ -1,4 +1,5 @@
 // @todo: add data!
+import { Change } from "../changelog";
 
 export class Collection {
   readonly block: number;
@@ -10,6 +11,7 @@ export class Collection {
   readonly id: string;
   readonly metadata: string;
   static V = "RMRK1.0.0";
+  private changes: Change[] = [];
   loadedMetadata?: CollectionMetadata;
 
   constructor(
@@ -59,6 +61,15 @@ export class Collection {
     return `RMRK::CHANGEISSUER::${this.version}::${this.id}::${address}`;
   }
 
+  public addChange(c: Change): Collection {
+    this.changes.push(c);
+    return this;
+  }
+
+  public getChanges(): Change[] {
+    return this.changes;
+  }
+
   static generateId(pubkey: string, symbol: string): string {
     if (!pubkey.startsWith("0x")) {
       throw new Error("This is not a valid pubkey, it does not start with 0x");
@@ -77,16 +88,17 @@ export class Collection {
       block = 0;
     }
     const exploded = remark.split("::");
-    if (exploded[0] != "RMRK")
-      throw new Error("Invalid remark - does not start with RMRK");
-    if (exploded[2] != Collection.V)
-      throw new Error(
-        `Version mismatch. Is ${exploded[2]}, should be ${Collection.V}`
-      );
-    if (exploded[1] != "MINT")
-      throw new Error("The op code needs to be MINT, is " + exploded[1]);
-    const data = decodeURIComponent(exploded[3]);
     try {
+      if (exploded[0] != "RMRK")
+        throw new Error("Invalid remark - does not start with RMRK");
+      if (exploded[2] != Collection.V)
+        throw new Error(
+          `Version mismatch. Is ${exploded[2]}, should be ${Collection.V}`
+        );
+      if (exploded[1] != "MINT")
+        throw new Error("The op code needs to be MINT, is " + exploded[1]);
+      const data = decodeURIComponent(exploded[3]);
+
       const obj = JSON.parse(data);
       if (!obj) throw new Error(`Could not parse object from: ${data}`);
       if (obj.version != Collection.V)
@@ -115,7 +127,7 @@ export class Collection {
       );
     } catch (e) {
       console.error(e.message);
-      console.log(`Full Input was ${data}`);
+      console.log(`MINT error: full input was ${remark}`);
       return e.message;
     }
   }
