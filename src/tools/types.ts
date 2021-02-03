@@ -2,7 +2,7 @@ export type Options = {
   ws: string;
   from: string;
   to: string;
-  prefix: string;
+  prefixes: string;
   blocks: string;
   json: string;
   folder: string;

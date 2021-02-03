@@ -6,7 +6,7 @@ export class Collection {
   readonly version: string;
   readonly name: string;
   readonly max: number;
-  readonly issuer: string;
+  issuer: string;
   readonly symbol: string;
   readonly id: string;
   readonly metadata: string;
@@ -89,16 +89,16 @@ export class Collection {
     }
     const exploded = remark.split("::");
     try {
-      if (exploded[0] != "RMRK")
+      if (exploded[0].toUpperCase() != "RMRK")
         throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[2] != Collection.V)
-        throw new Error(
-          `Version mismatch. Is ${exploded[2]}, should be ${Collection.V}`
-        );
       if (exploded[1] != "MINT")
         throw new Error("The op code needs to be MINT, is " + exploded[1]);
+      if (exploded[2] != Collection.V) {
+        throw new Error(
+          `This remark was issued under version ${exploded[2]} instead of ${Collection.V}`
+        );
+      }
       const data = decodeURIComponent(exploded[3]);
-
       const obj = JSON.parse(data);
       if (!obj) throw new Error(`Could not parse object from: ${data}`);
       if (obj.version != Collection.V)

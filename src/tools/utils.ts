@@ -1,4 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { stringToHex } from "@polkadot/util";
 import { URL } from "url";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
@@ -35,4 +36,17 @@ export const stringIsAValidUrl = (s: string): boolean => {
   } catch (err) {
     return false;
   }
+};
+
+export const prefixToArray = function (prefix: string): string[] {
+  const returnArray = [];
+  const exploded = prefix.split(",");
+  for (const p of exploded) {
+    if (p.indexOf("0x") === 0) {
+      returnArray.push(p);
+    } else {
+      returnArray.push(stringToHex(p));
+    }
+  }
+  return returnArray;
 };

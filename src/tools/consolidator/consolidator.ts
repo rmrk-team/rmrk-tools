@@ -3,6 +3,7 @@ import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
 import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Change } from "../../rmrk1.0.0/changelog";
+import { deeplog } from "../utils";
 import * as fs from "fs";
 
 import { decodeAddress } from "@polkadot/keyring";
@@ -23,10 +24,12 @@ export default class Consolidator {
     const nfts: N100[] = [];
     //console.log(remarks);
     for (const remark of remarks) {
+      console.log("==============================");
+      console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
         case "MINT":
           // A new collection was created
-          console.log("Instantiating collection from " + remark.remark);
+          console.log("Instantiating collection");
           const c = C100.fromRemark(remark.remark, remark.block);
 
           if (typeof c === "string") {
@@ -34,7 +37,7 @@ export default class Consolidator {
             //   "Collection was not instantiated OK from " + remark.remark
             // );
             this.invalidCalls.push({
-              message: `Dead before instantiation: ${c}`,
+              message: `[MINT] Dead before instantiation: ${c}`,
               caller: remark.caller,
               object_id: remark.remark,
               block: remark.block,
@@ -49,7 +52,7 @@ export default class Consolidator {
 
           if (this.collections.find((el) => el.id === c.id)) {
             this.invalidCalls.push({
-              message: "Attempt to mint already existing collection",
+              message: "[MINT] Attempt to mint already existing collection",
               caller: remark.caller,
               object_id: c.id,
               block: remark.block,
@@ -57,11 +60,11 @@ export default class Consolidator {
             } as InvalidCall);
             continue;
           }
-          if (id !== c.id) {
+          if (id.toLowerCase() !== c.id.toLowerCase()) {
             this.invalidCalls.push({
               message: `Caller's pubkey ${u8aToHex(
                 pubkey
-              )} does not match generated ID`,
+              )} (${id}) does not match generated ID`,
               caller: remark.caller,
               object_id: c.id,
               block: remark.block,
@@ -90,13 +93,14 @@ export default class Consolidator {
           break;
         case "CHANGEISSUER":
           // The ownership of a collection has changed
+          console.log("Instantiating an issuer change");
           const ci = ChangeIssuer.fromRemark(remark.remark);
           if (typeof ci === "string") {
             // console.log(
             //   "ChangeIssuer was not instantiated OK from " + remark.remark
             // );
             this.invalidCalls.push({
-              message: `Dead before instantiation: ${ci}`,
+              message: `[CHANGEISSUER] Dead before instantiation: ${ci}`,
               caller: remark.caller,
               object_id: remark.remark,
               block: remark.block,
@@ -105,6 +109,20 @@ export default class Consolidator {
             continue;
           }
           const coll = this.collections.find((el: C100) => el.id === ci.id);
+          if (!coll) {
+            console.error(
+              `This CHANGEISSUER remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`
+            );
+          } else {
+            coll.addChange({
+              field: "issuer",
+              old: coll.issuer,
+              new: ci.issuer,
+              caller: remark.caller,
+              block: remark.block,
+            } as Change);
+            coll.issuer = ci.issuer;
+          }
           break;
         default:
           console.error(
@@ -114,7 +132,7 @@ export default class Consolidator {
           continue;
       }
     }
-    console.log(this.collections);
+    deeplog(this.collections);
     console.log(this.invalidCalls);
   }
 }

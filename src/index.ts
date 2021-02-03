@@ -1,6 +1,10 @@
 import { Options } from "./tools/types";
-import { getApi, getLatestFinalizedBlock, deeplog } from "./tools/utils";
-import { stringToHex } from "@polkadot/util";
+import {
+  getApi,
+  getLatestFinalizedBlock,
+  deeplog,
+  prefixToArray,
+} from "./tools/utils";
 import program from "commander";
 import fetchRemarks from "./tools/fetchRemarks";
 import JsonAdapter from "./tools/consolidator/adapters/json";
@@ -13,8 +17,8 @@ program
   .option("--ws <ws>", "The websocket URL", "ws://127.0.0.1:9944")
   .option("--from <from>", "The starting block, defaults to 0", "0")
   .option(
-    "--prefix <prefix>",
-    "Limit remarks to prefix. No default. Can be hex (0x726d726b) or string (rmrk)",
+    "--prefixes <prefixes>",
+    "Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple",
     ""
   )
   .option(
@@ -34,18 +38,17 @@ program
       console.error("Starting block must be less than ending block.");
       process.exit(1);
     }
-    const prefix =
-      opts.prefix === ""
-        ? ""
-        : opts.prefix.indexOf("0x") === 0
-        ? opts.prefix
-        : stringToHex(opts.prefix);
     console.log(`Processing block range from ${from} to ${to}.`);
-    const extracted = await fetchRemarks(api, from, to, prefix);
+    const extracted = await fetchRemarks(
+      api,
+      from,
+      to,
+      prefixToArray(opts.prefixes)
+    );
     console.log(deeplog(extracted));
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     fs.writeFileSync(
-      `remarks-${from}-${to}-${prefix}.json`,
+      `remarks-${from}-${to}-${opts.prefixes}.json`,
       JSON.stringify(extracted)
     );
     process.exit(0);

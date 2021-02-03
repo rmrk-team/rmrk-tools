@@ -7,7 +7,7 @@ export default async (
   api: ApiPromise,
   from: number,
   to: number,
-  prefix: string
+  prefixes: string[]
 ): Promise<BlockCalls[]> => {
   const bcs: BlockCalls[] = [];
   for (let i = from; i <= to; i++) {
@@ -41,7 +41,8 @@ export default async (
 
       if (section === "system" && method === "remark") {
         const remark = args.toString();
-        if (remark.indexOf(prefix) === 0) {
+        if (prefixes.some((word) => remark.startsWith(word))) {
+          //if (remark.indexOf(prefix) === 0) {
           bc.push({
             call: "system.remark",
             value: remark,
@@ -59,7 +60,7 @@ export default async (
           if (
             el.section === "system" &&
             el.method === "remark" &&
-            el.args.toString().indexOf(prefix) === 0
+            prefixes.some((word) => el.args.toString().startsWith(word))
           ) {
             remarkExists = true;
           }

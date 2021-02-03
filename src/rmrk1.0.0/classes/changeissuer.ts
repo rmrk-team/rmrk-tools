@@ -1,7 +1,7 @@
 export class ChangeIssuer {
-  private issuer: string;
+  issuer: string;
   id: string;
-  static V = "1.0.0";
+  static V = "RMRK1.0.0";
 
   constructor(issuer: string, id: string) {
     this.issuer = issuer;
