@@ -120,6 +120,7 @@ export default class Consolidator {
               new: ci.issuer,
               caller: remark.caller,
               block: remark.block,
+              valid: remark.caller == coll.issuer, // RESTRICTION
             } as Change);
             coll.issuer = ci.issuer;
           }

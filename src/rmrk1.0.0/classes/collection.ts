@@ -3,7 +3,6 @@ import { Change } from "../changelog";
 
 export class Collection {
   readonly block: number;
-  readonly version: string;
   readonly name: string;
   readonly max: number;
   issuer: string;
@@ -30,16 +29,14 @@ export class Collection {
     this.symbol = symbol;
     this.id = id;
     this.metadata = metadata;
-    this.version = Collection.V;
   }
 
   public mint(): string {
     if (this.block) {
       throw new Error("An already existing collection cannot be minted!");
     }
-    return `RMRK::MINT::${this.version}::${encodeURIComponent(
+    return `RMRK::MINT::${Collection.V}::${encodeURIComponent(
       JSON.stringify({
-        version: this.version,
         name: this.name,
         max: this.max,
         issuer: this.issuer,
@@ -58,7 +55,7 @@ export class Collection {
           "collection as a new instance first, then change issuer."
       );
     }
-    return `RMRK::CHANGEISSUER::${this.version}::${this.id}::${address}`;
+    return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
   }
 
   public addChange(c: Change): Collection {
@@ -101,10 +98,6 @@ export class Collection {
       const data = decodeURIComponent(exploded[3]);
       const obj = JSON.parse(data);
       if (!obj) throw new Error(`Could not parse object from: ${data}`);
-      if (obj.version != Collection.V)
-        throw new Error(
-          `This collection has a version of ${obj.version} instead of ${Collection.V}`
-        );
       if (
         undefined === obj.metadata ||
         (!obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http"))
@@ -115,7 +108,6 @@ export class Collection {
       if (undefined === obj.issuer) throw new Error(`Missing field: issuer`);
       if (undefined === obj.symbol) throw new Error(`Missing field: symbol`);
       if (undefined === obj.id) throw new Error(`Missing field: id`);
-      if (undefined === obj.version) throw new Error(`Missing field: version`);
       return new this(
         block,
         obj.name,
