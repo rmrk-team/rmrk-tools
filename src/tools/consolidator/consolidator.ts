@@ -13,15 +13,16 @@ export default class Consolidator {
   private adapter: JsonAdapter;
   private invalidCalls: InvalidCall[];
   private collections: C100[];
+  private nfts: N100[];
   constructor(initializedAdapter: JsonAdapter) {
     this.adapter = initializedAdapter;
     this.invalidCalls = [];
     this.collections = [];
+    this.nfts = [];
   }
 
   public consolidate(): void {
     const remarks = this.adapter.getRemarks();
-    const nfts: N100[] = [];
     //console.log(remarks);
     for (const remark of remarks) {
       console.log("==============================");
@@ -77,7 +78,42 @@ export default class Consolidator {
           break;
         case "MINTNFT":
           // A new NFT was minted into a collection
-
+          console.log("Instantiating nft");
+          const n = N100.fromRemark(remark.remark, remark.block);
+          if (typeof n === "string") {
+            this.invalidCalls.push({
+              message: `[MINTNFT] Dead before instantiation: ${n}`,
+              caller: remark.caller,
+              object_id: remark.remark,
+              block: remark.block,
+              op_type: "MINTNFT",
+            } as InvalidCall);
+            continue;
+          }
+          const nftParent = this.collections.find(
+            (el) => el.id === n.collection
+          );
+          if (!nftParent) {
+            this.invalidCalls.push({
+              message: `NFT referencing non-existant parent collection ${n.collection}`,
+              caller: remark.caller,
+              object_id: n.getId(),
+              block: remark.block,
+              op_type: "MINTNFT",
+            } as InvalidCall);
+            continue;
+          }
+          n.owner = nftParent.issuer;
+          if (remark.caller != n.owner) {
+            this.invalidCalls.push({
+              message: `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`,
+              caller: remark.caller,
+              object_id: n.getId(),
+              block: remark.block,
+              op_type: "MINTNFT",
+            } as InvalidCall);
+            continue;
+          }
           break;
         case "SEND":
           // An NFT was sent to a new owner
@@ -133,6 +169,7 @@ export default class Consolidator {
           continue;
       }
     }
+    deeplog(this.nfts);
     deeplog(this.collections);
     console.log(this.invalidCalls);
   }
