@@ -1,7 +1,9 @@
 import JsonAdapter from "./adapters/json";
 import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
-import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
+import { NFT as N100, Reaction } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
+import { Send } from "../../rmrk1.0.0/classes/send";
+import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
 import * as fs from "fs";
@@ -114,10 +116,73 @@ export default class Consolidator {
             } as InvalidCall);
             continue;
           }
+          if (this.nfts.find((el) => el.getId() === n.getId())) {
+            this.invalidCalls.push({
+              message: "[MINTNFT] Attempt to mint already existing NFT",
+              caller: remark.caller,
+              object_id: n.getId(),
+              block: remark.block,
+              op_type: "MINTNFT",
+            } as InvalidCall);
+            continue;
+          }
+          if (n.owner === "") {
+            this.invalidCalls.push({
+              message:
+                "[MINTNFT] Somehow this NFT still doesn't have an owner.",
+              caller: remark.caller,
+              object_id: n.getId(),
+              block: remark.block,
+              op_type: "MINTNFT",
+            } as InvalidCall);
+            continue;
+          }
+          this.nfts.push(n);
           break;
         case "SEND":
           // An NFT was sent to a new owner
-
+          console.log("Instantiating send");
+          const send = Send.fromRemark(remark.remark);
+          if (typeof send === "string") {
+            this.invalidCalls.push({
+              message: `[SEND] Dead before instantiation: ${send}`,
+              caller: remark.caller,
+              object_id: remark.remark,
+              block: remark.block,
+              op_type: "SEND",
+            } as InvalidCall);
+            continue;
+          }
+          const nft = this.nfts.find((el) => el.getId() === send.id);
+          if (!nft) {
+            this.invalidCalls.push({
+              message: `[SEND] Attempting to send non-existant NFT ${send.id}`,
+              caller: remark.caller,
+              object_id: send.id,
+              block: remark.block,
+              op_type: "SEND",
+            } as InvalidCall);
+            continue;
+          }
+          // Check if allowed to issue send - if owner == caller
+          if (nft.owner != remark.caller) {
+            this.invalidCalls.push({
+              message: `[SEND] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`,
+              caller: remark.caller,
+              object_id: send.id,
+              block: remark.block,
+              op_type: "SEND",
+            } as InvalidCall);
+            continue;
+          }
+          nft.addChange({
+            field: "owner",
+            old: nft.owner,
+            new: send.recipient,
+            caller: remark.caller,
+            block: remark.block,
+          } as Change);
+          nft.owner = send.recipient;
           break;
         case "BUY":
           // An NFT was bought after being LISTed
@@ -126,6 +191,41 @@ export default class Consolidator {
         case "LIST":
           // An NFT was listed for sale
 
+          break;
+        case "EMOTE":
+          // An EMOTE reaction has been sent
+          console.log("Instantiating emote");
+          const emote = Emote.fromRemark(remark.remark);
+          if (typeof emote === "string") {
+            this.invalidCalls.push({
+              message: `[EMOTE] Dead before instantiation: ${emote}`,
+              caller: remark.caller,
+              object_id: remark.remark,
+              block: remark.block,
+              op_type: "EMOTE",
+            } as InvalidCall);
+            continue;
+          }
+          const target = this.nfts.find((el) => el.getId() === emote.id);
+          if (!target) {
+            this.invalidCalls.push({
+              message: `[EMOTE] Attempting to emote on non-existant NFT ${emote.id}`,
+              caller: remark.caller,
+              object_id: emote.id,
+              block: remark.block,
+              op_type: "EMOTE",
+            } as InvalidCall);
+            continue;
+          }
+          const index = target.reactions[emote.unicode].indexOf(
+            remark.caller,
+            0
+          );
+          if (index > -1) {
+            target.reactions[emote.unicode].splice(index, 1);
+          } else {
+            target.reactions[emote.unicode].push(remark.caller);
+          }
           break;
         case "CHANGEISSUER":
           // The ownership of a collection has changed
@@ -140,26 +240,41 @@ export default class Consolidator {
               caller: remark.caller,
               object_id: remark.remark,
               block: remark.block,
-              op_type: "MINT",
+              op_type: "CHANGEISSUER",
             } as InvalidCall);
             continue;
           }
           const coll = this.collections.find((el: C100) => el.id === ci.id);
           if (!coll) {
-            console.error(
-              `This CHANGEISSUER remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`
-            );
-          } else {
-            coll.addChange({
-              field: "issuer",
-              old: coll.issuer,
-              new: ci.issuer,
+            this.invalidCalls.push({
+              message: `This CHANGEISSUER remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`,
               caller: remark.caller,
+              object_id: ci.id,
               block: remark.block,
-              valid: remark.caller == coll.issuer, // RESTRICTION
-            } as Change);
-            coll.issuer = ci.issuer;
+              op_type: "CHANGEISSUER",
+            } as InvalidCall);
+            continue;
           }
+
+          if (remark.caller != coll.issuer) {
+            this.invalidCalls.push({
+              message: `Attempting to change issuer of collection ${ci.id} when not issuer!`,
+              caller: remark.caller,
+              object_id: ci.id,
+              block: remark.block,
+              op_type: "CHANGEISSUER",
+            } as InvalidCall);
+            continue;
+          }
+          coll.addChange({
+            field: "issuer",
+            old: coll.issuer,
+            new: ci.issuer,
+            caller: remark.caller,
+            block: remark.block,
+          } as Change);
+          coll.issuer = ci.issuer;
+
           break;
         default:
           console.error(

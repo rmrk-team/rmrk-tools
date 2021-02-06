@@ -1,5 +1,5 @@
 // @todo add data field
-// @todo add method to retrieve current owner
+import { Change } from "../changelog";
 
 export class NFT {
   readonly block: number;
@@ -10,6 +10,8 @@ export class NFT {
   readonly data?: string;
   readonly sn: string;
   readonly metadata?: string;
+  reactions: Reactionmap;
+  private changes: Change[] = [];
   owner: string;
   static V = "RMRK1.0.0";
   loadedMetadata?: NFTMetadata;
@@ -32,12 +34,18 @@ export class NFT {
     this.data = data;
     this.metadata = metadata;
     this.owner = "";
+    this.reactions = [];
   }
 
   public getId(): string {
     if (!this.block)
       throw new Error("This token is not minted, so it cannot have an ID.");
     return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
+  }
+
+  public addChange(c: Change): NFT {
+    this.changes.push(c);
+    return this;
   }
 
   public mintnft(): string {
@@ -194,4 +202,8 @@ export enum DisplayType {
   "boost_number",
   "number",
   "boost_percentage",
+}
+
+export interface Reactionmap {
+  [unicode: string]: string[];
 }
