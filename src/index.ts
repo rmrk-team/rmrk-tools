@@ -39,6 +39,7 @@ program
     // Grab FROM from append file
     let appendFile = [];
     if (append) {
+      console.log("Will append to " + append);
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.appendFileSync(append, "");
       try {
@@ -46,9 +47,10 @@ program
         const fileContent = fs.readFileSync(append).toString();
         if (fileContent) {
           appendFile = JSON.parse(fileContent);
-          from = appendFile.length
-            ? parseInt(appendFile[appendFile.length - 1].block) + 1
-            : 0;
+          if (appendFile.length) {
+            const lastBlock = appendFile.pop();
+            from = lastBlock.block;
+          }
         }
       } catch (e) {
         console.error(e);
@@ -74,11 +76,15 @@ program
     console.log(deeplog(extracted));
     let outputFileName = `remarks-${from}-${to}-${opts.prefixes}.json`;
     if (append) {
-      extracted = extracted.concat(appendFile);
+      extracted = appendFile.concat(extracted);
       console.log(`Appending ${appendFile.length} remarks found. Full set:`);
       console.log(deeplog(extracted));
       outputFileName = append;
     }
+    extracted.push({
+      block: to,
+      calls: [],
+    });
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     fs.writeFileSync(outputFileName, JSON.stringify(extracted));
     process.exit(0);
