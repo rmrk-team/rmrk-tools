@@ -7,6 +7,7 @@ export type Options = {
   json: string;
   folder: string;
   append: string;
+  remark: string;
 };
 
 export type BlockCalls = {

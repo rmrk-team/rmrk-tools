@@ -11,7 +11,7 @@ import * as fs from "fs";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 
-export default class Consolidator {
+export class Consolidator {
   private adapter: JsonAdapter;
   private invalidCalls: InvalidCall[];
   private collections: C100[];

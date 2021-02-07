@@ -13,7 +13,8 @@
     "consolidate": "ts-node src/index consolidate",
     "seed": "ts-node src/index seed",
     "getevents": "ts-node src/index getevents",
-    "test": "ava"
+    "test": "ava",
+    "validate": "ts-node src/index validate"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",

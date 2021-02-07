@@ -8,8 +8,9 @@ import {
 import program from "commander";
 import fetchRemarks from "./tools/fetchRemarks";
 import JsonAdapter from "./tools/consolidator/adapters/json";
-import Consolidator from "./tools/consolidator/consolidator";
+import { Consolidator } from "./tools/consolidator/consolidator";
 import { Seeder } from "../test/seed/seeder";
+import { NFT as N100 } from "./rmrk1.0.0/classes/nft";
 import * as fs from "fs";
 
 program
@@ -164,6 +165,33 @@ program
       console.log(`==========  Block ${blockNum} END =============`);
     }
     process.exit(0);
+  });
+
+program
+  .command("validate")
+  .option("--remark <remark>", "The remark to validate")
+  .action(async (opts: Options) => {
+    const remark = opts.remark;
+    const exploded = remark.split("::");
+    if (exploded.length < 2) {
+      throw new Error(
+        "Invalid RMRK remark, cannot explode by double-colon (::)"
+      );
+    }
+    if (exploded[0].toUpperCase() !== "RMRK") {
+      throw new Error(
+        "This is not a RMRK remark - does not begin with RMRK/rmrk"
+      );
+    }
+    switch (exploded[1]) {
+      case "MINTNFT":
+        console.log("Identified as MINTNFT");
+        const n = N100.fromRemark(remark);
+        deeplog(n);
+        break;
+      default:
+        throw new Error(`${exploded[1]} interaction not supported`);
+    }
   });
 
 program.parse(process.argv);
