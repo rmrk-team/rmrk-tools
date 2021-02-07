@@ -40,6 +40,7 @@ Optional parameters:
 - `--from FROM`: block from which to start, defaults to 0 (note that for RMRK, canonically the block 4892957 is genesis)
 - `--to TO`: block until which to search, defaults to latest
 - `--prefix PREFIX`: limit return data to only remarks with this prefix
+- `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable.
 
 The return data will look like this:
 

@@ -34,7 +34,7 @@ export class NFT {
     this.data = data;
     this.metadata = metadata;
     this.owner = "";
-    this.reactions = [];
+    this.reactions = {};
   }
 
   public getId(): string {

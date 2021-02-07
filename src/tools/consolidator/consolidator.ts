@@ -1,6 +1,6 @@
 import JsonAdapter from "./adapters/json";
 import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
-import { NFT as N100, Reaction } from "../../rmrk1.0.0/classes/nft";
+import { NFT as N100, Reactionmap } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
@@ -116,7 +116,20 @@ export default class Consolidator {
             } as InvalidCall);
             continue;
           }
-          if (this.nfts.find((el) => el.getId() === n.getId())) {
+
+          const existsCheck = this.nfts.find((el) => {
+            const idExpand1 = el.getId().split("-");
+            idExpand1.shift();
+            const uniquePart1 = idExpand1.join("-");
+
+            const idExpand2 = n.getId().split("-");
+            idExpand2.shift();
+            const uniquePart2 = idExpand2.join("-");
+
+            return uniquePart1 === uniquePart2;
+          });
+
+          if (existsCheck) {
             this.invalidCalls.push({
               message: "[MINTNFT] Attempt to mint already existing NFT",
               caller: remark.caller,
@@ -153,7 +166,19 @@ export default class Consolidator {
             } as InvalidCall);
             continue;
           }
-          const nft = this.nfts.find((el) => el.getId() === send.id);
+
+          const nft = this.nfts.find((el) => {
+            const idExpand1 = el.getId().split("-");
+            idExpand1.shift();
+            const uniquePart1 = idExpand1.join("-");
+
+            const idExpand2 = send.id.split("-");
+            idExpand2.shift();
+            const uniquePart2 = idExpand2.join("-");
+
+            return uniquePart1 === uniquePart2;
+          });
+
           if (!nft) {
             this.invalidCalls.push({
               message: `[SEND] Attempting to send non-existant NFT ${send.id}`,
