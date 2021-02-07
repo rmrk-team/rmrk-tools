@@ -14,7 +14,8 @@
     "seed": "ts-node src/index seed",
     "getevents": "ts-node src/index getevents",
     "test": "ava",
-    "validate": "ts-node src/index validate"
+    "validate": "ts-node src/index validate",
+    "bundle": "yarn build && npx browserify bundle.js > dist/rmrk.js"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
