@@ -2,30 +2,31 @@ import { Collection } from "./collection";
 import { Attribute } from "../types/attribute";
 
 export class NFT {
-  readonly collection: Collection;
-  readonly name: string;
-  readonly instance: string;
-  readonly transferable: number;
-  readonly sn: string;
-  readonly metadata: NFTMetadata;
-  static mintnft(): NFT {
-    return new NFT();
-  }
-  id(): string {
-    return `${this.collection.id}-${this.instance}-${this.sn}`;
-  }
-  send(): NFT {
-    return this;
-  }
-  consume(): NFT {
-    return this;
-  }
-  list(): NFT {
-    return this;
-  }
-  buy(): NFT {
-    return this;
-  }
+  // @todo discard because of 1.0.0
+  // readonly collection: Collection;
+  // readonly name: string;
+  // readonly instance: string;
+  // readonly transferable: number;
+  // readonly sn: string;
+  // readonly metadata: NFTMetadata;
+  // static mintnft(): NFT {
+  //   return new NFT();
+  // }
+  // id(): string {
+  //   return `${this.collection.id}-${this.instance}-${this.sn}`;
+  // }
+  // send(): NFT {
+  //   return this;
+  // }
+  // consume(): NFT {
+  //   return this;
+  // }
+  // list(): NFT {
+  //   return this;
+  // }
+  // buy(): NFT {
+  //   return this;
+  // }
 }
 
 export interface NFTMetadata {

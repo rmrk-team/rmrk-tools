@@ -3,3 +3,7 @@ node_modules
 build
 archive
 .vscode
+
+/remarks*.json
+/dump-*.json
+throwaway.js
