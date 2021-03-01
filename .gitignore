@@ -3,6 +3,7 @@ node_modules
 build
 archive
 .vscode
+.idea
 
 /remarks*.json
 /dump-*.json

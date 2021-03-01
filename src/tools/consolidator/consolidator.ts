@@ -10,6 +10,7 @@ import * as fs from "fs";
 
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
+import { Remark } from "./remark";
 
 export class Consolidator {
   private adapter: JsonAdapter;
@@ -22,6 +23,284 @@ export class Consolidator {
     this.collections = [];
     this.nfts = [];
   }
+  private findExistingCollection(id: string) {
+    return this.collections.find((el) => el.id === id);
+  }
+  private mint(remark: Remark): boolean {
+    // A new collection was created
+    console.log("Instantiating collection");
+    const op_type = "MINT";
+    const invalidCallBase: Partial<InvalidCall> = {
+      op_type,
+      block: remark.block,
+      caller: remark.caller,
+    };
+    const c = C100.fromRemark(remark.remark, remark.block);
+
+    if (typeof c === "string") {
+      // console.log(
+      //   "Collection was not instantiated OK from " + remark.remark
+      // );
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Dead before instantiation: ${c}`,
+        object_id: remark.remark,
+      } as InvalidCall);
+      return true;
+    }
+
+    //console.log("Collection instantiated OK from " + remark.remark);
+    const pubkey = decodeAddress(remark.caller);
+    const id = C100.generateId(u8aToHex(pubkey), c.symbol);
+
+    if (this.findExistingCollection(c.id)) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: "[MINT] Attempt to mint already existing collection",
+        object_id: c.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    if (id.toLowerCase() !== c.id.toLowerCase()) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `Caller's pubkey ${u8aToHex(
+          pubkey
+        )} (${id}) does not match generated ID`,
+        object_id: c.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    this.collections.push(c);
+    return false;
+  }
+
+  private mintNFT(remark: Remark): boolean {
+    // A new NFT was minted into a collection
+    console.log("Instantiating nft");
+    const op_type = "MINTNFT";
+    const invalidCallBase: Partial<InvalidCall> = {
+      op_type,
+      block: remark.block,
+      caller: remark.caller,
+    };
+    const n = N100.fromRemark(remark.remark, remark.block);
+
+    if (typeof n === "string") {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Dead before instantiation: ${n}`,
+        object_id: remark.remark,
+      } as InvalidCall);
+      return true;
+    }
+
+    const nftParent = this.findExistingCollection(n.collection);
+    if (!nftParent) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `NFT referencing non-existant parent collection ${n.collection}`,
+        object_id: n.getId(),
+      } as InvalidCall);
+      return true;
+    }
+
+    n.owner = nftParent.issuer;
+    if (remark.caller != n.owner) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`,
+        object_id: n.getId(),
+      } as InvalidCall);
+      return true;
+    }
+
+    const existsCheck = this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = n.getId().split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
+
+    if (existsCheck) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Attempt to mint already existing NFT`,
+        object_id: n.getId(),
+      } as InvalidCall);
+      return true;
+    }
+    if (n.owner === "") {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Somehow this NFT still doesn't have an owner.`,
+        object_id: n.getId(),
+      } as InvalidCall);
+      return true;
+    }
+    this.nfts.push(n);
+    return false;
+  }
+
+  private send(remark: Remark): boolean {
+    // An NFT was sent to a new owner
+    console.log("Instantiating send");
+    const send = Send.fromRemark(remark.remark);
+    const op_type = "SEND";
+    const invalidCallBase: Partial<InvalidCall> = {
+      op_type,
+      block: remark.block,
+      caller: remark.caller,
+    };
+    if (typeof send === "string") {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Dead before instantiation: ${send}`,
+        object_id: remark.remark,
+      } as InvalidCall);
+      return true;
+    }
+
+    const nft = this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = send.id.split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
+
+    if (!nft) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Attempting to send non-existant NFT ${send.id}`,
+        object_id: send.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    // Check if allowed to issue send - if owner == caller
+    if (nft.owner != remark.caller) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`,
+        object_id: send.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    nft.addChange({
+      field: "owner",
+      old: nft.owner,
+      new: send.recipient,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+
+    nft.owner = send.recipient;
+    return false;
+  }
+
+  private emote(remark: Remark): boolean {
+    // An EMOTE reaction has been sent
+    console.log("Instantiating emote");
+    const emote = Emote.fromRemark(remark.remark);
+    const op_type = "EMOTE";
+    const invalidCallBase: Partial<InvalidCall> = {
+      op_type,
+      block: remark.block,
+      caller: remark.caller,
+    };
+    if (typeof emote === "string") {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Dead before instantiation: ${emote}`,
+        object_id: remark.remark,
+      } as InvalidCall);
+      return true;
+    }
+    const target = this.nfts.find((el) => el.getId() === emote.id);
+    if (!target) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Attempting to emote on non-existant NFT ${emote.id}`,
+        object_id: emote.id,
+      } as InvalidCall);
+      return true;
+    }
+    const index = target.reactions[emote.unicode].indexOf(
+      remark.caller,
+      0
+    );
+    if (index > -1) {
+      target.reactions[emote.unicode].splice(index, 1);
+    } else {
+      target.reactions[emote.unicode].push(remark.caller);
+    }
+    return false;
+  }
+
+  private changeIssuer(remark: Remark): boolean {
+    // The ownership of a collection has changed
+    console.log("Instantiating an issuer change");
+    const ci = ChangeIssuer.fromRemark(remark.remark);
+    const op_type = "CHANGEISSUER";
+    const invalidCallBase: Partial<InvalidCall> = {
+      op_type,
+      block: remark.block,
+      caller: remark.caller,
+    };
+    if (typeof ci === "string") {
+      // console.log(
+      //   "ChangeIssuer was not instantiated OK from " + remark.remark
+      // );
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `[${op_type}] Dead before instantiation: ${ci}`,
+        object_id: remark.remark,
+      } as InvalidCall);
+      return true;
+    }
+    const coll = this.collections.find((el: C100) => el.id === ci.id);
+    if (!coll) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `This ${op_type} remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`,
+        object_id: ci.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    if (remark.caller != coll.issuer) {
+      this.invalidCalls.push({
+        ...invalidCallBase,
+        message: `Attempting to change issuer of collection ${ci.id} when not issuer!`,
+        object_id: ci.id,
+      } as InvalidCall);
+      return true;
+    }
+
+    coll.addChange({
+      field: "issuer",
+      old: coll.issuer,
+      new: ci.issuer,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+
+    coll.issuer = ci.issuer;
+    return false
+  }
 
   public consolidate(): void {
     const remarks = this.adapter.getRemarks();
@@ -31,183 +310,19 @@ export class Consolidator {
       console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
         case "MINT":
-          // A new collection was created
-          console.log("Instantiating collection");
-          const c = C100.fromRemark(remark.remark, remark.block);
-
-          if (typeof c === "string") {
-            // console.log(
-            //   "Collection was not instantiated OK from " + remark.remark
-            // );
-            this.invalidCalls.push({
-              message: `[MINT] Dead before instantiation: ${c}`,
-              caller: remark.caller,
-              object_id: remark.remark,
-              block: remark.block,
-              op_type: "MINT",
-            } as InvalidCall);
+          if (this.mint(remark)) {
             continue;
           }
-
-          //console.log("Collection instantiated OK from " + remark.remark);
-          const pubkey = decodeAddress(remark.caller);
-          const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-
-          if (this.collections.find((el) => el.id === c.id)) {
-            this.invalidCalls.push({
-              message: "[MINT] Attempt to mint already existing collection",
-              caller: remark.caller,
-              object_id: c.id,
-              block: remark.block,
-              op_type: "MINT",
-            } as InvalidCall);
-            continue;
-          }
-          if (id.toLowerCase() !== c.id.toLowerCase()) {
-            this.invalidCalls.push({
-              message: `Caller's pubkey ${u8aToHex(
-                pubkey
-              )} (${id}) does not match generated ID`,
-              caller: remark.caller,
-              object_id: c.id,
-              block: remark.block,
-              op_type: "MINT",
-            } as InvalidCall);
-            continue;
-          }
-
-          this.collections.push(c);
           break;
         case "MINTNFT":
-          // A new NFT was minted into a collection
-          console.log("Instantiating nft");
-          const n = N100.fromRemark(remark.remark, remark.block);
-          if (typeof n === "string") {
-            this.invalidCalls.push({
-              message: `[MINTNFT] Dead before instantiation: ${n}`,
-              caller: remark.caller,
-              object_id: remark.remark,
-              block: remark.block,
-              op_type: "MINTNFT",
-            } as InvalidCall);
+          if (this.mintNFT(remark)) {
             continue;
           }
-          const nftParent = this.collections.find(
-            (el) => el.id === n.collection
-          );
-          if (!nftParent) {
-            this.invalidCalls.push({
-              message: `NFT referencing non-existant parent collection ${n.collection}`,
-              caller: remark.caller,
-              object_id: n.getId(),
-              block: remark.block,
-              op_type: "MINTNFT",
-            } as InvalidCall);
-            continue;
-          }
-          n.owner = nftParent.issuer;
-          if (remark.caller != n.owner) {
-            this.invalidCalls.push({
-              message: `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`,
-              caller: remark.caller,
-              object_id: n.getId(),
-              block: remark.block,
-              op_type: "MINTNFT",
-            } as InvalidCall);
-            continue;
-          }
-
-          const existsCheck = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-
-            const idExpand2 = n.getId().split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-
-            return uniquePart1 === uniquePart2;
-          });
-
-          if (existsCheck) {
-            this.invalidCalls.push({
-              message: "[MINTNFT] Attempt to mint already existing NFT",
-              caller: remark.caller,
-              object_id: n.getId(),
-              block: remark.block,
-              op_type: "MINTNFT",
-            } as InvalidCall);
-            continue;
-          }
-          if (n.owner === "") {
-            this.invalidCalls.push({
-              message:
-                "[MINTNFT] Somehow this NFT still doesn't have an owner.",
-              caller: remark.caller,
-              object_id: n.getId(),
-              block: remark.block,
-              op_type: "MINTNFT",
-            } as InvalidCall);
-            continue;
-          }
-          this.nfts.push(n);
           break;
         case "SEND":
-          // An NFT was sent to a new owner
-          console.log("Instantiating send");
-          const send = Send.fromRemark(remark.remark);
-          if (typeof send === "string") {
-            this.invalidCalls.push({
-              message: `[SEND] Dead before instantiation: ${send}`,
-              caller: remark.caller,
-              object_id: remark.remark,
-              block: remark.block,
-              op_type: "SEND",
-            } as InvalidCall);
+          if (this.send(remark)) {
             continue;
           }
-
-          const nft = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-
-            const idExpand2 = send.id.split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-
-            return uniquePart1 === uniquePart2;
-          });
-
-          if (!nft) {
-            this.invalidCalls.push({
-              message: `[SEND] Attempting to send non-existant NFT ${send.id}`,
-              caller: remark.caller,
-              object_id: send.id,
-              block: remark.block,
-              op_type: "SEND",
-            } as InvalidCall);
-            continue;
-          }
-          // Check if allowed to issue send - if owner == caller
-          if (nft.owner != remark.caller) {
-            this.invalidCalls.push({
-              message: `[SEND] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`,
-              caller: remark.caller,
-              object_id: send.id,
-              block: remark.block,
-              op_type: "SEND",
-            } as InvalidCall);
-            continue;
-          }
-          nft.addChange({
-            field: "owner",
-            old: nft.owner,
-            new: send.recipient,
-            caller: remark.caller,
-            block: remark.block,
-          } as Change);
-          nft.owner = send.recipient;
           break;
         case "BUY":
           // An NFT was bought after being LISTed
@@ -218,87 +333,14 @@ export class Consolidator {
 
           break;
         case "EMOTE":
-          // An EMOTE reaction has been sent
-          console.log("Instantiating emote");
-          const emote = Emote.fromRemark(remark.remark);
-          if (typeof emote === "string") {
-            this.invalidCalls.push({
-              message: `[EMOTE] Dead before instantiation: ${emote}`,
-              caller: remark.caller,
-              object_id: remark.remark,
-              block: remark.block,
-              op_type: "EMOTE",
-            } as InvalidCall);
+          if (this.emote(remark)) {
             continue;
-          }
-          const target = this.nfts.find((el) => el.getId() === emote.id);
-          if (!target) {
-            this.invalidCalls.push({
-              message: `[EMOTE] Attempting to emote on non-existant NFT ${emote.id}`,
-              caller: remark.caller,
-              object_id: emote.id,
-              block: remark.block,
-              op_type: "EMOTE",
-            } as InvalidCall);
-            continue;
-          }
-          const index = target.reactions[emote.unicode].indexOf(
-            remark.caller,
-            0
-          );
-          if (index > -1) {
-            target.reactions[emote.unicode].splice(index, 1);
-          } else {
-            target.reactions[emote.unicode].push(remark.caller);
           }
           break;
         case "CHANGEISSUER":
-          // The ownership of a collection has changed
-          console.log("Instantiating an issuer change");
-          const ci = ChangeIssuer.fromRemark(remark.remark);
-          if (typeof ci === "string") {
-            // console.log(
-            //   "ChangeIssuer was not instantiated OK from " + remark.remark
-            // );
-            this.invalidCalls.push({
-              message: `[CHANGEISSUER] Dead before instantiation: ${ci}`,
-              caller: remark.caller,
-              object_id: remark.remark,
-              block: remark.block,
-              op_type: "CHANGEISSUER",
-            } as InvalidCall);
+          if (this.changeIssuer(remark)) {
             continue;
           }
-          const coll = this.collections.find((el: C100) => el.id === ci.id);
-          if (!coll) {
-            this.invalidCalls.push({
-              message: `This CHANGEISSUER remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`,
-              caller: remark.caller,
-              object_id: ci.id,
-              block: remark.block,
-              op_type: "CHANGEISSUER",
-            } as InvalidCall);
-            continue;
-          }
-
-          if (remark.caller != coll.issuer) {
-            this.invalidCalls.push({
-              message: `Attempting to change issuer of collection ${ci.id} when not issuer!`,
-              caller: remark.caller,
-              object_id: ci.id,
-              block: remark.block,
-              op_type: "CHANGEISSUER",
-            } as InvalidCall);
-            continue;
-          }
-          coll.addChange({
-            field: "issuer",
-            old: coll.issuer,
-            new: ci.issuer,
-            caller: remark.caller,
-            block: remark.block,
-          } as Change);
-          coll.issuer = ci.issuer;
 
           break;
         default:
