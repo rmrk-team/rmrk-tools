@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
 import { hexToString } from "@polkadot/util";
+import { OP_TYPES } from "../../types";
 
 /**
  * The JSON adapter expects to find a JSON array with elements 
@@ -40,8 +41,8 @@ export default class JsonAdapter {
         if (!meta) continue;
         let remark;
         switch (meta.type) {
-          case "MINTNFT":
-          case "MINT":
+          case OP_TYPES.MINTNFT:
+          case OP_TYPES.MINT:
             remark = decodeURI(hexToString(call.value));
             break;
           default:
