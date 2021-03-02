@@ -12,6 +12,8 @@ import { Remark } from "./remark";
 // import * as fs from "fs";
 
 enum OP_TYPES {
+  BUY = "BUY",
+  LIST = "LIST",
   MINT = "MINT",
   MINTNFT = "MINTNFT",
   SEND = "SEND",
@@ -301,39 +303,39 @@ export class Consolidator {
       console.log("==============================");
       console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
-        case "MINT":
+        case OP_TYPES.MINT:
           if (this.mint(remark)) {
             continue;
           }
           break;
 
-        case "MINTNFT":
+        case OP_TYPES.MINTNFT:
           if (this.mintNFT(remark)) {
             continue;
           }
           break;
 
-        case "SEND":
+        case OP_TYPES.SEND:
           if (this.send(remark)) {
             continue;
           }
           break;
 
-        case "BUY":
+        case OP_TYPES.BUY:
           // An NFT was bought after being LISTed
           break;
 
-        case "LIST":
+        case OP_TYPES.LIST:
           // An NFT was listed for sale
           break;
 
-        case "EMOTE":
+        case OP_TYPES.EMOTE:
           if (this.emote(remark)) {
             continue;
           }
           break;
 
-        case "CHANGEISSUER":
+        case OP_TYPES.CHANGEISSUER:
           if (this.changeIssuer(remark)) {
             continue;
           }
