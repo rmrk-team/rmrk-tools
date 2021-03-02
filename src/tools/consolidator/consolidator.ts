@@ -9,17 +9,8 @@ import { deeplog } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
+import { OP_TYPES } from "../types";
 // import * as fs from "fs";
-
-enum OP_TYPES {
-  BUY = "BUY",
-  LIST = "LIST",
-  MINT = "MINT",
-  MINTNFT = "MINTNFT",
-  SEND = "SEND",
-  EMOTE = "EMOTE",
-  CHANGEISSUER = "CHANGEISSUER",
-}
 
 export class Consolidator {
   private adapter: JsonAdapter;

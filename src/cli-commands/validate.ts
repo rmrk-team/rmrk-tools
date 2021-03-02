@@ -1,5 +1,5 @@
 import commander from "commander";
-import { Options } from "../tools/types";
+import { OP_TYPES, Options } from "../tools/types";
 import { NFT as N100 } from "../rmrk1.0.0/classes/nft";
 import { deeplog } from "../tools/utils";
 
@@ -21,8 +21,8 @@ export const addTo = (program: commander.CommanderStatic | typeof commander) =>
         );
       }
       switch (exploded[1]) {
-        case "MINTNFT":
-          console.log("Identified as MINTNFT");
+        case OP_TYPES.MINTNFT:
+          console.log(`Identified as ${OP_TYPES.MINTNFT}`);
           const n = N100.fromRemark(remark);
           deeplog(n);
           break;
