@@ -1,0 +1,18 @@
+name: PR notification - open
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    name: Notify about PR changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send TG message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: "rmrk-tools new [PR #${{ github.event.pull_request.number }}](https://github.com/swader/rmrk-tools/pull/${{ github.event.pull_request.number }}): ${{ github.event.pull_request.title }}."
