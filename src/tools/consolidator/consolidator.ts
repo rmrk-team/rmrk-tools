@@ -180,6 +180,8 @@ export class Consolidator {
       return uniquePart1 === uniquePart2;
     });
 
+    // @todo add condition for transferable!
+
     if (!nft) {
       invalidate(
         send.id,

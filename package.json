@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@polkadot/api": "^3.7.3",
+    "@polkadot/extension-dapp": "^0.37.2",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "winston": "^3.3.3"
