@@ -15,7 +15,7 @@ Grabs all `system.remark` extrinsics in a block range and logs an array of them 
 Export functionality will be added soon (SQL and file, total and in chunks).
 
 ```bash
-yarn fetch
+yarn cli:fetch
 ```
 
 Optional parameters:
@@ -61,7 +61,7 @@ The return data will look like this:
 Takes as input a JSON file and processes all remarks within it to reach a final state of the NFT ecosystem based on that JSON.
 
 ```bash
- yarn consolidate --json=dumps/remarks-4892957-5437981-0x726d726b.json
+ yarn cli:consolidate --json=dumps/remarks-4892957-5437981-0x726d726b.json
 ```
 
 Todo:
@@ -78,7 +78,7 @@ Todo:
 A local chain must be running in `--dev` mode for this to work.
 
 ```bash
-yarn seed --folder=[folder]
+yarn cli:seed --folder=[folder]
 ```
 
 When running a local chain, you can run `yarn seed` to populate the chain with pre-written NFT configurations. This is good for testing UIs, wallets, etc. It will use the unlocked ALICE, BOB, and CHARLIE accounts so `--dev` is required here.

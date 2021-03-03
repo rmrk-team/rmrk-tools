@@ -1,7 +1,7 @@
 import commander from "commander";
-import { OP_TYPES, Options } from "../tools/types";
-import { NFT as N100 } from "../rmrk1.0.0/classes/nft";
-import { deeplog } from "../tools/utils";
+import { OP_TYPES, Options } from "../src/tools/types";
+import { NFT as N100 } from "../src/rmrk1.0.0/classes/nft";
+import { deeplog } from "../src/tools/utils";
 
 export const addTo = (program: commander.CommanderStatic | typeof commander) =>
   program
@@ -30,4 +30,3 @@ export const addTo = (program: commander.CommanderStatic | typeof commander) =>
           throw new Error(`${exploded[1]} interaction not supported`);
       }
     });
-

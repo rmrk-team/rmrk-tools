@@ -187,16 +187,17 @@
       </div>
     </form>
     <hr />
-    <script src="rmrk.js"></script>
+    <script src="rmrk-tools.min.js"></script>
     <script>
       function initWeb3Login() {
-        dappex.web3Enable("RMRK Test").then(function () {
-          if (!dappex.isWeb3Injected) {
+        console.log('here');
+        window.rmrkTools.polkadot.dappex.web3Enable("RMRK Test").then(function () {
+          if (!window.rmrkTools.polkadot.dappex.isWeb3Injected) {
             alert(
               "You need a Web3 enabled browser to log in with Web3. The easiest solution is probably to install the Polkadot{js} extension."
             );
           } else {
-            dappex.web3Accounts().then(async (accounts) => {
+            window.rmrkTools.polkadot.dappex.web3Accounts().then(async (accounts) => {
               console.log(accounts);
               let picker = document.querySelector("#account_picker");
               let options = "";
@@ -230,7 +231,7 @@
               return false;
             }
 
-            const c1 = new c100.Collection(
+            const c1 = new window.rmrkTools.c100.Collection(
               0,
               name,
               max,
@@ -266,7 +267,7 @@
 
             if (!transferable) transferable = 1;
 
-            const n1 = new n100.NFT(
+            const n1 = new window.rmrkTools.n100.NFT(
               0,
               coll,
               name,
@@ -293,10 +294,10 @@
         return document.querySelector("#account_picker").value;
       }
       function pubkeyForAddress() {
-        return util_crypto.decodeAddress(selectedAddress());
+        return window.rmrkTools.polkadot.util_crypto.decodeAddress(selectedAddress());
       }
       function generateCollectionId(symbol, pubkey) {
-        return c100.Collection.generateId(util.u8aToHex(pubkey), symbol);
+        return window.rmrkTools.c100.Collection.generateId(window.rmrkTools.polkadot.util.u8aToHex(pubkey), symbol);
       }
       function getJson(s) {
         let encoded = s.split("::").pop();
@@ -342,6 +343,7 @@
         console.log(target);
         target.value = string_to_slug(target.value).toUpperCase();
       }
+
       initWeb3Login();
     </script>
   </body>

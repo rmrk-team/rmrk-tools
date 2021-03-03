@@ -1,7 +1,7 @@
 import commander from "commander";
-import { Options } from "../tools/types";
-import { getApi } from "../tools/utils";
-import { Seeder } from "../../test/seed/seeder";
+import { Options } from "../src/tools/types";
+import { getApi } from "../src/tools/utils";
+import { Seeder } from "../test/seed/seeder";
 
 export const addTo = (program: commander.CommanderStatic | typeof commander) =>
   program

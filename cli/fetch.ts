@@ -1,12 +1,12 @@
-import { Options } from "../tools/types";
+import { Options } from "../src/tools/types";
 import {
   deeplog,
   getApi,
   getLatestFinalizedBlock,
   prefixToArray,
-} from "../tools/utils";
+} from "../src/tools/utils";
 import fs from "fs";
-import fetchRemarks from "../tools/fetchRemarks";
+import fetchRemarks from "../src/tools/fetchRemarks";
 import commander from "commander";
 
 export const addTo = (program: commander.CommanderStatic | typeof commander) =>
@@ -88,4 +88,3 @@ export const addTo = (program: commander.CommanderStatic | typeof commander) =>
       fs.writeFileSync(outputFileName, JSON.stringify(extracted));
       process.exit(0);
     });
-

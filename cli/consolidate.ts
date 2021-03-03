@@ -1,8 +1,8 @@
 import commander from "commander";
-import { Options } from "../tools/types";
+import { Options } from "../src/tools/types";
 import fs from "fs";
-import JsonAdapter from "../tools/consolidator/adapters/json";
-import { Consolidator } from "../tools/consolidator/consolidator";
+import JsonAdapter from "../src/tools/consolidator/adapters/json";
+import { Consolidator } from "../src/tools/consolidator/consolidator";
 
 export const addTo = (program: commander.CommanderStatic | typeof commander) =>
   program
@@ -18,7 +18,9 @@ export const addTo = (program: commander.CommanderStatic | typeof commander) =>
       try {
         fs.accessSync(file, fs.constants.R_OK);
       } catch (e) {
-        console.error("File is not readable. Are you providing the right path?");
+        console.error(
+          "File is not readable. Are you providing the right path?"
+        );
         process.exit(1);
       }
       const ja = new JsonAdapter(file);
