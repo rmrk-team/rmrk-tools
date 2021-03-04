@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "dist/types"
+  },
+  "exclude": ["node_modules"],
+  "include": [
+    "src/index.ts"
+  ]
+}
