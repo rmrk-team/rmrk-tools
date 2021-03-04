@@ -1,10 +1,11 @@
 import JsonAdapter from "./adapters/json";
+import { Remark } from "./remark";
 export declare class Consolidator {
-    private adapter;
+    private adapter?;
     private invalidCalls;
     private collections;
     private nfts;
-    constructor(initializedAdapter: JsonAdapter);
+    constructor(initializedAdapter?: JsonAdapter);
     private findExistingCollection;
     private updateInvalidCalls;
     private mint;
@@ -12,5 +13,5 @@ export declare class Consolidator {
     private send;
     private emote;
     private changeIssuer;
-    consolidate(): void;
+    consolidate(rmrks?: Remark[]): void;
 }

@@ -40897,7 +40897,9 @@ var OP_TYPES;
 // import * as fs from "fs";
 class Consolidator {
     constructor(initializedAdapter) {
-        this.adapter = initializedAdapter;
+        if (initializedAdapter) {
+            this.adapter = initializedAdapter;
+        }
         this.invalidCalls = [];
         this.collections = [];
         this.nfts = [];
@@ -41073,8 +41075,9 @@ class Consolidator {
         coll.issuer = ci.issuer;
         return false;
     }
-    consolidate() {
-        const remarks = this.adapter.getRemarks();
+    consolidate(rmrks) {
+        var _a;
+        const remarks = rmrks || ((_a = this.adapter) === null || _a === void 0 ? void 0 : _a.getRemarks()) || [];
         //console.log(remarks);
         for (const remark of remarks) {
             console.log("==============================");

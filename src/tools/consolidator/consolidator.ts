@@ -13,12 +13,15 @@ import { OP_TYPES } from "../types";
 // import * as fs from "fs";
 
 export class Consolidator {
-  private adapter: JsonAdapter;
+  private adapter?: JsonAdapter;
   private invalidCalls: InvalidCall[];
   private collections: C100[];
   private nfts: N100[];
-  constructor(initializedAdapter: JsonAdapter) {
-    this.adapter = initializedAdapter;
+  constructor(initializedAdapter?: JsonAdapter) {
+    if (initializedAdapter) {
+      this.adapter = initializedAdapter;
+    }
+
     this.invalidCalls = [];
     this.collections = [];
     this.nfts = [];
@@ -289,8 +292,8 @@ export class Consolidator {
     return false;
   }
 
-  public consolidate(): void {
-    const remarks = this.adapter.getRemarks();
+  public consolidate(rmrks?: Remark[]): void {
+    const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
       console.log("==============================");
