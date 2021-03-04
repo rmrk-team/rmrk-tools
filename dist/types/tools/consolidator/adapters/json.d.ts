@@ -20,13 +20,13 @@ export default class JsonAdapter {
     getInputDataRaw(): JsonRow[];
     getRemarks(): Remark[];
 }
-declare type JsonRow = {
-    block: number;
-    calls: Call[];
-};
 declare type Call = {
     call: string;
     value: string;
     caller: string;
+};
+declare type JsonRow = {
+    block: number;
+    calls: Call[];
 };
 export {};

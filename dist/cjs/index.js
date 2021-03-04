@@ -5459,6 +5459,26 @@ function formatNumber(value) {
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * Hex input values return the actual bytes value converted to a string. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToString } from '@polkadot/util';
+ *
+ * hexToU8a('0x68656c6c6f'); // hello
+ * ```
+ */
+
+function hexToString(_value) {
+  return u8aToString(hexToU8a(_value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
 const FORMAT = [9, 10, 13];
 /**
  * @name isAscii
@@ -40839,6 +40859,17 @@ class ApiPromise extends ApiBase {
 
 }
 
+var OP_TYPES;
+(function (OP_TYPES) {
+    OP_TYPES["BUY"] = "BUY";
+    OP_TYPES["LIST"] = "LIST";
+    OP_TYPES["MINT"] = "MINT";
+    OP_TYPES["MINTNFT"] = "MINTNFT";
+    OP_TYPES["SEND"] = "SEND";
+    OP_TYPES["EMOTE"] = "EMOTE";
+    OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
+})(OP_TYPES || (OP_TYPES = {}));
+
 const getApi = (wsEndpoint) => __awaiter(void 0, void 0, void 0, function* () {
     const wsProvider = new WsProvider(wsEndpoint);
     const api = ApiPromise.create({ provider: wsProvider });
@@ -40882,6 +40913,49 @@ const prefixToArray = function (prefix) {
     }
     return returnArray;
 };
+const getMeta = (call, block) => {
+    const str = hexToString(call.value);
+    const arr = str.split("::");
+    if (arr.length < 3) {
+        console.error(`Invalid RMRK in block ${block}: ${str}`);
+        return false;
+    }
+    return {
+        type: arr[1],
+        version: parseFloat(arr[2]) ? arr[2] : "0.1",
+    };
+};
+const getRemarksFromBlocks = (blocks) => {
+    const remarks = [];
+    for (const row of blocks) {
+        for (const call of row.calls) {
+            if (call.call !== "system.remark")
+                continue;
+            const meta = getMeta(call, row.block);
+            if (!meta)
+                continue;
+            let remark;
+            switch (meta.type) {
+                case OP_TYPES.MINTNFT:
+                case OP_TYPES.MINT:
+                    remark = decodeURI(hexToString(call.value));
+                    break;
+                default:
+                    remark = hexToString(call.value);
+                    break;
+            }
+            const r = {
+                block: row.block,
+                caller: call.caller,
+                interaction_type: meta.type,
+                version: meta.version,
+                remark: remark,
+            };
+            remarks.push(r);
+        }
+    }
+    return remarks;
+};
 
 var utils = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -40890,19 +40964,9 @@ var utils = /*#__PURE__*/Object.freeze({
     getLatestFinalizedBlock: getLatestFinalizedBlock,
     deeplog: deeplog,
     stringIsAValidUrl: stringIsAValidUrl,
-    prefixToArray: prefixToArray
+    prefixToArray: prefixToArray,
+    getRemarksFromBlocks: getRemarksFromBlocks
 });
-
-var OP_TYPES;
-(function (OP_TYPES) {
-    OP_TYPES["BUY"] = "BUY";
-    OP_TYPES["LIST"] = "LIST";
-    OP_TYPES["MINT"] = "MINT";
-    OP_TYPES["MINTNFT"] = "MINTNFT";
-    OP_TYPES["SEND"] = "SEND";
-    OP_TYPES["EMOTE"] = "EMOTE";
-    OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
-})(OP_TYPES || (OP_TYPES = {}));
 
 // import * as fs from "fs";
 class Consolidator {
