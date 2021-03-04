@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "Suite of libraries implementing RMRK.app specs",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
