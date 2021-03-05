@@ -13,6 +13,7 @@
   <body>
     <style>
       #collection_to_remark input[type="text"],
+      #nft_to_remark input[type="text"],
       button.submit,
       textarea {
         width: 100%;
@@ -67,7 +68,7 @@
       <div>
         <label for="coll_symbol">Symbol*:</label
         ><input
-          onkeyup="refreshShownId()"
+          onblur="refreshShownId(this)"
           type="text"
           name="symbol"
           id="coll_symbol"
@@ -302,7 +303,8 @@
         let encoded = s.split("::").pop();
         return decodeURIComponent(encoded);
       }
-      function refreshShownId() {
+      function refreshShownId(target) {
+        sluggify(target);
         const id = generateCollectionId(
           document.querySelector("#coll_symbol").value,
           pubkeyForAddress()
