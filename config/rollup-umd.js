@@ -1,5 +1,5 @@
 export default {
-  input: "./dist/esm/index.js",
+  input: "./dist/index.es.js",
   output: {
     file: "./umd/rmrk-tools.js",
     format: "umd",
