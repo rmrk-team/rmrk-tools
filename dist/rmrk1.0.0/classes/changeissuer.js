@@ -25,5 +25,5 @@ export class ChangeIssuer {
         return ci;
     }
 }
-ChangeIssuer.V = "RMRK1.0.0";
+ChangeIssuer.V = "1.0.0";
 //# sourceMappingURL=changeissuer.js.map

@@ -24,5 +24,5 @@ export class Send {
         return new Send(exploded[3], exploded[4]);
     }
 }
-Send.V = "RMRK1.0.0";
+Send.V = "1.0.0";
 //# sourceMappingURL=send.js.map

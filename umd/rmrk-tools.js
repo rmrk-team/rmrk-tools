@@ -106,7 +106,7 @@
     }
 
   }
-  Collection.V = "RMRK1.0.0";
+  Collection.V = "1.0.0";
   var DisplayType$1;
 
   (function (DisplayType) {
@@ -245,7 +245,7 @@
     }
 
   }
-  NFT.V = "RMRK1.0.0";
+  NFT.V = "1.0.0";
   var DisplayType;
 
   (function (DisplayType) {
@@ -283,7 +283,7 @@
     }
 
   }
-  ChangeIssuer.V = "RMRK1.0.0";
+  ChangeIssuer.V = "1.0.0";
 
   class Send {
     constructor(id, recipient) {
@@ -312,7 +312,7 @@
     }
 
   }
-  Send.V = "RMRK1.0.0";
+  Send.V = "1.0.0";
 
   class Emote {
     constructor(id, unicode) {
@@ -341,7 +341,7 @@
     }
 
   }
-  Emote.V = "RMRK1.0.0";
+  Emote.V = "1.0.0";
 
   // Copyright 2017-2021 @polkadot/dev authors & contributors
   // SPDX-License-Identifier: Apache-2.0
@@ -40168,6 +40168,10 @@
         return true;
       }
 
+      if (undefined === target.reactions[emote.unicode]) {
+        target.reactions[emote.unicode] = [];
+      }
+
       const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
 
       if (index > -1) {
@@ -40346,7 +40350,7 @@
             const events = records.filter(({
               phase,
               event
-            }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(exIndex) && event.method.toString() === "BatchInterrupted");
+            }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(exIndex) && (event.method.toString() === "BatchInterrupted" || event.method.toString() === "ExtrinsicFailed"));
 
             if (events.length) {
               console.log("Skipping batch " + i + "-" + exIndex + " due to BatchInterrupted");

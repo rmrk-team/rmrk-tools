@@ -24,5 +24,5 @@ export class Emote {
         return new Emote(exploded[3], exploded[4]);
     }
 }
-Emote.V = "RMRK1.0.0";
+Emote.V = "1.0.0";
 //# sourceMappingURL=emote.js.map

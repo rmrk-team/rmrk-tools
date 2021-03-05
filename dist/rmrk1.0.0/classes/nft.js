@@ -122,7 +122,7 @@ export class NFT {
         return {};
     }
 }
-NFT.V = "RMRK1.0.0";
+NFT.V = "1.0.0";
 export var DisplayType;
 (function (DisplayType) {
     DisplayType[DisplayType["null"] = 0] = "null";

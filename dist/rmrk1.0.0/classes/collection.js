@@ -94,7 +94,7 @@ export class Collection {
         return {};
     }
 }
-Collection.V = "RMRK1.0.0";
+Collection.V = "1.0.0";
 export var DisplayType;
 (function (DisplayType) {
     DisplayType[DisplayType["null"] = 0] = "null";

@@ -51,7 +51,8 @@ export default async (api, from, to, prefixes) => {
                     const records = await api.query.system.events.at(blockHash);
                     const events = records.filter(({ phase, event }) => phase.isApplyExtrinsic &&
                         phase.asApplyExtrinsic.eq(exIndex) &&
-                        event.method.toString() === "BatchInterrupted");
+                        (event.method.toString() === "BatchInterrupted" ||
+                            event.method.toString() === "ExtrinsicFailed"));
                     if (events.length) {
                         console.log(`Skipping batch ${i}-${exIndex} due to BatchInterrupted`);
                         exIndex++;
