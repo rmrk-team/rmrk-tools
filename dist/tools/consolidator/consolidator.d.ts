@@ -1,4 +1,6 @@
 import JsonAdapter from "./adapters/json";
+import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
+import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { Remark } from "./remark";
 export declare class Consolidator {
     private adapter?;
@@ -13,5 +15,8 @@ export declare class Consolidator {
     private send;
     private emote;
     private changeIssuer;
-    consolidate(rmrks?: Remark[]): void;
+    consolidate(rmrks?: Remark[]): {
+        nfts: N100[];
+        collections: C100[];
+    };
 }

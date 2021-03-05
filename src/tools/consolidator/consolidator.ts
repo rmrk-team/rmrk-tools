@@ -295,7 +295,12 @@ export class Consolidator {
     return false;
   }
 
-  public consolidate(rmrks?: Remark[]): void {
+  public consolidate(
+    rmrks?: Remark[]
+  ): {
+    nfts: N100[];
+    collections: C100[];
+  } {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
@@ -349,6 +354,7 @@ export class Consolidator {
     }
     deeplog(this.nfts);
     deeplog(this.collections);
+    return { nfts: this.nfts, collections: this.collections };
     console.log(this.invalidCalls);
   }
 }
