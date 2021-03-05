@@ -10,6 +10,7 @@ export class NFT {
   readonly data?: string;
   readonly sn: string;
   readonly metadata?: string;
+  forsale: BigInt|boolean;
   reactions: Reactionmap;
   private changes: Change[] = [];
   owner: string;
@@ -35,6 +36,7 @@ export class NFT {
     this.metadata = metadata;
     this.owner = "";
     this.reactions = {};
+    this.forsale = false;
   }
 
   public getId(): string {

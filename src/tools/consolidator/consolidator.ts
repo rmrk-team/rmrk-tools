@@ -3,6 +3,7 @@ import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
 import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
+import { List } from "../../rmrk1.0.0/classes/list";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
@@ -214,6 +215,33 @@ export class Consolidator {
     return false;
   }
 
+  private list(remark: Remark): boolean {
+    // An NFT was listed for sale
+    console.log("Instantiating list");
+    const list = List.fromRemark(remark.remark);
+    const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
+      this
+    );
+    
+    // @todo finish list implementation
+    return true;
+  }
+
+  // This function is defined separately so that it can be called from send, buy, and consume.
+  // These other interactions will cancel a listing, so it's easier if we abstract the function out.
+  // @todo add this into these functions
+  private changeListStatus(nft: N100, status: BigInt|boolean, remark: Remark): boolean {
+    nft.addChange({
+      field: "forsale",
+      old: nft.forsale,
+      new: status,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+    nft.forsale = status;
+    return true;
+  }
+ 
   private emote(remark: Remark): boolean {
     // An EMOTE reaction has been sent
     console.log("Instantiating emote");
@@ -331,6 +359,9 @@ export class Consolidator {
 
         case OP_TYPES.LIST:
           // An NFT was listed for sale
+          if (this.list(remark)) {
+            continue;
+          }
           break;
 
         case OP_TYPES.EMOTE:
