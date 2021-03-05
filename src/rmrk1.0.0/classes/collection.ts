@@ -9,7 +9,7 @@ export class Collection {
   readonly symbol: string;
   readonly id: string;
   readonly metadata: string;
-  static V = "RMRK1.0.0";
+  static V = "1.0.0";
   private changes: Change[] = [];
   loadedMetadata?: CollectionMetadata;
 

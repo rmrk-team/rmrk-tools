@@ -71,7 +71,8 @@ export default async (
             ({ phase, event }) =>
               phase.isApplyExtrinsic &&
               phase.asApplyExtrinsic.eq(exIndex) &&
-              event.method.toString() === "BatchInterrupted"
+              (event.method.toString() === "BatchInterrupted" ||
+                event.method.toString() === "ExtrinsicFailed")
           );
           if (events.length) {
             console.log(

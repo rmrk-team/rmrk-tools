@@ -1,7 +1,7 @@
 export class Emote {
   unicode: string;
   id: string;
-  static V = "RMRK1.0.0";
+  static V = "1.0.0";
 
   constructor(id: string, unicode: string) {
     this.unicode = unicode;

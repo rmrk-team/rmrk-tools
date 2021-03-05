@@ -13,7 +13,7 @@ export class NFT {
   reactions: Reactionmap;
   private changes: Change[] = [];
   owner: string;
-  static V = "RMRK1.0.0";
+  static V = "1.0.0";
   loadedMetadata?: NFTMetadata;
   constructor(
     block: number,
