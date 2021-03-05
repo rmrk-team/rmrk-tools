@@ -233,6 +233,9 @@ export class Consolidator {
       );
       return true;
     }
+    if (undefined === target.reactions[emote.unicode]) {
+      target.reactions[emote.unicode] = [];
+    }
     const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
     if (index > -1) {
       target.reactions[emote.unicode].splice(index, 1);
