@@ -11,334 +11,325 @@ import crypto$1 from 'crypto';
 import require$$0$1 from 'util';
 
 class Collection {
-  constructor(block, name, max, issuer, symbol, id, metadata) {
-    this.changes = [];
-    this.block = block;
-    this.name = name;
-    this.max = max;
-    this.issuer = issuer;
-    this.symbol = symbol;
-    this.id = id;
-    this.metadata = metadata;
-  }
-
-  mint() {
-    if (this.block) {
-      throw new Error("An already existing collection cannot be minted!");
+    constructor(block, name, max, issuer, symbol, id, metadata) {
+        this.changes = [];
+        this.block = block;
+        this.name = name;
+        this.max = max;
+        this.issuer = issuer;
+        this.symbol = symbol;
+        this.id = id;
+        this.metadata = metadata;
     }
-
-    return "RMRK::MINT::" + Collection.V + "::" + encodeURIComponent(JSON.stringify({
-      name: this.name,
-      max: this.max,
-      issuer: this.issuer,
-      symbol: this.symbol.toUpperCase(),
-      id: this.id,
-      metadata: this.metadata
-    }));
-  }
-
-  change_issuer(address) {
-    if (this.block === 0) {
-      throw new Error("This collection is new, so there's no issuer to change." + " If it has been deployed on chain, load the existing " + "collection as a new instance first, then change issuer.");
+    mint() {
+        if (this.block) {
+            throw new Error("An already existing collection cannot be minted!");
+        }
+        return `RMRK::MINT::${Collection.V}::${encodeURIComponent(JSON.stringify({
+            name: this.name,
+            max: this.max,
+            issuer: this.issuer,
+            symbol: this.symbol.toUpperCase(),
+            id: this.id,
+            metadata: this.metadata,
+        }))}`;
     }
-
-    return "RMRK::CHANGEISSUER::" + Collection.V + "::" + this.id + "::" + address;
-  }
-
-  addChange(c) {
-    this.changes.push(c);
-    return this;
-  }
-
-  getChanges() {
-    return this.changes;
-  }
-
-  static generateId(pubkey, symbol) {
-    if (!pubkey.startsWith("0x")) {
-      throw new Error("This is not a valid pubkey, it does not start with 0x");
-    } //console.log(pubkey);
-
-
-    return pubkey.substr(2, 10) + pubkey.substring(pubkey.length - 8) + "-" + symbol.toUpperCase();
-  }
-
-  static fromRemark(remark, block) {
-    if (!block) {
-      block = 0;
+    change_issuer(address) {
+        if (this.block === 0) {
+            throw new Error("This collection is new, so there's no issuer to change." +
+                " If it has been deployed on chain, load the existing " +
+                "collection as a new instance first, then change issuer.");
+        }
+        return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
     }
-
-    const exploded = remark.split("::");
-
-    try {
-      if (exploded[0].toUpperCase() != "RMRK") throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[1] != "MINT") throw new Error("The op code needs to be MINT, is " + exploded[1]);
-
-      if (exploded[2] != Collection.V) {
-        throw new Error("This remark was issued under version " + exploded[2] + " instead of " + Collection.V);
-      }
-
-      const data = decodeURIComponent(exploded[3]);
-      const obj = JSON.parse(data);
-      if (!obj) throw new Error("Could not parse object from: " + data);
-      if (undefined === obj.metadata || !obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http")) throw new Error("Invalid metadata - not an HTTP or IPFS URL");
-      if (undefined === obj.name) throw new Error("Missing field: name");
-      if (undefined === obj.max) throw new Error("Missing field: max");
-      if (undefined === obj.issuer) throw new Error("Missing field: issuer");
-      if (undefined === obj.symbol) throw new Error("Missing field: symbol");
-      if (undefined === obj.id) throw new Error("Missing field: id");
-      return new this(block, obj.name, obj.max, obj.issuer, obj.symbol, obj.id, obj.metadata);
-    } catch (e) {
-      console.error(e.message);
-      console.log("MINT error: full input was " + remark);
-      return e.message;
+    addChange(c) {
+        this.changes.push(c);
+        return this;
     }
-  }
-  /**
-   * TBD - hard dependency on Axios / IPFS to fetch remote
-   */
-
-
-  async load_metadata() {
-    if (this.loadedMetadata) return this.loadedMetadata;
-    return {};
-  }
-
+    getChanges() {
+        return this.changes;
+    }
+    static generateId(pubkey, symbol) {
+        if (!pubkey.startsWith("0x")) {
+            throw new Error("This is not a valid pubkey, it does not start with 0x");
+        }
+        //console.log(pubkey);
+        return (pubkey.substr(2, 10) +
+            pubkey.substring(pubkey.length - 8) +
+            "-" +
+            symbol.toUpperCase());
+    }
+    static fromRemark(remark, block) {
+        if (!block) {
+            block = 0;
+        }
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0].toUpperCase() != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[1] != "MINT")
+                throw new Error("The op code needs to be MINT, is " + exploded[1]);
+            if (exploded[2] != Collection.V) {
+                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${Collection.V}`);
+            }
+            const data = decodeURIComponent(exploded[3]);
+            const obj = JSON.parse(data);
+            if (!obj)
+                throw new Error(`Could not parse object from: ${data}`);
+            if (undefined === obj.metadata ||
+                (!obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http")))
+                throw new Error(`Invalid metadata - not an HTTP or IPFS URL`);
+            if (undefined === obj.name)
+                throw new Error(`Missing field: name`);
+            if (undefined === obj.max)
+                throw new Error(`Missing field: max`);
+            if (undefined === obj.issuer)
+                throw new Error(`Missing field: issuer`);
+            if (undefined === obj.symbol)
+                throw new Error(`Missing field: symbol`);
+            if (undefined === obj.id)
+                throw new Error(`Missing field: id`);
+            return new this(block, obj.name, obj.max, obj.issuer, obj.symbol, obj.id, obj.metadata);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`MINT error: full input was ${remark}`);
+            return e.message;
+        }
+    }
+    /**
+     * TBD - hard dependency on Axios / IPFS to fetch remote
+     */
+    async load_metadata() {
+        if (this.loadedMetadata)
+            return this.loadedMetadata;
+        return {};
+    }
 }
 Collection.V = "1.0.0";
 var DisplayType$1;
-
 (function (DisplayType) {
-  DisplayType[DisplayType["null"] = 0] = "null";
-  DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
-  DisplayType[DisplayType["number"] = 2] = "number";
-  DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
+    DisplayType[DisplayType["null"] = 0] = "null";
+    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
+    DisplayType[DisplayType["number"] = 2] = "number";
+    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
 })(DisplayType$1 || (DisplayType$1 = {}));
 
 class NFT {
-  constructor(block, collection, name, instance, transferable, sn, metadata, data) {
-    this.changes = [];
-    this.block = block;
-    this.collection = collection;
-    this.name = name;
-    this.instance = instance;
-    this.transferable = transferable;
-    this.sn = sn;
-    this.data = data;
-    this.metadata = metadata;
-    this.owner = "";
-    this.reactions = {};
-  }
-
-  getId() {
-    if (!this.block) throw new Error("This token is not minted, so it cannot have an ID.");
-    return this.block + "-" + this.collection + "-" + this.instance + "-" + this.sn;
-  }
-
-  addChange(c) {
-    this.changes.push(c);
-    return this;
-  }
-
-  mintnft() {
-    if (this.block) {
-      throw new Error("An already existing NFT cannot be minted!");
+    constructor(block, collection, name, instance, transferable, sn, metadata, data) {
+        this.changes = [];
+        this.block = block;
+        this.collection = collection;
+        this.name = name;
+        this.instance = instance;
+        this.transferable = transferable;
+        this.sn = sn;
+        this.data = data;
+        this.metadata = metadata;
+        this.owner = "";
+        this.reactions = {};
     }
-
-    return "RMRK::MINTNFT::" + NFT.V + "::" + encodeURIComponent(JSON.stringify({
-      collection: this.collection,
-      name: this.name,
-      instance: this.instance,
-      transferable: this.transferable,
-      sn: this.sn,
-      metadata: this.metadata
-    }));
-  }
-
-  send(recipient) {
-    if (!this.block) {
-      throw new Error("You can only send an existing NFT. If you just minted this, please load a new, \n        separate instance as the block number is an important part of an NFT's ID.");
+    getId() {
+        if (!this.block)
+            throw new Error("This token is not minted, so it cannot have an ID.");
+        return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
     }
-
-    return "RMRK::SEND::" + NFT.V + "::" + this.getId() + "::" + recipient;
-  } // @todo build this out, maybe data type?
-
-
-  static checkDataFormat(data) {
-    return true;
-  }
-
-  static fromRemark(remark, block) {
-    if (!block) {
-      block = 0;
+    addChange(c) {
+        this.changes.push(c);
+        return this;
     }
-
-    const exploded = remark.split("::");
-
-    try {
-      if (exploded[0].toUpperCase() != "RMRK") throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[1] != "MINTNFT") throw new Error("The op code needs to be MINTNFT, is " + exploded[1]);
-
-      if (exploded[2] != NFT.V) {
-        throw new Error("This remark was issued under version " + exploded[2] + " instead of " + NFT.V);
-      }
-
-      const data = decodeURIComponent(exploded[3]);
-      const obj = JSON.parse(data);
-      if (!obj) throw new Error("Could not parse object from: " + data); // Check if the object has either data or metadata
-
-      if ((undefined === obj.metadata || !obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http")) && undefined === obj.data) throw new Error("Invalid metadata (not an HTTP or IPFS URL) and missing data");
-
-      if (obj.data) {
-        NFT.checkDataFormat(obj.data);
-      }
-
-      if (undefined === obj.name) throw new Error("Missing field: name");
-      if (undefined === obj.collection) throw new Error("Missing field: collection");
-      if (undefined === obj.instance) throw new Error("Missing field: instance");
-      if (undefined === obj.transferable) throw new Error("Missing field: transferable");
-      if (undefined === obj.sn) throw new Error("Missing field: sn");
-      return new this(block, obj.collection, obj.name, obj.instance, obj.transferable, obj.sn, obj.metadata, obj.data);
-    } catch (e) {
-      console.error(e.message);
-      console.log("MINTNFT error: full input was " + remark);
-      return e.message;
+    mintnft() {
+        if (this.block) {
+            throw new Error("An already existing NFT cannot be minted!");
+        }
+        return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(JSON.stringify({
+            collection: this.collection,
+            name: this.name,
+            instance: this.instance,
+            transferable: this.transferable,
+            sn: this.sn,
+            metadata: this.metadata,
+        }))}`;
     }
-  }
-  /**
-   * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
-   */
-
-
-  list(price) {
-    if (!this.block) {
-      throw new Error("You can only list an existing NFT. If you just minted this, please load a new, \n        separate instance as the block number is an important part of an NFT's ID.");
+    send(recipient) {
+        if (!this.block) {
+            throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
     }
-
-    return "RMRK::LIST::" + NFT.V + "::" + this.getId() + "::" + (price > 0 ? price : "cancel");
-  }
-
-  buy() {
-    if (!this.block) {
-      throw new Error("You can only buy an existing NFT. If you just minted this, please load a new, \n        separate instance as the block number is an important part of an NFT's ID.");
+    // @todo build this out, maybe data type?
+    static checkDataFormat(data) {
+        return true;
     }
-
-    return "RMRK::BUY::" + NFT.V + "::" + this.getId();
-  }
-
-  consume() {
-    if (!this.block) {
-      throw new Error("You can only consume an existing NFT. If you just minted this, please load a new, \n        separate instance as the block number is an important part of an NFT's ID.");
+    static fromRemark(remark, block) {
+        if (!block) {
+            block = 0;
+        }
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0].toUpperCase() != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[1] != "MINTNFT")
+                throw new Error("The op code needs to be MINTNFT, is " + exploded[1]);
+            if (exploded[2] != NFT.V) {
+                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${NFT.V}`);
+            }
+            const data = decodeURIComponent(exploded[3]);
+            const obj = JSON.parse(data);
+            if (!obj)
+                throw new Error(`Could not parse object from: ${data}`);
+            // Check if the object has either data or metadata
+            if ((undefined === obj.metadata ||
+                (!obj.metadata.startsWith("ipfs") &&
+                    !obj.metadata.startsWith("http"))) &&
+                undefined === obj.data)
+                throw new Error(`Invalid metadata (not an HTTP or IPFS URL) and missing data`);
+            if (obj.data) {
+                NFT.checkDataFormat(obj.data);
+            }
+            if (undefined === obj.name)
+                throw new Error(`Missing field: name`);
+            if (undefined === obj.collection)
+                throw new Error(`Missing field: collection`);
+            if (undefined === obj.instance)
+                throw new Error(`Missing field: instance`);
+            if (undefined === obj.transferable)
+                throw new Error(`Missing field: transferable`);
+            if (undefined === obj.sn)
+                throw new Error(`Missing field: sn`);
+            return new this(block, obj.collection, obj.name, obj.instance, obj.transferable, obj.sn, obj.metadata, obj.data);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`MINTNFT error: full input was ${remark}`);
+            return e.message;
+        }
     }
-
-    return "RMRK::CONSUME::" + NFT.V + "::" + this.getId();
-  }
-  /**
-   * TBD - hard dependency on Axios / IPFS to fetch remote
-   */
-
-
-  async load_metadata() {
-    if (this.loadedMetadata) return this.loadedMetadata;
-    return {};
-  }
-
+    /**
+     * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
+     */
+    list(price) {
+        if (!this.block) {
+            throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::LIST::${NFT.V}::${this.getId()}::${price > 0 ? price : "cancel"}`;
+    }
+    buy() {
+        if (!this.block) {
+            throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+    }
+    consume() {
+        if (!this.block) {
+            throw new Error(`You can only consume an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+    }
+    /**
+     * TBD - hard dependency on Axios / IPFS to fetch remote
+     */
+    async load_metadata() {
+        if (this.loadedMetadata)
+            return this.loadedMetadata;
+        return {};
+    }
 }
 NFT.V = "1.0.0";
 var DisplayType;
-
 (function (DisplayType) {
-  DisplayType[DisplayType["null"] = 0] = "null";
-  DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
-  DisplayType[DisplayType["number"] = 2] = "number";
-  DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
+    DisplayType[DisplayType["null"] = 0] = "null";
+    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
+    DisplayType[DisplayType["number"] = 2] = "number";
+    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
 })(DisplayType || (DisplayType = {}));
 
 class ChangeIssuer {
-  constructor(issuer, id) {
-    this.issuer = issuer;
-    this.id = id;
-  }
-
-  static fromRemark(remark) {
-    const exploded = remark.split("::");
-
-    try {
-      if (exploded[0] != "RMRK") throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[2] != ChangeIssuer.V) throw new Error("Version mismatch. Is " + exploded[2] + ", should be " + ChangeIssuer.V);
-      if (exploded[1] != "CHANGEISSUER") throw new Error("The op code needs to be CHANGEISSUER, is " + exploded[1]);
-
-      if (undefined === exploded[3] || undefined == exploded[4]) {
-        throw new Error("Cound not find ID or new issuer");
-      }
-    } catch (e) {
-      console.error(e.message);
-      console.log("CHANGEISSUER error: full input was " + remark);
-      return e.message;
+    constructor(issuer, id) {
+        this.issuer = issuer;
+        this.id = id;
     }
-
-    const ci = new ChangeIssuer(exploded[4], exploded[3]);
-    return ci;
-  }
-
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != ChangeIssuer.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${ChangeIssuer.V}`);
+            if (exploded[1] != "CHANGEISSUER")
+                throw new Error("The op code needs to be CHANGEISSUER, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or new issuer");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`CHANGEISSUER error: full input was ${remark}`);
+            return e.message;
+        }
+        const ci = new ChangeIssuer(exploded[4], exploded[3]);
+        return ci;
+    }
 }
 ChangeIssuer.V = "1.0.0";
 
 class Send {
-  constructor(id, recipient) {
-    this.recipient = recipient;
-    this.id = id;
-  }
-
-  static fromRemark(remark) {
-    const exploded = remark.split("::");
-
-    try {
-      if (exploded[0] != "RMRK") throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[2] != Send.V) throw new Error("Version mismatch. Is " + exploded[2] + ", should be " + Send.V);
-      if (exploded[1] != "SEND") throw new Error("The op code needs to be SEND, is " + exploded[1]);
-
-      if (undefined === exploded[3] || undefined == exploded[4]) {
-        throw new Error("Cound not find ID or recipient");
-      }
-    } catch (e) {
-      console.error(e.message);
-      console.log("SEND error: full input was " + remark);
-      return e.message;
+    constructor(id, recipient) {
+        this.recipient = recipient;
+        this.id = id;
     }
-
-    return new Send(exploded[3], exploded[4]);
-  }
-
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != Send.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Send.V}`);
+            if (exploded[1] != "SEND")
+                throw new Error("The op code needs to be SEND, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or recipient");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`SEND error: full input was ${remark}`);
+            return e.message;
+        }
+        return new Send(exploded[3], exploded[4]);
+    }
 }
 Send.V = "1.0.0";
 
 class Emote {
-  constructor(id, unicode) {
-    this.unicode = unicode;
-    this.id = id;
-  }
-
-  static fromRemark(remark) {
-    const exploded = remark.split("::");
-
-    try {
-      if (exploded[0] != "RMRK") throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[2] != Emote.V) throw new Error("Version mismatch. Is " + exploded[2] + ", should be " + Emote.V);
-      if (exploded[1] != "EMOTE") throw new Error("The op code needs to be EMOTE, is " + exploded[1]);
-
-      if (undefined === exploded[3] || undefined == exploded[4]) {
-        throw new Error("Cound not find ID or unicode");
-      }
-    } catch (e) {
-      console.error(e.message);
-      console.log("EMOTE error: full input was " + remark);
-      return e.message;
+    constructor(id, unicode) {
+        this.unicode = unicode;
+        this.id = id;
     }
-
-    return new Emote(exploded[3], exploded[4]);
-  }
-
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != Emote.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Emote.V}`);
+            if (exploded[1] != "EMOTE")
+                throw new Error("The op code needs to be EMOTE, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or unicode");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`EMOTE error: full input was ${remark}`);
+            return e.message;
+        }
+        return new Emote(exploded[3], exploded[4]);
+    }
 }
 Emote.V = "1.0.0";
 
@@ -6023,16 +6014,16 @@ function abort() {
 }
 
 var imports = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  __wbindgen_is_undefined: __wbindgen_is_undefined,
-  __wbg_self_1b7a39e3a92c949c: __wbg_self_1b7a39e3a92c949c,
-  __wbg_require_604837428532a733: __wbg_require_604837428532a733,
-  __wbg_crypto_968f1772287e2df0: __wbg_crypto_968f1772287e2df0,
-  __wbg_getRandomValues_a3d34b4fee3c2869: __wbg_getRandomValues_a3d34b4fee3c2869,
-  __wbg_getRandomValues_f5e14ab7ac8e995d: __wbg_getRandomValues_f5e14ab7ac8e995d,
-  __wbg_randomFillSync_d5bd2d655fdf256a: __wbg_randomFillSync_d5bd2d655fdf256a,
-  __wbindgen_object_drop_ref: __wbindgen_object_drop_ref,
-  abort: abort
+    __proto__: null,
+    __wbindgen_is_undefined: __wbindgen_is_undefined,
+    __wbg_self_1b7a39e3a92c949c: __wbg_self_1b7a39e3a92c949c,
+    __wbg_require_604837428532a733: __wbg_require_604837428532a733,
+    __wbg_crypto_968f1772287e2df0: __wbg_crypto_968f1772287e2df0,
+    __wbg_getRandomValues_a3d34b4fee3c2869: __wbg_getRandomValues_a3d34b4fee3c2869,
+    __wbg_getRandomValues_f5e14ab7ac8e995d: __wbg_getRandomValues_f5e14ab7ac8e995d,
+    __wbg_randomFillSync_d5bd2d655fdf256a: __wbg_randomFillSync_d5bd2d655fdf256a,
+    __wbindgen_object_drop_ref: __wbindgen_object_drop_ref,
+    abort: abort
 });
 
 // Copyright 2019-2021 @polkadot/wasm-crypto authors & contributors
@@ -25651,12 +25642,12 @@ const childStorageKeyPrefix = createRuntimeFunction('childStorageKeyPrefix', ':c
 });
 
 var substrate$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  code: code,
-  heapPages: heapPages,
-  extrinsicIndex: extrinsicIndex,
-  changesTrieConfig: changesTrieConfig,
-  childStorageKeyPrefix: childStorageKeyPrefix
+    __proto__: null,
+    code: code,
+    heapPages: heapPages,
+    extrinsicIndex: extrinsicIndex,
+    changesTrieConfig: changesTrieConfig,
+    childStorageKeyPrefix: childStorageKeyPrefix
 });
 
 // Copyright 2017-2021 @polkadot/metadata authors & contributors
@@ -28648,67 +28639,67 @@ class GenericVote extends U8aFixed {
 // Copyright 2017-2021 @polkadot/types authors & contributors
 
 var baseTypes = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  GenericExtrinsic: GenericExtrinsic,
-  GenericExtrinsicEra: GenericExtrinsicEra,
-  GenericMortalEra: MortalEra,
-  GenericImmortalEra: ImmortalEra,
-  GenericExtrinsicPayload: GenericExtrinsicPayload,
-  GenericExtrinsicPayloadUnknown: GenericExtrinsicPayloadUnknown,
-  GenericExtrinsicUnknown: GenericExtrinsicUnknown,
-  GenericSignerPayload: GenericSignerPayload,
-  GenericExtrinsicV4: GenericExtrinsicV4,
-  GenericExtrinsicPayloadV4: GenericExtrinsicPayloadV4,
-  GenericExtrinsicSignatureV4: GenericExtrinsicSignatureV4,
-  GenericAccountId: GenericAccountId,
-  GenericAccountIndex: GenericAccountIndex,
-  GenericBlock: GenericBlock,
-  GenericCall: GenericCall,
-  GenericChainProperties: GenericChainProperties,
-  GenericConsensusEngineId: GenericConsensusEngineId,
-  GenericEvent: GenericEvent,
-  GenericEventData: GenericEventData,
-  GenericLookupSource: GenericLookupSource,
-  GenericMultiAddress: GenericMultiAddress,
-  GenericVote: GenericVote,
-  GenericEthereumAccountId: GenericEthereumAccountId,
-  GenericEthereumLookupSource: GenericEthereumLookupSource,
-  BitVec: BitVec,
-  bool: bool,
-  Bool: bool,
-  Bytes: Bytes,
-  Data: Data,
-  DoNotConstruct: DoNotConstruct,
-  i8: i8,
-  I8: i8,
-  i16: i16,
-  I16: i16,
-  i32: i32,
-  I32: i32,
-  i64: i64,
-  I64: i64,
-  i128: i128,
-  I128: i128,
-  i256: i256,
-  I256: i256,
-  Null: Null,
-  StorageKey: StorageKey,
-  Text: Text,
-  Type: Type,
-  u8: u8,
-  U8: u8,
-  u16: u16,
-  U16: u16,
-  u32: u32,
-  U32: u32,
-  u64: u64,
-  U64: u64,
-  u128: u128,
-  U128: u128,
-  u256: u256,
-  U256: u256,
-  usize: usize,
-  USize: usize
+    __proto__: null,
+    GenericExtrinsic: GenericExtrinsic,
+    GenericExtrinsicEra: GenericExtrinsicEra,
+    GenericMortalEra: MortalEra,
+    GenericImmortalEra: ImmortalEra,
+    GenericExtrinsicPayload: GenericExtrinsicPayload,
+    GenericExtrinsicPayloadUnknown: GenericExtrinsicPayloadUnknown,
+    GenericExtrinsicUnknown: GenericExtrinsicUnknown,
+    GenericSignerPayload: GenericSignerPayload,
+    GenericExtrinsicV4: GenericExtrinsicV4,
+    GenericExtrinsicPayloadV4: GenericExtrinsicPayloadV4,
+    GenericExtrinsicSignatureV4: GenericExtrinsicSignatureV4,
+    GenericAccountId: GenericAccountId,
+    GenericAccountIndex: GenericAccountIndex,
+    GenericBlock: GenericBlock,
+    GenericCall: GenericCall,
+    GenericChainProperties: GenericChainProperties,
+    GenericConsensusEngineId: GenericConsensusEngineId,
+    GenericEvent: GenericEvent,
+    GenericEventData: GenericEventData,
+    GenericLookupSource: GenericLookupSource,
+    GenericMultiAddress: GenericMultiAddress,
+    GenericVote: GenericVote,
+    GenericEthereumAccountId: GenericEthereumAccountId,
+    GenericEthereumLookupSource: GenericEthereumLookupSource,
+    BitVec: BitVec,
+    bool: bool,
+    Bool: bool,
+    Bytes: Bytes,
+    Data: Data,
+    DoNotConstruct: DoNotConstruct,
+    i8: i8,
+    I8: i8,
+    i16: i16,
+    I16: i16,
+    i32: i32,
+    I32: i32,
+    i64: i64,
+    I64: i64,
+    i128: i128,
+    I128: i128,
+    i256: i256,
+    I256: i256,
+    Null: Null,
+    StorageKey: StorageKey,
+    Text: Text,
+    Type: Type,
+    u8: u8,
+    U8: u8,
+    u16: u16,
+    U16: u16,
+    u32: u32,
+    U32: u32,
+    u64: u64,
+    U64: u64,
+    u128: u128,
+    U128: u128,
+    u256: u256,
+    U256: u256,
+    usize: usize,
+    USize: usize
 });
 
 function ownKeys$r(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -33491,58 +33482,58 @@ var definitions$1 = {
 // Copyright 2017-2021 @polkadot/types authors & contributors
 
 var definitions = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  runtime: runtimeTypes,
-  assets: definitions$O,
-  authorship: definitions$N,
-  aura: definitions$M,
-  babe: definitions$L,
-  balances: definitions$K,
-  collective: definitions$J,
-  consensus: definitions$I,
-  contracts: definitions$H,
-  democracy: definitions$G,
-  elections: definitions$F,
-  engine: definitions$E,
-  evm: definitions$D,
-  extrinsics: definitions$C,
-  genericAsset: definitions$B,
-  gilt: definitions$A,
-  grandpa: definitions$z,
-  identity: definitions$y,
-  imOnline: definitions$x,
-  lottery: definitions$w,
-  offences: definitions$v,
-  proxy: definitions$u,
-  recovery: definitions$t,
-  scheduler: definitions$s,
-  session: definitions$r,
-  society: definitions$q,
-  staking: definitions$p,
-  support: definitions$o,
-  syncstate: definitions$n,
-  system: definitions$m,
-  treasury: definitions$l,
-  txpayment: definitions$k,
-  utility: definitions$j,
-  vesting: definitions$i,
-  attestations: definitions$h,
-  claims: definitions$g,
-  crowdloan: definitions$f,
-  parachains: definitions$e,
-  poll: definitions$d,
-  purchase: definitions$c,
-  contractsAbi: definitions$b,
-  scaleInfo: definitions$a,
-  eth: definitions$9,
-  metadata: definitions$8,
-  rpc: definitions$7,
-  author: definitions$6,
-  chain: definitions$5,
-  childstate: definitions$4,
-  offchain: definitions$3,
-  payment: definitions$2,
-  state: definitions$1
+    __proto__: null,
+    runtime: runtimeTypes,
+    assets: definitions$O,
+    authorship: definitions$N,
+    aura: definitions$M,
+    babe: definitions$L,
+    balances: definitions$K,
+    collective: definitions$J,
+    consensus: definitions$I,
+    contracts: definitions$H,
+    democracy: definitions$G,
+    elections: definitions$F,
+    engine: definitions$E,
+    evm: definitions$D,
+    extrinsics: definitions$C,
+    genericAsset: definitions$B,
+    gilt: definitions$A,
+    grandpa: definitions$z,
+    identity: definitions$y,
+    imOnline: definitions$x,
+    lottery: definitions$w,
+    offences: definitions$v,
+    proxy: definitions$u,
+    recovery: definitions$t,
+    scheduler: definitions$s,
+    session: definitions$r,
+    society: definitions$q,
+    staking: definitions$p,
+    support: definitions$o,
+    syncstate: definitions$n,
+    system: definitions$m,
+    treasury: definitions$l,
+    txpayment: definitions$k,
+    utility: definitions$j,
+    vesting: definitions$i,
+    attestations: definitions$h,
+    claims: definitions$g,
+    crowdloan: definitions$f,
+    parachains: definitions$e,
+    poll: definitions$d,
+    purchase: definitions$c,
+    contractsAbi: definitions$b,
+    scaleInfo: definitions$a,
+    eth: definitions$9,
+    metadata: definitions$8,
+    rpc: definitions$7,
+    author: definitions$6,
+    chain: definitions$5,
+    childstate: definitions$4,
+    offchain: definitions$3,
+    payment: definitions$2,
+    state: definitions$1
 });
 
 function ownKeys$l(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -34421,17 +34412,17 @@ function info$4(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var accounts$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  accountId: accountId,
-  flags: flags,
-  idAndIndex: idAndIndex,
-  idToIndex: idToIndex,
-  identity: identity$1,
-  hasIdentity: hasIdentity,
-  hasIdentityMulti: hasIdentityMulti,
-  indexToId: indexToId,
-  indexes: indexes$1,
-  info: info$4
+    __proto__: null,
+    accountId: accountId,
+    flags: flags,
+    idAndIndex: idAndIndex,
+    idToIndex: idToIndex,
+    identity: identity$1,
+    hasIdentity: hasIdentity,
+    hasIdentityMulti: hasIdentityMulti,
+    indexToId: indexToId,
+    indexes: indexes$1,
+    info: info$4
 });
 
 function ownKeys$k(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -34703,12 +34694,12 @@ function votingBalances(instanceId, api) {
 const votingBalance = all;
 
 var balances = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  all: all,
-  votingBalance: votingBalance,
-  account: account$1,
-  fees: fees$1,
-  votingBalances: votingBalances
+    __proto__: null,
+    all: all,
+    votingBalance: votingBalance,
+    account: account$1,
+    fees: fees$1,
+    votingBalances: votingBalances
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -34749,8 +34740,8 @@ function bounties$1(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var bounties = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  bounties: bounties$1
+    __proto__: null,
+    bounties: bounties$1
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35047,14 +35038,14 @@ function subscribeNewHeads(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var chain = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  bestNumber: bestNumber,
-  bestNumberFinalized: bestNumberFinalized,
-  bestNumberLag: bestNumberLag,
-  getHeader: getHeader,
-  getBlock: getBlock,
-  subscribeNewBlocks: subscribeNewBlocks,
-  subscribeNewHeads: subscribeNewHeads
+    __proto__: null,
+    bestNumber: bestNumber,
+    bestNumberFinalized: bestNumberFinalized,
+    bestNumberLag: bestNumberLag,
+    getHeader: getHeader,
+    getBlock: getBlock,
+    subscribeNewBlocks: subscribeNewBlocks,
+    subscribeNewHeads: subscribeNewHeads
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35100,8 +35091,8 @@ function fees(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var contracts = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  fees: fees
+    __proto__: null,
+    fees: fees
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35223,11 +35214,11 @@ function votesOf(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var council = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  proposal: proposal,
-  proposals: proposals$3,
-  votes: votes,
-  votesOf: votesOf
+    __proto__: null,
+    proposal: proposal,
+    proposals: proposals$3,
+    votes: votes,
+    votesOf: votesOf
 });
 
 function ownKeys$i(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -35729,22 +35720,22 @@ function sqrtElectorate(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var democracy = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  dispatchQueue: dispatchQueue,
-  locks: locks,
-  nextExternal: nextExternal,
-  preimage: preimage,
-  preimages: preimages,
-  proposals: proposals$2,
-  referendumIds: referendumIds,
-  referendums: referendums,
-  referendumsActive: referendumsActive,
-  referendumsFinished: referendumsFinished,
-  _referendumVotes: _referendumVotes,
-  _referendumsVotes: _referendumsVotes,
-  _referendumInfo: _referendumInfo,
-  referendumsInfo: referendumsInfo,
-  sqrtElectorate: sqrtElectorate
+    __proto__: null,
+    dispatchQueue: dispatchQueue,
+    locks: locks,
+    nextExternal: nextExternal,
+    preimage: preimage,
+    preimages: preimages,
+    proposals: proposals$2,
+    referendumIds: referendumIds,
+    referendums: referendums,
+    referendumsActive: referendumsActive,
+    referendumsFinished: referendumsFinished,
+    _referendumVotes: _referendumVotes,
+    _referendumsVotes: _referendumsVotes,
+    _referendumInfo: _referendumInfo,
+    referendumsInfo: referendumsInfo,
+    sqrtElectorate: sqrtElectorate
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35805,8 +35796,8 @@ function info$3(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var elections = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  info: info$3
+    __proto__: null,
+    info: info$3
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35847,8 +35838,8 @@ function receivedHeartbeats(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var imOnline = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  receivedHeartbeats: receivedHeartbeats
+    __proto__: null,
+    receivedHeartbeats: receivedHeartbeats
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35938,9 +35929,9 @@ function overview$1(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var parachains = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  info: info$2,
-  overview: overview$1
+    __proto__: null,
+    info: info$2,
+    overview: overview$1
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -36075,13 +36066,13 @@ function sessionProgress(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var session = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  eraLength: eraLength,
-  eraProgress: eraProgress,
-  indexes: indexes,
-  info: info$1,
-  progress: progress,
-  sessionProgress: sessionProgress
+    __proto__: null,
+    eraLength: eraLength,
+    eraProgress: eraProgress,
+    indexes: indexes,
+    info: info$1,
+    progress: progress,
+    sessionProgress: sessionProgress
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -36149,11 +36140,11 @@ function members(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var society = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  candidates: candidates,
-  info: info,
-  member: member,
-  members: members
+    __proto__: null,
+    candidates: candidates,
+    info: info,
+    member: member,
+    members: members
 });
 
 function ownKeys$a(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -36931,57 +36922,57 @@ function waitingInfo(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var staking = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  accounts: accounts,
-  account: account,
-  currentPoints: currentPoints,
-  _eraExposure: _eraExposure,
-  eraExposure: eraExposure,
-  _erasExposure: _erasExposure,
-  erasExposure: erasExposure,
-  erasHistoric: erasHistoric,
-  _erasPoints: _erasPoints,
-  erasPoints: erasPoints,
-  _eraPrefs: _eraPrefs,
-  eraPrefs: eraPrefs,
-  _erasPrefs: _erasPrefs,
-  erasPrefs: erasPrefs,
-  _erasRewards: _erasRewards,
-  erasRewards: erasRewards,
-  _eraSlashes: _eraSlashes,
-  eraSlashes: eraSlashes,
-  _erasSlashes: _erasSlashes,
-  erasSlashes: erasSlashes,
-  electedInfo: electedInfo,
-  keys: keys$1,
-  keysMulti: keysMulti,
-  overview: overview,
-  _ownExposures: _ownExposures,
-  ownExposure: ownExposure,
-  ownExposures: ownExposures,
-  _ownSlashes: _ownSlashes,
-  ownSlash: ownSlash,
-  ownSlashes: ownSlashes,
-  query: query,
-  queryMulti: queryMulti,
-  _stakerExposures: _stakerExposures,
-  stakerExposures: stakerExposures,
-  stakerExposure: stakerExposure,
-  _stakerPoints: _stakerPoints,
-  stakerPoints: stakerPoints,
-  _stakerPrefs: _stakerPrefs,
-  stakerPrefs: stakerPrefs,
-  _stakerRewardsEras: _stakerRewardsEras,
-  _stakerRewards: _stakerRewards,
-  stakerRewards: stakerRewards,
-  stakerRewardsMultiEras: stakerRewardsMultiEras,
-  stakerRewardsMulti: stakerRewardsMulti,
-  _stakerSlashes: _stakerSlashes,
-  stakerSlashes: stakerSlashes,
-  stashes: stashes,
-  nextElected: nextElected,
-  validators: validators,
-  waitingInfo: waitingInfo
+    __proto__: null,
+    accounts: accounts,
+    account: account,
+    currentPoints: currentPoints,
+    _eraExposure: _eraExposure,
+    eraExposure: eraExposure,
+    _erasExposure: _erasExposure,
+    erasExposure: erasExposure,
+    erasHistoric: erasHistoric,
+    _erasPoints: _erasPoints,
+    erasPoints: erasPoints,
+    _eraPrefs: _eraPrefs,
+    eraPrefs: eraPrefs,
+    _erasPrefs: _erasPrefs,
+    erasPrefs: erasPrefs,
+    _erasRewards: _erasRewards,
+    erasRewards: erasRewards,
+    _eraSlashes: _eraSlashes,
+    eraSlashes: eraSlashes,
+    _erasSlashes: _erasSlashes,
+    erasSlashes: erasSlashes,
+    electedInfo: electedInfo,
+    keys: keys$1,
+    keysMulti: keysMulti,
+    overview: overview,
+    _ownExposures: _ownExposures,
+    ownExposure: ownExposure,
+    ownExposures: ownExposures,
+    _ownSlashes: _ownSlashes,
+    ownSlash: ownSlash,
+    ownSlashes: ownSlashes,
+    query: query,
+    queryMulti: queryMulti,
+    _stakerExposures: _stakerExposures,
+    stakerExposures: stakerExposures,
+    stakerExposure: stakerExposure,
+    _stakerPoints: _stakerPoints,
+    stakerPoints: stakerPoints,
+    _stakerPrefs: _stakerPrefs,
+    stakerPrefs: stakerPrefs,
+    _stakerRewardsEras: _stakerRewardsEras,
+    _stakerRewards: _stakerRewards,
+    stakerRewards: stakerRewards,
+    stakerRewardsMultiEras: stakerRewardsMultiEras,
+    stakerRewardsMulti: stakerRewardsMulti,
+    _stakerSlashes: _stakerSlashes,
+    stakerSlashes: stakerSlashes,
+    stashes: stashes,
+    nextElected: nextElected,
+    validators: validators,
+    waitingInfo: waitingInfo
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -36992,8 +36983,8 @@ function proposals$1(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var technicalCommittee = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  proposals: proposals$1
+    __proto__: null,
+    proposals: proposals$1
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -37071,8 +37062,8 @@ function proposals(instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var treasury = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  proposals: proposals
+    __proto__: null,
+    proposals: proposals
 });
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -37127,9 +37118,9 @@ function signingInfo(_instanceId, api) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 var tx = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  events: events,
-  signingInfo: signingInfo
+    __proto__: null,
+    events: events,
+    signingInfo: signingInfo
 });
 
 function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -39876,510 +39867,428 @@ class ApiPromise extends ApiBase {
 }
 
 var OP_TYPES;
-
 (function (OP_TYPES) {
-  OP_TYPES["BUY"] = "BUY";
-  OP_TYPES["LIST"] = "LIST";
-  OP_TYPES["MINT"] = "MINT";
-  OP_TYPES["MINTNFT"] = "MINTNFT";
-  OP_TYPES["SEND"] = "SEND";
-  OP_TYPES["EMOTE"] = "EMOTE";
-  OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
+    OP_TYPES["BUY"] = "BUY";
+    OP_TYPES["LIST"] = "LIST";
+    OP_TYPES["MINT"] = "MINT";
+    OP_TYPES["MINTNFT"] = "MINTNFT";
+    OP_TYPES["SEND"] = "SEND";
+    OP_TYPES["EMOTE"] = "EMOTE";
+    OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
 })(OP_TYPES || (OP_TYPES = {}));
 
-const getApi = async wsEndpoint => {
-  const wsProvider = new WsProvider(wsEndpoint);
-  const api = ApiPromise.create({
-    provider: wsProvider
-  });
-  return api;
+const getApi = async (wsEndpoint) => {
+    const wsProvider = new WsProvider(wsEndpoint);
+    const api = ApiPromise.create({ provider: wsProvider });
+    return api;
 };
-const getLatestBlock = async api => {
-  const header = await api.rpc.chain.getHeader();
-  return header.number.toNumber();
+const getLatestBlock = async (api) => {
+    const header = await api.rpc.chain.getHeader();
+    return header.number.toNumber();
 };
-const getLatestFinalizedBlock = async api => {
-  const hash = await api.rpc.chain.getFinalizedHead();
-  const header = await api.rpc.chain.getHeader(hash);
-
-  if (header.number.toNumber() === 0) {
-    console.error("Unable to retrieve finalized head - returned genesis block");
-    process.exit(1);
-  }
-
-  return header.number.toNumber();
+const getLatestFinalizedBlock = async (api) => {
+    const hash = await api.rpc.chain.getFinalizedHead();
+    const header = await api.rpc.chain.getHeader(hash);
+    if (header.number.toNumber() === 0) {
+        console.error("Unable to retrieve finalized head - returned genesis block");
+        process.exit(1);
+    }
+    return header.number.toNumber();
 };
 const deeplog = function (obj) {
-  console.log(JSON.stringify(obj, null, 2));
+    console.log(JSON.stringify(obj, null, 2));
 };
-const stringIsAValidUrl = s => {
-  try {
-    new URL(s);
-    return true;
-  } catch (err) {
-    return false;
-  }
+const stringIsAValidUrl = (s) => {
+    try {
+        new URL(s);
+        return true;
+    }
+    catch (err) {
+        return false;
+    }
 };
 const prefixToArray = function (prefix) {
-  const returnArray = [];
-  const exploded = prefix.split(",");
-
-  for (const p of exploded) {
-    if (p.indexOf("0x") === 0) {
-      returnArray.push(p);
-    } else {
-      returnArray.push(stringToHex(p));
+    const returnArray = [];
+    const exploded = prefix.split(",");
+    for (const p of exploded) {
+        if (p.indexOf("0x") === 0) {
+            returnArray.push(p);
+        }
+        else {
+            returnArray.push(stringToHex(p));
+        }
     }
-  }
-
-  return returnArray;
+    return returnArray;
 };
-
 const getMeta = (call, block) => {
-  const str = hexToString(call.value);
-  const arr = str.split("::");
-
-  if (arr.length < 3) {
-    console.error("Invalid RMRK in block " + block + ": " + str);
-    return false;
-  }
-
-  return {
-    type: arr[1],
-    version: parseFloat(arr[2]) ? arr[2] : "0.1"
-  };
-};
-
-const getRemarksFromBlocks = blocks => {
-  const remarks = [];
-
-  for (const row of blocks) {
-    for (const call of row.calls) {
-      if (call.call !== "system.remark") continue;
-      const meta = getMeta(call, row.block);
-      if (!meta) continue;
-      let remark;
-
-      switch (meta.type) {
-        case OP_TYPES.MINTNFT:
-        case OP_TYPES.MINT:
-          remark = decodeURI(hexToString(call.value));
-          break;
-
-        default:
-          remark = hexToString(call.value);
-          break;
-      }
-
-      const r = {
-        block: row.block,
-        caller: call.caller,
-        interaction_type: meta.type,
-        version: meta.version,
-        remark: remark
-      };
-      remarks.push(r);
+    const str = hexToString(call.value);
+    const arr = str.split("::");
+    if (arr.length < 3) {
+        console.error(`Invalid RMRK in block ${block}: ${str}`);
+        return false;
     }
-  }
-
-  return remarks;
+    return {
+        type: arr[1],
+        version: parseFloat(arr[2]) ? arr[2] : "0.1",
+    };
+};
+const getRemarksFromBlocks = (blocks) => {
+    const remarks = [];
+    for (const row of blocks) {
+        for (const call of row.calls) {
+            if (call.call !== "system.remark")
+                continue;
+            const meta = getMeta(call, row.block);
+            if (!meta)
+                continue;
+            let remark;
+            switch (meta.type) {
+                case OP_TYPES.MINTNFT:
+                case OP_TYPES.MINT:
+                    remark = decodeURI(hexToString(call.value));
+                    break;
+                default:
+                    remark = hexToString(call.value);
+                    break;
+            }
+            const r = {
+                block: row.block,
+                caller: call.caller,
+                interaction_type: meta.type,
+                version: meta.version,
+                remark: remark,
+            };
+            remarks.push(r);
+        }
+    }
+    return remarks;
 };
 
 var utils = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  getApi: getApi,
-  getLatestBlock: getLatestBlock,
-  getLatestFinalizedBlock: getLatestFinalizedBlock,
-  deeplog: deeplog,
-  stringIsAValidUrl: stringIsAValidUrl,
-  prefixToArray: prefixToArray,
-  getRemarksFromBlocks: getRemarksFromBlocks
+    __proto__: null,
+    getApi: getApi,
+    getLatestBlock: getLatestBlock,
+    getLatestFinalizedBlock: getLatestFinalizedBlock,
+    deeplog: deeplog,
+    stringIsAValidUrl: stringIsAValidUrl,
+    prefixToArray: prefixToArray,
+    getRemarksFromBlocks: getRemarksFromBlocks
 });
 
+// import * as fs from "fs";
 class Consolidator {
-  constructor(initializedAdapter) {
-    if (initializedAdapter) {
-      this.adapter = initializedAdapter;
+    constructor(initializedAdapter) {
+        if (initializedAdapter) {
+            this.adapter = initializedAdapter;
+        }
+        this.invalidCalls = [];
+        this.collections = [];
+        this.nfts = [];
     }
-
-    this.invalidCalls = [];
-    this.collections = [];
-    this.nfts = [];
-  }
-
-  findExistingCollection(id) {
-    return this.collections.find(el => el.id === id);
-  }
-
-  updateInvalidCalls(op_type, remark) {
-    const invalidCallBase = {
-      op_type,
-      block: remark.block,
-      caller: remark.caller
-    };
-    return function update(object_id, message) {
-      this.invalidCalls.push(Object.assign(Object.assign({}, invalidCallBase), {
-        object_id,
-        message
-      }));
-    };
-  }
-
-  mint(remark) {
-    // A new collection was created
-    console.log("Instantiating collection");
-    const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(this);
-    const c = Collection.fromRemark(remark.remark, remark.block);
-
-    if (typeof c === "string") {
-      // console.log(
-      //   "Collection was not instantiated OK from " + remark.remark
-      // );
-      invalidate(remark.remark, "[" + OP_TYPES.MINT + "] Dead before instantiation: " + c);
-      return true;
-    } //console.log("Collection instantiated OK from " + remark.remark);
-
-
-    const pubkey = decodeAddress(remark.caller);
-    const id = Collection.generateId(u8aToHex(pubkey), c.symbol);
-
-    if (this.findExistingCollection(c.id)) {
-      invalidate(c.id, "[" + OP_TYPES.MINT + "] Attempt to mint already existing collection");
-      return true;
+    findExistingCollection(id) {
+        return this.collections.find((el) => el.id === id);
     }
-
-    if (id.toLowerCase() !== c.id.toLowerCase()) {
-      invalidate(c.id, "Caller's pubkey " + u8aToHex(pubkey) + " (" + id + ") does not match generated ID");
-      return true;
+    updateInvalidCalls(op_type, remark) {
+        const invalidCallBase = {
+            op_type,
+            block: remark.block,
+            caller: remark.caller,
+        };
+        return function update(object_id, message) {
+            this.invalidCalls.push(Object.assign(Object.assign({}, invalidCallBase), { object_id,
+                message }));
+        };
     }
-
-    this.collections.push(c);
-    return false;
-  }
-
-  mintNFT(remark) {
-    // A new NFT was minted into a collection
-    console.log("Instantiating nft");
-    const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(this);
-    const n = NFT.fromRemark(remark.remark, remark.block);
-
-    if (typeof n === "string") {
-      invalidate(remark.remark, "[" + OP_TYPES.MINTNFT + "] Dead before instantiation: " + n);
-      return true;
+    mint(remark) {
+        // A new collection was created
+        console.log("Instantiating collection");
+        const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(this);
+        const c = Collection.fromRemark(remark.remark, remark.block);
+        if (typeof c === "string") {
+            // console.log(
+            //   "Collection was not instantiated OK from " + remark.remark
+            // );
+            invalidate(remark.remark, `[${OP_TYPES.MINT}] Dead before instantiation: ${c}`);
+            return true;
+        }
+        //console.log("Collection instantiated OK from " + remark.remark);
+        const pubkey = decodeAddress(remark.caller);
+        const id = Collection.generateId(u8aToHex(pubkey), c.symbol);
+        if (this.findExistingCollection(c.id)) {
+            invalidate(c.id, `[${OP_TYPES.MINT}] Attempt to mint already existing collection`);
+            return true;
+        }
+        if (id.toLowerCase() !== c.id.toLowerCase()) {
+            invalidate(c.id, `Caller's pubkey ${u8aToHex(pubkey)} (${id}) does not match generated ID`);
+            return true;
+        }
+        this.collections.push(c);
+        return false;
     }
-
-    const nftParent = this.findExistingCollection(n.collection);
-
-    if (!nftParent) {
-      invalidate(n.getId(), "NFT referencing non-existant parent collection " + n.collection);
-      return true;
+    mintNFT(remark) {
+        // A new NFT was minted into a collection
+        console.log("Instantiating nft");
+        const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(this);
+        const n = NFT.fromRemark(remark.remark, remark.block);
+        if (typeof n === "string") {
+            invalidate(remark.remark, `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${n}`);
+            return true;
+        }
+        const nftParent = this.findExistingCollection(n.collection);
+        if (!nftParent) {
+            invalidate(n.getId(), `NFT referencing non-existant parent collection ${n.collection}`);
+            return true;
+        }
+        n.owner = nftParent.issuer;
+        if (remark.caller != n.owner) {
+            invalidate(n.getId(), `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`);
+            return true;
+        }
+        const existsCheck = this.nfts.find((el) => {
+            const idExpand1 = el.getId().split("-");
+            idExpand1.shift();
+            const uniquePart1 = idExpand1.join("-");
+            const idExpand2 = n.getId().split("-");
+            idExpand2.shift();
+            const uniquePart2 = idExpand2.join("-");
+            return uniquePart1 === uniquePart2;
+        });
+        if (existsCheck) {
+            invalidate(n.getId(), `[${OP_TYPES.MINTNFT}] Attempt to mint already existing NFT`);
+            return true;
+        }
+        if (n.owner === "") {
+            invalidate(n.getId(), `[${OP_TYPES.MINTNFT}] Somehow this NFT still doesn't have an owner.`);
+            return true;
+        }
+        this.nfts.push(n);
+        return false;
     }
-
-    n.owner = nftParent.issuer;
-
-    if (remark.caller != n.owner) {
-      invalidate(n.getId(), "Attempted issue of NFT in non-owned collection. Issuer: " + nftParent.issuer + ", caller: " + remark.caller);
-      return true;
+    send(remark) {
+        // An NFT was sent to a new owner
+        console.log("Instantiating send");
+        const send = Send.fromRemark(remark.remark);
+        const invalidate = this.updateInvalidCalls(OP_TYPES.SEND, remark).bind(this);
+        if (typeof send === "string") {
+            invalidate(remark.remark, `[${OP_TYPES.SEND}] Dead before instantiation: ${send}`);
+            return true;
+        }
+        const nft = this.nfts.find((el) => {
+            const idExpand1 = el.getId().split("-");
+            idExpand1.shift();
+            const uniquePart1 = idExpand1.join("-");
+            const idExpand2 = send.id.split("-");
+            idExpand2.shift();
+            const uniquePart2 = idExpand2.join("-");
+            return uniquePart1 === uniquePart2;
+        });
+        // @todo add condition for transferable!
+        if (!nft) {
+            invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`);
+            return true;
+        }
+        // Check if allowed to issue send - if owner == caller
+        if (nft.owner != remark.caller) {
+            invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`);
+            return true;
+        }
+        nft.addChange({
+            field: "owner",
+            old: nft.owner,
+            new: send.recipient,
+            caller: remark.caller,
+            block: remark.block,
+        });
+        nft.owner = send.recipient;
+        return false;
     }
-
-    const existsCheck = this.nfts.find(el => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-      const idExpand2 = n.getId().split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-      return uniquePart1 === uniquePart2;
-    });
-
-    if (existsCheck) {
-      invalidate(n.getId(), "[" + OP_TYPES.MINTNFT + "] Attempt to mint already existing NFT");
-      return true;
+    emote(remark) {
+        // An EMOTE reaction has been sent
+        console.log("Instantiating emote");
+        const emote = Emote.fromRemark(remark.remark);
+        const invalidate = this.updateInvalidCalls(OP_TYPES.EMOTE, remark).bind(this);
+        if (typeof emote === "string") {
+            invalidate(remark.remark, `[${OP_TYPES.EMOTE}] Dead before instantiation: ${emote}`);
+            return true;
+        }
+        const target = this.nfts.find((el) => el.getId() === emote.id);
+        if (!target) {
+            invalidate(emote.id, `[${OP_TYPES.EMOTE}] Attempting to emote on non-existant NFT ${emote.id}`);
+            return true;
+        }
+        if (undefined === target.reactions[emote.unicode]) {
+            target.reactions[emote.unicode] = [];
+        }
+        const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
+        if (index > -1) {
+            target.reactions[emote.unicode].splice(index, 1);
+        }
+        else {
+            target.reactions[emote.unicode].push(remark.caller);
+        }
+        return false;
     }
-
-    if (n.owner === "") {
-      invalidate(n.getId(), "[" + OP_TYPES.MINTNFT + "] Somehow this NFT still doesn't have an owner.");
-      return true;
+    changeIssuer(remark) {
+        // The ownership of a collection has changed
+        console.log("Instantiating an issuer change");
+        const ci = ChangeIssuer.fromRemark(remark.remark);
+        const invalidate = this.updateInvalidCalls(OP_TYPES.CHANGEISSUER, remark).bind(this);
+        if (typeof ci === "string") {
+            // console.log(
+            //   "ChangeIssuer was not instantiated OK from " + remark.remark
+            // );
+            invalidate(remark.remark, `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${ci}`);
+            return true;
+        }
+        const coll = this.collections.find((el) => el.id === ci.id);
+        if (!coll) {
+            invalidate(ci.id, `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`);
+            return true;
+        }
+        if (remark.caller != coll.issuer) {
+            invalidate(ci.id, `Attempting to change issuer of collection ${ci.id} when not issuer!`);
+            return true;
+        }
+        coll.addChange({
+            field: "issuer",
+            old: coll.issuer,
+            new: ci.issuer,
+            caller: remark.caller,
+            block: remark.block,
+        });
+        coll.issuer = ci.issuer;
+        return false;
     }
-
-    this.nfts.push(n);
-    return false;
-  }
-
-  send(remark) {
-    // An NFT was sent to a new owner
-    console.log("Instantiating send");
-    const send = Send.fromRemark(remark.remark);
-    const invalidate = this.updateInvalidCalls(OP_TYPES.SEND, remark).bind(this);
-
-    if (typeof send === "string") {
-      invalidate(remark.remark, "[" + OP_TYPES.SEND + "] Dead before instantiation: " + send);
-      return true;
+    consolidate(rmrks) {
+        var _a;
+        const remarks = rmrks || ((_a = this.adapter) === null || _a === void 0 ? void 0 : _a.getRemarks()) || [];
+        //console.log(remarks);
+        for (const remark of remarks) {
+            console.log("==============================");
+            console.log("Remark is: " + remark.remark);
+            switch (remark.interaction_type) {
+                case OP_TYPES.MINT:
+                    if (this.mint(remark)) {
+                        continue;
+                    }
+                    break;
+                case OP_TYPES.MINTNFT:
+                    if (this.mintNFT(remark)) {
+                        continue;
+                    }
+                    break;
+                case OP_TYPES.SEND:
+                    if (this.send(remark)) {
+                        continue;
+                    }
+                    break;
+                case OP_TYPES.BUY:
+                    // An NFT was bought after being LISTed
+                    break;
+                case OP_TYPES.LIST:
+                    // An NFT was listed for sale
+                    break;
+                case OP_TYPES.EMOTE:
+                    if (this.emote(remark)) {
+                        continue;
+                    }
+                    break;
+                case OP_TYPES.CHANGEISSUER:
+                    if (this.changeIssuer(remark)) {
+                        continue;
+                    }
+                    break;
+                default:
+                    console.error("Unable to process this remark - wrong type: " +
+                        remark.interaction_type);
+            }
+        }
+        deeplog(this.nfts);
+        deeplog(this.collections);
+        console.log(this.invalidCalls);
+        return { nfts: this.nfts, collections: this.collections };
     }
-
-    const nft = this.nfts.find(el => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-      const idExpand2 = send.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-      return uniquePart1 === uniquePart2;
-    }); // @todo add condition for transferable!
-
-    if (!nft) {
-      invalidate(send.id, "[" + OP_TYPES.SEND + "] Attempting to send non-existant NFT " + send.id);
-      return true;
-    } // Check if allowed to issue send - if owner == caller
-
-
-    if (nft.owner != remark.caller) {
-      invalidate(send.id, "[" + OP_TYPES.SEND + "] Attempting to send non-owned NFT " + send.id + ", real owner: " + nft.owner);
-      return true;
-    }
-
-    nft.addChange({
-      field: "owner",
-      old: nft.owner,
-      new: send.recipient,
-      caller: remark.caller,
-      block: remark.block
-    });
-    nft.owner = send.recipient;
-    return false;
-  }
-
-  emote(remark) {
-    // An EMOTE reaction has been sent
-    console.log("Instantiating emote");
-    const emote = Emote.fromRemark(remark.remark);
-    const invalidate = this.updateInvalidCalls(OP_TYPES.EMOTE, remark).bind(this);
-
-    if (typeof emote === "string") {
-      invalidate(remark.remark, "[" + OP_TYPES.EMOTE + "] Dead before instantiation: " + emote);
-      return true;
-    }
-
-    const target = this.nfts.find(el => el.getId() === emote.id);
-
-    if (!target) {
-      invalidate(emote.id, "[" + OP_TYPES.EMOTE + "] Attempting to emote on non-existant NFT " + emote.id);
-      return true;
-    }
-
-    if (undefined === target.reactions[emote.unicode]) {
-      target.reactions[emote.unicode] = [];
-    }
-
-    const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
-
-    if (index > -1) {
-      target.reactions[emote.unicode].splice(index, 1);
-    } else {
-      target.reactions[emote.unicode].push(remark.caller);
-    }
-
-    return false;
-  }
-
-  changeIssuer(remark) {
-    // The ownership of a collection has changed
-    console.log("Instantiating an issuer change");
-    const ci = ChangeIssuer.fromRemark(remark.remark);
-    const invalidate = this.updateInvalidCalls(OP_TYPES.CHANGEISSUER, remark).bind(this);
-
-    if (typeof ci === "string") {
-      // console.log(
-      //   "ChangeIssuer was not instantiated OK from " + remark.remark
-      // );
-      invalidate(remark.remark, "[" + OP_TYPES.CHANGEISSUER + "] Dead before instantiation: " + ci);
-      return true;
-    }
-
-    const coll = this.collections.find(el => el.id === ci.id);
-
-    if (!coll) {
-      invalidate(ci.id, "This " + OP_TYPES.CHANGEISSUER + " remark is invalid - no such collection with ID " + ci.id + " found before block " + remark.block + "!");
-      return true;
-    }
-
-    if (remark.caller != coll.issuer) {
-      invalidate(ci.id, "Attempting to change issuer of collection " + ci.id + " when not issuer!");
-      return true;
-    }
-
-    coll.addChange({
-      field: "issuer",
-      old: coll.issuer,
-      new: ci.issuer,
-      caller: remark.caller,
-      block: remark.block
-    });
-    coll.issuer = ci.issuer;
-    return false;
-  }
-
-  consolidate(rmrks) {
-    var _a;
-
-    const remarks = rmrks || ((_a = this.adapter) === null || _a === void 0 ? void 0 : _a.getRemarks()) || []; //console.log(remarks);
-
-    for (const remark of remarks) {
-      console.log("==============================");
-      console.log("Remark is: " + remark.remark);
-
-      switch (remark.interaction_type) {
-        case OP_TYPES.MINT:
-          if (this.mint(remark)) {
-            continue;
-          }
-
-          break;
-
-        case OP_TYPES.MINTNFT:
-          if (this.mintNFT(remark)) {
-            continue;
-          }
-
-          break;
-
-        case OP_TYPES.SEND:
-          if (this.send(remark)) {
-            continue;
-          }
-
-          break;
-
-        case OP_TYPES.BUY:
-          // An NFT was bought after being LISTed
-          break;
-
-        case OP_TYPES.LIST:
-          // An NFT was listed for sale
-          break;
-
-        case OP_TYPES.EMOTE:
-          if (this.emote(remark)) {
-            continue;
-          }
-
-          break;
-
-        case OP_TYPES.CHANGEISSUER:
-          if (this.changeIssuer(remark)) {
-            continue;
-          }
-
-          break;
-
-        default:
-          console.error("Unable to process this remark - wrong type: " + remark.interaction_type);
-      }
-    }
-
-    deeplog(this.nfts);
-    deeplog(this.collections);
-    console.log(this.invalidCalls);
-  }
-
 }
 
-var fetchRemarks = (async (api, from, to, prefixes) => {
-  const bcs = [];
-
-  for (let i = from; i <= to; i++) {
-    if (i % 1000 === 0) {
-      const event = new Date();
-      console.log("Block " + i + " at time " + event.toTimeString());
-
-      if (i % 5000 === 0) {
-        console.log("Currently at " + bcs.length + " remarks.");
-      }
-    }
-
-    const blockHash = await api.rpc.chain.getBlockHash(i);
-    const block = await api.rpc.chain.getBlock(blockHash);
-    const bc = [];
-
-    if (block.block === undefined) {
-      console.error("block.block is undefined for block " + i);
-      deeplog(block);
-      continue;
-    }
-
-    let exIndex = 0;
-
-    exLoop: for (const ex of block.block.extrinsics) {
-      if (ex.isEmpty || !ex.isSigned) {
-        exIndex++;
-        continue;
-      }
-
-      const {
-        method: {
-          args,
-          method,
-          section
+var fetchRemarks = async (api, from, to, prefixes) => {
+    const bcs = [];
+    for (let i = from; i <= to; i++) {
+        if (i % 1000 === 0) {
+            const event = new Date();
+            console.log(`Block ${i} at time ${event.toTimeString()}`);
+            if (i % 5000 === 0) {
+                console.log(`Currently at ${bcs.length} remarks.`);
+            }
         }
-      } = ex;
-
-      if (section === "system" && method === "remark") {
-        const remark = args.toString();
-
-        if (prefixes.some(word => remark.startsWith(word))) {
-          //if (remark.indexOf(prefix) === 0) {
-          bc.push({
-            call: "system.remark",
-            value: remark,
-            caller: ex.signer.toString()
-          });
+        const blockHash = await api.rpc.chain.getBlockHash(i);
+        const block = await api.rpc.chain.getBlock(blockHash);
+        const bc = [];
+        if (block.block === undefined) {
+            console.error("block.block is undefined for block " + i);
+            deeplog(block);
+            continue;
         }
-      } else if (section === "utility" && (method === "batch" || method == "batchAll")) {
-        // @ts-ignore
-        const batchargs = args[0];
-        let remarkExists = false;
-        batchargs.forEach(el => {
-          if (el.section === "system" && el.method === "remark" && prefixes.some(word => el.args.toString().startsWith(word))) {
-            remarkExists = true;
-          }
-        });
-
-        if (remarkExists) {
-          const records = await api.query.system.events.at(blockHash);
-          const events = records.filter(({
-            phase,
-            event
-          }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(exIndex) && (event.method.toString() === "BatchInterrupted" || event.method.toString() === "ExtrinsicFailed"));
-
-          if (events.length) {
-            console.log("Skipping batch " + i + "-" + exIndex + " due to BatchInterrupted");
+        let exIndex = 0;
+        exLoop: for (const ex of block.block.extrinsics) {
+            if (ex.isEmpty || !ex.isSigned) {
+                exIndex++;
+                continue;
+            }
+            const { method: { args, method, section }, } = ex;
+            if (section === "system" && method === "remark") {
+                const remark = args.toString();
+                if (prefixes.some((word) => remark.startsWith(word))) {
+                    //if (remark.indexOf(prefix) === 0) {
+                    bc.push({
+                        call: "system.remark",
+                        value: remark,
+                        caller: ex.signer.toString(),
+                    });
+                }
+            }
+            else if (section === "utility" &&
+                (method === "batch" || method == "batchAll")) {
+                // @ts-ignore
+                const batchargs = args[0];
+                let remarkExists = false;
+                batchargs.forEach((el) => {
+                    if (el.section === "system" &&
+                        el.method === "remark" &&
+                        prefixes.some((word) => el.args.toString().startsWith(word))) {
+                        remarkExists = true;
+                    }
+                });
+                if (remarkExists) {
+                    const records = await api.query.system.events.at(blockHash);
+                    const events = records.filter(({ phase, event }) => phase.isApplyExtrinsic &&
+                        phase.asApplyExtrinsic.eq(exIndex) &&
+                        (event.method.toString() === "BatchInterrupted" ||
+                            event.method.toString() === "ExtrinsicFailed"));
+                    if (events.length) {
+                        console.log(`Skipping batch ${i}-${exIndex} due to BatchInterrupted`);
+                        exIndex++;
+                        continue exLoop;
+                    }
+                    batchargs.forEach((el) => {
+                        bc.push({
+                            call: `${el.section}.${el.method}`,
+                            value: el.args.toString(),
+                            caller: ex.signer.toString(),
+                        });
+                    });
+                }
+            }
             exIndex++;
-            continue exLoop;
-          }
-
-          batchargs.forEach(el => {
-            bc.push({
-              call: el.section + "." + el.method,
-              value: el.args.toString(),
-              caller: ex.signer.toString()
-            });
-          });
         }
-      }
-
-      exIndex++;
+        if (bc.length) {
+            bcs.push({
+                block: i,
+                calls: bc,
+            });
+        }
     }
-
-    if (bc.length) {
-      bcs.push({
-        block: i,
-        calls: bc
-      });
-    }
-  }
-
-  return bcs;
-});
+    return bcs;
+};
 
 export { Consolidator, Collection as c100, fetchRemarks, NFT as n100, utils };
 //# sourceMappingURL=index.es.js.map
