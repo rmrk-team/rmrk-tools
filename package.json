@@ -10,7 +10,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && yarn build:cjs && yarn build:max && yarn build:min",
+    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:max && yarn build:min",
+    "build:es": "rollup --config ./config/rollup.js",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:max": "tsc && rollup --config ./config/rollup-umd.js",
     "build:min": "rollup --config ./config/rollup-umd-min.js",
@@ -35,6 +36,7 @@
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
@@ -55,7 +57,6 @@
   "dependencies": {
     "@polkadot/api": "^3.7.3",
     "@polkadot/extension-dapp": "^0.37.2",
-    "@rollup/plugin-json": "^4.1.0",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "winston": "^3.3.3"
