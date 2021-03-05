@@ -88,7 +88,8 @@
           autocomplete="off"
         />
       </div>
-      <div><button type="submit" class="submit">Turn into Remark</button></div>
+      <div><button type="submit" class="submit turn_into_remark">Turn into Remark</button></div>
+      <div><button type="submit" data-textarea="collection_remark" class="submit_remark">Submit Remark</button></div>
       <div>
         <textarea
           name="collection_remark"
@@ -168,7 +169,8 @@
           autocomplete="off"
         />
       </div>
-      <div><button type="submit" class="submit">Turn into Remark</button></div>
+      <div><button type="submit" class="submit turn_into_remark">Turn into Remark</button></div>
+      <div><button type="submit" data-textarea="nft_remark" class="submit_remark">Submit Remark</button></div>
       <div id="nft_id">
         ID: <span><b></b></span>.
         <em
@@ -190,7 +192,15 @@
     <hr />
     <script src="rmrk.js"></script>
     <script>
-      function initWeb3Login() {
+
+      start();
+
+      async function start() {
+        let myApi = await initWeb3Connection();
+        await initWeb3Login();
+      }
+
+      async function initWeb3Login() {
         dappex.web3Enable("RMRK Test").then(function () {
           if (!dappex.isWeb3Injected) {
             alert(
@@ -207,15 +217,15 @@
                 }</option>`;
               }
               picker.innerHTML = options;
-              initRest();
+              await initRest();
             });
           }
         });
       }
 
-      function initRest() {
+      async function initRest() {
         document
-          .querySelector("#collection_to_remark button.submit")
+          .querySelector("#collection_to_remark button.submit.turn_into_remark")
           .addEventListener("click", function (e) {
             e.preventDefault();
 
@@ -247,7 +257,7 @@
           });
 
         document
-          .querySelector("#nft_to_remark button.submit")
+          .querySelector("#nft_to_remark button.submit.turn_into_remark")
           .addEventListener("click", function (e) {
             e.preventDefault();
 
@@ -282,6 +292,15 @@
               "#nft_id span b"
             ).innerText = `xxxxxx-${coll}-${instance}-${sn}`;
           });
+
+        for (let b of document.querySelectorAll(".submit_remark")) {
+          b.addEventListener("click", function(e) {
+            e.preventDefault();
+            const remark = document.querySelector(`#${e.currentTarget.dataset.textarea}`).value;
+            console.log("Will submit " + remark);
+            submitRemark(remark);
+          })
+        }
 
         document
           .querySelector("#current_account_is_issuer")
@@ -344,7 +363,25 @@
         console.log(target);
         target.value = string_to_slug(target.value).toUpperCase();
       }
-      initWeb3Login();
+
+      async function submitRemark(remark) {
+        if (myApi) {
+          console.log("Submitting from " + selectedAddress());
+          let acc = await dappex.web3FromAddress(selectedAddress());
+          console.log(acc);
+          myApi.tx.system.remark(remark).signAndSend(selectedAddress(), {signer: acc.signer})
+        } else {
+          console.error("No connection");
+        }
+      }
+      async function initWeb3Connection() {
+        try {
+        const wsProvider = new api.WsProvider('ws://127.0.0.1:9944');
+        myApi = await api.ApiPromise.create({ provider: wsProvider });
+        } catch (e) {
+          console.error(e);
+        }
+      }
     </script>
   </body>
 </html>
