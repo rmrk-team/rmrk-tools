@@ -346,7 +346,7 @@ export class Consolidator {
     }
     deeplog(this.nfts);
     deeplog(this.collections);
-    console.log(this.invalidCalls);
+    //console.log(this.invalidCalls);
   }
 }
 
