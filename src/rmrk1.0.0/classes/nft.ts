@@ -125,7 +125,7 @@ export class NFT {
         obj.collection,
         obj.name,
         obj.instance,
-        obj.transferable,
+        typeof obj.transferable === "number" ? obj.transferable : parseInt(obj.transferable, 10),
         obj.sn,
         obj.metadata,
         obj.data
