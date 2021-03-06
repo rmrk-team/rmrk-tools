@@ -13,6 +13,8 @@ export declare class Consolidator {
     private mint;
     private mintNFT;
     private send;
+    private list;
+    private changeListStatus;
     private emote;
     private changeIssuer;
     consolidate(rmrks?: Remark[]): {

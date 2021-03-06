@@ -1,7 +1,7 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
-import { OP_TYPES } from "./types";
+import { OP_TYPES } from "./constants";
 export const getApi = async (wsEndpoint) => {
     const wsProvider = new WsProvider(wsEndpoint);
     const api = ApiPromise.create({ provider: wsProvider });
@@ -87,5 +87,9 @@ export const getRemarksFromBlocks = (blocks) => {
         }
     }
     return remarks;
+};
+export const getRemarkData = (dataString) => {
+    const data = decodeURIComponent(dataString);
+    return JSON.parse(data);
 };
 //# sourceMappingURL=utils.js.map

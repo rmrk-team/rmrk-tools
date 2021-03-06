@@ -18,12 +18,3 @@ export declare type BlockCall = {
     value: string;
     caller: string;
 };
-export declare enum OP_TYPES {
-    BUY = "BUY",
-    LIST = "LIST",
-    MINT = "MINT",
-    MINTNFT = "MINTNFT",
-    SEND = "SEND",
-    EMOTE = "EMOTE",
-    CHANGEISSUER = "CHANGEISSUER"
-}

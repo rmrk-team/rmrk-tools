@@ -8,6 +8,7 @@ export declare class NFT {
     readonly data?: string;
     readonly sn: string;
     readonly metadata?: string;
+    forsale: BigInt | boolean;
     reactions: Reactionmap;
     private changes;
     owner: string;

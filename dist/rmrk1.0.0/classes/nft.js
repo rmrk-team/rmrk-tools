@@ -1,3 +1,5 @@
+import { validateNFT } from "../../tools/validate-remark";
+import { getRemarkData } from "../../tools/utils";
 export class NFT {
     constructor(block, collection, name, instance, transferable, sn, metadata, data) {
         this.changes = [];
@@ -11,6 +13,7 @@ export class NFT {
         this.metadata = metadata;
         this.owner = "";
         this.reactions = {};
+        this.forsale = false;
     }
     getId() {
         if (!this.block)
@@ -49,39 +52,13 @@ export class NFT {
         if (!block) {
             block = 0;
         }
-        const exploded = remark.split("::");
         try {
-            if (exploded[0].toUpperCase() != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[1] != "MINTNFT")
-                throw new Error("The op code needs to be MINTNFT, is " + exploded[1]);
-            if (exploded[2] != NFT.V) {
-                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${NFT.V}`);
-            }
-            const data = decodeURIComponent(exploded[3]);
-            const obj = JSON.parse(data);
-            if (!obj)
-                throw new Error(`Could not parse object from: ${data}`);
-            // Check if the object has either data or metadata
-            if ((undefined === obj.metadata ||
-                (!obj.metadata.startsWith("ipfs") &&
-                    !obj.metadata.startsWith("http"))) &&
-                undefined === obj.data)
-                throw new Error(`Invalid metadata (not an HTTP or IPFS URL) and missing data`);
-            if (obj.data) {
-                NFT.checkDataFormat(obj.data);
-            }
-            if (undefined === obj.name)
-                throw new Error(`Missing field: name`);
-            if (undefined === obj.collection)
-                throw new Error(`Missing field: collection`);
-            if (undefined === obj.instance)
-                throw new Error(`Missing field: instance`);
-            if (undefined === obj.transferable)
-                throw new Error(`Missing field: transferable`);
-            if (undefined === obj.sn)
-                throw new Error(`Missing field: sn`);
-            return new this(block, obj.collection, obj.name, obj.instance, obj.transferable, obj.sn, obj.metadata, obj.data);
+            validateNFT(remark);
+            const [prefix, op_type, version, dataString] = remark.split("::");
+            const obj = getRemarkData(dataString);
+            return new this(block, obj.collection, obj.name, obj.instance, typeof obj.transferable === "number"
+                ? obj.transferable
+                : parseInt(obj.transferable, 10), obj.sn, obj.metadata, obj.data);
         }
         catch (e) {
             console.error(e.message);

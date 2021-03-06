@@ -21,328 +21,526 @@ var camelcase__default = /*#__PURE__*/_interopDefaultLegacy(camelcase);
 var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto$1);
 var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$1);
 
-class Collection {
-    constructor(block, name, max, issuer, symbol, id, metadata) {
-        this.changes = [];
-        this.block = block;
-        this.name = name;
-        this.max = max;
-        this.issuer = issuer;
-        this.symbol = symbol;
-        this.id = id;
-        this.metadata = metadata;
-    }
-    mint() {
-        if (this.block) {
-            throw new Error("An already existing collection cannot be minted!");
-        }
-        return `RMRK::MINT::${Collection.V}::${encodeURIComponent(JSON.stringify({
-            name: this.name,
-            max: this.max,
-            issuer: this.issuer,
-            symbol: this.symbol.toUpperCase(),
-            id: this.id,
-            metadata: this.metadata,
-        }))}`;
-    }
-    change_issuer(address) {
-        if (this.block === 0) {
-            throw new Error("This collection is new, so there's no issuer to change." +
-                " If it has been deployed on chain, load the existing " +
-                "collection as a new instance first, then change issuer.");
-        }
-        return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
-    }
-    addChange(c) {
-        this.changes.push(c);
-        return this;
-    }
-    getChanges() {
-        return this.changes;
-    }
-    static generateId(pubkey, symbol) {
-        if (!pubkey.startsWith("0x")) {
-            throw new Error("This is not a valid pubkey, it does not start with 0x");
-        }
-        //console.log(pubkey);
-        return (pubkey.substr(2, 10) +
-            pubkey.substring(pubkey.length - 8) +
-            "-" +
-            symbol.toUpperCase());
-    }
-    static fromRemark(remark, block) {
-        if (!block) {
-            block = 0;
-        }
-        const exploded = remark.split("::");
-        try {
-            if (exploded[0].toUpperCase() != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[1] != "MINT")
-                throw new Error("The op code needs to be MINT, is " + exploded[1]);
-            if (exploded[2] != Collection.V) {
-                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${Collection.V}`);
-            }
-            const data = decodeURIComponent(exploded[3]);
-            const obj = JSON.parse(data);
-            if (!obj)
-                throw new Error(`Could not parse object from: ${data}`);
-            if (undefined === obj.metadata ||
-                (!obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http")))
-                throw new Error(`Invalid metadata - not an HTTP or IPFS URL`);
-            if (undefined === obj.name)
-                throw new Error(`Missing field: name`);
-            if (undefined === obj.max)
-                throw new Error(`Missing field: max`);
-            if (undefined === obj.issuer)
-                throw new Error(`Missing field: issuer`);
-            if (undefined === obj.symbol)
-                throw new Error(`Missing field: symbol`);
-            if (undefined === obj.id)
-                throw new Error(`Missing field: id`);
-            return new this(block, obj.name, obj.max, obj.issuer, obj.symbol, obj.id, obj.metadata);
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`MINT error: full input was ${remark}`);
-            return e.message;
-        }
-    }
-    /**
-     * TBD - hard dependency on Axios / IPFS to fetch remote
-     */
-    async load_metadata() {
-        if (this.loadedMetadata)
-            return this.loadedMetadata;
-        return {};
-    }
-}
-Collection.V = "1.0.0";
-var DisplayType$1;
-(function (DisplayType) {
-    DisplayType[DisplayType["null"] = 0] = "null";
-    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
-    DisplayType[DisplayType["number"] = 2] = "number";
-    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
-})(DisplayType$1 || (DisplayType$1 = {}));
+const VERSION = "1.0.0";
+const PREFIX = "RMRK";
+var OP_TYPES;
+(function (OP_TYPES) {
+    OP_TYPES["BUY"] = "BUY";
+    OP_TYPES["LIST"] = "LIST";
+    OP_TYPES["MINT"] = "MINT";
+    OP_TYPES["MINTNFT"] = "MINTNFT";
+    OP_TYPES["SEND"] = "SEND";
+    OP_TYPES["EMOTE"] = "EMOTE";
+    OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
+})(OP_TYPES || (OP_TYPES = {}));
 
-class NFT {
-    constructor(block, collection, name, instance, transferable, sn, metadata, data) {
-        this.changes = [];
-        this.block = block;
-        this.collection = collection;
-        this.name = name;
-        this.instance = instance;
-        this.transferable = transferable;
-        this.sn = sn;
-        this.data = data;
-        this.metadata = metadata;
-        this.owner = "";
-        this.reactions = {};
-    }
-    getId() {
-        if (!this.block)
-            throw new Error("This token is not minted, so it cannot have an ID.");
-        return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
-    }
-    addChange(c) {
-        this.changes.push(c);
-        return this;
-    }
-    mintnft() {
-        if (this.block) {
-            throw new Error("An already existing NFT cannot be minted!");
-        }
-        return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(JSON.stringify({
-            collection: this.collection,
-            name: this.name,
-            instance: this.instance,
-            transferable: this.transferable,
-            sn: this.sn,
-            metadata: this.metadata,
-        }))}`;
-    }
-    send(recipient) {
-        if (!this.block) {
-            throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`);
-        }
-        return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
-    }
-    // @todo build this out, maybe data type?
-    static checkDataFormat(data) {
-        return true;
-    }
-    static fromRemark(remark, block) {
-        if (!block) {
-            block = 0;
-        }
-        const exploded = remark.split("::");
-        try {
-            if (exploded[0].toUpperCase() != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[1] != "MINTNFT")
-                throw new Error("The op code needs to be MINTNFT, is " + exploded[1]);
-            if (exploded[2] != NFT.V) {
-                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${NFT.V}`);
-            }
-            const data = decodeURIComponent(exploded[3]);
-            const obj = JSON.parse(data);
-            if (!obj)
-                throw new Error(`Could not parse object from: ${data}`);
-            // Check if the object has either data or metadata
-            if ((undefined === obj.metadata ||
-                (!obj.metadata.startsWith("ipfs") &&
-                    !obj.metadata.startsWith("http"))) &&
-                undefined === obj.data)
-                throw new Error(`Invalid metadata (not an HTTP or IPFS URL) and missing data`);
-            if (obj.data) {
-                NFT.checkDataFormat(obj.data);
-            }
-            if (undefined === obj.name)
-                throw new Error(`Missing field: name`);
-            if (undefined === obj.collection)
-                throw new Error(`Missing field: collection`);
-            if (undefined === obj.instance)
-                throw new Error(`Missing field: instance`);
-            if (undefined === obj.transferable)
-                throw new Error(`Missing field: transferable`);
-            if (undefined === obj.sn)
-                throw new Error(`Missing field: sn`);
-            return new this(block, obj.collection, obj.name, obj.instance, obj.transferable, obj.sn, obj.metadata, obj.data);
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`MINTNFT error: full input was ${remark}`);
-            return e.message;
-        }
-    }
-    /**
-     * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
-     */
-    list(price) {
-        if (!this.block) {
-            throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`);
-        }
-        return `RMRK::LIST::${NFT.V}::${this.getId()}::${price > 0 ? price : "cancel"}`;
-    }
-    buy() {
-        if (!this.block) {
-            throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`);
-        }
-        return `RMRK::BUY::${NFT.V}::${this.getId()}`;
-    }
-    consume() {
-        if (!this.block) {
-            throw new Error(`You can only consume an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`);
-        }
-        return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
-    }
-    /**
-     * TBD - hard dependency on Axios / IPFS to fetch remote
-     */
-    async load_metadata() {
-        if (this.loadedMetadata)
-            return this.loadedMetadata;
-        return {};
-    }
-}
-NFT.V = "1.0.0";
-var DisplayType;
-(function (DisplayType) {
-    DisplayType[DisplayType["null"] = 0] = "null";
-    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
-    DisplayType[DisplayType["number"] = 2] = "number";
-    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
-})(DisplayType || (DisplayType = {}));
+/**
+ * A `StructFailure` represents a single specific failure in validation.
+ */
 
-class ChangeIssuer {
-    constructor(issuer, id) {
-        this.issuer = issuer;
-        this.id = id;
-    }
-    static fromRemark(remark) {
-        const exploded = remark.split("::");
-        try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != ChangeIssuer.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${ChangeIssuer.V}`);
-            if (exploded[1] != "CHANGEISSUER")
-                throw new Error("The op code needs to be CHANGEISSUER, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or new issuer");
-            }
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`CHANGEISSUER error: full input was ${remark}`);
-            return e.message;
-        }
-        const ci = new ChangeIssuer(exploded[4], exploded[3]);
-        return ci;
-    }
-}
-ChangeIssuer.V = "1.0.0";
+/**
+ * `StructError` objects are thrown (or returned) when validation fails.
+ *
+ * Validation logic is design to exit early for maximum performance. The error
+ * represents the first error encountered during validation. For more detail,
+ * the `error.failures` property is a generator function that can be run to
+ * continue validation and receive all the failures in the data.
+ */
+class StructError extends TypeError {
+  constructor(failure, failures) {
+    let cached;
+    const {
+      message,
+      ...rest
+    } = failure;
+    const {
+      path
+    } = failure;
+    const msg = path.length === 0 ? message : "At path: " + path.join('.') + " -- " + message;
+    super(msg);
+    Object.assign(this, rest);
+    this.name = this.constructor.name;
 
-class Send {
-    constructor(id, recipient) {
-        this.recipient = recipient;
-        this.id = id;
-    }
-    static fromRemark(remark) {
-        const exploded = remark.split("::");
-        try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != Send.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Send.V}`);
-            if (exploded[1] != "SEND")
-                throw new Error("The op code needs to be SEND, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or recipient");
-            }
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`SEND error: full input was ${remark}`);
-            return e.message;
-        }
-        return new Send(exploded[3], exploded[4]);
-    }
-}
-Send.V = "1.0.0";
+    this.failures = () => {
+      var _cached;
 
-class Emote {
-    constructor(id, unicode) {
-        this.unicode = unicode;
-        this.id = id;
-    }
-    static fromRemark(remark) {
-        const exploded = remark.split("::");
-        try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != Emote.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Emote.V}`);
-            if (exploded[1] != "EMOTE")
-                throw new Error("The op code needs to be EMOTE, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or unicode");
-            }
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`EMOTE error: full input was ${remark}`);
-            return e.message;
-        }
-        return new Emote(exploded[3], exploded[4]);
-    }
+      return (_cached = cached) != null ? _cached : cached = [failure, ...failures()];
+    };
+  }
+
 }
-Emote.V = "1.0.0";
+
+/**
+ * Check if a value is an iterator.
+ */
+function isIterable$1(x) {
+  return isObject$2(x) && typeof x[Symbol.iterator] === 'function';
+}
+/**
+ * Check if a value is a plain object.
+ */
+
+
+function isObject$2(x) {
+  return typeof x === 'object' && x != null;
+}
+/**
+ * Return a value as a printable string.
+ */
+
+function print(value) {
+  return typeof value === 'string' ? JSON.stringify(value) : "" + value;
+}
+/**
+ * Shifts (removes and returns) the first value from the `input` iterator.
+ * Like `Array.prototype.shift()` but for an `Iterator`.
+ */
+
+function shiftIterator(input) {
+  const {
+    done,
+    value
+  } = input.next();
+  return done ? undefined : value;
+}
+/**
+ * Convert a single validation result to a failure.
+ */
+
+function toFailure(result, context, struct, value) {
+  if (result === true) {
+    return;
+  } else if (result === false) {
+    result = {};
+  } else if (typeof result === 'string') {
+    result = {
+      message: result
+    };
+  }
+
+  const {
+    path,
+    branch
+  } = context;
+  const {
+    type
+  } = struct;
+  const {
+    refinement,
+    message = "Expected a value of type `" + type + "`" + (refinement ? " with refinement `" + refinement + "`" : '') + ", but received: `" + print(value) + "`"
+  } = result;
+  return {
+    value,
+    type,
+    refinement,
+    key: path[path.length - 1],
+    path,
+    branch,
+    ...result,
+    message
+  };
+}
+/**
+ * Convert a validation result to an iterable of failures.
+ */
+
+function* toFailures(result, context, struct, value) {
+  if (!isIterable$1(result)) {
+    result = [result];
+  }
+
+  for (const r of result) {
+    const failure = toFailure(r, context, struct, value);
+
+    if (failure) {
+      yield failure;
+    }
+  }
+}
+/**
+ * Check a value against a struct, traversing deeply into nested values, and
+ * returning an iterator of failures or success.
+ */
+
+function* run(value, struct, options = {}) {
+  const {
+    path = [],
+    branch = [value],
+    coerce = false,
+    mask = false
+  } = options;
+  const ctx = {
+    path,
+    branch
+  };
+
+  if (coerce) {
+    value = struct.coercer(value, ctx);
+
+    if (mask && struct.type !== 'type' && isObject$2(struct.schema) && isObject$2(value) && !Array.isArray(value)) {
+      for (const key in value) {
+        if (struct.schema[key] === undefined) {
+          delete value[key];
+        }
+      }
+    }
+  }
+
+  let valid = true;
+
+  for (const failure of struct.validator(value, ctx)) {
+    valid = false;
+    yield [failure, undefined];
+  }
+
+  for (let [k, v, s] of struct.entries(value, ctx)) {
+    const ts = run(v, s, {
+      path: k === undefined ? path : [...path, k],
+      branch: k === undefined ? branch : [...branch, v],
+      coerce,
+      mask
+    });
+
+    for (const t of ts) {
+      if (t[0]) {
+        valid = false;
+        yield [t[0], undefined];
+      } else if (coerce) {
+        v = t[1];
+
+        if (k === undefined) {
+          value = v;
+        } else if (value instanceof Map) {
+          value.set(k, v);
+        } else if (value instanceof Set) {
+          value.add(v);
+        } else if (isObject$2(value)) {
+          value[k] = v;
+        }
+      }
+    }
+  }
+
+  if (valid) {
+    for (const failure of struct.refiner(value, ctx)) {
+      valid = false;
+      yield [failure, undefined];
+    }
+  }
+
+  if (valid) {
+    yield [undefined, value];
+  }
+}
+
+/**
+ * `Struct` objects encapsulate the validation logic for a specific type of
+ * values. Once constructed, you use the `assert`, `is` or `validate` helpers to
+ * validate unknown input data against the struct.
+ */
+
+class Struct$1 {
+  constructor(props) {
+    const {
+      type,
+      schema,
+      validator,
+      refiner,
+      coercer = value => value,
+      entries = function* () {}
+    } = props;
+    this.type = type;
+    this.schema = schema;
+    this.entries = entries;
+    this.coercer = coercer;
+
+    if (validator) {
+      this.validator = (value, context) => {
+        const result = validator(value, context);
+        return toFailures(result, context, this, value);
+      };
+    } else {
+      this.validator = () => [];
+    }
+
+    if (refiner) {
+      this.refiner = (value, context) => {
+        const result = refiner(value, context);
+        return toFailures(result, context, this, value);
+      };
+    } else {
+      this.refiner = () => [];
+    }
+  }
+  /**
+   * Assert that a value passes the struct's validation, throwing if it doesn't.
+   */
+
+
+  assert(value) {
+    return assert$b(value, this);
+  }
+  /**
+   * Create a value with the struct's coercion logic, then validate it.
+   */
+
+
+  create(value) {
+    return create(value, this);
+  }
+  /**
+   * Check if a value passes the struct's validation.
+   */
+
+
+  is(value) {
+    return is(value, this);
+  }
+  /**
+   * Mask a value, coercing and validating it, but returning only the subset of
+   * properties defined by the struct's schema.
+   */
+
+
+  mask(value) {
+    return mask(value, this);
+  }
+  /**
+   * Validate a value with the struct's validation logic, returning a tuple
+   * representing the result.
+   *
+   * You may optionally pass `true` for the `withCoercion` argument to coerce
+   * the value before attempting to validate it. If you do, the result will
+   * contain the coerced result when successful.
+   */
+
+
+  validate(value, options = {}) {
+    return validate(value, this, options);
+  }
+
+}
+/**
+ * Assert that a value passes a struct, throwing if it doesn't.
+ */
+
+function assert$b(value, struct) {
+  const result = validate(value, struct);
+
+  if (result[0]) {
+    throw result[0];
+  }
+}
+/**
+ * Create a value with the coercion logic of struct and validate it.
+ */
+
+function create(value, struct) {
+  const result = validate(value, struct, {
+    coerce: true
+  });
+
+  if (result[0]) {
+    throw result[0];
+  } else {
+    return result[1];
+  }
+}
+/**
+ * Mask a value, returning only the subset of properties defined by a struct.
+ */
+
+function mask(value, struct) {
+  const result = validate(value, struct, {
+    coerce: true,
+    mask: true
+  });
+
+  if (result[0]) {
+    throw result[0];
+  } else {
+    return result[1];
+  }
+}
+/**
+ * Check if a value passes a struct.
+ */
+
+function is(value, struct) {
+  const result = validate(value, struct);
+  return !result[0];
+}
+/**
+ * Validate a value against a struct, returning an error if invalid, or the
+ * value (with potential coercion) if valid.
+ */
+
+function validate(value, struct, options = {}) {
+  const tuples = run(value, struct, options);
+  const tuple = shiftIterator(tuples);
+
+  if (tuple[0]) {
+    const error = new StructError(tuple[0], function* () {
+      for (const t of tuples) {
+        if (t[0]) {
+          yield t[0];
+        }
+      }
+    });
+    return [error, undefined];
+  } else {
+    const v = tuple[1];
+    return [undefined, v];
+  }
+}
+/**
+ * Define a new struct type with a custom validation function.
+ */
+
+function define(name, validator) {
+  return new Struct$1({
+    type: name,
+    schema: null,
+    validator
+  });
+}
+
+/**
+ * Ensure that any value passes validation.
+ */
+
+function any() {
+  return define('any', () => true);
+}
+/**
+ * Ensure that no value ever passes validation.
+ */
+
+function never() {
+  return define('never', () => false);
+}
+/**
+ * Ensure that a value is a number.
+ */
+
+function number() {
+  return define('number', value => {
+    return typeof value === 'number' && !isNaN(value) || "Expected a number, but received: " + print(value);
+  });
+}
+function object(schema) {
+  const knowns = schema ? Object.keys(schema) : [];
+  const Never = never();
+  return new Struct$1({
+    type: 'object',
+    schema: schema ? schema : null,
+
+    *entries(value) {
+      if (schema && isObject$2(value)) {
+        const unknowns = new Set(Object.keys(value));
+
+        for (const key of knowns) {
+          unknowns.delete(key);
+          yield [key, value[key], schema[key]];
+        }
+
+        for (const key of unknowns) {
+          yield [key, value[key], Never];
+        }
+      }
+    },
+
+    validator(value) {
+      return isObject$2(value) || "Expected an object, but received: " + print(value);
+    },
+
+    coercer(value) {
+      return isObject$2(value) ? { ...value
+      } : value;
+    }
+
+  });
+}
+/**
+ * Augment a struct to allow `undefined` values.
+ */
+
+function optional(struct) {
+  return new Struct$1({ ...struct,
+    validator: (value, ctx) => value === undefined || struct.validator(value, ctx),
+    refiner: (value, ctx) => value === undefined || struct.refiner(value, ctx)
+  });
+}
+/**
+ * Ensure that a value is a string.
+ */
+
+function string() {
+  return define('string', value => {
+    return typeof value === 'string' || "Expected a string, but received: " + print(value);
+  });
+}
+/**
+ * Ensure that a value has a set of known properties of specific types.
+ *
+ * Note: Unrecognized properties are allowed and untouched. This is similar to
+ * how TypeScript's structural typing works.
+ */
+
+function type(schema) {
+  const keys = Object.keys(schema);
+  return new Struct$1({
+    type: 'type',
+    schema,
+
+    *entries(value) {
+      if (isObject$2(value)) {
+        for (const k of keys) {
+          yield [k, value[k], schema[k]];
+        }
+      }
+    },
+
+    validator(value) {
+      return isObject$2(value) || "Expected an object, but received: " + print(value);
+    }
+
+  });
+}
+/**
+ * Ensure that a string matches a regular expression.
+ */
+
+function pattern(struct, regexp) {
+  return refine(struct, 'pattern', value => {
+    return regexp.test(value) || "Expected a " + struct.type + " matching `/" + regexp.source + "/` but received \"" + value + "\"";
+  });
+}
+/**
+ * Augment a `Struct` to add an additional refinement to the validation.
+ *
+ * The refiner function is guaranteed to receive a value of the struct's type,
+ * because the struct's existing validation will already have passed. This
+ * allows you to layer additional validation on top of existing structs.
+ */
+
+function refine(struct, name, refiner) {
+  return new Struct$1({ ...struct,
+
+    *refiner(value, ctx) {
+      yield* struct.refiner(value, ctx);
+      const result = refiner(value, ctx);
+      const failures = toFailures(result, ctx, struct, value);
+
+      for (const failure of failures) {
+        yield { ...failure,
+          refinement: name
+        };
+      }
+    }
+
+  });
+}
 
 // Copyright 2017-2021 @polkadot/dev authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -39877,17 +40075,6 @@ class ApiPromise extends ApiBase {
 
 }
 
-var OP_TYPES;
-(function (OP_TYPES) {
-    OP_TYPES["BUY"] = "BUY";
-    OP_TYPES["LIST"] = "LIST";
-    OP_TYPES["MINT"] = "MINT";
-    OP_TYPES["MINTNFT"] = "MINTNFT";
-    OP_TYPES["SEND"] = "SEND";
-    OP_TYPES["EMOTE"] = "EMOTE";
-    OP_TYPES["CHANGEISSUER"] = "CHANGEISSUER";
-})(OP_TYPES || (OP_TYPES = {}));
-
 const getApi = async (wsEndpoint) => {
     const wsProvider = new WsProvider(wsEndpoint);
     const api = ApiPromise.create({ provider: wsProvider });
@@ -39974,6 +40161,10 @@ const getRemarksFromBlocks = (blocks) => {
     }
     return remarks;
 };
+const getRemarkData = (dataString) => {
+    const data = decodeURIComponent(dataString);
+    return JSON.parse(data);
+};
 
 var utils = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -39983,8 +40174,372 @@ var utils = /*#__PURE__*/Object.freeze({
     deeplog: deeplog,
     stringIsAValidUrl: stringIsAValidUrl,
     prefixToArray: prefixToArray,
-    getRemarksFromBlocks: getRemarksFromBlocks
+    getRemarksFromBlocks: getRemarksFromBlocks,
+    getRemarkData: getRemarkData
 });
+
+const DataStruct = object({
+    protocol: string(),
+    data: any(),
+    type: string(),
+});
+const CollectionStruct = type({
+    name: string(),
+    max: number(),
+    issuer: string(),
+    symbol: string(),
+    id: string(),
+    metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+    data: optional(DataStruct),
+});
+const NFTStruct = type({
+    name: string(),
+    collection: string(),
+    instance: string(),
+    transferable: number(),
+    sn: string(),
+    data: optional(DataStruct),
+    metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+});
+const validateBase = (remark, opType) => {
+    const [prefix, op_type, version] = remark.split("::");
+    if (prefix !== PREFIX) {
+        throw new Error("Invalid remark - does not start with RMRK");
+    }
+    if (version !== VERSION) {
+        throw new Error(`This remark was issued under version ${version} instead of ${VERSION}`);
+    }
+    if (op_type !== opType) {
+        throw new Error(`The op code needs to be ${opType}, but it is ${op_type}`);
+    }
+};
+const validateCollection = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, dataString] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.MINT);
+        const obj = getRemarkData(dataString);
+        return assert$b(obj, CollectionStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        return new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrrong during remark validation");
+    }
+};
+const validateNFT = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, dataString] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.MINTNFT);
+        const obj = getRemarkData(dataString);
+        return assert$b(obj, NFTStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        return new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrrong during remark validation");
+    }
+};
+
+class Collection {
+    constructor(block, name, max, issuer, symbol, id, metadata) {
+        this.changes = [];
+        this.block = block;
+        this.name = name;
+        this.max = max;
+        this.issuer = issuer;
+        this.symbol = symbol;
+        this.id = id;
+        this.metadata = metadata;
+    }
+    mint() {
+        if (this.block) {
+            throw new Error("An already existing collection cannot be minted!");
+        }
+        return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(JSON.stringify({
+            name: this.name,
+            max: this.max,
+            issuer: this.issuer,
+            symbol: this.symbol.toUpperCase(),
+            id: this.id,
+            metadata: this.metadata,
+        }))}`;
+    }
+    change_issuer(address) {
+        if (this.block === 0) {
+            throw new Error("This collection is new, so there's no issuer to change." +
+                " If it has been deployed on chain, load the existing " +
+                "collection as a new instance first, then change issuer.");
+        }
+        return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
+    }
+    addChange(c) {
+        this.changes.push(c);
+        return this;
+    }
+    getChanges() {
+        return this.changes;
+    }
+    static generateId(pubkey, symbol) {
+        if (!pubkey.startsWith("0x")) {
+            throw new Error("This is not a valid pubkey, it does not start with 0x");
+        }
+        //console.log(pubkey);
+        return (pubkey.substr(2, 10) +
+            pubkey.substring(pubkey.length - 8) +
+            "-" +
+            symbol.toUpperCase());
+    }
+    static fromRemark(remark, block = 0) {
+        try {
+            validateCollection(remark);
+            const [prefix, op_type, version, dataString] = remark.split("::");
+            const obj = getRemarkData(dataString);
+            return new this(block, obj.name, obj.max, obj.issuer, obj.symbol, obj.id, obj.metadata);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`${OP_TYPES.MINT} error: full input was ${remark}`);
+            return e.message;
+        }
+    }
+    /**
+     * TBD - hard dependency on Axios / IPFS to fetch remote
+     */
+    async load_metadata() {
+        if (this.loadedMetadata)
+            return this.loadedMetadata;
+        return {};
+    }
+}
+Collection.V = "1.0.0";
+var DisplayType$1;
+(function (DisplayType) {
+    DisplayType[DisplayType["null"] = 0] = "null";
+    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
+    DisplayType[DisplayType["number"] = 2] = "number";
+    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
+})(DisplayType$1 || (DisplayType$1 = {}));
+
+class NFT {
+    constructor(block, collection, name, instance, transferable, sn, metadata, data) {
+        this.changes = [];
+        this.block = block;
+        this.collection = collection;
+        this.name = name;
+        this.instance = instance;
+        this.transferable = transferable;
+        this.sn = sn;
+        this.data = data;
+        this.metadata = metadata;
+        this.owner = "";
+        this.reactions = {};
+        this.forsale = false;
+    }
+    getId() {
+        if (!this.block)
+            throw new Error("This token is not minted, so it cannot have an ID.");
+        return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
+    }
+    addChange(c) {
+        this.changes.push(c);
+        return this;
+    }
+    mintnft() {
+        if (this.block) {
+            throw new Error("An already existing NFT cannot be minted!");
+        }
+        return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(JSON.stringify({
+            collection: this.collection,
+            name: this.name,
+            instance: this.instance,
+            transferable: this.transferable,
+            sn: this.sn,
+            metadata: this.metadata,
+        }))}`;
+    }
+    send(recipient) {
+        if (!this.block) {
+            throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
+    }
+    // @todo build this out, maybe data type?
+    static checkDataFormat(data) {
+        return true;
+    }
+    static fromRemark(remark, block) {
+        if (!block) {
+            block = 0;
+        }
+        try {
+            validateNFT(remark);
+            const [prefix, op_type, version, dataString] = remark.split("::");
+            const obj = getRemarkData(dataString);
+            return new this(block, obj.collection, obj.name, obj.instance, typeof obj.transferable === "number"
+                ? obj.transferable
+                : parseInt(obj.transferable, 10), obj.sn, obj.metadata, obj.data);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`MINTNFT error: full input was ${remark}`);
+            return e.message;
+        }
+    }
+    /**
+     * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
+     */
+    list(price) {
+        if (!this.block) {
+            throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::LIST::${NFT.V}::${this.getId()}::${price > 0 ? price : "cancel"}`;
+    }
+    buy() {
+        if (!this.block) {
+            throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+    }
+    consume() {
+        if (!this.block) {
+            throw new Error(`You can only consume an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`);
+        }
+        return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+    }
+    /**
+     * TBD - hard dependency on Axios / IPFS to fetch remote
+     */
+    async load_metadata() {
+        if (this.loadedMetadata)
+            return this.loadedMetadata;
+        return {};
+    }
+}
+NFT.V = "1.0.0";
+var DisplayType;
+(function (DisplayType) {
+    DisplayType[DisplayType["null"] = 0] = "null";
+    DisplayType[DisplayType["boost_number"] = 1] = "boost_number";
+    DisplayType[DisplayType["number"] = 2] = "number";
+    DisplayType[DisplayType["boost_percentage"] = 3] = "boost_percentage";
+})(DisplayType || (DisplayType = {}));
+
+class ChangeIssuer {
+    constructor(issuer, id) {
+        this.issuer = issuer;
+        this.id = id;
+    }
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != ChangeIssuer.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${ChangeIssuer.V}`);
+            if (exploded[1] != "CHANGEISSUER")
+                throw new Error("The op code needs to be CHANGEISSUER, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or new issuer");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`CHANGEISSUER error: full input was ${remark}`);
+            return e.message;
+        }
+        const ci = new ChangeIssuer(exploded[4], exploded[3]);
+        return ci;
+    }
+}
+ChangeIssuer.V = "1.0.0";
+
+class Send {
+    constructor(id, recipient) {
+        this.recipient = recipient;
+        this.id = id;
+    }
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != Send.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Send.V}`);
+            if (exploded[1] != "SEND")
+                throw new Error("The op code needs to be SEND, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or recipient");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`SEND error: full input was ${remark}`);
+            return e.message;
+        }
+        return new Send(exploded[3], exploded[4]);
+    }
+}
+Send.V = "1.0.0";
+
+class List {
+    constructor(id, price) {
+        this.price = price;
+        this.id = id;
+    }
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != List.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${List.V}`);
+            if (exploded[1] != "LIST")
+                throw new Error("The op code needs to be LIST, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or price");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`SEND error: full input was ${remark}`);
+            return e.message;
+        }
+        return new List(exploded[3], BigInt(exploded[4]));
+    }
+}
+List.V = "1.0.0";
+
+class Emote {
+    constructor(id, unicode) {
+        this.unicode = unicode;
+        this.id = id;
+    }
+    static fromRemark(remark) {
+        const exploded = remark.split("::");
+        try {
+            if (exploded[0] != "RMRK")
+                throw new Error("Invalid remark - does not start with RMRK");
+            if (exploded[2] != Emote.V)
+                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Emote.V}`);
+            if (exploded[1] != "EMOTE")
+                throw new Error("The op code needs to be EMOTE, is " + exploded[1]);
+            if (undefined === exploded[3] || undefined == exploded[4]) {
+                throw new Error("Cound not find ID or unicode");
+            }
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`EMOTE error: full input was ${remark}`);
+            return e.message;
+        }
+        return new Emote(exploded[3], exploded[4]);
+    }
+}
+Emote.V = "1.0.0";
 
 // import * as fs from "fs";
 class Consolidator {
@@ -40093,7 +40648,6 @@ class Consolidator {
             const uniquePart2 = idExpand2.join("-");
             return uniquePart1 === uniquePart2;
         });
-        // @todo add condition for transferable!
         if (!nft) {
             invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`);
             return true;
@@ -40101,6 +40655,10 @@ class Consolidator {
         // Check if allowed to issue send - if owner == caller
         if (nft.owner != remark.caller) {
             invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`);
+            return true;
+        }
+        if (nft.transferable === 0) {
+            invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`);
             return true;
         }
         nft.addChange({
@@ -40112,6 +40670,28 @@ class Consolidator {
         });
         nft.owner = send.recipient;
         return false;
+    }
+    list(remark) {
+        // An NFT was listed for sale
+        console.log("Instantiating list");
+        List.fromRemark(remark.remark);
+        this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(this);
+        // @todo finish list implementation
+        return true;
+    }
+    // This function is defined separately so that it can be called from send, buy, and consume.
+    // These other interactions will cancel a listing, so it's easier if we abstract the function out.
+    // @todo add this into these functions
+    changeListStatus(nft, status, remark) {
+        nft.addChange({
+            field: "forsale",
+            old: nft.forsale,
+            new: status,
+            caller: remark.caller,
+            block: remark.block,
+        });
+        nft.forsale = status;
+        return true;
     }
     emote(remark) {
         // An EMOTE reaction has been sent
@@ -40198,6 +40778,9 @@ class Consolidator {
                     break;
                 case OP_TYPES.LIST:
                     // An NFT was listed for sale
+                    if (this.list(remark)) {
+                        continue;
+                    }
                     break;
                 case OP_TYPES.EMOTE:
                     if (this.emote(remark)) {
@@ -40216,7 +40799,7 @@ class Consolidator {
         }
         deeplog(this.nfts);
         deeplog(this.collections);
-        console.log(this.invalidCalls);
+        // console.log(this.invalidCalls);
         return { nfts: this.nfts, collections: this.collections };
     }
 }

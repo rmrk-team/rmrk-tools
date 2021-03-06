@@ -2,11 +2,12 @@ import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
 import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
+import { List } from "../../rmrk1.0.0/classes/list";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { deeplog } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
-import { OP_TYPES } from "../types";
+import { OP_TYPES } from "../constants";
 // import * as fs from "fs";
 export class Consolidator {
     constructor(initializedAdapter) {
@@ -114,7 +115,6 @@ export class Consolidator {
             const uniquePart2 = idExpand2.join("-");
             return uniquePart1 === uniquePart2;
         });
-        // @todo add condition for transferable!
         if (!nft) {
             invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`);
             return true;
@@ -122,6 +122,10 @@ export class Consolidator {
         // Check if allowed to issue send - if owner == caller
         if (nft.owner != remark.caller) {
             invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`);
+            return true;
+        }
+        if (nft.transferable === 0) {
+            invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`);
             return true;
         }
         nft.addChange({
@@ -133,6 +137,28 @@ export class Consolidator {
         });
         nft.owner = send.recipient;
         return false;
+    }
+    list(remark) {
+        // An NFT was listed for sale
+        console.log("Instantiating list");
+        const list = List.fromRemark(remark.remark);
+        const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(this);
+        // @todo finish list implementation
+        return true;
+    }
+    // This function is defined separately so that it can be called from send, buy, and consume.
+    // These other interactions will cancel a listing, so it's easier if we abstract the function out.
+    // @todo add this into these functions
+    changeListStatus(nft, status, remark) {
+        nft.addChange({
+            field: "forsale",
+            old: nft.forsale,
+            new: status,
+            caller: remark.caller,
+            block: remark.block,
+        });
+        nft.forsale = status;
+        return true;
     }
     emote(remark) {
         // An EMOTE reaction has been sent
@@ -219,6 +245,9 @@ export class Consolidator {
                     break;
                 case OP_TYPES.LIST:
                     // An NFT was listed for sale
+                    if (this.list(remark)) {
+                        continue;
+                    }
                     break;
                 case OP_TYPES.EMOTE:
                     if (this.emote(remark)) {
@@ -237,7 +266,7 @@ export class Consolidator {
         }
         deeplog(this.nfts);
         deeplog(this.collections);
-        console.log(this.invalidCalls);
+        // console.log(this.invalidCalls);
         return { nfts: this.nfts, collections: this.collections };
     }
 }

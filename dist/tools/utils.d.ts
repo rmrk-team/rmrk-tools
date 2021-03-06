@@ -16,4 +16,5 @@ declare type Block = {
     calls: Call[];
 };
 export declare const getRemarksFromBlocks: (blocks: Block[]) => Remark[];
+export declare const getRemarkData: (dataString: string) => any;
 export {};

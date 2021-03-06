@@ -1,3 +1,6 @@
+import { validateCollection } from "../../tools/validate-remark";
+import { getRemarkData } from "../../tools/utils";
+import { OP_TYPES } from "../../tools/constants";
 export class Collection {
     constructor(block, name, max, issuer, symbol, id, metadata) {
         this.changes = [];
@@ -13,7 +16,7 @@ export class Collection {
         if (this.block) {
             throw new Error("An already existing collection cannot be minted!");
         }
-        return `RMRK::MINT::${Collection.V}::${encodeURIComponent(JSON.stringify({
+        return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(JSON.stringify({
             name: this.name,
             max: this.max,
             issuer: this.issuer,
@@ -47,41 +50,16 @@ export class Collection {
             "-" +
             symbol.toUpperCase());
     }
-    static fromRemark(remark, block) {
-        if (!block) {
-            block = 0;
-        }
-        const exploded = remark.split("::");
+    static fromRemark(remark, block = 0) {
         try {
-            if (exploded[0].toUpperCase() != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[1] != "MINT")
-                throw new Error("The op code needs to be MINT, is " + exploded[1]);
-            if (exploded[2] != Collection.V) {
-                throw new Error(`This remark was issued under version ${exploded[2]} instead of ${Collection.V}`);
-            }
-            const data = decodeURIComponent(exploded[3]);
-            const obj = JSON.parse(data);
-            if (!obj)
-                throw new Error(`Could not parse object from: ${data}`);
-            if (undefined === obj.metadata ||
-                (!obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http")))
-                throw new Error(`Invalid metadata - not an HTTP or IPFS URL`);
-            if (undefined === obj.name)
-                throw new Error(`Missing field: name`);
-            if (undefined === obj.max)
-                throw new Error(`Missing field: max`);
-            if (undefined === obj.issuer)
-                throw new Error(`Missing field: issuer`);
-            if (undefined === obj.symbol)
-                throw new Error(`Missing field: symbol`);
-            if (undefined === obj.id)
-                throw new Error(`Missing field: id`);
+            validateCollection(remark);
+            const [prefix, op_type, version, dataString] = remark.split("::");
+            const obj = getRemarkData(dataString);
             return new this(block, obj.name, obj.max, obj.issuer, obj.symbol, obj.id, obj.metadata);
         }
         catch (e) {
             console.error(e.message);
-            console.log(`MINT error: full input was ${remark}`);
+            console.log(`${OP_TYPES.MINT} error: full input was ${remark}`);
             return e.message;
         }
     }
