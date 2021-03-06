@@ -1,5 +1,7 @@
 // @todo: add data!
 import { Change } from "../changelog";
+import { validateCollection } from "../../tools/validate-remark";
+import { getRemarkData } from "../../tools/utils";
 
 export class Collection {
   readonly block: number;
@@ -80,34 +82,11 @@ export class Collection {
     );
   }
 
-  static fromRemark(remark: string, block?: number): Collection | string {
-    if (!block) {
-      block = 0;
-    }
-    const exploded = remark.split("::");
+  static fromRemark(remark: string, block = 0): Collection | string {
     try {
-      if (exploded[0].toUpperCase() != "RMRK")
-        throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[1] != "MINT")
-        throw new Error("The op code needs to be MINT, is " + exploded[1]);
-      if (exploded[2] != Collection.V) {
-        throw new Error(
-          `This remark was issued under version ${exploded[2]} instead of ${Collection.V}`
-        );
-      }
-      const data = decodeURIComponent(exploded[3]);
-      const obj = JSON.parse(data);
-      if (!obj) throw new Error(`Could not parse object from: ${data}`);
-      if (
-        undefined === obj.metadata ||
-        (!obj.metadata.startsWith("ipfs") && !obj.metadata.startsWith("http"))
-      )
-        throw new Error(`Invalid metadata - not an HTTP or IPFS URL`);
-      if (undefined === obj.name) throw new Error(`Missing field: name`);
-      if (undefined === obj.max) throw new Error(`Missing field: max`);
-      if (undefined === obj.issuer) throw new Error(`Missing field: issuer`);
-      if (undefined === obj.symbol) throw new Error(`Missing field: symbol`);
-      if (undefined === obj.id) throw new Error(`Missing field: id`);
+      validateCollection(remark);
+      const [prefix, op_type, version, dataString] = remark.split("::");
+      const obj = getRemarkData(dataString);
       return new this(
         block,
         obj.name,

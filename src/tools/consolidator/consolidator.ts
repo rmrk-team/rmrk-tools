@@ -10,7 +10,7 @@ import { deeplog } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
-import { OP_TYPES } from "../types";
+import { OP_TYPES } from "../constants";
 // import * as fs from "fs";
 
 export class Consolidator {

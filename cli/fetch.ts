@@ -3,6 +3,7 @@ import {
   deeplog,
   getApi,
   getLatestFinalizedBlock,
+  getRemarksFromBlocks,
   prefixToArray,
 } from "../src/tools/utils";
 import fs from "fs";
@@ -73,6 +74,7 @@ export const addTo = (program: commander.CommanderStatic | typeof commander) =>
         prefixToArray(opts.prefixes)
       );
       console.log(deeplog(extracted));
+      console.log(getRemarksFromBlocks(extracted));
       let outputFileName = `remarks-${from}-${to}-${opts.prefixes}.json`;
       if (append) {
         extracted = appendFile.concat(extracted);

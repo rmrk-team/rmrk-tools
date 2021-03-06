@@ -2,7 +2,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
 import { Remark } from "./consolidator/remark";
-import { OP_TYPES } from "./types";
+import { OP_TYPES } from "./constants";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -90,6 +90,7 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
       const meta = getMeta(call, row.block);
       if (!meta) continue;
       let remark;
+
       switch (meta.type) {
         case OP_TYPES.MINTNFT:
         case OP_TYPES.MINT:
@@ -99,6 +100,7 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
           remark = hexToString(call.value);
           break;
       }
+
       const r: Remark = {
         block: row.block,
         caller: call.caller,
@@ -110,4 +112,9 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
     }
   }
   return remarks;
+};
+
+export const getRemarkData = (dataString: string) => {
+  const data = decodeURIComponent(dataString);
+  return JSON.parse(data);
 };

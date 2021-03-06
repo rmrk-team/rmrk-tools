@@ -22,12 +22,12 @@
     "clean": "rm -rf build",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "cli:fetch": "ts-node cli/index fetch",
-    "cli:consolidate": "ts-node cli/index consolidate",
-    "cli:seed": "ts-node cli/index seed",
-    "cli:getevents": "ts-node cli/index getevents",
-    "cli:validate": "ts-node src/index validate",
-    "test": "ava"
+    "cli:fetch": "ts-node --project tsconfig.cli.json cli/index fetch",
+    "cli:consolidate": "ts-node --project tsconfig.cli.json cli/index consolidate",
+    "cli:seed": "ts-node --project tsconfig.cli.json cli/index seed",
+    "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
+    "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
+    "test": "TS_NODE_PROJECT=tsconfig.test.json ava"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
@@ -38,9 +38,9 @@
     "@babel/preset-typescript": "^7.13.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.0",
-    "@rollup/plugin-json": "^4.1.0",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
@@ -63,6 +63,7 @@
     "@polkadot/extension-dapp": "^0.37.2",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
+    "superstruct": "^0.14.2",
     "winston": "^3.3.3"
   },
   "ava": {
@@ -71,6 +72,9 @@
     ],
     "require": [
       "ts-node/register"
+    ],
+    "files": [
+      "test/**/*.test.ts"
     ]
   }
 }
