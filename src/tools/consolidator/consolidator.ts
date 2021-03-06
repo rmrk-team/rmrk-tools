@@ -222,7 +222,7 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
     );
-    
+
     // @todo finish list implementation
     return true;
   }
@@ -230,7 +230,11 @@ export class Consolidator {
   // This function is defined separately so that it can be called from send, buy, and consume.
   // These other interactions will cancel a listing, so it's easier if we abstract the function out.
   // @todo add this into these functions
-  private changeListStatus(nft: N100, status: BigInt|boolean, remark: Remark): boolean {
+  private changeListStatus(
+    nft: N100,
+    status: BigInt | boolean,
+    remark: Remark
+  ): boolean {
     nft.addChange({
       field: "forsale",
       old: nft.forsale,
@@ -241,7 +245,7 @@ export class Consolidator {
     nft.forsale = status;
     return true;
   }
- 
+
   private emote(remark: Remark): boolean {
     // An EMOTE reaction has been sent
     console.log("Instantiating emote");
