@@ -28,10 +28,10 @@ export const validateBase = (remark: string, opType: OP_TYPES) => {
 
 export const validateCollection = (remark: string): any => {
   const [prefix, op_type, version, dataString] = remark.split("::");
-  validateBase(remark, OP_TYPES.MINT);
-  const obj = getRemarkData(dataString);
 
   try {
+    validateBase(remark, OP_TYPES.MINT);
+    const obj = getRemarkData(dataString);
     return assert(obj, CollectionData);
   } catch (error) {
     console.log("StructError is:", error);
