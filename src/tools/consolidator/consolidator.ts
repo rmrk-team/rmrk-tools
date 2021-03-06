@@ -181,8 +181,6 @@ export class Consolidator {
       return uniquePart1 === uniquePart2;
     });
 
-    // @todo add condition for transferable!
-
     if (!nft) {
       invalidate(
         send.id,
@@ -196,6 +194,14 @@ export class Consolidator {
       invalidate(
         send.id,
         `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`
+      );
+      return true;
+    }
+
+    if (nft.transferable === 0) {
+      invalidate(
+        send.id,
+        `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`
       );
       return true;
     }
@@ -219,7 +225,7 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
     );
-    
+
     // @todo finish list implementation
     return true;
   }
