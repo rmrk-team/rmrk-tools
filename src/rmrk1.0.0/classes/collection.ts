@@ -2,6 +2,7 @@
 import { Change } from "../changelog";
 import { validateCollection } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
+import { OP_TYPES } from "../../tools/constants";
 
 export class Collection {
   readonly block: number;
@@ -37,7 +38,7 @@ export class Collection {
     if (this.block) {
       throw new Error("An already existing collection cannot be minted!");
     }
-    return `RMRK::MINT::${Collection.V}::${encodeURIComponent(
+    return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(
       JSON.stringify({
         name: this.name,
         max: this.max,
@@ -98,7 +99,7 @@ export class Collection {
       );
     } catch (e) {
       console.error(e.message);
-      console.log(`MINT error: full input was ${remark}`);
+      console.log(`${OP_TYPES.MINT} error: full input was ${remark}`);
       return e.message;
     }
   }
