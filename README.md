@@ -2,7 +2,45 @@
 
 Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec/).
 
+## Installation
+`yarn install git+https://github.com/Swader/rmrk-tools`
+
 ## Usage
+
+### ESM / Typescript
+
+```
+import { fetchRemarks, utils, Consolidator } from 'rmrk-tools';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+
+const wsProvider = new WsProvider('wss://node.rmrk.app');
+    
+const fetchAndConsolidate = async () => {
+    try {
+        const api = await ApiPromise.create({ provider: wsProvider });
+        const to = await utils.getLatestFinalizedBlock(api);
+    
+        const remarkBlocks = await fetchRemarks(api, 6431422, to, ['']);
+        if (remarkBlocks && !isEmpty(remarkBlocks)) {
+          const remarks = utils.getRemarksFromBlocks(remarkBlocks);
+          const consolidator = new Consolidator();    
+          const { nfts, collections } = consolidator.consolidate(remarks);
+          console.log('Consolidated nfts:', nfts);
+          console.log('Consolidated collections:', collections);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+```
+
+### Browser
+```
+<script src="node_modules/rmrk-tools"></script>
+<script>
+    const { c100, n100, Consolidator, fetchRemarks, utils } = window.rmrkTools;
+</script>
+```
 
 TBD
 
