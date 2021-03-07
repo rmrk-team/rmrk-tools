@@ -63,14 +63,14 @@ class StructError extends TypeError {
  * Check if a value is an iterator.
  */
 function isIterable$1(x) {
-  return isObject$2(x) && typeof x[Symbol.iterator] === 'function';
+  return isObject$6(x) && typeof x[Symbol.iterator] === 'function';
 }
 /**
  * Check if a value is a plain object.
  */
 
 
-function isObject$2(x) {
+function isObject$6(x) {
   return typeof x === 'object' && x != null;
 }
 /**
@@ -166,7 +166,7 @@ function* run(value, struct, options = {}) {
   if (coerce) {
     value = struct.coercer(value, ctx);
 
-    if (mask && struct.type !== 'type' && isObject$2(struct.schema) && isObject$2(value) && !Array.isArray(value)) {
+    if (mask && struct.type !== 'type' && isObject$6(struct.schema) && isObject$6(value) && !Array.isArray(value)) {
       for (const key in value) {
         if (struct.schema[key] === undefined) {
           delete value[key];
@@ -203,7 +203,7 @@ function* run(value, struct, options = {}) {
           value.set(k, v);
         } else if (value instanceof Set) {
           value.add(v);
-        } else if (isObject$2(value)) {
+        } else if (isObject$6(value)) {
           value[k] = v;
         }
       }
@@ -267,7 +267,7 @@ class Struct$1 {
 
 
   assert(value) {
-    return assert$b(value, this);
+    return assert$j(value, this);
   }
   /**
    * Create a value with the struct's coercion logic, then validate it.
@@ -313,7 +313,7 @@ class Struct$1 {
  * Assert that a value passes a struct, throwing if it doesn't.
  */
 
-function assert$b(value, struct) {
+function assert$j(value, struct) {
   const result = validate(value, struct);
 
   if (result[0]) {
@@ -425,7 +425,7 @@ function object(schema) {
     schema: schema ? schema : null,
 
     *entries(value) {
-      if (schema && isObject$2(value)) {
+      if (schema && isObject$6(value)) {
         const unknowns = new Set(Object.keys(value));
 
         for (const key of knowns) {
@@ -440,11 +440,11 @@ function object(schema) {
     },
 
     validator(value) {
-      return isObject$2(value) || "Expected an object, but received: " + print(value);
+      return isObject$6(value) || "Expected an object, but received: " + print(value);
     },
 
     coercer(value) {
-      return isObject$2(value) ? { ...value
+      return isObject$6(value) ? { ...value
       } : value;
     }
 
@@ -483,7 +483,7 @@ function type(schema) {
     schema,
 
     *entries(value) {
-      if (isObject$2(value)) {
+      if (isObject$6(value)) {
         for (const k of keys) {
           yield [k, value[k], schema[k]];
         }
@@ -491,7 +491,7 @@ function type(schema) {
     },
 
     validator(value) {
-      return isObject$2(value) || "Expected an object, but received: " + print(value);
+      return isObject$6(value) || "Expected an object, but received: " + print(value);
     }
 
   });
@@ -600,7 +600,7 @@ const xglobal = typeof global !== 'undefined' ? global : typeof self !== 'undefi
  * isFunction(() => false); // => true
  * ```
  */
-function isFunction$1(value) {
+function isFunction$9(value) {
   return typeof value === 'function';
 }
 
@@ -622,7 +622,7 @@ function isFunction$1(value) {
  * ```
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-function isString(value) {
+function isString$8(value) {
   return typeof value === 'string' || value instanceof String;
 }
 
@@ -644,7 +644,7 @@ function isString(value) {
  * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isUndefined(value) {
+function isUndefined$6(value) {
   return typeof value === 'undefined';
 }
 
@@ -666,9 +666,9 @@ function isUndefined(value) {
  * assert(false, () => 'message'); // Error with 'message'
  * ```
  */
-function assert$a(condition, message) {
+function assert$i(condition, message) {
   if (!condition) {
-    throw new Error(isFunction$1(message) ? message() : message);
+    throw new Error(isFunction$9(message) ? message() : message);
   }
 }
 /**
@@ -676,97 +676,9 @@ function assert$a(condition, message) {
  * @summart Returns when the value is not undefined, otherwise throws assertion error
  */
 
-function assertReturn(value, message) {
-  assert$a(!isUndefined(value), message);
+function assertReturn$2(value, message) {
+  assert$i(!isUndefined$6(value), message);
   return value;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-const DEDUPE = 'Either remove and explicitly install matching versions or deupe using your package manager.\nThe following conflicting packages were found:';
-/** @internal */
-
-function getEntry(name) {
-  const _global = xglobal;
-
-  if (!_global.__polkadotjs) {
-    _global.__polkadotjs = {};
-  }
-
-  if (!_global.__polkadotjs[name]) {
-    _global.__polkadotjs[name] = [];
-  }
-
-  return _global.__polkadotjs[name];
-}
-
-function getVersionLength(all) {
-  return all.reduce((max, {
-    version
-  }) => Math.max(max, version.length), 0);
-}
-/** @internal */
-
-
-function flattenInfos(all) {
-  const verLength = getVersionLength(all);
-  return all.map(({
-    name,
-    version
-  }) => `\t${version.padEnd(verLength)}\t${name}`).join('\n');
-}
-/** @internal */
-
-
-function flattenVersions(entry) {
-  const all = entry.map(version => isString(version) ? {
-    version
-  } : version);
-  const verLength = getVersionLength(all);
-  return all.map(({
-    path,
-    version
-  }) => `\t${version.padEnd(verLength)}\t${!path || path.length < 5 ? '<unknown>' : path}`).join('\n');
-}
-/** @internal */
-
-
-function getPath(pathOrFn) {
-  if (isFunction$1(pathOrFn)) {
-    try {
-      return pathOrFn() || '';
-    } catch (error) {
-      return '';
-    }
-  }
-
-  return pathOrFn || '';
-}
-/**
- * @name detectPackage
- * @summary Checks that a specific package is only imported once
- */
-
-
-function detectPackage({
-  name,
-  version
-}, pathOrFn, deps = []) {
-  assert$a(name.startsWith('@polkadot'), `Invalid package descriptor ${name}`);
-  const entry = getEntry(name);
-  entry.push({
-    path: getPath(pathOrFn),
-    version
-  });
-
-  if (entry.length !== 1) {
-    console.warn(`${name} has multiple versions, ensure that there is only one installed.\n${DEDUPE}\n${flattenVersions(entry)}`);
-  } else {
-    const mismatches = deps.filter(d => d && d.version !== version);
-
-    if (mismatches.length) {
-      console.warn(`${name} requires direct dependencies exactly matching version ${version}.\n${DEDUPE}\n${flattenInfos(mismatches)}`);
-    }
-  }
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -800,27 +712,6 @@ function arrayChunk(array, chunkSize) {
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name isNull
- * @summary Tests for a `null` values.
- * @description
- * Checks to see if the input value is `null`.
- * @example
- * <BR>
- *
- * ```javascript
- * import { isNull } from '@polkadot/util';
- *
- * console.log('isNull', isNull(null)); // => true
- * ```
- */
-function isNull(value) {
-  return value === null;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
 // This is supposed to be a faster concat...
 // https://dev.to/uilicious/javascript-array-push-is-945x-faster-than-array-concat-1oki
 
@@ -838,7 +729,7 @@ function isNull(value) {
  * arrayFlatten([[1, 2], [3, 4], [5]]); // [1, 2, 3, 4, 5]
  * ```
  */
-function arrayFlatten(arrays) {
+function arrayFlatten$1(arrays) {
   // pre-allocate based on the combined size
   const output = new Array(arrays.reduce((length, array) => length + array.length, 0));
   let index = -1;
@@ -4313,13 +4204,13 @@ var bn = createCommonjsModule(function (module) {
  * @summary BN constant for 0.
  */
 
-const BN_ZERO = new bn(0);
+const BN_ZERO$2 = new bn(0);
 /**
  * @name BN_ONE
  * @summary BN constant for 1.
  */
 
-const BN_ONE = new bn(1);
+new bn(1);
 /**
  * @name BN_TWO
  * @summary BN constant for 2.
@@ -4379,7 +4270,7 @@ new bn(10);
  * @summary BN constant for 100.
  */
 
-const BN_HUNDRED = new bn(100);
+new bn(100);
 /**
  * @name BN_THOUSAND
  * @summary BN constant for 1,000.
@@ -4391,25 +4282,25 @@ new bn(1000);
  * @summary BN constant for 1,000,000.
  */
 
-const BN_MILLION = new bn(1000000);
+new bn(1000000);
 /**
  * @name BN_BILLION
  * @summary BN constant for 1,000,000,000.
  */
 
-const BN_BILLION = new bn(1000000000);
+const BN_BILLION$2 = new bn(1000000000);
 /**
  * @name BN_QUINTILL
  * @summary BN constant for 1,000,000,000,000,000,000.
  */
 
-const BN_QUINTILL = BN_BILLION.mul(BN_BILLION);
+BN_BILLION$2.mul(BN_BILLION$2);
 /**
  * @name BN_MAX_INTEGER
  * @summary BN constant for MAX_SAFE_INTEGER
  */
 
-const BN_MAX_INTEGER = new bn(Number.MAX_SAFE_INTEGER);
+new bn(Number.MAX_SAFE_INTEGER);
 
 function _defineProperty(obj, key, value) {
   if (key in obj) {
@@ -4443,12 +4334,12 @@ function _defineProperty(obj, key, value) {
  * isBoolean(false); // => true
  * ```
  */
-function isBoolean(value) {
+function isBoolean$5(value) {
   return typeof value === 'boolean';
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
-const HEX_REGEX = /^0x[a-fA-F0-9]+$/;
+const HEX_REGEX$8 = /^0x[a-fA-F0-9]+$/;
 /**
  * @name isHex
  * @summary Tests for a hex string.
@@ -4466,8 +4357,8 @@ const HEX_REGEX = /^0x[a-fA-F0-9]+$/;
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 
-function isHex(value, bitLength = -1, ignoreLength = false) {
-  const isValidHex = value === '0x' || isString(value) && HEX_REGEX.test(value.toString());
+function isHex$8(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$8(value) && HEX_REGEX$8.test(value.toString());
 
   if (isValidHex && bitLength !== -1) {
     return value.length === 2 + Math.ceil(bitLength / 4);
@@ -4492,12 +4383,12 @@ function isHex(value, bitLength = -1, ignoreLength = false) {
  * ```
  */
 
-function hexHasPrefix(value) {
-  return !!(value && isHex(value, -1, true) && value.substr(0, 2) === '0x');
+function hexHasPrefix$8(value) {
+  return !!(value && isHex$8(value, -1, true) && value.substr(0, 2) === '0x');
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
-const UNPREFIX_HEX_REGEX = /^[a-fA-F0-9]+$/;
+const UNPREFIX_HEX_REGEX$8 = /^[a-fA-F0-9]+$/;
 /**
  * @name hexStripPrefix
  * @summary Strips any leading `0x` prefix.
@@ -4513,27 +4404,27 @@ const UNPREFIX_HEX_REGEX = /^[a-fA-F0-9]+$/;
  * ```
  */
 
-function hexStripPrefix(value) {
+function hexStripPrefix$8(value) {
   if (!value) {
     return '';
   }
 
-  if (hexHasPrefix(value)) {
+  if (hexHasPrefix$8(value)) {
     return value.substr(2);
   }
 
-  if (UNPREFIX_HEX_REGEX.test(value)) {
+  if (UNPREFIX_HEX_REGEX$8.test(value)) {
     return value;
   }
 
   throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
 }
 
-function ownKeys$O(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$W(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$O(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$O(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$O(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$W(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$W(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$W(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function reverse(value) {
+function reverse$5(value) {
   return (value.match(/.{1,2}/g) || []).reverse().join('');
 }
 /**
@@ -4556,7 +4447,7 @@ function reverse(value) {
  */
 
 
-function hexToBn(value, options = {
+function hexToBn$5(value, options = {
   isLe: false,
   isNegative: false
 }) {
@@ -4564,146 +4455,21 @@ function hexToBn(value, options = {
     return new bn(0);
   }
 
-  const _options = _objectSpread$O({
+  const _options = _objectSpread$W({
     isLe: false,
     isNegative: false
-  }, isBoolean(options) ? {
+  }, isBoolean$5(options) ? {
     isLe: options
   } : options);
 
-  const _value = hexStripPrefix(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  const _value = hexStripPrefix$8(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
   // https://github.com/indutny/bn.js/issues/208
 
 
-  const bn$1 = new bn((_options.isLe ? reverse(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  const bn$1 = new bn((_options.isLe ? reverse$5(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
   // multiplied by 4.
 
   return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-function checkMaxMin(type, items) {
-  assert$a(items.length >= 1, 'Must provide one or more BN arguments');
-  return items.reduce((acc, val) => bn[type](acc, val), items[0]);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name bnMax
- * @summary Finds and returns the highest value in an array of BNs.
- * @example
- * <BR>
- *
- * ```javascript
- * import BN from 'bn.js';
- * import { bnMax } from '@polkadot/util';
- *
- * bnMax([new BN(1), new BN(3), new BN(2)]).toString(); // => '3'
- * ```
- */
-
-function bnMax(...items) {
-  return checkMaxMin('max', items);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name isBigInt
- * @summary Tests for a `BigInt` object instance.
- * @description
- * Checks to see if the input object is an instance of `BigInt`
- * @example
- * <BR>
- *
- * ```javascript
- * import { isBigInt } from '@polkadot/util';
- *
- * console.log('isBigInt', isBigInt(123_456n)); // => true
- * ```
- */
-function isBigInt(value) {
-  return typeof value === 'bigint';
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-function isToBn(value) {
-  return !!value && isFunction$1(value.toBn);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-
-function numberToBn(value) {
-  return bn.isBN(value) ? value : isToBn(value) ? value.toBn() : new bn(value);
-}
-/**
- * @name bnToBn
- * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
- * @description
- * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
- * @example
- * <BR>
- *
- * ```javascript
- * import BN from 'bn.js';
- * import { bnToBn } from '@polkadot/util';
- *
- * bnToBn(0x1234); // => BN(0x1234)
- * bnToBn(new BN(0x1234)); // => BN(0x1234)
- * ```
- */
-
-
-function bnToBn(value) {
-  if (!value) {
-    return new bn(0);
-  } else if (isHex(value)) {
-    return hexToBn(value.toString());
-  } else if (isBigInt(value)) {
-    return new bn(value.toString());
-  }
-
-  return numberToBn(value);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name bnSqrt
- * @summary Calculates the integer square root of a BN
- * @example
- * <BR>
- *
- * ```javascript
- * import BN from 'bn.js';
- * import { bnSqrt } from '@polkadot/util';
- *
- * bnSqrt(new BN(16)).toString(); // => '4'
- * ```
- */
-
-function bnSqrt(value) {
-  const n = bnToBn(value);
-  assert$a(n.gte(BN_ZERO), 'square root of negative numbers is not supported'); // https://stackoverflow.com/questions/53683995/javascript-big-integer-square-root/
-  // shortcut <= 2^53 - 1 to use the JS utils
-
-  if (n.lte(BN_MAX_INTEGER)) {
-    return new bn(Math.floor(Math.sqrt(n.toNumber())));
-  } // Use sqrt(MAX_SAFE_INTEGER) as starting point. since we already know the
-  // output will be larger than this, we expect this to be a safe start
-
-
-  let x0 = new bn(94906265);
-
-  while (true) {
-    const x1 = n.div(x0).iadd(x0).ishrn(1);
-
-    if (x0.eq(x1) || x0.eq(x1.sub(BN_ONE))) {
-      return x0;
-    }
-
-    x0 = x1;
-  }
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -4723,7 +4489,7 @@ function bnSqrt(value) {
  * console.log('isNumber', isNumber(1234)); // => true
  * ```
  */
-function isNumber(value) {
+function isNumber$5(value) {
   return typeof value === 'number';
 }
 
@@ -4744,7 +4510,7 @@ function isNumber(value) {
  * bufferToU8a(Buffer.from([1, 2, 3]));
  * ```
  */
-function bufferToU8a(buffer) {
+function bufferToU8a$6(buffer) {
   return new Uint8Array(buffer || []);
 }
 
@@ -4765,13 +4531,13 @@ function bufferToU8a(buffer) {
  * ```
  */
 
-function hexToU8a(_value, bitLength = -1) {
+function hexToU8a$7(_value, bitLength = -1) {
   if (!_value) {
     return new Uint8Array();
   }
 
-  assert$a(isHex(_value), `Expected hex value to convert, found '${_value}'`);
-  const value = hexStripPrefix(_value);
+  assert$i(isHex$8(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$8(_value);
   const valLength = value.length / 2;
   const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
   const result = new Uint8Array(bufLength);
@@ -4801,12 +4567,12 @@ function hexToU8a(_value, bitLength = -1) {
  * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
  * ```
  */
-function isBuffer(value) {
+function isBuffer$6(value) {
   return Buffer.isBuffer(value);
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
-const encoder = new TextEncoder();
+const encoder$7 = new TextEncoder();
 /**
  * @name stringToU8a
  * @summary Creates a Uint8Array object from a utf-8 string.
@@ -4823,18 +4589,18 @@ const encoder = new TextEncoder();
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 
-function stringToU8a(value) {
-  return value ? encoder.encode(value.toString()) : new Uint8Array();
+function stringToU8a$7(value) {
+  return value ? encoder$7.encode(value.toString()) : new Uint8Array();
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
 
-function convertArray(value) {
+function convertArray$6(value) {
   return Array.isArray(value) ? Uint8Array.from(value) : value;
 }
 
-function convertString(value) {
-  return isHex(value) ? hexToU8a(value) : stringToU8a(value);
+function convertString$6(value) {
+  return isHex$8(value) ? hexToU8a$7(value) : stringToU8a$7(value);
 }
 /**
  * @name u8aToU8a
@@ -4853,55 +4619,16 @@ function convertString(value) {
  */
 
 
-function u8aToU8a(value) {
+function u8aToU8a$6(value) {
   if (!value) {
     return new Uint8Array();
-  } else if (isBuffer(value)) {
-    return bufferToU8a(value);
-  } else if (isString(value)) {
-    return convertString(value);
+  } else if (isBuffer$6(value)) {
+    return bufferToU8a$6(value);
+  } else if (isString$8(value)) {
+    return convertString$6(value);
   }
 
-  return convertArray(value);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name u8aConcat
- * @summary Creates a concatenated Uint8Array from the inputs.
- * @description
- * Concatenates the input arrays into a single `UInt8Array`.
- * @example
- * <BR>
- *
- * ```javascript
- * import { { u8aConcat } from '@polkadot/util';
- *
- * u8aConcat(
- *   new Uint8Array([1, 2, 3]),
- *   new Uint8Array([4, 5, 6])
- * ); // [1, 2, 3, 4, 5, 6]
- * ```
- */
-
-function u8aConcat(...list) {
-  let length = 0;
-  let offset = 0;
-  const u8as = new Array(list.length);
-
-  for (let i = 0; i < list.length; i++) {
-    u8as[i] = u8aToU8a(list[i]);
-    length += u8as[i].length;
-  }
-
-  const result = new Uint8Array(length);
-
-  for (let i = 0; i < u8as.length; i++) {
-    result.set(u8as[i], offset);
-    offset += u8as[i].length;
-  }
-
-  return result;
+  return convertArray$6(value);
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -4936,19 +4663,19 @@ function equals(a, b) {
 
 
 function u8aEq(a, b) {
-  return equals(u8aToU8a(a), u8aToU8a(b));
+  return equals(u8aToU8a$6(a), u8aToU8a$6(b));
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-const ALPHABET = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+const ALPHABET$7 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
 /** @internal */
 
-function extract(value) {
+function extract$7(value) {
   const result = new Array(value.length);
 
   for (let i = 0; i < value.length; i++) {
-    result[i] = ALPHABET[value[i]];
+    result[i] = ALPHABET$7[value[i]];
   }
 
   return result.join('');
@@ -4956,8 +4683,8 @@ function extract(value) {
 /** @internal */
 
 
-function trim(value, halfLength) {
-  return `${u8aToHex(value.subarray(0, halfLength), -1, false)}…${u8aToHex(value.subarray(value.length - halfLength), -1, false)}`;
+function trim$7(value, halfLength) {
+  return `${u8aToHex$7(value.subarray(0, halfLength), -1, false)}…${u8aToHex$7(value.subarray(value.length - halfLength), -1, false)}`;
 }
 /**
  * @name u8aToHex
@@ -4975,7 +4702,7 @@ function trim(value, halfLength) {
  */
 
 
-function u8aToHex(value, bitLength = -1, isPrefixed = true) {
+function u8aToHex$7(value, bitLength = -1, isPrefixed = true) {
   const prefix = isPrefixed ? '0x' : '';
 
   if (!(value !== null && value !== void 0 && value.length)) {
@@ -4983,7 +4710,7 @@ function u8aToHex(value, bitLength = -1, isPrefixed = true) {
   }
 
   const byteLength = Math.ceil(bitLength / 8);
-  return prefix + (byteLength > 0 && value.length > byteLength ? trim(value, Math.ceil(byteLength / 2)) : extract(value));
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$7(value, Math.ceil(byteLength / 2)) : extract$7(value));
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -5006,11 +4733,896 @@ function u8aToHex(value, bitLength = -1, isPrefixed = true) {
  * ```
  */
 
-function u8aToBn(value, options = {
+function u8aToBn$2(value, options = {
   isLe: true,
   isNegative: false
 }) {
-  return hexToBn(u8aToHex(value), options);
+  return hexToBn$5(u8aToHex$7(value), options);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const DEFAULT_BITLENGTH$2 = 32;
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactFromU8a
+ * @description Retrievs the offset and encoded length from a compact-prefixed value
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactFromU8a } from '@polkadot/util';
+ *
+ * const [offset, length] = compactFromU8a(new Uint8Array([254, 255, 3, 0]), 32));
+ *
+ * console.log('value offset=', offset, 'length=', length); // 4, 0xffff
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+function compactFromU8a$2(_input, bitLength = DEFAULT_BITLENGTH$2) {
+  const input = u8aToU8a$6(_input);
+  const flag = input[0] & 0b11;
+
+  if (flag === 0b00) {
+    return [1, new bn(input[0]).shrn(2)];
+  } else if (flag === 0b01) {
+    return [2, u8aToBn$2(input.slice(0, 2), true).shrn(2)];
+  } else if (flag === 0b10) {
+    return [4, u8aToBn$2(input.slice(0, 4), true).shrn(2)];
+  }
+
+  const length = new bn(input[0]).shrn(2) // clear flag
+  .addn(4) // add 4 for base length
+  .toNumber();
+  const offset = 1 + length;
+  return [offset, u8aToBn$2(input.subarray(1, offset), true)];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactStripLength
+ * @description Removes the length prefix, returning both the total length (including the value + compact encoding) and the decoded value with the correct length
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactStripLength } from '@polkadot/util';
+ *
+ * console.log(compactStripLength(new Uint8Array([2 << 2, 0xde, 0xad]))); // [2, Uint8Array[0xde, 0xad]]
+ * ```
+ */
+
+function compactStripLength$1(input, bitLength = DEFAULT_BITLENGTH$2) {
+  const [offset, length] = compactFromU8a$2(input, bitLength);
+  const total = offset + length.toNumber();
+  return [total, input.subarray(offset, total)];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/** @internal */
+function zeroPad$4(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function formatDate$4(date) {
+  const year = date.getFullYear().toString();
+  const month = zeroPad$4(date.getMonth() + 1);
+  const day = zeroPad$4(date.getDate());
+  const hour = zeroPad$4(date.getHours());
+  const minute = zeroPad$4(date.getMinutes());
+  const second = zeroPad$4(date.getSeconds());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isBn
+ * @summary Tests for a `BN` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BN` (bn.js).
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { isBn } from '@polkadot/util';
+ *
+ * console.log('isBn', isBn(new BN(1))); // => true
+ * ```
+ */
+
+function isBn$4(value) {
+  return bn.isBN(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$7(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+function isObject$5(value) {
+  return typeof value === 'object';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$7(value) {
+  return isInstanceOf$7(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const logTo$4 = {
+  debug: 'log',
+  error: 'error',
+  log: 'log',
+  warn: 'warn'
+};
+
+function formatOther$4(value) {
+  if (value && isObject$5(value) && value.constructor === Object) {
+    return Object.keys(value).reduce((result, key) => {
+      result[key] = loggerFormat$4(value[key]);
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+function loggerFormat$4(value) {
+  if (Array.isArray(value)) {
+    return value.map(loggerFormat$4);
+  } else if (isBn$4(value)) {
+    return value.toString();
+  } else if (isU8a$7(value) || isBuffer$6(value)) {
+    return u8aToHex$7(u8aToU8a$6(value));
+  }
+
+  return formatOther$4(value);
+}
+
+function apply$4(log, type, values, maxSize = -1) {
+  if (values.length === 1 && isFunction$9(values[0])) {
+    const fnResult = values[0]();
+    return apply$4(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
+  }
+
+  console[logTo$4[log]](formatDate$4(new Date()), type, ...values.map(loggerFormat$4).map(v => {
+    if (maxSize <= 0) {
+      return v;
+    }
+
+    const r = `${v}`;
+    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
+  }));
+}
+
+function noop$5() {// noop
+}
+
+function parseEnv$4(type) {
+  var _process, _process$env, _process2, _process2$env;
+
+  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
+  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
+}
+/**
+ * @name Logger
+ * @summary Creates a consistent log interface for messages
+ * @description
+ * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { logger } from '@polkadot';
+ *
+ * const l = logger('test');
+ * ```
+ */
+
+
+function logger$4(_type) {
+  const type = `${_type.toUpperCase()}:`.padStart(16);
+  const [isDebug, maxSize] = parseEnv$4(_type.toLowerCase());
+  return {
+    debug: isDebug ? (...values) => apply$4('debug', type, values, maxSize) : noop$5,
+    error: (...values) => apply$4('error', type, values),
+    log: (...values) => apply$4('log', type, values),
+    noop: noop$5,
+    warn: (...values) => apply$4('warn', type, values)
+  };
+}
+
+// Copyright 2017-2021 @polkadot/dev authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// Auto-generated by @polkadot/dev, do not edit
+const packageInfo$1 = {
+  name: '@polkadot/api',
+  version: '3.11.1'
+};
+
+function _classPrivateFieldBase(receiver, privateKey) {
+  if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) {
+    throw new TypeError("attempted to use private field on non-instance");
+  }
+
+  return receiver;
+}
+
+var id = 0;
+function _classPrivateFieldKey(name) {
+  return "__private_" + id++ + "_" + name;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$8(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$7(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$h(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$8(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const DEDUPE$3 = 'Either remove and explicitly install matching versions or deupe using your package manager.\nThe following conflicting packages were found:';
+/** @internal */
+
+function getEntry$3(name) {
+  const _global = xglobal;
+
+  if (!_global.__polkadotjs) {
+    _global.__polkadotjs = {};
+  }
+
+  if (!_global.__polkadotjs[name]) {
+    _global.__polkadotjs[name] = [];
+  }
+
+  return _global.__polkadotjs[name];
+}
+
+function getVersionLength$3(all) {
+  return all.reduce((max, {
+    version
+  }) => Math.max(max, version.length), 0);
+}
+/** @internal */
+
+
+function flattenInfos$3(all) {
+  const verLength = getVersionLength$3(all);
+  return all.map(({
+    name,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${name}`).join('\n');
+}
+/** @internal */
+
+
+function flattenVersions$3(entry) {
+  const all = entry.map(version => isString$7(version) ? {
+    version
+  } : version);
+  const verLength = getVersionLength$3(all);
+  return all.map(({
+    path,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${!path || path.length < 5 ? '<unknown>' : path}`).join('\n');
+}
+/** @internal */
+
+
+function getPath$3(pathOrFn) {
+  if (isFunction$8(pathOrFn)) {
+    try {
+      return pathOrFn() || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  return pathOrFn || '';
+}
+/**
+ * @name detectPackage
+ * @summary Checks that a specific package is only imported once
+ */
+
+
+function detectPackage$3({
+  name,
+  version
+}, pathOrFn, deps = []) {
+  assert$h(name.startsWith('@polkadot'), `Invalid package descriptor ${name}`);
+  const entry = getEntry$3(name);
+  entry.push({
+    path: getPath$3(pathOrFn),
+    version
+  });
+
+  if (entry.length !== 1) {
+    console.warn(`${name} has multiple versions, ensure that there is only one installed.\n${DEDUPE$3}\n${flattenVersions$3(entry)}`);
+  } else {
+    const mismatches = deps.filter(d => d && d.version !== version);
+
+    if (mismatches.length) {
+      console.warn(`${name} requires direct dependencies exactly matching version ${version}.\n${DEDUPE$3}\n${flattenInfos$3(mismatches)}`);
+    }
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBoolean
+ * @summary Tests for a boolean value.
+ * @description
+ * Checks to see if the input value is a JavaScript boolean.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBoolean } from '@polkadot/util';
+ *
+ * isBoolean(false); // => true
+ * ```
+ */
+function isBoolean$4(value) {
+  return typeof value === 'boolean';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$7 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$7(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$7(value) && HEX_REGEX$7.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$7(value) {
+  return !!(value && isHex$7(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$7 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$7(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$7(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$7.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+function ownKeys$V(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$V(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$V(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$V(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function reverse$4(value) {
+  return (value.match(/.{1,2}/g) || []).reverse().join('');
+}
+/**
+ * @name hexToBn
+ * @summary Creates a BN.js bignumber object from a hex string.
+ * @description
+ * `null` inputs returns a `BN(0)` result. Hex input values return the actual value converted to a BN. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @param _value The value to convert
+ * @param _options Options to pass while converting
+ * @param _options.isLe Convert using Little Endian
+ * @param _options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToBn } from '@polkadot/util';
+ *
+ * hexToBn('0x123480001f'); // => BN(0x123480001f)
+ * ```
+ */
+
+
+function hexToBn$4(value, options = {
+  isLe: false,
+  isNegative: false
+}) {
+  if (!value) {
+    return new bn(0);
+  }
+
+  const _options = _objectSpread$V({
+    isLe: false,
+    isNegative: false
+  }, isBoolean$4(options) ? {
+    isLe: options
+  } : options);
+
+  const _value = hexStripPrefix$7(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  // https://github.com/indutny/bn.js/issues/208
+
+
+  const bn$1 = new bn((_options.isLe ? reverse$4(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4.
+
+  return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt$5(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function isToBn$4(value) {
+  return !!value && isFunction$8(value.toBn);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function numberToBn$4(value) {
+  return bn.isBN(value) ? value : isToBn$4(value) ? value.toBn() : new bn(value);
+}
+/**
+ * @name bnToBn
+ * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
+ * @description
+ * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnToBn } from '@polkadot/util';
+ *
+ * bnToBn(0x1234); // => BN(0x1234)
+ * bnToBn(new BN(0x1234)); // => BN(0x1234)
+ * ```
+ */
+
+
+function bnToBn$4(value) {
+  if (!value) {
+    return new bn(0);
+  } else if (isHex$7(value)) {
+    return hexToBn$4(value.toString());
+  } else if (isBigInt$5(value)) {
+    return new bn(value.toString());
+  }
+
+  return numberToBn$4(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNumber
+ * @summary Tests for a JavaScript number.
+ * @description
+ * Checks to see if the input value is a valid number.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNumber } from '@polkadot/util';
+ *
+ * console.log('isNumber', isNumber(1234)); // => true
+ * ```
+ */
+function isNumber$4(value) {
+  return typeof value === 'number';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a$5(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$6(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$h(isHex$7(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$7(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer$5(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$6 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$6(value) {
+  return value ? encoder$6.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray$5(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString$5(value) {
+  return isHex$7(value) ? hexToU8a$6(value) : stringToU8a$6(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a$5(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer$5(value)) {
+    return bufferToU8a$5(value);
+  } else if (isString$7(value)) {
+    return convertString$5(value);
+  }
+
+  return convertArray$5(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aConcat
+ * @summary Creates a concatenated Uint8Array from the inputs.
+ * @description
+ * Concatenates the input arrays into a single `UInt8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aConcat } from '@polkadot/util';
+ *
+ * u8aConcat(
+ *   new Uint8Array([1, 2, 3]),
+ *   new Uint8Array([4, 5, 6])
+ * ); // [1, 2, 3, 4, 5, 6]
+ * ```
+ */
+
+function u8aConcat$3(...list) {
+  let length = 0;
+  let offset = 0;
+  const u8as = new Array(list.length);
+
+  for (let i = 0; i < list.length; i++) {
+    u8as[i] = u8aToU8a$5(list[i]);
+    length += u8as[i].length;
+  }
+
+  const result = new Uint8Array(length);
+
+  for (let i = 0; i < u8as.length; i++) {
+    result.set(u8as[i], offset);
+    offset += u8as[i].length;
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$6 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$6(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$6[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$6(value, halfLength) {
+  return `${u8aToHex$6(value.subarray(0, halfLength), -1, false)}…${u8aToHex$6(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$6(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$6(value, Math.ceil(byteLength / 2)) : extract$6(value));
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -5035,7 +5647,7 @@ function u8aToBuffer(value) {
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
-const decoder = new TextDecoder('utf-8');
+const decoder$3 = new TextDecoder('utf-8');
 /**
  * @name u8aToString
  * @summary Creates a utf-8 string from a Uint8Array object.
@@ -5051,19 +5663,19 @@ const decoder = new TextDecoder('utf-8');
  * ```
  */
 
-function u8aToString(value) {
-  return !(value !== null && value !== void 0 && value.length) ? '' : decoder.decode(value);
+function u8aToString$3(value) {
+  return !(value !== null && value !== void 0 && value.length) ? '' : decoder$3.decode(value);
 }
 
-function ownKeys$N(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$U(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$N(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$N(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$N(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$U(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$U(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$U(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function createEmpty(byteLength, options) {
+function createEmpty$2(byteLength, options) {
   return options.bitLength === -1 ? new Uint8Array() : new Uint8Array(byteLength);
 }
 
-function createValue$1(valueBn, byteLength, {
+function createValue$3(valueBn, byteLength, {
   isLe,
   isNegative
 }) {
@@ -5088,451 +5700,23 @@ function createValue$1(valueBn, byteLength, {
  */
 
 
-function bnToU8a(value, arg1 = {
+function bnToU8a$2(value, arg1 = {
   bitLength: -1,
   isLe: true,
   isNegative: false
 }, arg2) {
-  const options = _objectSpread$N({
+  const options = _objectSpread$U({
     bitLength: -1,
     isLe: true,
     isNegative: false
-  }, isNumber(arg1) ? {
+  }, isNumber$4(arg1) ? {
     bitLength: arg1,
     isLe: arg2
   } : arg1);
 
-  const valueBn = bnToBn(value);
+  const valueBn = bnToBn$4(value);
   const byteLength = options.bitLength === -1 ? Math.ceil(valueBn.bitLength() / 8) : Math.ceil((options.bitLength || 0) / 8);
-  return value ? createValue$1(valueBn, byteLength, options) : createEmpty(byteLength, options);
-}
-
-function ownKeys$M(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread$M(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$M(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$M(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-const ZERO_STR = '0x00';
-
-function bnToHex(value, arg1 = {
-  bitLength: -1,
-  isLe: false,
-  isNegative: false
-}, arg2) {
-  if (!value) {
-    return ZERO_STR;
-  }
-
-  const _options = _objectSpread$M({
-    isLe: false,
-    isNegative: false
-  }, isNumber(arg1) ? {
-    bitLength: arg1,
-    isLe: arg2
-  } : arg1);
-
-  return u8aToHex(bnToU8a(value, _options));
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-const MAX_U8 = new bn(2).pow(new bn(8 - 2)).subn(1);
-const MAX_U16 = new bn(2).pow(new bn(16 - 2)).subn(1);
-const MAX_U32 = new bn(2).pow(new bn(32 - 2)).subn(1);
-/**
- * @name compactToU8a
- * @description Encodes a number into a compact representation
- * @example
- * <BR>
- *
- * ```javascript
- * import { compactToU8a } from '@polkadot/util';
- *
- * console.log(compactToU8a(511, 32)); // Uint8Array([0b11111101, 0b00000111])
- * ```
- */
-
-function compactToU8a(_value) {
-  const value = bnToBn(_value);
-
-  if (value.lte(MAX_U8)) {
-    return new Uint8Array([value.toNumber() << 2]);
-  } else if (value.lte(MAX_U16)) {
-    return bnToU8a(value.shln(2).addn(0b01), 16, true);
-  } else if (value.lte(MAX_U32)) {
-    return bnToU8a(value.shln(2).addn(0b10), 32, true);
-  }
-
-  const u8a = bnToU8a(value);
-  let length = u8a.length; // adjust to the minimum number of bytes
-
-  while (u8a[length - 1] === 0) {
-    length--;
-  }
-
-  assert$a(length >= 4, 'Previous tests match anyting less than 2^30; qed');
-  return u8aConcat(new Uint8Array([// substract 4 as minimum (also catered for in decoding)
-  (length - 4 << 2) + 0b11]), u8a.subarray(0, length));
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name compactAddLength
- * @description Adds a length prefix to the input value
- * @example
- * <BR>
- *
- * ```javascript
- * import { compactAddLength } from '@polkadot/util';
- *
- * console.log(compactAddLength(new Uint8Array([0xde, 0xad, 0xbe, 0xef]))); // Uint8Array([4 << 2, 0xde, 0xad, 0xbe, 0xef])
- * ```
- */
-
-function compactAddLength(input) {
-  return u8aConcat(compactToU8a(input.length), input);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-const DEFAULT_BITLENGTH = 32;
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name compactFromU8a
- * @description Retrievs the offset and encoded length from a compact-prefixed value
- * @example
- * <BR>
- *
- * ```javascript
- * import { compactFromU8a } from '@polkadot/util';
- *
- * const [offset, length] = compactFromU8a(new Uint8Array([254, 255, 3, 0]), 32));
- *
- * console.log('value offset=', offset, 'length=', length); // 4, 0xffff
- * ```
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-function compactFromU8a(_input, bitLength = DEFAULT_BITLENGTH) {
-  const input = u8aToU8a(_input);
-  const flag = input[0] & 0b11;
-
-  if (flag === 0b00) {
-    return [1, new bn(input[0]).shrn(2)];
-  } else if (flag === 0b01) {
-    return [2, u8aToBn(input.slice(0, 2), true).shrn(2)];
-  } else if (flag === 0b10) {
-    return [4, u8aToBn(input.slice(0, 4), true).shrn(2)];
-  }
-
-  const length = new bn(input[0]).shrn(2) // clear flag
-  .addn(4) // add 4 for base length
-  .toNumber();
-  const offset = 1 + length;
-  return [offset, u8aToBn(input.subarray(1, offset), true)];
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name compactStripLength
- * @description Removes the length prefix, returning both the total length (including the value + compact encoding) and the decoded value with the correct length
- * @example
- * <BR>
- *
- * ```javascript
- * import { compactStripLength } from '@polkadot/util';
- *
- * console.log(compactStripLength(new Uint8Array([2 << 2, 0xde, 0xad]))); // [2, Uint8Array[0xde, 0xad]]
- * ```
- */
-
-function compactStripLength(input, bitLength = DEFAULT_BITLENGTH) {
-  const [offset, length] = compactFromU8a(input, bitLength);
-  const total = offset + length.toNumber();
-  return [total, input.subarray(offset, total)];
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-// eslint-disable-next-line prefer-regex-literals
-const NUMBER_REGEX = new RegExp('(\\d+?)(?=(\\d{3})+(?!\\d)|$)', 'g');
-function formatDecimal(value) {
-  // We can do this by adjusting the regx, however for the sake of clarity
-  // we rather strip and re-add the negative sign in the output
-  const isNegative = value[0].startsWith('-');
-  const matched = isNegative ? value.substr(1).match(NUMBER_REGEX) : value.match(NUMBER_REGEX);
-  return matched ? `${isNegative ? '-' : ''}${matched.join(',')}` : value;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-const SI_MID = 8;
-const SI = [{
-  power: -24,
-  text: 'yocto',
-  value: 'y'
-}, {
-  power: -21,
-  text: 'zepto',
-  value: 'z'
-}, {
-  power: -18,
-  text: 'atto',
-  value: 'a'
-}, {
-  power: -15,
-  text: 'femto',
-  value: 'f'
-}, {
-  power: -12,
-  text: 'pico',
-  value: 'p'
-}, {
-  power: -9,
-  text: 'nano',
-  value: 'n'
-}, {
-  power: -6,
-  text: 'micro',
-  value: 'µ'
-}, {
-  power: -3,
-  text: 'milli',
-  value: 'm'
-}, {
-  power: 0,
-  text: 'Unit',
-  value: '-'
-}, // position 8
-{
-  power: 3,
-  text: 'Kilo',
-  value: 'k'
-}, {
-  power: 6,
-  text: 'Mill',
-  value: 'M'
-}, // Mega, M
-{
-  power: 9,
-  text: 'Bill',
-  value: 'B'
-}, // Giga, G
-{
-  power: 12,
-  text: 'Tril',
-  value: 'T'
-}, // Tera, T
-{
-  power: 15,
-  text: 'Peta',
-  value: 'P'
-}, {
-  power: 18,
-  text: 'Exa',
-  value: 'E'
-}, {
-  power: 21,
-  text: 'Zeta',
-  value: 'Z'
-}, {
-  power: 24,
-  text: 'Yotta',
-  value: 'Y'
-}]; // Given a SI type (e.g. k, m, Y) find the SI definition
-
-function findSi(type) {
-  // use a loop here, better RN support (which doesn't have [].find)
-  for (let i = 0; i < SI.length; i++) {
-    if (SI[i].value === type) {
-      return SI[i];
-    }
-  }
-
-  return SI[SI_MID];
-}
-function calcSi(text, decimals, forceUnit) {
-  if (forceUnit) {
-    return findSi(forceUnit);
-  }
-
-  const siDefIndex = SI_MID - 1 + Math.ceil((text.length - decimals) / 3);
-  return SI[siDefIndex] || SI[siDefIndex < 0 ? 0 : SI.length - 1];
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-const DEFAULT_DECIMALS = 0;
-const DEFAULT_UNIT = SI[SI_MID].text;
-let defaultDecimals = DEFAULT_DECIMALS;
-let defaultUnit = DEFAULT_UNIT; // Formats a string/number with <prefix>.<postfix><type> notation
-
-function _formatBalance(input, options = true, optDecimals = defaultDecimals) {
-  let text = bnToBn(input).toString();
-
-  if (text.length === 0 || text === '0') {
-    return '0';
-  } // strip the negative sign so we can work with clean groupings, re-add this in the
-  // end when we return the result (from here on we work with positive numbers)
-
-
-  const isNegative = text[0].startsWith('-');
-
-  if (isNegative) {
-    text = text.substr(1);
-  } // extract options - the boolean case is for backwards-compat
-
-
-  const {
-    decimals = optDecimals,
-    forceUnit = undefined,
-    withSi = true,
-    withSiFull = false,
-    withUnit = true
-  } = isBoolean(options) ? {
-    withSi: options
-  } : options; // NOTE We start at midpoint (8) minus 1 - this means that values display as
-  // 123.456 instead of 0.123k (so always 6 relevant). Additionally we use ceil
-  // so there are at most 3 decimal before the decimal separator
-
-  const si = calcSi(text, decimals, forceUnit);
-  const mid = text.length - (decimals + si.power);
-  const prefix = text.substr(0, mid);
-  const padding = mid < 0 ? 0 - mid : 0;
-  const postfix = `${`${new Array(padding + 1).join('0')}${text}`.substr(mid < 0 ? 0 : mid)}0000`.substr(0, 4);
-  const units = withSi || withSiFull ? si.value === '-' ? withUnit ? ` ${isBoolean(withUnit) ? si.text : withUnit}` : '' : ` ${withSiFull ? si.text : si.value}${withUnit ? `${withSiFull ? ' ' : ''}${isBoolean(withUnit) ? SI[SI_MID].text : withUnit}` : ''}` : '';
-  return `${isNegative ? '-' : ''}${formatDecimal(prefix || '0')}.${postfix}${units}`;
-}
-
-const formatBalance = _formatBalance; // eslint-disable-next-line @typescript-eslint/unbound-method
-
-formatBalance.calcSi = (text, decimals = defaultDecimals) => calcSi(text, decimals); // eslint-disable-next-line @typescript-eslint/unbound-method
-
-
-formatBalance.findSi = findSi; // eslint-disable-next-line @typescript-eslint/unbound-method
-
-formatBalance.getDefaults = () => {
-  return {
-    decimals: defaultDecimals,
-    unit: defaultUnit
-  };
-}; // get allowable options to display in a dropdown
-// eslint-disable-next-line @typescript-eslint/unbound-method
-
-
-formatBalance.getOptions = (decimals = defaultDecimals) => {
-  return SI.filter(({
-    power
-  }) => power < 0 ? decimals + power >= 0 : true);
-}; // Sets the default decimals to use for formatting (ui-wide)
-// eslint-disable-next-line @typescript-eslint/unbound-method
-
-
-formatBalance.setDefaults = ({
-  decimals,
-  unit
-}) => {
-  defaultDecimals = isUndefined(decimals) ? defaultDecimals : Array.isArray(decimals) ? decimals[0] : decimals;
-  defaultUnit = isUndefined(unit) ? defaultUnit : Array.isArray(unit) ? unit[0] : unit;
-  SI[SI_MID].text = defaultUnit;
-};
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/** @internal */
-function zeroPad(value) {
-  return value.toString().padStart(2, '0');
-}
-
-function formatDate(date) {
-  const year = date.getFullYear().toString();
-  const month = zeroPad(date.getMonth() + 1);
-  const day = zeroPad(date.getDate());
-  const hour = zeroPad(date.getHours());
-  const minute = zeroPad(date.getMinutes());
-  const second = zeroPad(date.getSeconds());
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-function formatNumber(value) {
-  return formatDecimal(bnToBn(value).toString());
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name hexToU8a
- * @summary Creates a Uint8Array object from a hex string.
- * @description
- * Hex input values return the actual bytes value converted to a string. Anything that is not a hex string (including the `0x` prefix) throws an error.
- * @example
- * <BR>
- *
- * ```javascript
- * import { hexToString } from '@polkadot/util';
- *
- * hexToU8a('0x68656c6c6f'); // hello
- * ```
- */
-
-function hexToString(_value) {
-  return u8aToString(hexToU8a(_value));
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-const FORMAT = [9, 10, 13];
-/**
- * @name isAscii
- * @summary Tests if the input is printable ASCII
- * @description
- * Checks to see if the input string or Uint8Array is printable ASCII, 32-127 + formatters
- */
-
-function isAscii(value) {
-  return value ? !u8aToU8a(value).some(byte => byte >= 127 || byte < 32 && !FORMAT.includes(byte)) : isString(value);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name isBn
- * @summary Tests for a `BN` object instance.
- * @description
- * Checks to see if the input object is an instance of `BN` (bn.js).
- * @example
- * <BR>
- *
- * ```javascript
- * import BN from 'bn.js';
- * import { isBn } from '@polkadot/util';
- *
- * console.log('isBn', isBn(new BN(1))); // => true
- * ```
- */
-
-function isBn(value) {
-  return bn.isBN(value);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name isChildClass
- * @summary Tests if the child extends the parent Class
- * @description
- * Checks to see if the child Class extends the parent Class
- * @example
- * <BR>
- *
- * ```javascript
- * import { isChildClass } from '@polkadot/util';
- *
- * console.log('isChildClass', isChildClass(BN, BN); // => true
- * console.log('isChildClass', isChildClass(BN, Uint8Array); // => false
- * ```
- */
-function isChildClass(Parent, Child) {
-  // https://stackoverflow.com/questions/30993434/check-if-a-constructor-inherits-another-in-es6/30993664
-  return Child // eslint-disable-next-line no-prototype-builtins
-  ? Parent === Child || Parent.isPrototypeOf(Child) : false;
+  return value ? createValue$3(valueBn, byteLength, options) : createEmpty$2(byteLength, options);
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -5553,30 +5737,8 @@ function isChildClass(Parent, Child) {
  * ```
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-function isInstanceOf(value, clazz) {
+function isInstanceOf$6(value, clazz) {
   return value instanceof clazz;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name isObject
- * @summary Tests for an `object`.
- * @description
- * Checks to see if the input value is a JavaScript object.
- * @example
- * <BR>
- *
- * ```javascript
- * import { isObject } from '@polkadot/util';
- *
- * isObject({}); // => true
- * isObject('something'); // => false
- * ```
- */
-function isObject$1(value) {
-  return typeof value === 'object';
 }
 
 // Copyright 2017-2021 @polkadot/util authors & contributors
@@ -5595,468 +5757,8 @@ function isObject$1(value) {
  * ```
  */
 
-function isU8a(value) {
-  return isInstanceOf(value, Uint8Array);
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name isUtf8
- * @summary Tests if the input is valid Utf8
- * @description
- * Checks to see if the input string or Uint8Array is valid Utf8
- */
-
-function isUtf8(value) {
-  if (!value) {
-    return isString(value);
-  }
-
-  const u8a = u8aToU8a(value);
-  const len = u8a.length;
-  let i = 0;
-
-  while (i < len) {
-    if (u8a[i] <= 0x7F)
-      /* 00..7F */
-      {
-        i += 1;
-      } else if (u8a[i] >= 0xC2 && u8a[i] <= 0xDF)
-      /* C2..DF 80..BF */
-      {
-        if (i + 1 < len)
-          /* Expect a 2nd byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte between C2 and DF, expecting a 2nd byte between 80 and BF";
-              // *faulty_bytes = 2;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte between C2 and DF, expecting a 2nd byte.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 2;
-      } else if (u8a[i] === 0xE0)
-      /* E0 A0..BF 80..BF */
-      {
-        if (i + 2 < len)
-          /* Expect a 2nd and 3rd byte */
-          {
-            if (u8a[i + 1] < 0xA0 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte of E0, expecting a 2nd byte between A0 and BF.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte of E0, expecting a 3nd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte of E0, expecting two following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 3;
-      } else if (u8a[i] >= 0xE1 && u8a[i] <= 0xEC)
-      /* E1..EC 80..BF 80..BF */
-      {
-        if (i + 2 < len)
-          /* Expect a 2nd and 3rd byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte between E1 and EC, expecting the 2nd byte between 80 and BF.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte between E1 and EC, expecting the 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte between E1 and EC, expecting two following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 3;
-      } else if (u8a[i] === 0xED)
-      /* ED 80..9F 80..BF */
-      {
-        if (i + 2 < len)
-          /* Expect a 2nd and 3rd byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0x9F) {
-              // *message = "After a first byte of ED, expecting 2nd byte between 80 and 9F.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte of ED, expecting 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte of ED, expecting two following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 3;
-      } else if (u8a[i] >= 0xEE && u8a[i] <= 0xEF)
-      /* EE..EF 80..BF 80..BF */
-      {
-        if (i + 2 < len)
-          /* Expect a 2nd and 3rd byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte between EE and EF, expecting 2nd byte between 80 and BF.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte between EE and EF, expecting 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte between EE and EF, two following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 3;
-      } else if (u8a[i] === 0xF0)
-      /* F0 90..BF 80..BF 80..BF */
-      {
-        if (i + 3 < len)
-          /* Expect a 2nd, 3rd 3th byte */
-          {
-            if (u8a[i + 1] < 0x90 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte of F0, expecting 2nd byte between 90 and BF.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte of F0, expecting 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-
-            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
-              // *message = "After a first byte of F0, expecting 4th byte between 80 and BF.";
-              // *faulty_bytes = 4;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte of F0, expecting three following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 4;
-      } else if (u8a[i] >= 0xF1 && u8a[i] <= 0xF3)
-      /* F1..F3 80..BF 80..BF 80..BF */
-      {
-        if (i + 3 < len)
-          /* Expect a 2nd, 3rd 3th byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
-              // *message = "After a first byte of F1, F2, or F3, expecting a 2nd byte between 80 and BF.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte of F1, F2, or F3, expecting a 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-
-            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
-              // *message = "After a first byte of F1, F2, or F3, expecting a 4th byte between 80 and BF.";
-              // *faulty_bytes = 4;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte of F1, F2, or F3, expecting three following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 4;
-      } else if (u8a[i] === 0xF4)
-      /* F4 80..8F 80..BF 80..BF */
-      {
-        if (i + 3 < len)
-          /* Expect a 2nd, 3rd 3th byte */
-          {
-            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0x8F) {
-              // *message = "After a first byte of F4, expecting 2nd byte between 80 and 8F.";
-              // *faulty_bytes = 2;
-              return false;
-            }
-
-            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
-              // *message = "After a first byte of F4, expecting 3rd byte between 80 and BF.";
-              // *faulty_bytes = 3;
-              return false;
-            }
-
-            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
-              // *message = "After a first byte of F4, expecting 4th byte between 80 and BF.";
-              // *faulty_bytes = 4;
-              return false;
-            }
-          } else {
-          // *message = "After a first byte of F4, expecting three following bytes.";
-          // *faulty_bytes = 1;
-          return false;
-        }
-
-        i += 4;
-      } else {
-      // *message = "Expecting bytes in the following ranges: 00..7F C2..F4.";
-      // *faulty_bytes = 1;
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-const logTo = {
-  debug: 'log',
-  error: 'error',
-  log: 'log',
-  warn: 'warn'
-};
-
-function formatOther(value) {
-  if (value && isObject$1(value) && value.constructor === Object) {
-    return Object.keys(value).reduce((result, key) => {
-      result[key] = loggerFormat(value[key]);
-      return result;
-    }, {});
-  }
-
-  return value;
-}
-
-function loggerFormat(value) {
-  if (Array.isArray(value)) {
-    return value.map(loggerFormat);
-  } else if (isBn(value)) {
-    return value.toString();
-  } else if (isU8a(value) || isBuffer(value)) {
-    return u8aToHex(u8aToU8a(value));
-  }
-
-  return formatOther(value);
-}
-
-function apply(log, type, values, maxSize = -1) {
-  if (values.length === 1 && isFunction$1(values[0])) {
-    const fnResult = values[0]();
-    return apply(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
-  }
-
-  console[logTo[log]](formatDate(new Date()), type, ...values.map(loggerFormat).map(v => {
-    if (maxSize <= 0) {
-      return v;
-    }
-
-    const r = `${v}`;
-    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
-  }));
-}
-
-function noop$1() {// noop
-}
-
-function parseEnv(type) {
-  var _process, _process$env, _process2, _process2$env;
-
-  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
-  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
-}
-/**
- * @name Logger
- * @summary Creates a consistent log interface for messages
- * @description
- * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
- * @example
- * <BR>
- *
- * ```javascript
- * import { logger } from '@polkadot';
- *
- * const l = logger('test');
- * ```
- */
-
-
-function logger(_type) {
-  const type = `${_type.toUpperCase()}:`.padStart(16);
-  const [isDebug, maxSize] = parseEnv(_type.toLowerCase());
-  return {
-    debug: isDebug ? (...values) => apply('debug', type, values, maxSize) : noop$1,
-    error: (...values) => apply('error', type, values),
-    log: (...values) => apply('log', type, values),
-    noop: noop$1,
-    warn: (...values) => apply('warn', type, values)
-  };
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-
-function defaultGetId() {
-  return 'none';
-}
-
-function normalize(args) {
-  return JSON.stringify(args, (_, value) => isBigInt(value) ? value.toString() : value);
-} // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-
-function memoize(fn, {
-  getInstanceId = defaultGetId
-} = {}) {
-  const cache = {};
-
-  const memoized = (...args) => {
-    const stringParams = normalize(args);
-    const instanceId = getInstanceId();
-
-    if (!cache[instanceId]) {
-      cache[instanceId] = {};
-    }
-
-    if (isUndefined(cache[instanceId][stringParams])) {
-      cache[instanceId][stringParams] = fn(...args);
-    }
-
-    return cache[instanceId][stringParams];
-  };
-
-  memoized.unmemoize = (...args) => {
-    const stringParams = normalize(args);
-    const instanceId = getInstanceId();
-
-    if (cache[instanceId] && !isUndefined(cache[instanceId][stringParams])) {
-      delete cache[instanceId][stringParams];
-    }
-  };
-
-  return memoized;
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name stringCamelCase
- * @summary Convert a dash/dot/underscore/space separated string/String to camelCase
- */
-// eslint-disable-next-line @typescript-eslint/ban-types
-
-function stringCamelCase(value) {
-  return camelcase(value.toString());
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name stringLowerFirst
- * @summary Lowercase the first letter of a string
- * @description
- * Lowercase the first letter of a string
- * @example
- * <BR>
- *
- * ```javascript
- * import { stringLowerFirst } from '@polkadot/util';
- *
- * stringLowerFirst('ABC'); // => 'aBC'
- * ```
- */
-// eslint-disable-next-line @typescript-eslint/ban-types
-function stringLowerFirst(value) {
-  return value ? value.charAt(0).toLowerCase() + value.slice(1) : '';
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-/**
- * @name stringToHex
- * @summary Creates a hex string from a utf-8 string
- * @description
- * String input values return the actual encoded hex value.
- * @example
- * <BR>
- *
- * ```javascript
- * import { stringToHex } from '@polkadot/util';
- *
- * stringToU8a('hello'); // 0x68656c6c6f
- * ```
- */
-// eslint-disable-next-line @typescript-eslint/ban-types
-
-function stringToHex(value) {
-  return u8aToHex(stringToU8a(value));
-}
-
-// Copyright 2017-2021 @polkadot/util authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/**
- * @name stringUpperFirst
- * @summary Lowercase the first letter of a string
- * @description
- * Lowercase the first letter of a string
- * @example
- * <BR>
- *
- * ```javascript
- * import { stringUpperFirst } from '@polkadot/util';
- *
- * stringUpperFirst('abc'); // => 'Abc'
- * ```
- */
-// eslint-disable-next-line @typescript-eslint/ban-types
-function stringUpperFirst(value) {
-  return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
-}
-
-// Copyright 2017-2021 @polkadot/dev authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-// Auto-generated by @polkadot/dev, do not edit
-const packageInfo$1 = {
-  name: '@polkadot/api',
-  version: '3.11.1'
-};
-
-function _classPrivateFieldBase(receiver, privateKey) {
-  if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) {
-    throw new TypeError("attempted to use private field on non-instance");
-  }
-
-  return receiver;
-}
-
-var id = 0;
-function _classPrivateFieldKey(name) {
-  return "__private_" + id++ + "_" + name;
+function isU8a$6(value) {
+  return isInstanceOf$6(value, Uint8Array);
 }
 
 // Copyright 2017-2021 @polkadot/dev authors & contributors
@@ -6068,7 +5770,7 @@ const packageInfo = {
 };
 
 // Copyright 2017-2021 @polkadot/wasm-crypto authors & contributors
-detectPackage(packageInfo, typeof __dirname !== 'undefined' && __dirname);
+detectPackage$3(packageInfo, typeof __dirname !== 'undefined' && __dirname);
 
 // Copyright 2019-2021 @polkadot/wasm-crypto authors & contributors
 let wasm = null;
@@ -6076,7 +5778,7 @@ let cachegetInt32 = null;
 let cachegetUint8 = null;
 async function initWasm(wasmBytes, asmFn, wbg) {
   try {
-    assert$a(typeof WebAssembly !== 'undefined' && wasmBytes && wasmBytes.length, 'WebAssembly is not available in your environment');
+    assert$h(typeof WebAssembly !== 'undefined' && wasmBytes && wasmBytes.length, 'WebAssembly is not available in your environment');
     const source = await WebAssembly.instantiate(wasmBytes, {
       wbg
     });
@@ -6096,7 +5798,7 @@ async function initWasm(wasmBytes, asmFn, wbg) {
 
 function withWasm(fn) {
   return (...params) => {
-    assert$a(wasm, 'The WASM interface has not been initialized. Ensure that you wait for the initialization Promise with waitReady() from @polkadot/wasm-crypto (or cryptoWaitReady() from @polkadot/util-crypto) before attempting to use WASM-only interfaces.');
+    assert$h(wasm, 'The WASM interface has not been initialized. Ensure that you wait for the initialization Promise with waitReady() from @polkadot/wasm-crypto (or cryptoWaitReady() from @polkadot/util-crypto) before attempting to use WASM-only interfaces.');
     return fn(wasm)(...params);
   };
 }
@@ -6121,7 +5823,7 @@ function getU8a(ptr, len) {
   return getUint8().subarray(ptr / 1, ptr / 1 + len);
 }
 function getString(ptr, len) {
-  return u8aToString(getU8a(ptr, len));
+  return u8aToString$3(getU8a(ptr, len));
 }
 function allocU8a(arg) {
   const ptr = wasm.__wbindgen_malloc(arg.length * 1);
@@ -6451,25 +6153,25 @@ var src = base$1;
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
 
-const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-const bs58 = src(BASE58_ALPHABET);
+const BASE58_ALPHABET$1 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+const bs58$1 = src(BASE58_ALPHABET$1);
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-const BASE_CONFIG = {
-  alphabet: BASE58_ALPHABET,
+const BASE_CONFIG$1 = {
+  alphabet: BASE58_ALPHABET$1,
   ipfsChar: 'z',
   type: 'base58'
 };
-function validateChars({
+function validateChars$1({
   alphabet,
   ipfsChar,
   type
 }, value, ipfsCompat) {
-  assert$a(value, `Expected non-null, non-empty ${type} input`);
-  assert$a(!ipfsCompat || value[0] === ipfsChar, `Expected ${type} to start with '${ipfsChar}'`);
+  assert$h(value, `Expected non-null, non-empty ${type} input`);
+  assert$h(!ipfsCompat || value[0] === ipfsChar, `Expected ${type} to start with '${ipfsChar}'`);
 
   for (let i = ipfsCompat ? 1 : 0; i < value.length; i++) {
-    assert$a(alphabet.includes(value[i]), `Invalid ${type} character "${value[i]}" (0x${value.charCodeAt(i).toString(16)}) at index ${i}`);
+    assert$h(alphabet.includes(value[i]), `Invalid ${type} character "${value[i]}" (0x${value.charCodeAt(i).toString(16)}) at index ${i}`);
   }
 
   return true;
@@ -6481,8 +6183,8 @@ function validateChars({
  * Validates the the supplied value is valid base58
  */
 
-function base58Validate(value, ipfsCompat) {
-  return validateChars(BASE_CONFIG, value, ipfsCompat);
+function base58Validate$1(value, ipfsCompat) {
+  return validateChars$1(BASE_CONFIG$1, value, ipfsCompat);
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
@@ -6493,9 +6195,9 @@ function base58Validate(value, ipfsCompat) {
  * From the provided input, decode the base58 and return the result as an `Uint8Array`.
  */
 
-function base58Decode(value, ipfsCompat) {
-  base58Validate(value, ipfsCompat);
-  return bufferToU8a(bs58.decode(value.substr(ipfsCompat ? 1 : 0)));
+function base58Decode$1(value, ipfsCompat) {
+  base58Validate$1(value, ipfsCompat);
+  return bufferToU8a$5(bs58$1.decode(value.substr(ipfsCompat ? 1 : 0)));
 }
 
 var ERROR_MSG_INPUT = 'Input must be an string, Buffer or Uint8Array';
@@ -7074,40 +6776,40 @@ var blakejs = {
  * ```
  */
 
-function blake2AsU8a(data, bitLength = 256, key = null, onlyJs = false) {
+function blake2AsU8a$1(data, bitLength = 256, key = null, onlyJs = false) {
   const byteLength = Math.ceil(bitLength / 8);
-  return isReady() && !onlyJs ? blake2b$1(u8aToU8a(data), u8aToU8a(key), byteLength) : blakejs.blake2b(u8aToU8a(data), key, byteLength);
+  return isReady() && !onlyJs ? blake2b$1(u8aToU8a$5(data), u8aToU8a$5(key), byteLength) : blakejs.blake2b(u8aToU8a$5(data), key, byteLength);
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-const SS58_PREFIX = stringToU8a('SS58PRE');
-function sshash(key) {
-  return blake2AsU8a(u8aConcat(SS58_PREFIX, key), 512);
+const SS58_PREFIX$1 = stringToU8a$6('SS58PRE');
+function sshash$1(key) {
+  return blake2AsU8a$1(u8aConcat$3(SS58_PREFIX$1, key), 512);
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-function checkAddressChecksum(decoded) {
+function checkAddressChecksum$1(decoded) {
   const ss58Length = decoded[0] & 0b01000000 ? 2 : 1;
   const ss58Decoded = ss58Length === 1 ? decoded[0] : (decoded[0] & 0b00111111) << 2 | decoded[1] >> 6 | (decoded[1] & 0b00111111) << 8; // 32/33 bytes public + 2 bytes checksum + prefix
 
   const isPublicKey = [34 + ss58Length, 35 + ss58Length].includes(decoded.length);
   const length = decoded.length - (isPublicKey ? 2 : 1); // calculate the hash and do the checksum byte checks
 
-  const hash = sshash(decoded.subarray(0, length));
+  const hash = sshash$1(decoded.subarray(0, length));
   const isValid = (decoded[0] & 0b10000000) === 0 && ![46, 47].includes(decoded[0]) && (isPublicKey ? decoded[decoded.length - 2] === hash[0] && decoded[decoded.length - 1] === hash[1] : decoded[decoded.length - 1] === hash[0]);
   return [isValid, length, ss58Length, ss58Decoded];
 }
 
-function ownKeys$L(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$T(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$L(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$L(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$L(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$T(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$T(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$T(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-const UNSORTED = [0, 2, 42]; // NOTE: In the case where the network was hard-spooned and multiple genesisHashes
+const UNSORTED$1 = [0, 2, 42]; // NOTE: In the case where the network was hard-spooned and multiple genesisHashes
 // are provided, it needs to be in reverse order, i.e. most-recent first, oldest
 // last. This make lookups for the current a simple genesisHash[0]
 // (See Kusama as an example)
 
-const createReserved = (prefix, displayName, network = null) => ({
+const createReserved$1 = (prefix, displayName, network = null) => ({
   decimals: null,
   displayName,
   isIgnored: true,
@@ -7118,7 +6820,7 @@ const createReserved = (prefix, displayName, network = null) => ({
   website: null
 });
 
-const all$1 = [{
+const all$2 = [{
   decimals: [10],
   displayName: 'Polkadot Relay Chain',
   genesisHash: ['0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3'],
@@ -7130,7 +6832,7 @@ const all$1 = [{
   standardAccount: '*25519',
   symbols: ['DOT'],
   website: 'https://polkadot.network'
-}, createReserved(1, 'Bare 32-bit Schnorr/Ristretto (S/R 25519) public key.'), {
+}, createReserved$1(1, 'Bare 32-bit Schnorr/Ristretto (S/R 25519) public key.'), {
   decimals: [12],
   displayName: 'Kusama Relay Chain',
   genesisHash: ['0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // Kusama CC3,
@@ -7145,7 +6847,7 @@ const all$1 = [{
   standardAccount: '*25519',
   symbols: ['KSM'],
   website: 'https://kusama.network'
-}, createReserved(3, 'Bare 32-bit Ed25519 public key.'), {
+}, createReserved$1(3, 'Bare 32-bit Ed25519 public key.'), {
   decimals: null,
   displayName: 'Katal Chain',
   network: 'katalchain',
@@ -7476,7 +7178,7 @@ const all$1 = [{
   standardAccount: '*25519',
   symbols: null,
   website: 'https://substrate.dev/'
-}, createReserved(43, 'Bare 32-bit ECDSA SECP-256k1 public key.'), {
+}, createReserved$1(43, 'Bare 32-bit ECDSA SECP-256k1 public key.'), {
   decimals: [8],
   displayName: 'ChainX',
   network: 'chainx',
@@ -7492,7 +7194,7 @@ const all$1 = [{
   standardAccount: '*25519',
   symbols: ['UART', 'UINK'],
   website: 'https://uniarts.me'
-}, createReserved(46, 'This prefix is reserved.', 'reserved46'), createReserved(47, 'This prefix is reserved.', 'reserved47'), {
+}, createReserved$1(46, 'This prefix is reserved.', 'reserved46'), createReserved$1(47, 'This prefix is reserved.', 'reserved47'), {
   decimals: [12],
   displayName: 'Neatcoin Mainnet',
   network: 'neatcoin',
@@ -7530,36 +7232,36 @@ const all$1 = [{
 //   - when no icon has been specified, default to substrate
 //   - sort by name, however we keep 0, 2, 42 first in the list
 
-const available = all$1.filter(n => !n.isIgnored && !!n.network).map(n => _objectSpread$L(_objectSpread$L({}, n), {}, {
+const available$1 = all$2.filter(n => !n.isIgnored && !!n.network).map(n => _objectSpread$T(_objectSpread$T({}, n), {}, {
   genesisHash: n.genesisHash || [],
   icon: n.icon || 'substrate'
-})).sort((a, b) => UNSORTED.includes(a.prefix) && UNSORTED.includes(b.prefix) ? 0 : UNSORTED.includes(a.prefix) ? -1 : UNSORTED.includes(b.prefix) ? 1 : a.displayName.localeCompare(b.displayName)); // A filtered list of those chains we have details about (genesisHashes)
+})).sort((a, b) => UNSORTED$1.includes(a.prefix) && UNSORTED$1.includes(b.prefix) ? 0 : UNSORTED$1.includes(a.prefix) ? -1 : UNSORTED$1.includes(b.prefix) ? 1 : a.displayName.localeCompare(b.displayName)); // A filtered list of those chains we have details about (genesisHashes)
 
-var networks = available.filter(n => n.genesisHash.length || n.prefix === 42);
+var networks = available$1.filter(n => n.genesisHash.length || n.prefix === 42);
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-const defaults$1 = {
+const defaults$2 = {
   allowedDecodedLengths: [1, 2, 4, 8, 32, 33],
   // publicKey has prefix + 2 checksum bytes, short only prefix + 1 checksum byte
   allowedEncodedLengths: [3, 4, 6, 10, 35, 36, 37, 38],
-  allowedPrefix: available.map(({
+  allowedPrefix: available$1.map(({
     prefix
   }) => prefix),
   prefix: 42
 };
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-function decodeAddress(encoded, ignoreChecksum, ss58Format = -1) {
-  if (isU8a(encoded) || isHex(encoded)) {
-    return u8aToU8a(encoded);
+function decodeAddress$1(encoded, ignoreChecksum, ss58Format = -1) {
+  if (isU8a$6(encoded) || isHex$7(encoded)) {
+    return u8aToU8a$5(encoded);
   }
 
   try {
-    const decoded = base58Decode(encoded);
-    assert$a(defaults$1.allowedEncodedLengths.includes(decoded.length), 'Invalid decoded address length');
-    const [isValid, endPos, ss58Length, ss58Decoded] = checkAddressChecksum(decoded);
-    assert$a(ignoreChecksum || isValid, 'Invalid decoded address checksum');
-    assert$a([-1, ss58Decoded].includes(ss58Format), `Expected ss58Format ${ss58Format}, received ${ss58Decoded}`);
+    const decoded = base58Decode$1(encoded);
+    assert$h(defaults$2.allowedEncodedLengths.includes(decoded.length), 'Invalid decoded address length');
+    const [isValid, endPos, ss58Length, ss58Decoded] = checkAddressChecksum$1(decoded);
+    assert$h(ignoreChecksum || isValid, 'Invalid decoded address checksum');
+    assert$h([-1, ss58Decoded].includes(ss58Format), `Expected ss58Format ${ss58Format}, received ${ss58Decoded}`);
     return decoded.slice(ss58Length, endPos);
   } catch (error) {
     throw new Error(`Decoding ${encoded}: ${error.message}`);
@@ -7637,14 +7339,14 @@ var require$$0 = {
 	dependencies: dependencies
 };
 
-var minimalisticAssert = assert$9;
+var minimalisticAssert = assert$g;
 
-function assert$9(val, msg) {
+function assert$g(val, msg) {
   if (!val)
     throw new Error(msg || 'Assertion failed');
 }
 
-assert$9.equal = function assertEqual(l, r, msg) {
+assert$g.equal = function assertEqual(l, r, msg) {
   if (l != r)
     throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
 };
@@ -7898,7 +7600,7 @@ brorand.Rand = Rand_1;
 
 var getNAF = utils_1.getNAF;
 var getJSF = utils_1.getJSF;
-var assert$8 = utils_1.assert;
+var assert$f = utils_1.assert;
 
 function BaseCurve(type, conf) {
   this.type = type;
@@ -7944,7 +7646,7 @@ BaseCurve.prototype.validate = function validate() {
 };
 
 BaseCurve.prototype._fixedNafMul = function _fixedNafMul(p, k) {
-  assert$8(p.precomputed);
+  assert$f(p.precomputed);
   var doubles = p._getDoubles();
 
   var naf = getNAF(k, 1, this._bitLength);
@@ -8001,7 +7703,7 @@ BaseCurve.prototype._wnafMul = function _wnafMul(p, k) {
     if (i < 0)
       break;
     var z = naf[i];
-    assert$8(z !== 0);
+    assert$f(z !== 0);
     if (p.type === 'affine') {
       // J +- P
       if (z > 0)
@@ -8169,9 +7871,9 @@ BaseCurve.prototype.decodePoint = function decodePoint(bytes, enc) {
   if ((bytes[0] === 0x04 || bytes[0] === 0x06 || bytes[0] === 0x07) &&
       bytes.length - 1 === 2 * len) {
     if (bytes[0] === 0x06)
-      assert$8(bytes[bytes.length - 1] % 2 === 0);
+      assert$f(bytes[bytes.length - 1] % 2 === 0);
     else if (bytes[0] === 0x07)
-      assert$8(bytes[bytes.length - 1] % 2 === 1);
+      assert$f(bytes[bytes.length - 1] % 2 === 1);
 
     var res =  this.point(bytes.slice(1, 1 + len),
       bytes.slice(1 + len, 1 + 2 * len));
@@ -8315,7 +8017,7 @@ try {
 }
 });
 
-var assert$7 = utils_1.assert;
+var assert$e = utils_1.assert;
 
 function ShortCurve(conf) {
   base.call(this, 'short', conf);
@@ -8360,7 +8062,7 @@ ShortCurve.prototype._getEndomorphism = function _getEndomorphism(conf) {
       lambda = lambdas[0];
     } else {
       lambda = lambdas[1];
-      assert$7(this.g.mul(lambda).x.cmp(this.g.x.redMul(beta)) === 0);
+      assert$e(this.g.mul(lambda).x.cmp(this.g.x.redMul(beta)) === 0);
     }
   }
 
@@ -9418,7 +9120,7 @@ Point$1.prototype.getX = function getX() {
   return this.x.fromRed();
 };
 
-var assert$6 = utils_1.assert;
+var assert$d = utils_1.assert;
 
 function EdwardsCurve(conf) {
   // NOTE: Important as we are creating point in Base.call()
@@ -9435,7 +9137,7 @@ function EdwardsCurve(conf) {
   this.d = new bn(conf.d, 16).toRed(this.red);
   this.dd = this.d.redAdd(this.d);
 
-  assert$6(!this.twisted || this.c.fromRed().cmpn(1) === 0);
+  assert$d(!this.twisted || this.c.fromRed().cmpn(1) === 0);
   this.oneC = (conf.c | 0) === 1;
 }
 inherits(EdwardsCurve, base);
@@ -12176,7 +11878,7 @@ HmacDRBG.prototype.generate = function generate(len, enc, add, addEnc) {
   return utils_1$1.encode(res, enc);
 };
 
-var assert$5 = utils_1.assert;
+var assert$c = utils_1.assert;
 
 function KeyPair$1(ec, options) {
   this.ec = ec;
@@ -12261,10 +11963,10 @@ KeyPair$1.prototype._importPublic = function _importPublic(key, enc) {
     // Weierstrass/Edwards points on the other hand have both `x` and
     // `y` coordinates.
     if (this.ec.curve.type === 'mont') {
-      assert$5(key.x, 'Need x coordinate');
+      assert$c(key.x, 'Need x coordinate');
     } else if (this.ec.curve.type === 'short' ||
                this.ec.curve.type === 'edwards') {
-      assert$5(key.x && key.y, 'Need both x and y coordinate');
+      assert$c(key.x && key.y, 'Need both x and y coordinate');
     }
     this.pub = this.ec.curve.point(key.x, key.y);
     return;
@@ -12275,7 +11977,7 @@ KeyPair$1.prototype._importPublic = function _importPublic(key, enc) {
 // ECDH
 KeyPair$1.prototype.derive = function derive(pub) {
   if(!pub.validate()) {
-    assert$5(pub.validate(), 'public point not validated');
+    assert$c(pub.validate(), 'public point not validated');
   }
   return pub.mul(this.priv).getX();
 };
@@ -12294,7 +11996,7 @@ KeyPair$1.prototype.inspect = function inspect() {
          ' pub: ' + (this.pub && this.pub.inspect()) + ' >';
 };
 
-var assert$4 = utils_1.assert;
+var assert$b = utils_1.assert;
 
 function Signature$1(options, enc) {
   if (options instanceof Signature$1)
@@ -12303,7 +12005,7 @@ function Signature$1(options, enc) {
   if (this._importDER(options, enc))
     return;
 
-  assert$4(options.r && options.s, 'Signature without r or s');
+  assert$b(options.r && options.s, 'Signature without r or s');
   this.r = new bn(options.r, 16);
   this.s = new bn(options.s, 16);
   if (options.recoveryParam === undefined)
@@ -12456,7 +12158,7 @@ Signature$1.prototype.toDER = function toDER(enc) {
   return utils_1.encode(res, enc);
 };
 
-var assert$3 = utils_1.assert;
+var assert$a = utils_1.assert;
 
 
 
@@ -12467,7 +12169,7 @@ function EC$1(options) {
 
   // Shortcut `elliptic.ec(curve-name)`
   if (typeof options === 'string') {
-    assert$3(Object.prototype.hasOwnProperty.call(curves_1, options),
+    assert$a(Object.prototype.hasOwnProperty.call(curves_1, options),
       'Unknown curve ' + options);
 
     options = curves_1[options];
@@ -12645,7 +12347,7 @@ EC$1.prototype.verify = function verify(msg, signature, key, enc) {
 };
 
 EC$1.prototype.recoverPubKey = function(msg, signature, j, enc) {
-  assert$3((3 & j) === j, 'The recovery param is more than two bits');
+  assert$a((3 & j) === j, 'The recovery param is more than two bits');
   signature = new signature$1(signature, enc);
 
   var n = this.n;
@@ -12693,7 +12395,7 @@ EC$1.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
   throw new Error('Unable to find valid recovery factor');
 };
 
-var assert$2 = utils_1.assert;
+var assert$9 = utils_1.assert;
 var parseBytes$2 = utils_1.parseBytes;
 var cachedProperty$1 = utils_1.cachedProperty;
 
@@ -12767,7 +12469,7 @@ cachedProperty$1(KeyPair, 'messagePrefix', function messagePrefix() {
 });
 
 KeyPair.prototype.sign = function sign(message) {
-  assert$2(this._secret, 'KeyPair can only verify');
+  assert$9(this._secret, 'KeyPair can only verify');
   return this.eddsa.sign(message, this);
 };
 
@@ -12776,7 +12478,7 @@ KeyPair.prototype.verify = function verify(message, sig) {
 };
 
 KeyPair.prototype.getSecret = function getSecret(enc) {
-  assert$2(this._secret, 'KeyPair is public only');
+  assert$9(this._secret, 'KeyPair is public only');
   return utils_1.encode(this.secret(), enc);
 };
 
@@ -12786,7 +12488,7 @@ KeyPair.prototype.getPublic = function getPublic(enc) {
 
 var key = KeyPair;
 
-var assert$1 = utils_1.assert;
+var assert$8 = utils_1.assert;
 var cachedProperty = utils_1.cachedProperty;
 var parseBytes$1 = utils_1.parseBytes;
 
@@ -12811,7 +12513,7 @@ function Signature(eddsa, sig) {
     };
   }
 
-  assert$1(sig.R && sig.S, 'Signature without R or S');
+  assert$8(sig.R && sig.S, 'Signature without R or S');
 
   if (eddsa.isPoint(sig.R))
     this._R = sig.R;
@@ -12848,13 +12550,13 @@ Signature.prototype.toHex = function toHex() {
 
 var signature = Signature;
 
-var assert = utils_1.assert;
+var assert$7 = utils_1.assert;
 var parseBytes = utils_1.parseBytes;
 
 
 
 function EDDSA(curve) {
-  assert(curve === 'ed25519', 'only tested with ed25519 so far');
+  assert$7(curve === 'ed25519', 'only tested with ed25519 so far');
 
   if (!(this instanceof EDDSA))
     return new EDDSA(curve);
@@ -12994,19 +12696,19 @@ const EXPAND_OPT = {
  */
 
 function base58Encode(value, ipfsCompat) {
-  const out = bs58.encode(u8aToU8a(value));
+  const out = bs58$1.encode(u8aToU8a$5(value));
   return ipfsCompat ? `z${out}` : out;
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
-function encodeAddress(_key, ss58Format = defaults$1.prefix) {
+function encodeAddress(_key, ss58Format = defaults$2.prefix) {
   // decode it, this means we can re-encode an address
-  const key = decodeAddress(_key);
-  assert$a(ss58Format >= 0 && ss58Format <= 16383 && ![46, 47].includes(ss58Format), 'Out of range ss58Format specified');
-  assert$a(defaults$1.allowedDecodedLengths.includes(key.length), `Expected a valid key to convert, with length ${defaults$1.allowedDecodedLengths.join(', ')}`);
+  const key = decodeAddress$1(_key);
+  assert$h(ss58Format >= 0 && ss58Format <= 16383 && ![46, 47].includes(ss58Format), 'Out of range ss58Format specified');
+  assert$h(defaults$2.allowedDecodedLengths.includes(key.length), `Expected a valid key to convert, with length ${defaults$2.allowedDecodedLengths.join(', ')}`);
   const isPublicKey = [32, 33].includes(key.length);
-  const input = u8aConcat(new Uint8Array(ss58Format < 64 ? [ss58Format] : [(ss58Format & 0b0000000011111100) >> 2 | 0b01000000, ss58Format >> 8 | (ss58Format & 0b0000000000000011) << 6]), key);
-  return base58Encode(u8aConcat(input, sshash(input).subarray(0, isPublicKey ? 2 : 1)));
+  const input = u8aConcat$3(new Uint8Array(ss58Format < 64 ? [ss58Format] : [(ss58Format & 0b0000000011111100) >> 2 | 0b01000000, ss58Format >> 8 | (ss58Format & 0b0000000000000011) << 6]), key);
+  return base58Encode(u8aConcat$3(input, sshash$1(input).subarray(0, isPublicKey ? 2 : 1)));
 }
 
 /**
@@ -13680,14 +13382,14 @@ var sha3 = createCommonjsModule(function (module) {
 
 function keccakAsU8a(value, bitLength = 256, onlyJs = false) {
   const is256 = bitLength === 256;
-  return isReady() && is256 && !onlyJs ? keccak256(u8aToU8a(value)) : new Uint8Array((is256 ? sha3.keccak256 : sha3.keccak512).update(u8aToU8a(value)).arrayBuffer());
+  return isReady() && is256 && !onlyJs ? keccak256(u8aToU8a$5(value)) : new Uint8Array((is256 ? sha3.keccak256 : sha3.keccak512).update(u8aToU8a$5(value)).arrayBuffer());
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
 function secp256k1Expand(publicKey) {
-  assert$a([33, 65].includes(publicKey.length), 'Invalid publicKey provided');
+  assert$h([33, 65].includes(publicKey.length), 'Invalid publicKey provided');
   const expanded = secp256k1.keyFromPublic(publicKey).getPublic();
-  return u8aConcat(bnToU8a(expanded.getX(), EXPAND_OPT), bnToU8a(expanded.getY(), EXPAND_OPT));
+  return u8aConcat$3(bnToU8a$2(expanded.getX(), EXPAND_OPT), bnToU8a$2(expanded.getY(), EXPAND_OPT));
 }
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
@@ -13705,10 +13407,10 @@ function ethereumEncode(addressOrPublic) {
     return '0x';
   }
 
-  const u8aAddress = u8aToU8a(addressOrPublic);
-  assert$a([20, 32, 33, 65].includes(u8aAddress.length), 'Invalid address or publicKey passed');
-  const address = u8aToHex(getH160(u8aAddress), -1, false);
-  const hash = u8aToHex(keccakAsU8a(address), -1, false);
+  const u8aAddress = u8aToU8a$5(addressOrPublic);
+  assert$h([20, 32, 33, 65].includes(u8aAddress.length), 'Invalid address or publicKey passed');
+  const address = u8aToHex$6(getH160(u8aAddress), -1, false);
+  const hash = u8aToHex$6(keccakAsU8a(address), -1, false);
   let result = '';
 
   for (let index = 0; index < 40; index++) {
@@ -13727,7 +13429,7 @@ function isInvalidChar(char, byte) {
 function isEthereumChecksum(_address) {
   const address = _address.replace('0x', '');
 
-  const hash = u8aToHex(keccakAsU8a(address.toLowerCase()), -1, false);
+  const hash = u8aToHex$6(keccakAsU8a(address.toLowerCase()), -1, false);
 
   for (let index = 0; index < 40; index++) {
     if (isInvalidChar(address[index], parseInt(hash[index], 16))) {
@@ -13740,7 +13442,7 @@ function isEthereumChecksum(_address) {
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
 function isEthereumAddress(address) {
-  if (!address || address.length !== 42 || !isHex(address)) {
+  if (!address || address.length !== 42 || !isHex$7(address)) {
     return false;
   }
 
@@ -15700,7 +15402,7 @@ var lib = {
 
 // Copyright 2017-2021 @polkadot/util-crypto authors & contributors
 function xxhash64AsValue(data, seed) {
-  if (isBuffer(data) || isString(data)) {
+  if (isBuffer$5(data) || isString$7(data)) {
     return lib.h64(data, seed);
   }
 
@@ -15737,7 +15439,7 @@ function xxhashAsU8a(data, bitLength = 64, onlyJs = false) {
   const iterations = Math.ceil(bitLength / 64);
 
   if (isReady() && !onlyJs) {
-    return twox(u8aToU8a(data), iterations);
+    return twox(u8aToU8a$5(data), iterations);
   }
 
   const u8a = new Uint8Array(Math.ceil(bitLength / 8));
@@ -16087,12 +15789,622 @@ EventEmitter.EventEmitter = EventEmitter;
 }
 });
 
-function formatErrorData(data) {
-  if (isUndefined(data)) {
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$7(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$6(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined$5(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$6(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$7(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNull
+ * @summary Tests for a `null` values.
+ * @description
+ * Checks to see if the input value is `null`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNull } from '@polkadot/util';
+ *
+ * console.log('isNull', isNull(null)); // => true
+ * ```
+ */
+function isNull$3(value) {
+  return value === null;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$6 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$6(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$6(value) && HEX_REGEX$6.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$6(value) {
+  return !!(value && isHex$6(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$6 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$6(value) {
+  if (!value) {
     return '';
   }
 
-  const formatted = `: ${isString(data) ? data.replace(/Error\("/g, '').replace(/\("/g, '(').replace(/"\)/g, ')').replace(/\(/g, ', ').replace(/\)/g, '') : JSON.stringify(data)}`; // We need some sort of cut-off here since these can be very large and
+  if (hexHasPrefix$6(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$6.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNumber
+ * @summary Tests for a JavaScript number.
+ * @description
+ * Checks to see if the input value is a valid number.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNumber } from '@polkadot/util';
+ *
+ * console.log('isNumber', isNumber(1234)); // => true
+ * ```
+ */
+function isNumber$3(value) {
+  return typeof value === 'number';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a$4(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$5(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$6(isHex$6(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$6(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer$4(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$5 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$5(value) {
+  return value ? encoder$5.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray$4(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString$4(value) {
+  return isHex$6(value) ? hexToU8a$5(value) : stringToU8a$5(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a$4(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer$4(value)) {
+    return bufferToU8a$4(value);
+  } else if (isString$6(value)) {
+    return convertString$4(value);
+  }
+
+  return convertArray$4(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$5 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$5(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$5[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$5(value, halfLength) {
+  return `${u8aToHex$5(value.subarray(0, halfLength), -1, false)}…${u8aToHex$5(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$5(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$5(value, Math.ceil(byteLength / 2)) : extract$5(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/** @internal */
+function zeroPad$3(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function formatDate$3(date) {
+  const year = date.getFullYear().toString();
+  const month = zeroPad$3(date.getMonth() + 1);
+  const day = zeroPad$3(date.getDate());
+  const hour = zeroPad$3(date.getHours());
+  const minute = zeroPad$3(date.getMinutes());
+  const second = zeroPad$3(date.getSeconds());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isBn
+ * @summary Tests for a `BN` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BN` (bn.js).
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { isBn } from '@polkadot/util';
+ *
+ * console.log('isBn', isBn(new BN(1))); // => true
+ * ```
+ */
+
+function isBn$3(value) {
+  return bn.isBN(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isChildClass
+ * @summary Tests if the child extends the parent Class
+ * @description
+ * Checks to see if the child Class extends the parent Class
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isChildClass } from '@polkadot/util';
+ *
+ * console.log('isChildClass', isChildClass(BN, BN); // => true
+ * console.log('isChildClass', isChildClass(BN, Uint8Array); // => false
+ * ```
+ */
+function isChildClass(Parent, Child) {
+  // https://stackoverflow.com/questions/30993434/check-if-a-constructor-inherits-another-in-es6/30993664
+  return Child // eslint-disable-next-line no-prototype-builtins
+  ? Parent === Child || Parent.isPrototypeOf(Child) : false;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$5(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+function isObject$4(value) {
+  return typeof value === 'object';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$5(value) {
+  return isInstanceOf$5(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const logTo$3 = {
+  debug: 'log',
+  error: 'error',
+  log: 'log',
+  warn: 'warn'
+};
+
+function formatOther$3(value) {
+  if (value && isObject$4(value) && value.constructor === Object) {
+    return Object.keys(value).reduce((result, key) => {
+      result[key] = loggerFormat$3(value[key]);
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+function loggerFormat$3(value) {
+  if (Array.isArray(value)) {
+    return value.map(loggerFormat$3);
+  } else if (isBn$3(value)) {
+    return value.toString();
+  } else if (isU8a$5(value) || isBuffer$4(value)) {
+    return u8aToHex$5(u8aToU8a$4(value));
+  }
+
+  return formatOther$3(value);
+}
+
+function apply$3(log, type, values, maxSize = -1) {
+  if (values.length === 1 && isFunction$7(values[0])) {
+    const fnResult = values[0]();
+    return apply$3(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
+  }
+
+  console[logTo$3[log]](formatDate$3(new Date()), type, ...values.map(loggerFormat$3).map(v => {
+    if (maxSize <= 0) {
+      return v;
+    }
+
+    const r = `${v}`;
+    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
+  }));
+}
+
+function noop$4() {// noop
+}
+
+function parseEnv$3(type) {
+  var _process, _process$env, _process2, _process2$env;
+
+  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
+  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
+}
+/**
+ * @name Logger
+ * @summary Creates a consistent log interface for messages
+ * @description
+ * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { logger } from '@polkadot';
+ *
+ * const l = logger('test');
+ * ```
+ */
+
+
+function logger$3(_type) {
+  const type = `${_type.toUpperCase()}:`.padStart(16);
+  const [isDebug, maxSize] = parseEnv$3(_type.toLowerCase());
+  return {
+    debug: isDebug ? (...values) => apply$3('debug', type, values, maxSize) : noop$4,
+    error: (...values) => apply$3('error', type, values),
+    log: (...values) => apply$3('log', type, values),
+    noop: noop$4,
+    warn: (...values) => apply$3('warn', type, values)
+  };
+}
+
+function formatErrorData(data) {
+  if (isUndefined$5(data)) {
+    return '';
+  }
+
+  const formatted = `: ${isString$6(data) ? data.replace(/Error\("/g, '').replace(/\("/g, '(').replace(/"\)/g, ')').replace(/\(/g, ', ').replace(/\)/g, '') : JSON.stringify(data)}`; // We need some sort of cut-off here since these can be very large and
   // very nested, pick a number and trim the result display to it
 
   return formatted.length <= 256 ? formatted : `${formatted.substr(0, 255)}…`;
@@ -16111,14 +16423,14 @@ class RpcCoder {
   }
 
   decodeResponse(response) {
-    assert$a(response, 'Empty response object received');
-    assert$a(response.jsonrpc === '2.0', 'Invalid jsonrpc field in decoded object');
-    const isSubscription = !isUndefined(response.params) && !isUndefined(response.method);
-    assert$a(isNumber(response.id) || isSubscription && (isNumber(response.params.subscription) || isString(response.params.subscription)), 'Invalid id field in decoded object');
+    assert$6(response, 'Empty response object received');
+    assert$6(response.jsonrpc === '2.0', 'Invalid jsonrpc field in decoded object');
+    const isSubscription = !isUndefined$5(response.params) && !isUndefined$5(response.method);
+    assert$6(isNumber$3(response.id) || isSubscription && (isNumber$3(response.params.subscription) || isString$6(response.params.subscription)), 'Invalid id field in decoded object');
 
     this._checkError(response.error);
 
-    assert$a(!isUndefined(response.result) || isSubscription, 'No result found in JsonRpc response');
+    assert$6(!isUndefined$5(response.result) || isSubscription, 'No result found in JsonRpc response');
 
     if (isSubscription) {
       this._checkError(response.params.error);
@@ -16163,7 +16475,7 @@ class RpcCoder {
 // SPDX-License-Identifier: Apache-2.0
 const HTTP_URL = 'http://127.0.0.1:9933';
 const WS_URL = 'ws://127.0.0.1:9944';
-var defaults = {
+var defaults$1 = {
   HTTP_URL,
   WS_URL
 };
@@ -16210,16 +16522,16 @@ function getWSErrorString(code) {
   return known[code] || getUnmapped(code) || '(Unknown)';
 }
 
-function ownKeys$K(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$S(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$K(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$K(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$K(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$S(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$S(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$S(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const ALIASSES = {
   chain_finalisedHead: 'chain_finalizedHead',
   chain_subscribeFinalisedHeads: 'chain_subscribeFinalizedHeads',
   chain_unsubscribeFinalisedHeads: 'chain_unsubscribeFinalizedHeads'
 };
 const RETRY_DELAY = 1000;
-const l$c = logger('api-ws');
+const l$c = logger$3('api-ws');
 
 function eraseRecord(record, cb) {
   Object.keys(record).forEach(key => {
@@ -16297,7 +16609,7 @@ class WsProvider {
    * @param {string | string[]}  endpoint    The endpoint url. Usually `ws://ip:9944` or `wss://ip:9944`, may provide an array of endpoint strings.
    * @param {boolean} autoConnect Whether to connect automatically or not.
    */
-  constructor(endpoint = defaults.WS_URL, autoConnectMs = RETRY_DELAY, headers = {}) {
+  constructor(endpoint = defaults$1.WS_URL, autoConnectMs = RETRY_DELAY, headers = {}) {
     Object.defineProperty(this, _coder, {
       writable: true,
       value: void 0
@@ -16390,7 +16702,7 @@ class WsProvider {
       value: message => {
         l$c.debug(() => ['received', message.data]);
         const response = JSON.parse(message.data);
-        return isUndefined(response.method) ? _classPrivateFieldBase(this, _onSocketMessageResult)[_onSocketMessageResult](response) : _classPrivateFieldBase(this, _onSocketMessageSubscribe)[_onSocketMessageSubscribe](response);
+        return isUndefined$5(response.method) ? _classPrivateFieldBase(this, _onSocketMessageResult)[_onSocketMessageResult](response) : _classPrivateFieldBase(this, _onSocketMessageSubscribe)[_onSocketMessageSubscribe](response);
       }
     });
     Object.defineProperty(this, _onSocketMessageResult, {
@@ -16418,7 +16730,7 @@ class WsProvider {
 
           if (subscription) {
             const subId = `${subscription.type}::${result}`;
-            _classPrivateFieldBase(this, _subscriptions$1)[_subscriptions$1][subId] = _objectSpread$K(_objectSpread$K({}, subscription), {}, {
+            _classPrivateFieldBase(this, _subscriptions$1)[_subscriptions$1][subId] = _objectSpread$S(_objectSpread$S({}, subscription), {}, {
               method,
               params
             }); // if we have a result waiting for this subscription already
@@ -16464,7 +16776,7 @@ class WsProvider {
     Object.defineProperty(this, _onSocketOpen, {
       writable: true,
       value: () => {
-        assert$a(!isNull(_classPrivateFieldBase(this, _websocket)[_websocket]), 'WebSocket cannot be null in onOpen');
+        assert$6(!isNull$3(_classPrivateFieldBase(this, _websocket)[_websocket]), 'WebSocket cannot be null in onOpen');
         l$c.debug(() => ['connected to', _classPrivateFieldBase(this, _endpoints)[_endpoints][_classPrivateFieldBase(this, _endpointIndex)[_endpointIndex]]]);
         _classPrivateFieldBase(this, _isConnected)[_isConnected] = true;
 
@@ -16504,9 +16816,9 @@ class WsProvider {
       }
     });
     const endpoints = Array.isArray(endpoint) ? endpoint : [endpoint];
-    assert$a(endpoints.length !== 0, 'WsProvider requires at least one Endpoint');
+    assert$6(endpoints.length !== 0, 'WsProvider requires at least one Endpoint');
     endpoints.forEach(endpoint => {
-      assert$a(/^(wss|ws):\/\//.test(endpoint), `Endpoint should start with 'ws://', received '${endpoint}'`);
+      assert$6(/^(wss|ws):\/\//.test(endpoint), `Endpoint should start with 'ws://', received '${endpoint}'`);
     });
     _classPrivateFieldBase(this, _eventemitter$1)[_eventemitter$1] = new eventemitter3();
     _classPrivateFieldBase(this, _autoConnectMs)[_autoConnectMs] = autoConnectMs || 0;
@@ -16616,7 +16928,7 @@ class WsProvider {
 
   async disconnect() {
     try {
-      assert$a(!isNull(_classPrivateFieldBase(this, _websocket)[_websocket]), 'Cannot disconnect on a non-connected websocket'); // switch off autoConnect, we are in manual mode now
+      assert$6(!isNull$3(_classPrivateFieldBase(this, _websocket)[_websocket]), 'Cannot disconnect on a non-connected websocket'); // switch off autoConnect, we are in manual mode now
 
       _classPrivateFieldBase(this, _autoConnectMs)[_autoConnectMs] = 0; // 1000 - Normal closure; the connection successfully completed
 
@@ -16657,7 +16969,7 @@ class WsProvider {
   send(method, params, subscription) {
     return new Promise((resolve, reject) => {
       try {
-        assert$a(this.isConnected && !isNull(_classPrivateFieldBase(this, _websocket)[_websocket]), 'WebSocket is not connected');
+        assert$6(this.isConnected && !isNull$3(_classPrivateFieldBase(this, _websocket)[_websocket]), 'WebSocket is not connected');
 
         const json = _classPrivateFieldBase(this, _coder)[_coder].encodeJson(method, params);
 
@@ -16723,7 +17035,7 @@ class WsProvider {
     // a slight complication in solving - since we cannot rely on the send id, but rather
     // need to find the actual subscription id to map it
 
-    if (isUndefined(_classPrivateFieldBase(this, _subscriptions$1)[_subscriptions$1][subscription])) {
+    if (isUndefined$5(_classPrivateFieldBase(this, _subscriptions$1)[_subscriptions$1][subscription])) {
       l$c.debug(() => `Unable to find active subscription=${subscription}`);
       return false;
     }
@@ -16731,7 +17043,7 @@ class WsProvider {
     delete _classPrivateFieldBase(this, _subscriptions$1)[_subscriptions$1][subscription];
 
     try {
-      return this.isConnected && !isNull(_classPrivateFieldBase(this, _websocket)[_websocket]) ? this.send(method, [id]) : true;
+      return this.isConnected && !isNull$3(_classPrivateFieldBase(this, _websocket)[_websocket]) ? this.send(method, [id]) : true;
     } catch (error) {
       return false;
     }
@@ -16769,7 +17081,7 @@ function __extends(d, b) {
 }
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function isFunction(x) {
+function isFunction$6(x) {
     return typeof x === 'function';
 }
 
@@ -16813,7 +17125,7 @@ var empty$2 = {
 var isArray = /*@__PURE__*/ (function () { return Array.isArray || (function (x) { return x && typeof x.length === 'number'; }); })();
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function isObject(x) {
+function isObject$3(x) {
     return x !== null && typeof x === 'object';
 }
 
@@ -16861,7 +17173,7 @@ var Subscription = /*@__PURE__*/ (function () {
                 parent_1.remove(this);
             }
         }
-        if (isFunction(_unsubscribe)) {
+        if (isFunction$6(_unsubscribe)) {
             if (_ctorUnsubscribe) {
                 this._unsubscribe = undefined;
             }
@@ -16877,7 +17189,7 @@ var Subscription = /*@__PURE__*/ (function () {
             var len = _subscriptions.length;
             while (++index < len) {
                 var sub = _subscriptions[index];
-                if (isObject(sub)) {
+                if (isObject$3(sub)) {
                     try {
                         sub.unsubscribe();
                     }
@@ -17070,7 +17382,7 @@ var SafeSubscriber = /*@__PURE__*/ (function (_super) {
         _this._parentSubscriber = _parentSubscriber;
         var next;
         var context = _this;
-        if (isFunction(observerOrNext)) {
+        if (isFunction$6(observerOrNext)) {
             next = observerOrNext;
         }
         else if (observerOrNext) {
@@ -17079,7 +17391,7 @@ var SafeSubscriber = /*@__PURE__*/ (function (_super) {
             complete = observerOrNext.complete;
             if (observerOrNext !== empty$2) {
                 context = Object.create(observerOrNext);
-                if (isFunction(context.unsubscribe)) {
+                if (isFunction$6(context.unsubscribe)) {
                     _this.add(context.unsubscribe.bind(context));
                 }
                 context.unsubscribe = _this.unsubscribe.bind(_this);
@@ -18364,7 +18676,7 @@ var AsapScheduler = /*@__PURE__*/ (function (_super) {
 var asapScheduler = /*@__PURE__*/ new AsapScheduler(AsapAction);
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
-function noop() { }
+function noop$3() { }
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var ArgumentOutOfRangeErrorImpl = /*@__PURE__*/ (function () {
@@ -18569,7 +18881,7 @@ var subscribeTo = function (result) {
         return subscribeToIterable(result);
     }
     else {
-        var value = isObject(result) ? 'an invalid object' : "'" + result + "'";
+        var value = isObject$3(result) ? 'an invalid object' : "'" + result + "'";
         var msg = "You provided " + value + " where a stream was expected."
             + ' You can provide an Observable, Promise, Array, or Iterable.';
         throw new TypeError(msg);
@@ -19571,20 +19883,20 @@ var TapSubscriber = /*@__PURE__*/ (function (_super) {
     __extends(TapSubscriber, _super);
     function TapSubscriber(destination, observerOrNext, error, complete) {
         var _this = _super.call(this, destination) || this;
-        _this._tapNext = noop;
-        _this._tapError = noop;
-        _this._tapComplete = noop;
-        _this._tapError = error || noop;
-        _this._tapComplete = complete || noop;
-        if (isFunction(observerOrNext)) {
+        _this._tapNext = noop$3;
+        _this._tapError = noop$3;
+        _this._tapComplete = noop$3;
+        _this._tapError = error || noop$3;
+        _this._tapComplete = complete || noop$3;
+        if (isFunction$6(observerOrNext)) {
             _this._context = _this;
             _this._tapNext = observerOrNext;
         }
         else if (observerOrNext) {
             _this._context = observerOrNext;
-            _this._tapNext = observerOrNext.next || noop;
-            _this._tapError = observerOrNext.error || noop;
-            _this._tapComplete = observerOrNext.complete || noop;
+            _this._tapNext = observerOrNext.next || noop$3;
+            _this._tapError = observerOrNext.error || noop$3;
+            _this._tapComplete = observerOrNext.complete || noop$3;
         }
         return _this;
     }
@@ -19633,10 +19945,2565 @@ function toArray() {
     return reduce(toArrayReducer, []);
 }
 
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$5(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$5(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined$4(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$5(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$5(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNull
+ * @summary Tests for a `null` values.
+ * @description
+ * Checks to see if the input value is `null`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNull } from '@polkadot/util';
+ *
+ * console.log('isNull', isNull(null)); // => true
+ * ```
+ */
+function isNull$2(value) {
+  return value === null;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBoolean
+ * @summary Tests for a boolean value.
+ * @description
+ * Checks to see if the input value is a JavaScript boolean.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBoolean } from '@polkadot/util';
+ *
+ * isBoolean(false); // => true
+ * ```
+ */
+function isBoolean$3(value) {
+  return typeof value === 'boolean';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$5 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$5(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$5(value) && HEX_REGEX$5.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$5(value) {
+  return !!(value && isHex$5(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$5 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$5(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$5(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$5.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+function ownKeys$R(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$R(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$R(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$R(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function reverse$3(value) {
+  return (value.match(/.{1,2}/g) || []).reverse().join('');
+}
+/**
+ * @name hexToBn
+ * @summary Creates a BN.js bignumber object from a hex string.
+ * @description
+ * `null` inputs returns a `BN(0)` result. Hex input values return the actual value converted to a BN. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @param _value The value to convert
+ * @param _options Options to pass while converting
+ * @param _options.isLe Convert using Little Endian
+ * @param _options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToBn } from '@polkadot/util';
+ *
+ * hexToBn('0x123480001f'); // => BN(0x123480001f)
+ * ```
+ */
+
+
+function hexToBn$3(value, options = {
+  isLe: false,
+  isNegative: false
+}) {
+  if (!value) {
+    return new bn(0);
+  }
+
+  const _options = _objectSpread$R({
+    isLe: false,
+    isNegative: false
+  }, isBoolean$3(options) ? {
+    isLe: options
+  } : options);
+
+  const _value = hexStripPrefix$5(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  // https://github.com/indutny/bn.js/issues/208
+
+
+  const bn$1 = new bn((_options.isLe ? reverse$3(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4.
+
+  return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt$4(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function isToBn$3(value) {
+  return !!value && isFunction$5(value.toBn);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function numberToBn$3(value) {
+  return bn.isBN(value) ? value : isToBn$3(value) ? value.toBn() : new bn(value);
+}
+/**
+ * @name bnToBn
+ * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
+ * @description
+ * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnToBn } from '@polkadot/util';
+ *
+ * bnToBn(0x1234); // => BN(0x1234)
+ * bnToBn(new BN(0x1234)); // => BN(0x1234)
+ * ```
+ */
+
+
+function bnToBn$3(value) {
+  if (!value) {
+    return new bn(0);
+  } else if (isHex$5(value)) {
+    return hexToBn$3(value.toString());
+  } else if (isBigInt$4(value)) {
+    return new bn(value.toString());
+  }
+
+  return numberToBn$3(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNumber
+ * @summary Tests for a JavaScript number.
+ * @description
+ * Checks to see if the input value is a valid number.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNumber } from '@polkadot/util';
+ *
+ * console.log('isNumber', isNumber(1234)); // => true
+ * ```
+ */
+function isNumber$2(value) {
+  return typeof value === 'number';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a$3(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$4(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$5(isHex$5(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$5(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer$3(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$4 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$4(value) {
+  return value ? encoder$4.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray$3(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString$3(value) {
+  return isHex$5(value) ? hexToU8a$4(value) : stringToU8a$4(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a$3(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer$3(value)) {
+    return bufferToU8a$3(value);
+  } else if (isString$5(value)) {
+    return convertString$3(value);
+  }
+
+  return convertArray$3(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aConcat
+ * @summary Creates a concatenated Uint8Array from the inputs.
+ * @description
+ * Concatenates the input arrays into a single `UInt8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aConcat } from '@polkadot/util';
+ *
+ * u8aConcat(
+ *   new Uint8Array([1, 2, 3]),
+ *   new Uint8Array([4, 5, 6])
+ * ); // [1, 2, 3, 4, 5, 6]
+ * ```
+ */
+
+function u8aConcat$2(...list) {
+  let length = 0;
+  let offset = 0;
+  const u8as = new Array(list.length);
+
+  for (let i = 0; i < list.length; i++) {
+    u8as[i] = u8aToU8a$3(list[i]);
+    length += u8as[i].length;
+  }
+
+  const result = new Uint8Array(length);
+
+  for (let i = 0; i < u8as.length; i++) {
+    result.set(u8as[i], offset);
+    offset += u8as[i].length;
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$4 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$4(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$4[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$4(value, halfLength) {
+  return `${u8aToHex$4(value.subarray(0, halfLength), -1, false)}…${u8aToHex$4(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$4(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$4(value, Math.ceil(byteLength / 2)) : extract$4(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aToBn
+ * @summary Creates a BN from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual BN. `null` or `undefined` values returns an `0x0` value.
+ * @param value The value to convert
+ * @param options Options to pass while converting
+ * @param options.isLe Convert using Little Endian
+ * @param options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToBn } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+function u8aToBn$1(value, options = {
+  isLe: true,
+  isNegative: false
+}) {
+  return hexToBn$3(u8aToHex$4(value), options);
+}
+
+function ownKeys$Q(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$Q(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$Q(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$Q(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function createEmpty$1(byteLength, options) {
+  return options.bitLength === -1 ? new Uint8Array() : new Uint8Array(byteLength);
+}
+
+function createValue$2(valueBn, byteLength, {
+  isLe,
+  isNegative
+}) {
+  const output = new Uint8Array(byteLength);
+  const bn = isNegative ? valueBn.toTwos(byteLength * 8) : valueBn;
+  output.set(bn.toArray(isLe ? 'le' : 'be', byteLength), 0);
+  return output;
+}
+/**
+ * @name bnToU8a
+ * @summary Creates a Uint8Array object from a BN.
+ * @description
+ * `null`/`undefined`/`NaN` inputs returns an empty `Uint8Array` result. `BN` input values return the actual bytes value converted to a `Uint8Array`. Optionally convert using little-endian format if `isLE` is set.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bnToU8a } from '@polkadot/util';
+ *
+ * bnToU8a(new BN(0x1234)); // => [0x12, 0x34]
+ * ```
+ */
+
+
+function bnToU8a$1(value, arg1 = {
+  bitLength: -1,
+  isLe: true,
+  isNegative: false
+}, arg2) {
+  const options = _objectSpread$Q({
+    bitLength: -1,
+    isLe: true,
+    isNegative: false
+  }, isNumber$2(arg1) ? {
+    bitLength: arg1,
+    isLe: arg2
+  } : arg1);
+
+  const valueBn = bnToBn$3(value);
+  const byteLength = options.bitLength === -1 ? Math.ceil(valueBn.bitLength() / 8) : Math.ceil((options.bitLength || 0) / 8);
+  return value ? createValue$2(valueBn, byteLength, options) : createEmpty$1(byteLength, options);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const MAX_U8$1 = new bn(2).pow(new bn(8 - 2)).subn(1);
+const MAX_U16$1 = new bn(2).pow(new bn(16 - 2)).subn(1);
+const MAX_U32$1 = new bn(2).pow(new bn(32 - 2)).subn(1);
+/**
+ * @name compactToU8a
+ * @description Encodes a number into a compact representation
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactToU8a } from '@polkadot/util';
+ *
+ * console.log(compactToU8a(511, 32)); // Uint8Array([0b11111101, 0b00000111])
+ * ```
+ */
+
+function compactToU8a$1(_value) {
+  const value = bnToBn$3(_value);
+
+  if (value.lte(MAX_U8$1)) {
+    return new Uint8Array([value.toNumber() << 2]);
+  } else if (value.lte(MAX_U16$1)) {
+    return bnToU8a$1(value.shln(2).addn(0b01), 16, true);
+  } else if (value.lte(MAX_U32$1)) {
+    return bnToU8a$1(value.shln(2).addn(0b10), 32, true);
+  }
+
+  const u8a = bnToU8a$1(value);
+  let length = u8a.length; // adjust to the minimum number of bytes
+
+  while (u8a[length - 1] === 0) {
+    length--;
+  }
+
+  assert$5(length >= 4, 'Previous tests match anyting less than 2^30; qed');
+  return u8aConcat$2(new Uint8Array([// substract 4 as minimum (also catered for in decoding)
+  (length - 4 << 2) + 0b11]), u8a.subarray(0, length));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactAddLength
+ * @description Adds a length prefix to the input value
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactAddLength } from '@polkadot/util';
+ *
+ * console.log(compactAddLength(new Uint8Array([0xde, 0xad, 0xbe, 0xef]))); // Uint8Array([4 << 2, 0xde, 0xad, 0xbe, 0xef])
+ * ```
+ */
+
+function compactAddLength$1(input) {
+  return u8aConcat$2(compactToU8a$1(input.length), input);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const DEFAULT_BITLENGTH$1 = 32;
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactFromU8a
+ * @description Retrievs the offset and encoded length from a compact-prefixed value
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactFromU8a } from '@polkadot/util';
+ *
+ * const [offset, length] = compactFromU8a(new Uint8Array([254, 255, 3, 0]), 32));
+ *
+ * console.log('value offset=', offset, 'length=', length); // 4, 0xffff
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+function compactFromU8a$1(_input, bitLength = DEFAULT_BITLENGTH$1) {
+  const input = u8aToU8a$3(_input);
+  const flag = input[0] & 0b11;
+
+  if (flag === 0b00) {
+    return [1, new bn(input[0]).shrn(2)];
+  } else if (flag === 0b01) {
+    return [2, u8aToBn$1(input.slice(0, 2), true).shrn(2)];
+  } else if (flag === 0b10) {
+    return [4, u8aToBn$1(input.slice(0, 4), true).shrn(2)];
+  }
+
+  const length = new bn(input[0]).shrn(2) // clear flag
+  .addn(4) // add 4 for base length
+  .toNumber();
+  const offset = 1 + length;
+  return [offset, u8aToBn$1(input.subarray(1, offset), true)];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactStripLength
+ * @description Removes the length prefix, returning both the total length (including the value + compact encoding) and the decoded value with the correct length
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactStripLength } from '@polkadot/util';
+ *
+ * console.log(compactStripLength(new Uint8Array([2 << 2, 0xde, 0xad]))); // [2, Uint8Array[0xde, 0xad]]
+ * ```
+ */
+
+function compactStripLength(input, bitLength = DEFAULT_BITLENGTH$1) {
+  const [offset, length] = compactFromU8a$1(input, bitLength);
+  const total = offset + length.toNumber();
+  return [total, input.subarray(offset, total)];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/** @internal */
+function zeroPad$2(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function formatDate$2(date) {
+  const year = date.getFullYear().toString();
+  const month = zeroPad$2(date.getMonth() + 1);
+  const day = zeroPad$2(date.getDate());
+  const hour = zeroPad$2(date.getHours());
+  const minute = zeroPad$2(date.getMinutes());
+  const second = zeroPad$2(date.getSeconds());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isBn
+ * @summary Tests for a `BN` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BN` (bn.js).
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { isBn } from '@polkadot/util';
+ *
+ * console.log('isBn', isBn(new BN(1))); // => true
+ * ```
+ */
+
+function isBn$2(value) {
+  return bn.isBN(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$4(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+function isObject$2(value) {
+  return typeof value === 'object';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$4(value) {
+  return isInstanceOf$4(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const logTo$2 = {
+  debug: 'log',
+  error: 'error',
+  log: 'log',
+  warn: 'warn'
+};
+
+function formatOther$2(value) {
+  if (value && isObject$2(value) && value.constructor === Object) {
+    return Object.keys(value).reduce((result, key) => {
+      result[key] = loggerFormat$2(value[key]);
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+function loggerFormat$2(value) {
+  if (Array.isArray(value)) {
+    return value.map(loggerFormat$2);
+  } else if (isBn$2(value)) {
+    return value.toString();
+  } else if (isU8a$4(value) || isBuffer$3(value)) {
+    return u8aToHex$4(u8aToU8a$3(value));
+  }
+
+  return formatOther$2(value);
+}
+
+function apply$2(log, type, values, maxSize = -1) {
+  if (values.length === 1 && isFunction$5(values[0])) {
+    const fnResult = values[0]();
+    return apply$2(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
+  }
+
+  console[logTo$2[log]](formatDate$2(new Date()), type, ...values.map(loggerFormat$2).map(v => {
+    if (maxSize <= 0) {
+      return v;
+    }
+
+    const r = `${v}`;
+    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
+  }));
+}
+
+function noop$2() {// noop
+}
+
+function parseEnv$2(type) {
+  var _process, _process$env, _process2, _process2$env;
+
+  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
+  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
+}
+/**
+ * @name Logger
+ * @summary Creates a consistent log interface for messages
+ * @description
+ * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { logger } from '@polkadot';
+ *
+ * const l = logger('test');
+ * ```
+ */
+
+
+function logger$2(_type) {
+  const type = `${_type.toUpperCase()}:`.padStart(16);
+  const [isDebug, maxSize] = parseEnv$2(_type.toLowerCase());
+  return {
+    debug: isDebug ? (...values) => apply$2('debug', type, values, maxSize) : noop$2,
+    error: (...values) => apply$2('error', type, values),
+    log: (...values) => apply$2('log', type, values),
+    noop: noop$2,
+    warn: (...values) => apply$2('warn', type, values)
+  };
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name stringCamelCase
+ * @summary Convert a dash/dot/underscore/space separated string/String to camelCase
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringCamelCase$1(value) {
+  return camelcase(value.toString());
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name stringLowerFirst
+ * @summary Lowercase the first letter of a string
+ * @description
+ * Lowercase the first letter of a string
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringLowerFirst } from '@polkadot/util';
+ *
+ * stringLowerFirst('ABC'); // => 'aBC'
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function stringLowerFirst(value) {
+  return value ? value.charAt(0).toLowerCase() + value.slice(1) : '';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$4(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$4(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined$3(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$4(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$4(message) ? message() : message);
+  }
+}
+/**
+ * @name assertReturn
+ * @summart Returns when the value is not undefined, otherwise throws assertion error
+ */
+
+function assertReturn$1(value, message) {
+  assert$4(!isUndefined$3(value), message);
+  return value;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNull
+ * @summary Tests for a `null` values.
+ * @description
+ * Checks to see if the input value is `null`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNull } from '@polkadot/util';
+ *
+ * console.log('isNull', isNull(null)); // => true
+ * ```
+ */
+function isNull$1(value) {
+  return value === null;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name BN_ZERO
+ * @summary BN constant for 0.
+ */
+
+const BN_ZERO$1 = new bn(0);
+/**
+ * @name BN_ONE
+ * @summary BN constant for 1.
+ */
+
+new bn(1);
+/**
+ * @name BN_TWO
+ * @summary BN constant for 2.
+ */
+
+new bn(2);
+/**
+ * @name BN_THREE
+ * @summary BN constant for 3.
+ */
+
+new bn(3);
+/**
+ * @name BN_FOUR
+ * @summary BN constant for 4.
+ */
+
+new bn(4);
+/**
+ * @name BN_FIVE
+ * @summary BN constant for 5.
+ */
+
+new bn(5);
+/**
+ * @name BN_SIX
+ * @summary BN constant for 6.
+ */
+
+new bn(6);
+/**
+ * @name BN_SEVEN
+ * @summary BN constant for 7.
+ */
+
+new bn(7);
+/**
+ * @name BN_EIGHT
+ * @summary BN constant for 8.
+ */
+
+new bn(8);
+/**
+ * @name BN_NINE
+ * @summary BN constant for 9.
+ */
+
+new bn(9);
+/**
+ * @name BN_TEN
+ * @summary BN constant for 10.
+ */
+
+new bn(10);
+/**
+ * @name BN_HUNDRED
+ * @summary BN constant for 100.
+ */
+
+const BN_HUNDRED = new bn(100);
+/**
+ * @name BN_THOUSAND
+ * @summary BN constant for 1,000.
+ */
+
+new bn(1000);
+/**
+ * @name BN_MILLION
+ * @summary BN constant for 1,000,000.
+ */
+
+const BN_MILLION = new bn(1000000);
+/**
+ * @name BN_BILLION
+ * @summary BN constant for 1,000,000,000.
+ */
+
+const BN_BILLION$1 = new bn(1000000000);
+/**
+ * @name BN_QUINTILL
+ * @summary BN constant for 1,000,000,000,000,000,000.
+ */
+
+const BN_QUINTILL = BN_BILLION$1.mul(BN_BILLION$1);
+/**
+ * @name BN_MAX_INTEGER
+ * @summary BN constant for MAX_SAFE_INTEGER
+ */
+
+new bn(Number.MAX_SAFE_INTEGER);
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBoolean
+ * @summary Tests for a boolean value.
+ * @description
+ * Checks to see if the input value is a JavaScript boolean.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBoolean } from '@polkadot/util';
+ *
+ * isBoolean(false); // => true
+ * ```
+ */
+function isBoolean$2(value) {
+  return typeof value === 'boolean';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$4 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$4(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$4(value) && HEX_REGEX$4.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$4(value) {
+  return !!(value && isHex$4(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$4 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$4(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$4(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$4.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+function ownKeys$P(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$P(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$P(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$P(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function reverse$2(value) {
+  return (value.match(/.{1,2}/g) || []).reverse().join('');
+}
+/**
+ * @name hexToBn
+ * @summary Creates a BN.js bignumber object from a hex string.
+ * @description
+ * `null` inputs returns a `BN(0)` result. Hex input values return the actual value converted to a BN. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @param _value The value to convert
+ * @param _options Options to pass while converting
+ * @param _options.isLe Convert using Little Endian
+ * @param _options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToBn } from '@polkadot/util';
+ *
+ * hexToBn('0x123480001f'); // => BN(0x123480001f)
+ * ```
+ */
+
+
+function hexToBn$2(value, options = {
+  isLe: false,
+  isNegative: false
+}) {
+  if (!value) {
+    return new bn(0);
+  }
+
+  const _options = _objectSpread$P({
+    isLe: false,
+    isNegative: false
+  }, isBoolean$2(options) ? {
+    isLe: options
+  } : options);
+
+  const _value = hexStripPrefix$4(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  // https://github.com/indutny/bn.js/issues/208
+
+
+  const bn$1 = new bn((_options.isLe ? reverse$2(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4.
+
+  return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt$3(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function isToBn$2(value) {
+  return !!value && isFunction$4(value.toBn);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function numberToBn$2(value) {
+  return bn.isBN(value) ? value : isToBn$2(value) ? value.toBn() : new bn(value);
+}
+/**
+ * @name bnToBn
+ * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
+ * @description
+ * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnToBn } from '@polkadot/util';
+ *
+ * bnToBn(0x1234); // => BN(0x1234)
+ * bnToBn(new BN(0x1234)); // => BN(0x1234)
+ * ```
+ */
+
+
+function bnToBn$2(value) {
+  if (!value) {
+    return new bn(0);
+  } else if (isHex$4(value)) {
+    return hexToBn$2(value.toString());
+  } else if (isBigInt$3(value)) {
+    return new bn(value.toString());
+  }
+
+  return numberToBn$2(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNumber
+ * @summary Tests for a JavaScript number.
+ * @description
+ * Checks to see if the input value is a valid number.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNumber } from '@polkadot/util';
+ *
+ * console.log('isNumber', isNumber(1234)); // => true
+ * ```
+ */
+function isNumber$1(value) {
+  return typeof value === 'number';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a$2(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$3(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$4(isHex$4(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$4(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer$2(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$3 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$3(value) {
+  return value ? encoder$3.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray$2(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString$2(value) {
+  return isHex$4(value) ? hexToU8a$3(value) : stringToU8a$3(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a$2(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer$2(value)) {
+    return bufferToU8a$2(value);
+  } else if (isString$4(value)) {
+    return convertString$2(value);
+  }
+
+  return convertArray$2(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aConcat
+ * @summary Creates a concatenated Uint8Array from the inputs.
+ * @description
+ * Concatenates the input arrays into a single `UInt8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aConcat } from '@polkadot/util';
+ *
+ * u8aConcat(
+ *   new Uint8Array([1, 2, 3]),
+ *   new Uint8Array([4, 5, 6])
+ * ); // [1, 2, 3, 4, 5, 6]
+ * ```
+ */
+
+function u8aConcat$1(...list) {
+  let length = 0;
+  let offset = 0;
+  const u8as = new Array(list.length);
+
+  for (let i = 0; i < list.length; i++) {
+    u8as[i] = u8aToU8a$2(list[i]);
+    length += u8as[i].length;
+  }
+
+  const result = new Uint8Array(length);
+
+  for (let i = 0; i < u8as.length; i++) {
+    result.set(u8as[i], offset);
+    offset += u8as[i].length;
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$3 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$3(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$3[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$3(value, halfLength) {
+  return `${u8aToHex$3(value.subarray(0, halfLength), -1, false)}…${u8aToHex$3(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$3(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$3(value, Math.ceil(byteLength / 2)) : extract$3(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aToBn
+ * @summary Creates a BN from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual BN. `null` or `undefined` values returns an `0x0` value.
+ * @param value The value to convert
+ * @param options Options to pass while converting
+ * @param options.isLe Convert using Little Endian
+ * @param options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToBn } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+function u8aToBn(value, options = {
+  isLe: true,
+  isNegative: false
+}) {
+  return hexToBn$2(u8aToHex$3(value), options);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const decoder$2 = new TextDecoder('utf-8');
+/**
+ * @name u8aToString
+ * @summary Creates a utf-8 string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual decoded utf-8 string. `null` or `undefined` values returns an empty string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToString } from '@polkadot/util';
+ *
+ * u8aToString(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0x6f])); // hello
+ * ```
+ */
+
+function u8aToString$2(value) {
+  return !(value !== null && value !== void 0 && value.length) ? '' : decoder$2.decode(value);
+}
+
+function ownKeys$O(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$O(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$O(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$O(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function createEmpty(byteLength, options) {
+  return options.bitLength === -1 ? new Uint8Array() : new Uint8Array(byteLength);
+}
+
+function createValue$1(valueBn, byteLength, {
+  isLe,
+  isNegative
+}) {
+  const output = new Uint8Array(byteLength);
+  const bn = isNegative ? valueBn.toTwos(byteLength * 8) : valueBn;
+  output.set(bn.toArray(isLe ? 'le' : 'be', byteLength), 0);
+  return output;
+}
+/**
+ * @name bnToU8a
+ * @summary Creates a Uint8Array object from a BN.
+ * @description
+ * `null`/`undefined`/`NaN` inputs returns an empty `Uint8Array` result. `BN` input values return the actual bytes value converted to a `Uint8Array`. Optionally convert using little-endian format if `isLE` is set.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bnToU8a } from '@polkadot/util';
+ *
+ * bnToU8a(new BN(0x1234)); // => [0x12, 0x34]
+ * ```
+ */
+
+
+function bnToU8a(value, arg1 = {
+  bitLength: -1,
+  isLe: true,
+  isNegative: false
+}, arg2) {
+  const options = _objectSpread$O({
+    bitLength: -1,
+    isLe: true,
+    isNegative: false
+  }, isNumber$1(arg1) ? {
+    bitLength: arg1,
+    isLe: arg2
+  } : arg1);
+
+  const valueBn = bnToBn$2(value);
+  const byteLength = options.bitLength === -1 ? Math.ceil(valueBn.bitLength() / 8) : Math.ceil((options.bitLength || 0) / 8);
+  return value ? createValue$1(valueBn, byteLength, options) : createEmpty(byteLength, options);
+}
+
+function ownKeys$N(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$N(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$N(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$N(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+const ZERO_STR = '0x00';
+
+function bnToHex(value, arg1 = {
+  bitLength: -1,
+  isLe: false,
+  isNegative: false
+}, arg2) {
+  if (!value) {
+    return ZERO_STR;
+  }
+
+  const _options = _objectSpread$N({
+    isLe: false,
+    isNegative: false
+  }, isNumber$1(arg1) ? {
+    bitLength: arg1,
+    isLe: arg2
+  } : arg1);
+
+  return u8aToHex$3(bnToU8a(value, _options));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const MAX_U8 = new bn(2).pow(new bn(8 - 2)).subn(1);
+const MAX_U16 = new bn(2).pow(new bn(16 - 2)).subn(1);
+const MAX_U32 = new bn(2).pow(new bn(32 - 2)).subn(1);
+/**
+ * @name compactToU8a
+ * @description Encodes a number into a compact representation
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactToU8a } from '@polkadot/util';
+ *
+ * console.log(compactToU8a(511, 32)); // Uint8Array([0b11111101, 0b00000111])
+ * ```
+ */
+
+function compactToU8a(_value) {
+  const value = bnToBn$2(_value);
+
+  if (value.lte(MAX_U8)) {
+    return new Uint8Array([value.toNumber() << 2]);
+  } else if (value.lte(MAX_U16)) {
+    return bnToU8a(value.shln(2).addn(0b01), 16, true);
+  } else if (value.lte(MAX_U32)) {
+    return bnToU8a(value.shln(2).addn(0b10), 32, true);
+  }
+
+  const u8a = bnToU8a(value);
+  let length = u8a.length; // adjust to the minimum number of bytes
+
+  while (u8a[length - 1] === 0) {
+    length--;
+  }
+
+  assert$4(length >= 4, 'Previous tests match anyting less than 2^30; qed');
+  return u8aConcat$1(new Uint8Array([// substract 4 as minimum (also catered for in decoding)
+  (length - 4 << 2) + 0b11]), u8a.subarray(0, length));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactAddLength
+ * @description Adds a length prefix to the input value
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactAddLength } from '@polkadot/util';
+ *
+ * console.log(compactAddLength(new Uint8Array([0xde, 0xad, 0xbe, 0xef]))); // Uint8Array([4 << 2, 0xde, 0xad, 0xbe, 0xef])
+ * ```
+ */
+
+function compactAddLength(input) {
+  return u8aConcat$1(compactToU8a(input.length), input);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const DEFAULT_BITLENGTH = 32;
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name compactFromU8a
+ * @description Retrievs the offset and encoded length from a compact-prefixed value
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { compactFromU8a } from '@polkadot/util';
+ *
+ * const [offset, length] = compactFromU8a(new Uint8Array([254, 255, 3, 0]), 32));
+ *
+ * console.log('value offset=', offset, 'length=', length); // 4, 0xffff
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+function compactFromU8a(_input, bitLength = DEFAULT_BITLENGTH) {
+  const input = u8aToU8a$2(_input);
+  const flag = input[0] & 0b11;
+
+  if (flag === 0b00) {
+    return [1, new bn(input[0]).shrn(2)];
+  } else if (flag === 0b01) {
+    return [2, u8aToBn(input.slice(0, 2), true).shrn(2)];
+  } else if (flag === 0b10) {
+    return [4, u8aToBn(input.slice(0, 4), true).shrn(2)];
+  }
+
+  const length = new bn(input[0]).shrn(2) // clear flag
+  .addn(4) // add 4 for base length
+  .toNumber();
+  const offset = 1 + length;
+  return [offset, u8aToBn(input.subarray(1, offset), true)];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line prefer-regex-literals
+const NUMBER_REGEX = new RegExp('(\\d+?)(?=(\\d{3})+(?!\\d)|$)', 'g');
+function formatDecimal(value) {
+  // We can do this by adjusting the regx, however for the sake of clarity
+  // we rather strip and re-add the negative sign in the output
+  const isNegative = value[0].startsWith('-');
+  const matched = isNegative ? value.substr(1).match(NUMBER_REGEX) : value.match(NUMBER_REGEX);
+  return matched ? `${isNegative ? '-' : ''}${matched.join(',')}` : value;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const SI_MID = 8;
+const SI = [{
+  power: -24,
+  text: 'yocto',
+  value: 'y'
+}, {
+  power: -21,
+  text: 'zepto',
+  value: 'z'
+}, {
+  power: -18,
+  text: 'atto',
+  value: 'a'
+}, {
+  power: -15,
+  text: 'femto',
+  value: 'f'
+}, {
+  power: -12,
+  text: 'pico',
+  value: 'p'
+}, {
+  power: -9,
+  text: 'nano',
+  value: 'n'
+}, {
+  power: -6,
+  text: 'micro',
+  value: 'µ'
+}, {
+  power: -3,
+  text: 'milli',
+  value: 'm'
+}, {
+  power: 0,
+  text: 'Unit',
+  value: '-'
+}, // position 8
+{
+  power: 3,
+  text: 'Kilo',
+  value: 'k'
+}, {
+  power: 6,
+  text: 'Mill',
+  value: 'M'
+}, // Mega, M
+{
+  power: 9,
+  text: 'Bill',
+  value: 'B'
+}, // Giga, G
+{
+  power: 12,
+  text: 'Tril',
+  value: 'T'
+}, // Tera, T
+{
+  power: 15,
+  text: 'Peta',
+  value: 'P'
+}, {
+  power: 18,
+  text: 'Exa',
+  value: 'E'
+}, {
+  power: 21,
+  text: 'Zeta',
+  value: 'Z'
+}, {
+  power: 24,
+  text: 'Yotta',
+  value: 'Y'
+}]; // Given a SI type (e.g. k, m, Y) find the SI definition
+
+function findSi(type) {
+  // use a loop here, better RN support (which doesn't have [].find)
+  for (let i = 0; i < SI.length; i++) {
+    if (SI[i].value === type) {
+      return SI[i];
+    }
+  }
+
+  return SI[SI_MID];
+}
+function calcSi(text, decimals, forceUnit) {
+  if (forceUnit) {
+    return findSi(forceUnit);
+  }
+
+  const siDefIndex = SI_MID - 1 + Math.ceil((text.length - decimals) / 3);
+  return SI[siDefIndex] || SI[siDefIndex < 0 ? 0 : SI.length - 1];
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const DEFAULT_DECIMALS = 0;
+const DEFAULT_UNIT = SI[SI_MID].text;
+let defaultDecimals = DEFAULT_DECIMALS;
+let defaultUnit = DEFAULT_UNIT; // Formats a string/number with <prefix>.<postfix><type> notation
+
+function _formatBalance(input, options = true, optDecimals = defaultDecimals) {
+  let text = bnToBn$2(input).toString();
+
+  if (text.length === 0 || text === '0') {
+    return '0';
+  } // strip the negative sign so we can work with clean groupings, re-add this in the
+  // end when we return the result (from here on we work with positive numbers)
+
+
+  const isNegative = text[0].startsWith('-');
+
+  if (isNegative) {
+    text = text.substr(1);
+  } // extract options - the boolean case is for backwards-compat
+
+
+  const {
+    decimals = optDecimals,
+    forceUnit = undefined,
+    withSi = true,
+    withSiFull = false,
+    withUnit = true
+  } = isBoolean$2(options) ? {
+    withSi: options
+  } : options; // NOTE We start at midpoint (8) minus 1 - this means that values display as
+  // 123.456 instead of 0.123k (so always 6 relevant). Additionally we use ceil
+  // so there are at most 3 decimal before the decimal separator
+
+  const si = calcSi(text, decimals, forceUnit);
+  const mid = text.length - (decimals + si.power);
+  const prefix = text.substr(0, mid);
+  const padding = mid < 0 ? 0 - mid : 0;
+  const postfix = `${`${new Array(padding + 1).join('0')}${text}`.substr(mid < 0 ? 0 : mid)}0000`.substr(0, 4);
+  const units = withSi || withSiFull ? si.value === '-' ? withUnit ? ` ${isBoolean$2(withUnit) ? si.text : withUnit}` : '' : ` ${withSiFull ? si.text : si.value}${withUnit ? `${withSiFull ? ' ' : ''}${isBoolean$2(withUnit) ? SI[SI_MID].text : withUnit}` : ''}` : '';
+  return `${isNegative ? '-' : ''}${formatDecimal(prefix || '0')}.${postfix}${units}`;
+}
+
+const formatBalance = _formatBalance; // eslint-disable-next-line @typescript-eslint/unbound-method
+
+formatBalance.calcSi = (text, decimals = defaultDecimals) => calcSi(text, decimals); // eslint-disable-next-line @typescript-eslint/unbound-method
+
+
+formatBalance.findSi = findSi; // eslint-disable-next-line @typescript-eslint/unbound-method
+
+formatBalance.getDefaults = () => {
+  return {
+    decimals: defaultDecimals,
+    unit: defaultUnit
+  };
+}; // get allowable options to display in a dropdown
+// eslint-disable-next-line @typescript-eslint/unbound-method
+
+
+formatBalance.getOptions = (decimals = defaultDecimals) => {
+  return SI.filter(({
+    power
+  }) => power < 0 ? decimals + power >= 0 : true);
+}; // Sets the default decimals to use for formatting (ui-wide)
+// eslint-disable-next-line @typescript-eslint/unbound-method
+
+
+formatBalance.setDefaults = ({
+  decimals,
+  unit
+}) => {
+  defaultDecimals = isUndefined$3(decimals) ? defaultDecimals : Array.isArray(decimals) ? decimals[0] : decimals;
+  defaultUnit = isUndefined$3(unit) ? defaultUnit : Array.isArray(unit) ? unit[0] : unit;
+  SI[SI_MID].text = defaultUnit;
+};
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/** @internal */
+function zeroPad$1(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function formatDate$1(date) {
+  const year = date.getFullYear().toString();
+  const month = zeroPad$1(date.getMonth() + 1);
+  const day = zeroPad$1(date.getDate());
+  const hour = zeroPad$1(date.getHours());
+  const minute = zeroPad$1(date.getMinutes());
+  const second = zeroPad$1(date.getSeconds());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function formatNumber(value) {
+  return formatDecimal(bnToBn$2(value).toString());
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const FORMAT = [9, 10, 13];
+/**
+ * @name isAscii
+ * @summary Tests if the input is printable ASCII
+ * @description
+ * Checks to see if the input string or Uint8Array is printable ASCII, 32-127 + formatters
+ */
+
+function isAscii(value) {
+  return value ? !u8aToU8a$2(value).some(byte => byte >= 127 || byte < 32 && !FORMAT.includes(byte)) : isString$4(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isBn
+ * @summary Tests for a `BN` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BN` (bn.js).
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { isBn } from '@polkadot/util';
+ *
+ * console.log('isBn', isBn(new BN(1))); // => true
+ * ```
+ */
+
+function isBn$1(value) {
+  return bn.isBN(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$3(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+function isObject$1(value) {
+  return typeof value === 'object';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$3(value) {
+  return isInstanceOf$3(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isUtf8
+ * @summary Tests if the input is valid Utf8
+ * @description
+ * Checks to see if the input string or Uint8Array is valid Utf8
+ */
+
+function isUtf8(value) {
+  if (!value) {
+    return isString$4(value);
+  }
+
+  const u8a = u8aToU8a$2(value);
+  const len = u8a.length;
+  let i = 0;
+
+  while (i < len) {
+    if (u8a[i] <= 0x7F)
+      /* 00..7F */
+      {
+        i += 1;
+      } else if (u8a[i] >= 0xC2 && u8a[i] <= 0xDF)
+      /* C2..DF 80..BF */
+      {
+        if (i + 1 < len)
+          /* Expect a 2nd byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte between C2 and DF, expecting a 2nd byte between 80 and BF";
+              // *faulty_bytes = 2;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte between C2 and DF, expecting a 2nd byte.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 2;
+      } else if (u8a[i] === 0xE0)
+      /* E0 A0..BF 80..BF */
+      {
+        if (i + 2 < len)
+          /* Expect a 2nd and 3rd byte */
+          {
+            if (u8a[i + 1] < 0xA0 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte of E0, expecting a 2nd byte between A0 and BF.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte of E0, expecting a 3nd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte of E0, expecting two following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 3;
+      } else if (u8a[i] >= 0xE1 && u8a[i] <= 0xEC)
+      /* E1..EC 80..BF 80..BF */
+      {
+        if (i + 2 < len)
+          /* Expect a 2nd and 3rd byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte between E1 and EC, expecting the 2nd byte between 80 and BF.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte between E1 and EC, expecting the 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte between E1 and EC, expecting two following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 3;
+      } else if (u8a[i] === 0xED)
+      /* ED 80..9F 80..BF */
+      {
+        if (i + 2 < len)
+          /* Expect a 2nd and 3rd byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0x9F) {
+              // *message = "After a first byte of ED, expecting 2nd byte between 80 and 9F.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte of ED, expecting 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte of ED, expecting two following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 3;
+      } else if (u8a[i] >= 0xEE && u8a[i] <= 0xEF)
+      /* EE..EF 80..BF 80..BF */
+      {
+        if (i + 2 < len)
+          /* Expect a 2nd and 3rd byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte between EE and EF, expecting 2nd byte between 80 and BF.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte between EE and EF, expecting 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte between EE and EF, two following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 3;
+      } else if (u8a[i] === 0xF0)
+      /* F0 90..BF 80..BF 80..BF */
+      {
+        if (i + 3 < len)
+          /* Expect a 2nd, 3rd 3th byte */
+          {
+            if (u8a[i + 1] < 0x90 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte of F0, expecting 2nd byte between 90 and BF.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte of F0, expecting 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+
+            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
+              // *message = "After a first byte of F0, expecting 4th byte between 80 and BF.";
+              // *faulty_bytes = 4;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte of F0, expecting three following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 4;
+      } else if (u8a[i] >= 0xF1 && u8a[i] <= 0xF3)
+      /* F1..F3 80..BF 80..BF 80..BF */
+      {
+        if (i + 3 < len)
+          /* Expect a 2nd, 3rd 3th byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0xBF) {
+              // *message = "After a first byte of F1, F2, or F3, expecting a 2nd byte between 80 and BF.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte of F1, F2, or F3, expecting a 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+
+            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
+              // *message = "After a first byte of F1, F2, or F3, expecting a 4th byte between 80 and BF.";
+              // *faulty_bytes = 4;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte of F1, F2, or F3, expecting three following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 4;
+      } else if (u8a[i] === 0xF4)
+      /* F4 80..8F 80..BF 80..BF */
+      {
+        if (i + 3 < len)
+          /* Expect a 2nd, 3rd 3th byte */
+          {
+            if (u8a[i + 1] < 0x80 || u8a[i + 1] > 0x8F) {
+              // *message = "After a first byte of F4, expecting 2nd byte between 80 and 8F.";
+              // *faulty_bytes = 2;
+              return false;
+            }
+
+            if (u8a[i + 2] < 0x80 || u8a[i + 2] > 0xBF) {
+              // *message = "After a first byte of F4, expecting 3rd byte between 80 and BF.";
+              // *faulty_bytes = 3;
+              return false;
+            }
+
+            if (u8a[i + 3] < 0x80 || u8a[i + 3] > 0xBF) {
+              // *message = "After a first byte of F4, expecting 4th byte between 80 and BF.";
+              // *faulty_bytes = 4;
+              return false;
+            }
+          } else {
+          // *message = "After a first byte of F4, expecting three following bytes.";
+          // *faulty_bytes = 1;
+          return false;
+        }
+
+        i += 4;
+      } else {
+      // *message = "Expecting bytes in the following ranges: 00..7F C2..F4.";
+      // *faulty_bytes = 1;
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const logTo$1 = {
+  debug: 'log',
+  error: 'error',
+  log: 'log',
+  warn: 'warn'
+};
+
+function formatOther$1(value) {
+  if (value && isObject$1(value) && value.constructor === Object) {
+    return Object.keys(value).reduce((result, key) => {
+      result[key] = loggerFormat$1(value[key]);
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+function loggerFormat$1(value) {
+  if (Array.isArray(value)) {
+    return value.map(loggerFormat$1);
+  } else if (isBn$1(value)) {
+    return value.toString();
+  } else if (isU8a$3(value) || isBuffer$2(value)) {
+    return u8aToHex$3(u8aToU8a$2(value));
+  }
+
+  return formatOther$1(value);
+}
+
+function apply$1(log, type, values, maxSize = -1) {
+  if (values.length === 1 && isFunction$4(values[0])) {
+    const fnResult = values[0]();
+    return apply$1(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
+  }
+
+  console[logTo$1[log]](formatDate$1(new Date()), type, ...values.map(loggerFormat$1).map(v => {
+    if (maxSize <= 0) {
+      return v;
+    }
+
+    const r = `${v}`;
+    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
+  }));
+}
+
+function noop$1() {// noop
+}
+
+function parseEnv$1(type) {
+  var _process, _process$env, _process2, _process2$env;
+
+  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
+  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
+}
+/**
+ * @name Logger
+ * @summary Creates a consistent log interface for messages
+ * @description
+ * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { logger } from '@polkadot';
+ *
+ * const l = logger('test');
+ * ```
+ */
+
+
+function logger$1(_type) {
+  const type = `${_type.toUpperCase()}:`.padStart(16);
+  const [isDebug, maxSize] = parseEnv$1(_type.toLowerCase());
+  return {
+    debug: isDebug ? (...values) => apply$1('debug', type, values, maxSize) : noop$1,
+    error: (...values) => apply$1('error', type, values),
+    log: (...values) => apply$1('log', type, values),
+    noop: noop$1,
+    warn: (...values) => apply$1('warn', type, values)
+  };
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name stringCamelCase
+ * @summary Convert a dash/dot/underscore/space separated string/String to camelCase
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringCamelCase(value) {
+  return camelcase(value.toString());
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name stringUpperFirst
+ * @summary Lowercase the first letter of a string
+ * @description
+ * Lowercase the first letter of a string
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringUpperFirst } from '@polkadot/util';
+ *
+ * stringUpperFirst('abc'); // => 'Abc'
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function stringUpperFirst(value) {
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
+}
+
 // Copyright 2017-2021 @polkadot/types authors & contributors
 function hasEq(o) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return isFunction$1(o.eq);
+  return isFunction$4(o.eq);
 }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
@@ -19644,7 +22511,7 @@ function hasEq(o) {
 
 function compareArray(a, b) {
   if (Array.isArray(b)) {
-    return a.length === b.length && isUndefined(a.find((value, index) => hasEq(value) ? !value.eq(b[index]) : value !== b[index]));
+    return a.length === b.length && isUndefined$3(a.find((value, index) => hasEq(value) ? !value.eq(b[index]) : value !== b[index]));
   }
 
   return false;
@@ -19653,7 +22520,7 @@ function compareArray(a, b) {
 // Copyright 2017-2021 @polkadot/types authors & contributors
 
 function hasMismatch(a, b) {
-  return isUndefined(a) || (hasEq(a) ? !a.eq(b) : a !== b);
+  return isUndefined$3(a) || (hasEq(a) ? !a.eq(b) : a !== b);
 }
 
 function notEntry(value) {
@@ -19726,7 +22593,7 @@ function decodeU8a$3(registry, u8a, _types) {
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 function typeToConstructor(registry, type) {
-  return isString(type) ? registry.createClass(type) : type;
+  return isString$4(type) ? registry.createClass(type) : type;
 }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
@@ -19741,7 +22608,7 @@ function mapToTypeMap(registry, input) {
   }, {});
 }
 
-const l$b = logger('Map');
+const l$b = logger$1('Map');
 /** @internal */
 
 function decodeMapFromU8a(registry, KeyClass, ValClass, u8a) {
@@ -19799,8 +22666,8 @@ function decodeMap(registry, keyType, valType, value) {
 
   if (!value) {
     return new Map();
-  } else if (isU8a(value) || isHex(value)) {
-    return decodeMapFromU8a(registry, KeyClass, ValClass, u8aToU8a(value));
+  } else if (isU8a$3(value) || isHex$4(value)) {
+    return decodeMapFromU8a(registry, KeyClass, ValClass, u8aToU8a$2(value));
   } else if (value instanceof Map) {
     return decodeMapFromMap(registry, KeyClass, ValClass, value);
   } else if (isObject$1(value)) {
@@ -19879,7 +22746,7 @@ class CodecMap extends Map {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -19937,7 +22804,7 @@ class CodecMap extends Map {
     this.forEach((v, k) => {
       encoded.push(k.toU8a(isBare), v.toU8a(isBare));
     });
-    return u8aConcat(...encoded);
+    return u8aConcat$1(...encoded);
   }
 
 }
@@ -19955,7 +22822,7 @@ class BTreeMap extends CodecMap {
 
 }
 
-const l$a = logger('BTreeSet');
+const l$a = logger$1('BTreeSet');
 /** @internal */
 
 function decodeSetFromU8a(registry, ValClass, u8a) {
@@ -20013,8 +22880,8 @@ function decodeSet$1(registry, valType, value) {
 
   const ValClass = typeToConstructor(registry, valType);
 
-  if (isHex(value) || isU8a(value)) {
-    return decodeSetFromU8a(registry, ValClass, u8aToU8a(value));
+  if (isHex$4(value) || isU8a$3(value)) {
+    return decodeSetFromU8a(registry, ValClass, u8aToU8a$2(value));
   } else if (Array.isArray(value) || value instanceof Set) {
     return decodeSetFromSet(registry, ValClass, value);
   }
@@ -20086,7 +22953,7 @@ class BTreeSet extends Set {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -20144,7 +23011,7 @@ class BTreeSet extends Set {
     this.forEach(v => {
       encoded.push(v.toU8a(isBare));
     });
-    return u8aConcat(...encoded);
+    return u8aConcat$1(...encoded);
   }
 
 }
@@ -20192,7 +23059,7 @@ class Compact {
   static decodeCompact(registry, Type, value) {
     if (value instanceof Compact) {
       return new Type(registry, _classPrivateFieldBase(value, _raw$2)[_raw$2]);
-    } else if (isString(value) || isNumber(value) || isBn(value) || isBigInt(value)) {
+    } else if (isString$4(value) || isNumber$1(value) || isBn$1(value) || isBigInt$3(value)) {
       return new Type(registry, value);
     }
 
@@ -20366,7 +23233,7 @@ class Null {
 
 
   eq(other) {
-    return other instanceof Null || isNull(other);
+    return other instanceof Null || isNull$1(other);
   }
   /**
    * @description Returns a hex string representation of the value
@@ -20444,8 +23311,8 @@ function decodeStructFromObject(registry, Types, value, jsonMap) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let assign = value[jsonKey];
 
-        if (isUndefined(assign)) {
-          if (isUndefined(jsonObj)) {
+        if (isUndefined$3(assign)) {
+          if (isUndefined$3(jsonObj)) {
             jsonObj = Object.entries(value).reduce((all, [key, value]) => {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               all[stringCamelCase(key)] = value;
@@ -20495,9 +23362,9 @@ function decodeStructFromObject(registry, Types, value, jsonMap) {
 
 
 function decodeStruct(registry, Types, value, jsonMap) {
-  if (isHex(value)) {
-    return decodeStruct(registry, Types, hexToU8a(value), jsonMap);
-  } else if (isU8a(value)) {
+  if (isHex$4(value)) {
+    return decodeStruct(registry, Types, hexToU8a$3(value), jsonMap);
+  } else if (isU8a$3(value)) {
     const values = decodeU8a$3(registry, value, Object.values(Types)); // Transform array of values to {key: value} mapping
 
     return Object.keys(Types).reduce((raw, key, index) => {
@@ -20552,7 +23419,7 @@ class Struct extends Map {
       constructor(registry, value) {
         super(registry, Types, value, jsonMap);
         Object.keys(Types).forEach(key => {
-          isUndefined(this[key]) && Object.defineProperty(this, key, {
+          isUndefined$3(this[key]) && Object.defineProperty(this, key, {
             enumerable: true,
             get: () => this.get(key)
           });
@@ -20662,7 +23529,7 @@ class Struct extends Map {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -20714,8 +23581,8 @@ class Struct extends Map {
   toU8a(isBare) {
     // we have keyof S here, cast to string to make it compatible with isBare
     const entries = [...this.entries()];
-    return u8aConcat(...entries // eslint-disable-next-line @typescript-eslint/unbound-method
-    .filter(([, value]) => isFunction$1(value === null || value === void 0 ? void 0 : value.toU8a)).map(([key, value]) => value.toU8a(!isBare || isBoolean(isBare) ? isBare : isBare[key])));
+    return u8aConcat$1(...entries // eslint-disable-next-line @typescript-eslint/unbound-method
+    .filter(([, value]) => isFunction$4(value === null || value === void 0 ? void 0 : value.toU8a)).map(([key, value]) => value.toU8a(!isBare || isBoolean$2(isBare) ? isBare : isBare[key])));
   }
 
 }
@@ -20723,8 +23590,8 @@ class Struct extends Map {
 function isRustEnum$1(def) {
   const defValues = Object.values(def);
 
-  if (defValues.some(v => isNumber(v))) {
-    assert$a(defValues.every(v => isNumber(v) && v >= 0 && v <= 255), 'Invalid number-indexed enum definition');
+  if (defValues.some(v => isNumber$1(v))) {
+    assert$4(defValues.every(v => isNumber$1(v) && v >= 0 && v <= 255), 'Invalid number-indexed enum definition');
     return false;
   }
 
@@ -20783,7 +23650,7 @@ function extractDef(registry, _def) {
 
 function createFromValue(registry, def, index = 0, value) {
   const entry = Object.values(def).find(e => e.index === index);
-  assert$a(!isUndefined(entry), `Unable to create Enum via index ${index}, in ${Object.keys(def).join(', ')}`);
+  assert$4(!isUndefined$3(entry), `Unable to create Enum via index ${index}, in ${Object.keys(def).join(', ')}`);
   return {
     index,
     value: value instanceof entry.Type ? value : new entry.Type(registry, value)
@@ -20796,7 +23663,7 @@ function decodeFromJSON(registry, def, key, value) {
   const keys = Object.keys(def).map(k => k.toLowerCase());
   const keyLower = key.toLowerCase();
   const index = keys.indexOf(keyLower);
-  assert$a(index !== -1, `Cannot map Enum JSON, unable to find '${key}' in ${keys.join(', ')}`);
+  assert$4(index !== -1, `Cannot map Enum JSON, unable to find '${key}' in ${keys.join(', ')}`);
 
   try {
     return createFromValue(registry, def, Object.values(def)[index].index, value);
@@ -20806,19 +23673,19 @@ function decodeFromJSON(registry, def, key, value) {
 }
 
 function decodeFromString(registry, def, value) {
-  return isHex(value) // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  ? decodeFromValue(registry, def, hexToU8a(value)) : decodeFromJSON(registry, def, value);
+  return isHex$4(value) // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  ? decodeFromValue(registry, def, hexToU8a$3(value)) : decodeFromJSON(registry, def, value);
 }
 
 function decodeFromValue(registry, def, value) {
-  if (isU8a(value)) {
+  if (isU8a$3(value)) {
     // nested, we don't want to match isObject below
     if (value.length) {
       return createFromValue(registry, def, value[0], value.subarray(1));
     }
-  } else if (isNumber(value)) {
+  } else if (isNumber$1(value)) {
     return createFromValue(registry, def, value);
-  } else if (isString(value)) {
+  } else if (isString$4(value)) {
     return decodeFromString(registry, def, value.toString());
   } else if (isObject$1(value)) {
     const key = Object.keys(value)[0];
@@ -20832,7 +23699,7 @@ function decodeFromValue(registry, def, value) {
 function decodeEnum(registry, def, value, index) {
   // NOTE We check the index path first, before looking at values - this allows treating
   // the optional indexes before anything else, more-specific > less-specific
-  if (isNumber(index)) {
+  if (isNumber$1(index)) {
     return createFromValue(registry, def, index, value); // eslint-disable-next-line @typescript-eslint/no-use-before-define
   } else if (value instanceof Enum) {
     return createFromValue(registry, def, value.index, value.value);
@@ -20911,14 +23778,14 @@ class Enum {
           const name = stringUpperFirst(stringCamelCase(_key.replace(' ', '_')));
           const askey = `as${name}`;
           const iskey = `is${name}`;
-          isUndefined(this[iskey]) && Object.defineProperty(this, iskey, {
+          isUndefined$3(this[iskey]) && Object.defineProperty(this, iskey, {
             enumerable: true,
             get: () => this.type === _key
           });
-          isUndefined(this[askey]) && Object.defineProperty(this, askey, {
+          isUndefined$3(this[askey]) && Object.defineProperty(this, askey, {
             enumerable: true,
             get: () => {
-              assert$a(this[iskey], `Cannot convert '${this.type}' via ${askey}`);
+              assert$4(this[iskey], `Cannot convert '${this.type}' via ${askey}`);
               return this.value;
             }
           });
@@ -21022,13 +23889,13 @@ class Enum {
 
   eq(other) {
     // cater for the case where we only pass the enum index
-    if (isNumber(other)) {
+    if (isNumber$1(other)) {
       return this.toNumber() === other;
-    } else if (_classPrivateFieldBase(this, _isBasic)[_isBasic] && isString(other)) {
+    } else if (_classPrivateFieldBase(this, _isBasic)[_isBasic] && isString$4(other)) {
       return this.type === other;
-    } else if (isU8a(other)) {
+    } else if (isU8a$3(other)) {
       return !this.toU8a().some((entry, index) => entry !== other[index]);
-    } else if (isHex(other)) {
+    } else if (isHex$4(other)) {
       return this.toHex() === other;
     } else if (other instanceof Enum) {
       return this.index === other.index && this.value.eq(other.value);
@@ -21045,7 +23912,7 @@ class Enum {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -21121,7 +23988,7 @@ class Enum {
 
 
   toU8a(isBare) {
-    return u8aConcat(new Uint8Array(isBare ? [] : [this.index]), _classPrivateFieldBase(this, _raw$1)[_raw$1].toU8a(isBare));
+    return u8aConcat$1(new Uint8Array(isBare ? [] : [this.index]), _classPrivateFieldBase(this, _raw$1)[_raw$1].toU8a(isBare));
   }
 
 }
@@ -21144,7 +24011,7 @@ const DEFAULT_UINT_BITS = 64; // Maximum allowed integer for JS is 2^53 - 1, set
 
 const MAX_NUMBER_BITS = 52;
 const MUL_P = new bn(10000);
-const FORMATTERS = [['Perquintill', BN_QUINTILL], ['Perbill', BN_BILLION], ['Permill', BN_MILLION], ['Percent', BN_HUNDRED]];
+const FORMATTERS = [['Perquintill', BN_QUINTILL], ['Perbill', BN_BILLION$1], ['Permill', BN_MILLION], ['Percent', BN_HUNDRED]];
 
 function toPercentage(value, divisor) {
   return `${(value.mul(MUL_P).div(divisor).toNumber() / 100).toFixed(2)}%`;
@@ -21174,18 +24041,18 @@ function decodeAbstractInt(value, bitLength, isNegative) {
   // This function returns a string, which will be passed in the BN
   // constructor. It would be ideal to actually return a BN, but there's a
   // bug: https://github.com/indutny/bn.js/issues/206.
-  if (isHex(value, -1, true)) {
-    return hexToBn(value, {
+  if (isHex$4(value, -1, true)) {
+    return hexToBn$2(value, {
       isLe: false,
       isNegative
     }).toString();
-  } else if (isU8a(value)) {
+  } else if (isU8a$3(value)) {
     return decodeAbstracIntU8a(value, bitLength, isNegative);
-  } else if (isString(value)) {
+  } else if (isString$4(value)) {
     return new bn(value.toString(), 10).toString();
   }
 
-  return bnToBn(value).toString();
+  return bnToBn$2(value).toString();
 }
 /**
  * @name AbstractInt
@@ -21215,10 +24082,10 @@ class AbstractInt extends bn {
     this.registry = registry;
     _classPrivateFieldBase(this, _bitLength)[_bitLength] = bitLength;
     _classPrivateFieldBase(this, _isSigned)[_isSigned] = isSigned;
-    const isPositive = this.gte(BN_ZERO);
+    const isPositive = this.gte(BN_ZERO$1);
     const maxBits = bitLength - (isSigned && isPositive ? 1 : 0);
-    assert$a(isSigned || isPositive, `${this.toRawType()}: Negative number passed to unsigned type`);
-    assert$a(super.bitLength() <= maxBits, `${this.toRawType()}: Input too large. Found input with ${super.bitLength()} bits, expected ${maxBits}`);
+    assert$4(isSigned || isPositive, `${this.toRawType()}: Negative number passed to unsigned type`);
+    assert$4(super.bitLength() <= maxBits, `${this.toRawType()}: Input too large. Found input with ${super.bitLength()} bits, expected ${maxBits}`);
   }
   /**
    * @description The length of the value when encoded as a Uint8Array
@@ -21269,10 +24136,10 @@ class AbstractInt extends bn {
   eq(other) {
     // Here we are actually overriding the built-in .eq to take care of both
     // number and BN inputs (no `.eqn` needed) - numbers will be converted
-    return super.eq(isHex(other) ? hexToBn(other.toString(), {
+    return super.eq(isHex$4(other) ? hexToBn$2(other.toString(), {
       isLe: false,
       isNegative: _classPrivateFieldBase(this, _isSigned)[_isSigned]
-    }) : bnToBn(other));
+    }) : bnToBn$2(other));
   }
   /**
    * @description True if this value is the max of the type
@@ -21439,7 +24306,7 @@ class Json extends Map {
     this.registry = void 0;
     this.registry = registry;
     decoded.forEach(([key]) => {
-      isUndefined(this[key]) && Object.defineProperty(this, key, {
+      isUndefined$3(this[key]) && Object.defineProperty(this, key, {
         enumerable: true,
         get: () => this.get(key)
       });
@@ -21492,7 +24359,7 @@ class Json extends Map {
 
   toHuman() {
     return [...this.entries()].reduce((json, [key, value]) => {
-      json[key] = isFunction$1(value.toHuman) ? value.toHuman() : value;
+      json[key] = isFunction$4(value.toHuman) ? value.toHuman() : value;
       return json;
     }, {});
   }
@@ -21544,7 +24411,7 @@ function decodeOptionU8a(registry, Type, value) {
 
 
 function decodeOption(registry, typeName, value) {
-  if (isNull(value) || isUndefined(value) || value instanceof Null) {
+  if (isNull$1(value) || isUndefined$3(value) || value instanceof Null) {
     return new Null(registry);
   }
 
@@ -21555,7 +24422,7 @@ function decodeOption(registry, typeName, value) {
   } else if (value instanceof Type) {
     // don't re-create, use as it (which also caters for derived types)
     return value;
-  } else if (isU8a(value)) {
+  } else if (isU8a$3(value)) {
     // the isU8a check happens last in the if-tree - since the wrapped value
     // may be an instance of it, so Type and Option checks go in first
     return decodeOptionU8a(registry, Type, value);
@@ -21670,7 +24537,7 @@ class Option {
   toHex() {
     // This attempts to align with the JSON encoding - actually in this case
     // the isSome value is correct, however the `isNone` may be problematic
-    return this.isNone ? '0x' : u8aToHex(this.toU8a().subarray(1));
+    return this.isNone ? '0x' : u8aToHex$3(this.toU8a().subarray(1));
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -21731,7 +24598,7 @@ class Option {
 
 
   unwrap() {
-    assert$a(this.isSome, 'Option: unwrapping a None value');
+    assert$4(this.isSome, 'Option: unwrapping a None value');
     return _classPrivateFieldBase(this, _raw)[_raw];
   }
   /**
@@ -21827,7 +24694,7 @@ class AbstractArray extends Array {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -21866,7 +24733,7 @@ class AbstractArray extends Array {
 
   toU8a(isBare) {
     const encoded = this.map(entry => entry.toU8a(isBare));
-    return isBare ? u8aConcat(...encoded) : u8aConcat(compactToU8a(this.length), ...encoded);
+    return isBare ? u8aConcat$1(...encoded) : u8aConcat$1(compactToU8a(this.length), ...encoded);
   } // Below are methods that we override. When we do a `new Vec(...).map()`,
   // we want it to return an Array. We only override the methods that return a
   // new instance.
@@ -21918,8 +24785,8 @@ class AbstractArray extends Array {
 
 /** @internal */
 function decodeTuple(registry, _Types, value) {
-  if (isU8a(value) || isHex(value)) {
-    return decodeU8a$3(registry, u8aToU8a(value), _Types);
+  if (isU8a$3(value) || isHex$4(value)) {
+    return decodeU8a$3(registry, u8aToU8a$2(value), _Types);
   }
 
   const Types = Array.isArray(_Types) ? _Types : Object.values(_Types);
@@ -22005,14 +24872,14 @@ class Tuple extends AbstractArray {
 
 
   toU8a(isBare) {
-    return u8aConcat(...this.map(entry => entry.toU8a(isBare)));
+    return u8aConcat$1(...this.map(entry => entry.toU8a(isBare)));
   }
 
 }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 const MAX_LENGTH$2 = 64 * 1024;
-const l$9 = logger('Vec');
+const l$9 = logger$1('Vec');
 /**
  * @name Vec
  * @description
@@ -22044,9 +24911,9 @@ class Vec extends AbstractArray {
       });
     }
 
-    const u8a = u8aToU8a(value);
+    const u8a = u8aToU8a$2(value);
     const [offset, length] = compactFromU8a(u8a);
-    assert$a(length.lten(MAX_LENGTH$2), `Vec length ${length.toString()} exceeds ${MAX_LENGTH$2}`);
+    assert$4(length.lten(MAX_LENGTH$2), `Vec length ${length.toString()} exceeds ${MAX_LENGTH$2}`);
     return decodeU8a$3(registry, u8a.subarray(offset), new Array(length.toNumber()).fill(Type));
   }
 
@@ -22107,7 +24974,7 @@ class Vec extends AbstractArray {
 
 class Raw extends Uint8Array {
   constructor(registry, value) {
-    super(u8aToU8a(value));
+    super(u8aToU8a$2(value));
     this.registry = void 0;
     this.registry = registry;
   }
@@ -22141,7 +25008,7 @@ class Raw extends Uint8Array {
 
 
   get isEmpty() {
-    return !this.length || isUndefined(this.find(value => !!value));
+    return !this.length || isUndefined$3(this.find(value => !!value));
   }
   /**
    * @description Returns true if the wrapped value contains only utf8 characters
@@ -22178,7 +25045,7 @@ class Raw extends Uint8Array {
       return this.length === other.length && !this.some((value, index) => value !== other[index]);
     }
 
-    return this.eq(u8aToU8a(other));
+    return this.eq(u8aToU8a$2(other));
   }
   /**
    * @description Create a new slice from the actual buffer. (compat)
@@ -22208,7 +25075,7 @@ class Raw extends Uint8Array {
 
 
   toHex() {
-    return u8aToHex(this);
+    return u8aToHex$3(this);
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -22258,8 +25125,8 @@ class Raw extends Uint8Array {
 
 
   toUtf8() {
-    assert$a(this.isUtf8, 'The character sequence is not a valid Utf8 string');
-    return u8aToString(this);
+    assert$4(this.isUtf8, 'The character sequence is not a valid Utf8 string');
+    return u8aToString$2(this);
   }
 
 }
@@ -22295,7 +25162,7 @@ class Result extends Enum {
 
 
   get asErr() {
-    assert$a(this.isErr, 'Cannot extract Err value from Ok result, check isErr first');
+    assert$4(this.isErr, 'Cannot extract Err value from Ok result, check isErr first');
     return this.value;
   }
   /**
@@ -22312,7 +25179,7 @@ class Result extends Enum {
 
 
   get asOk() {
-    assert$a(this.isOk, 'Cannot extract Ok value from Err result, check isOk first');
+    assert$4(this.isOk, 'Cannot extract Ok value from Err result, check isOk first');
     return this.value;
   }
   /**
@@ -22362,7 +25229,7 @@ class Result extends Enum {
 
 function encodeSet(setValues, value) {
   return value.reduce((result, value) => {
-    return result.or(bnToBn(setValues[value] || 0));
+    return result.or(bnToBn$2(setValues[value] || 0));
   }, new bn(0));
 }
 /** @internal */
@@ -22370,7 +25237,7 @@ function encodeSet(setValues, value) {
 
 function decodeSetArray(setValues, value) {
   return value.reduce((result, key) => {
-    assert$a(!isUndefined(setValues[key]), `Set: Invalid key '${key}' passed to Set, allowed ${Object.keys(setValues).join(', ')}`);
+    assert$4(!isUndefined$3(setValues[key]), `Set: Invalid key '${key}' passed to Set, allowed ${Object.keys(setValues).join(', ')}`);
     result.push(key);
     return result;
   }, []);
@@ -22379,28 +25246,28 @@ function decodeSetArray(setValues, value) {
 
 
 function decodeSetNumber(setValues, _value) {
-  const bn = bnToBn(_value);
+  const bn = bnToBn$2(_value);
   const result = Object.keys(setValues).reduce((result, key) => {
-    if (bn.and(bnToBn(setValues[key])).eq(bnToBn(setValues[key]))) {
+    if (bn.and(bnToBn$2(setValues[key])).eq(bnToBn$2(setValues[key]))) {
       result.push(key);
     }
 
     return result;
   }, []);
   const computed = encodeSet(setValues, result);
-  assert$a(bn.eq(computed), `Set: Mismatch decoding '${bn.toString()}', computed as '${computed.toString()}' with ${result.join(', ')}`);
+  assert$4(bn.eq(computed), `Set: Mismatch decoding '${bn.toString()}', computed as '${computed.toString()}' with ${result.join(', ')}`);
   return result;
 }
 /** @internal */
 
 
 function decodeSet(setValues, value = 0, bitLength) {
-  assert$a(bitLength % 8 === 0, `Expected valid bitLength, power of 8, found ${bitLength}`);
+  assert$4(bitLength % 8 === 0, `Expected valid bitLength, power of 8, found ${bitLength}`);
   const byteLength = bitLength / 8;
 
-  if (isString(value)) {
-    return decodeSet(setValues, u8aToU8a(value), byteLength);
-  } else if (isU8a(value)) {
+  if (isString$4(value)) {
+    return decodeSet(setValues, u8aToU8a$2(value), byteLength);
+  } else if (isU8a$3(value)) {
     return value.length === 0 ? [] : decodeSetNumber(setValues, u8aToBn(value.subarray(0, byteLength), {
       isLe: true
     }));
@@ -22441,7 +25308,7 @@ class CodecSet extends Set {
       // ^^^ add = () property done to assign this instance's this, otherwise Set.add creates "some" chaos
       // we have the isUndefined(this._setValues) in here as well, add is used internally
       // in the Set constructor (so it is undefined at this point, and should allow)
-      assert$a(isUndefined(_classPrivateFieldBase(this, _allowed)[_allowed]) || !isUndefined(_classPrivateFieldBase(this, _allowed)[_allowed][key]), `Set: Invalid key '${key}' on add`);
+      assert$4(isUndefined$3(_classPrivateFieldBase(this, _allowed)[_allowed]) || !isUndefined$3(_classPrivateFieldBase(this, _allowed)[_allowed][key]), `Set: Invalid key '${key}' on add`);
       super.add(key);
       return this;
     };
@@ -22458,7 +25325,7 @@ class CodecSet extends Set {
         Object.keys(values).forEach(_key => {
           const name = stringUpperFirst(stringCamelCase(_key));
           const iskey = `is${name}`;
-          isUndefined(this[iskey]) && Object.defineProperty(this, iskey, {
+          isUndefined$3(this[iskey]) && Object.defineProperty(this, iskey, {
             enumerable: true,
             get: () => this.strings.includes(_key)
           });
@@ -22521,8 +25388,8 @@ class CodecSet extends Set {
       return compareArray(this.strings.sort(), other.sort());
     } else if (other instanceof Set) {
       return this.eq([...other.values()]);
-    } else if (isNumber(other) || isBn(other)) {
-      return this.valueEncoded.eq(bnToBn(other));
+    } else if (isNumber$1(other) || isBn$1(other)) {
+      return this.valueEncoded.eq(bnToBn$2(other));
     }
 
     return false;
@@ -22533,7 +25400,7 @@ class CodecSet extends Set {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -22625,8 +25492,8 @@ class UInt extends AbstractInt {
 /** @internal */
 
 function decodeU8aFixed(value, bitLength) {
-  if (Array.isArray(value) || isString(value)) {
-    return decodeU8aFixed(u8aToU8a(value), bitLength);
+  if (Array.isArray(value) || isString$4(value)) {
+    return decodeU8aFixed(u8aToU8a$2(value), bitLength);
   } // ensure that we have an actual u8a with the full length as specified by
   // the bitLength input (padded with zeros as required)
 
@@ -22696,13 +25563,13 @@ class VecFixed extends AbstractArray {
 
 
   static decodeVecFixed(registry, Type, allocLength, value) {
-    const values = Vec.decodeVec(registry, Type, isU8a(value) ? u8aConcat(compactToU8a(allocLength), value) : value);
+    const values = Vec.decodeVec(registry, Type, isU8a$3(value) ? u8aConcat$1(compactToU8a(allocLength), value) : value);
 
     while (values.length < allocLength) {
       values.push(new Type(registry));
     }
 
-    assert$a(values.length === allocLength, `Expected a length of exactly ${allocLength} entries`);
+    assert$4(values.length === allocLength, `Expected a length of exactly ${allocLength} entries`);
     return values;
   }
 
@@ -22735,7 +25602,7 @@ class VecFixed extends AbstractArray {
     // we override, we don't add the length prefix for ourselves, and at the same time we
     // ignore isBare on entries, since they should be properly encoded at all times
     const encoded = this.map(entry => entry.toU8a());
-    return encoded.length ? u8aConcat(...encoded) : new Uint8Array([]);
+    return encoded.length ? u8aConcat$1(...encoded) : new Uint8Array([]);
   }
   /**
    * @description Returns the base runtime type name for this instance
@@ -22748,9 +25615,9 @@ class VecFixed extends AbstractArray {
 
 }
 
-function ownKeys$J(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$M(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$J(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$J(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$J(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$M(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$M(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$M(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/metadata authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -22772,13 +25639,13 @@ function createStorageHasher(registry, hasher) {
 
 function createStorageType(registry, entryType) {
   if (entryType.isMap) {
-    return [_objectSpread$J(_objectSpread$J({}, entryType.asMap), {}, {
+    return [_objectSpread$M(_objectSpread$M({}, entryType.asMap), {}, {
       hasher: createStorageHasher(registry, entryType.asMap.hasher)
     }), 1];
   }
 
   if (entryType.isDoubleMap) {
-    return [_objectSpread$J(_objectSpread$J({}, entryType.asDoubleMap), {}, {
+    return [_objectSpread$M(_objectSpread$M({}, entryType.asDoubleMap), {}, {
       hasher: createStorageHasher(registry, entryType.asDoubleMap.hasher),
       key2Hasher: createStorageHasher(registry, entryType.asDoubleMap.key2Hasher)
     }), 2];
@@ -22791,9 +25658,9 @@ function createStorageType(registry, entryType) {
 
 function convertModule(registry, mod) {
   const storage = mod.storage.unwrapOr(null);
-  return registry.createType('ModuleMetadataV10', _objectSpread$J(_objectSpread$J({}, mod), {}, {
-    storage: storage ? _objectSpread$J(_objectSpread$J({}, storage), {}, {
-      items: storage.items.map(item => _objectSpread$J(_objectSpread$J({}, item), {}, {
+  return registry.createType('ModuleMetadataV10', _objectSpread$M(_objectSpread$M({}, mod), {}, {
+    storage: storage ? _objectSpread$M(_objectSpread$M({}, storage), {}, {
+      items: storage.items.map(item => _objectSpread$M(_objectSpread$M({}, item), {}, {
         type: registry.createType('StorageEntryTypeV10', ...createStorageType(registry, item.type))
       }))
     }) : null
@@ -22828,9 +25695,9 @@ function toV11(registry, {
   });
 }
 
-function ownKeys$I(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$L(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$I(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$I(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$I(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$L(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$L(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$L(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/metadata authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -22844,14 +25711,444 @@ function toV12(registry, {
 }) {
   return registry.createType('MetadataLatest', {
     extrinsic,
-    modules: modules.map(mod => registry.createType('ModuleMetadataV12', _objectSpread$I(_objectSpread$I({}, mod), {}, {
+    modules: modules.map(mod => registry.createType('ModuleMetadataV12', _objectSpread$L(_objectSpread$L({}, mod), {}, {
       index: 255
     })))
   });
 }
 
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$3(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$3(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined$2(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$3(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$3(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const DEDUPE$2 = 'Either remove and explicitly install matching versions or deupe using your package manager.\nThe following conflicting packages were found:';
+/** @internal */
+
+function getEntry$2(name) {
+  const _global = xglobal;
+
+  if (!_global.__polkadotjs) {
+    _global.__polkadotjs = {};
+  }
+
+  if (!_global.__polkadotjs[name]) {
+    _global.__polkadotjs[name] = [];
+  }
+
+  return _global.__polkadotjs[name];
+}
+
+function getVersionLength$2(all) {
+  return all.reduce((max, {
+    version
+  }) => Math.max(max, version.length), 0);
+}
+/** @internal */
+
+
+function flattenInfos$2(all) {
+  const verLength = getVersionLength$2(all);
+  return all.map(({
+    name,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${name}`).join('\n');
+}
+/** @internal */
+
+
+function flattenVersions$2(entry) {
+  const all = entry.map(version => isString$3(version) ? {
+    version
+  } : version);
+  const verLength = getVersionLength$2(all);
+  return all.map(({
+    path,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${!path || path.length < 5 ? '<unknown>' : path}`).join('\n');
+}
+/** @internal */
+
+
+function getPath$2(pathOrFn) {
+  if (isFunction$3(pathOrFn)) {
+    try {
+      return pathOrFn() || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  return pathOrFn || '';
+}
+/**
+ * @name detectPackage
+ * @summary Checks that a specific package is only imported once
+ */
+
+
+function detectPackage$2({
+  name,
+  version
+}, pathOrFn, deps = []) {
+  assert$3(name.startsWith('@polkadot'), `Invalid package descriptor ${name}`);
+  const entry = getEntry$2(name);
+  entry.push({
+    path: getPath$2(pathOrFn),
+    version
+  });
+
+  if (entry.length !== 1) {
+    console.warn(`${name} has multiple versions, ensure that there is only one installed.\n${DEDUPE$2}\n${flattenVersions$2(entry)}`);
+  } else {
+    const mismatches = deps.filter(d => d && d.version !== version);
+
+    if (mismatches.length) {
+      console.warn(`${name} requires direct dependencies exactly matching version ${version}.\n${DEDUPE$2}\n${flattenInfos$2(mismatches)}`);
+    }
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBoolean
+ * @summary Tests for a boolean value.
+ * @description
+ * Checks to see if the input value is a JavaScript boolean.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBoolean } from '@polkadot/util';
+ *
+ * isBoolean(false); // => true
+ * ```
+ */
+function isBoolean$1(value) {
+  return typeof value === 'boolean';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$3 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$3(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$3(value) && HEX_REGEX$3.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$3(value) {
+  return !!(value && isHex$3(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$3 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$3(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$3(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$3.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+function ownKeys$K(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$K(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$K(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$K(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function reverse$1(value) {
+  return (value.match(/.{1,2}/g) || []).reverse().join('');
+}
+/**
+ * @name hexToBn
+ * @summary Creates a BN.js bignumber object from a hex string.
+ * @description
+ * `null` inputs returns a `BN(0)` result. Hex input values return the actual value converted to a BN. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @param _value The value to convert
+ * @param _options Options to pass while converting
+ * @param _options.isLe Convert using Little Endian
+ * @param _options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToBn } from '@polkadot/util';
+ *
+ * hexToBn('0x123480001f'); // => BN(0x123480001f)
+ * ```
+ */
+
+
+function hexToBn$1(value, options = {
+  isLe: false,
+  isNegative: false
+}) {
+  if (!value) {
+    return new bn(0);
+  }
+
+  const _options = _objectSpread$K({
+    isLe: false,
+    isNegative: false
+  }, isBoolean$1(options) ? {
+    isLe: options
+  } : options);
+
+  const _value = hexStripPrefix$3(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  // https://github.com/indutny/bn.js/issues/208
+
+
+  const bn$1 = new bn((_options.isLe ? reverse$1(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4.
+
+  return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt$2(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function isToBn$1(value) {
+  return !!value && isFunction$3(value.toBn);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function numberToBn$1(value) {
+  return bn.isBN(value) ? value : isToBn$1(value) ? value.toBn() : new bn(value);
+}
+/**
+ * @name bnToBn
+ * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
+ * @description
+ * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnToBn } from '@polkadot/util';
+ *
+ * bnToBn(0x1234); // => BN(0x1234)
+ * bnToBn(new BN(0x1234)); // => BN(0x1234)
+ * ```
+ */
+
+
+function bnToBn$1(value) {
+  if (!value) {
+    return new bn(0);
+  } else if (isHex$3(value)) {
+    return hexToBn$1(value.toString());
+  } else if (isBigInt$2(value)) {
+    return new bn(value.toString());
+  }
+
+  return numberToBn$1(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$2(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$3(isHex$3(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$3(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
-detectPackage(packageInfo$2, typeof __dirname !== 'undefined' && __dirname, [packageInfo$3]);
+detectPackage$2(packageInfo$2, typeof __dirname !== 'undefined' && __dirname, [packageInfo$3]);
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -22923,9 +26220,9 @@ const typesModules = {
   }
 };
 
-function ownKeys$H(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$J(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$H(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$H(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$H(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$J(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$J(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$J(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -22997,14 +26294,14 @@ const sharedTypes$4 = {
 };
 const versioned$6 = [{
   minmax: [240, undefined],
-  types: _objectSpread$H(_objectSpread$H({}, sharedTypes$4), {}, {
+  types: _objectSpread$J(_objectSpread$J({}, sharedTypes$4), {}, {
     RefCount: 'RefCountTo259'
   })
 }];
 
-function ownKeys$G(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$I(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$G(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$G(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$G(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$I(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$I(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$I(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -23037,7 +26334,7 @@ const addrAccountIdTypes$2 = {
 const versioned$5 = [{
   // 1020 is first CC3
   minmax: [1019, 1031],
-  types: _objectSpread$G(_objectSpread$G({}, addrIndicesTypes), {}, {
+  types: _objectSpread$I(_objectSpread$I({}, addrIndicesTypes), {}, {
     BalanceLock: 'BalanceLockTo212',
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchError: 'DispatchErrorTo198',
@@ -23055,7 +26352,7 @@ const versioned$5 = [{
   })
 }, {
   minmax: [1032, 1042],
-  types: _objectSpread$G(_objectSpread$G({}, addrIndicesTypes), {}, {
+  types: _objectSpread$I(_objectSpread$I({}, addrIndicesTypes), {}, {
     BalanceLock: 'BalanceLockTo212',
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchInfo: 'DispatchInfoTo244',
@@ -23073,7 +26370,7 @@ const versioned$5 = [{
 }, {
   // actual at 1045 (1043-1044 is dev)
   minmax: [1043, 1045],
-  types: _objectSpread$G(_objectSpread$G({}, addrIndicesTypes), {}, {
+  types: _objectSpread$I(_objectSpread$I({}, addrIndicesTypes), {}, {
     BalanceLock: 'BalanceLockTo212',
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchInfo: 'DispatchInfoTo244',
@@ -23089,7 +26386,7 @@ const versioned$5 = [{
   })
 }, {
   minmax: [1046, 1054],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchInfo: 'DispatchInfoTo244',
     Multiplier: 'Fixed64',
@@ -23102,7 +26399,7 @@ const versioned$5 = [{
   })
 }, {
   minmax: [1055, 1056],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchInfo: 'DispatchInfoTo244',
     Multiplier: 'Fixed64',
@@ -23114,7 +26411,7 @@ const versioned$5 = [{
   })
 }, {
   minmax: [1057, 1061],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     DispatchInfo: 'DispatchInfoTo244',
     OpenTip: 'OpenTipTo225',
@@ -23123,7 +26420,7 @@ const versioned$5 = [{
   })
 }, {
   minmax: [1062, 2012],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     OpenTip: 'OpenTipTo225',
     RefCount: 'RefCountTo259',
@@ -23131,22 +26428,22 @@ const versioned$5 = [{
   })
 }, {
   minmax: [2013, 2022],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     RefCount: 'RefCountTo259',
     RewardDestination: 'RewardDestinationTo257'
   })
 }, {
   minmax: [2023, 2024],
-  types: _objectSpread$G(_objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
+  types: _objectSpread$I(_objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2), {}, {
     RefCount: 'RefCountTo259'
   })
 }, {
   minmax: [2025, 2027],
-  types: _objectSpread$G(_objectSpread$G({}, sharedTypes$3), addrAccountIdTypes$2)
+  types: _objectSpread$I(_objectSpread$I({}, sharedTypes$3), addrAccountIdTypes$2)
 }, {
   minmax: [2028, undefined],
-  types: _objectSpread$G({}, sharedTypes$3)
+  types: _objectSpread$I({}, sharedTypes$3)
 }];
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
@@ -23182,9 +26479,9 @@ const versioned$3 = [{
   }
 }];
 
-function ownKeys$F(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$H(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$F(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$F(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$F(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$H(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$H(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$H(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -23218,7 +26515,7 @@ const addrAccountIdTypes$1 = {
 
 const versioned$2 = [{
   minmax: [0, 12],
-  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
+  types: _objectSpread$H(_objectSpread$H(_objectSpread$H({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     OpenTip: 'OpenTipTo225',
     RefCount: 'RefCountTo259',
@@ -23226,27 +26523,27 @@ const versioned$2 = [{
   })
 }, {
   minmax: [13, 22],
-  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
+  types: _objectSpread$H(_objectSpread$H(_objectSpread$H({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     RefCount: 'RefCountTo259',
     RewardDestination: 'RewardDestinationTo257'
   })
 }, {
   minmax: [23, 24],
-  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
+  types: _objectSpread$H(_objectSpread$H(_objectSpread$H({}, sharedTypes$2), addrAccountIdTypes$1), {}, {
     RefCount: 'RefCountTo259'
   })
 }, {
   minmax: [25, 27],
-  types: _objectSpread$F(_objectSpread$F({}, sharedTypes$2), addrAccountIdTypes$1)
+  types: _objectSpread$H(_objectSpread$H({}, sharedTypes$2), addrAccountIdTypes$1)
 }, {
   minmax: [28, undefined],
-  types: _objectSpread$F({}, sharedTypes$2)
+  types: _objectSpread$H({}, sharedTypes$2)
 }];
 
-function ownKeys$E(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$G(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$E(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$E(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$E(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$G(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$G(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$G(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -23265,18 +26562,18 @@ const sharedTypes$1 = {
 };
 const versioned$1 = [{
   minmax: [0, 200],
-  types: _objectSpread$E(_objectSpread$E({}, sharedTypes$1), {}, {
+  types: _objectSpread$G(_objectSpread$G({}, sharedTypes$1), {}, {
     Address: 'AccountId',
     LookupSource: 'AccountId'
   })
 }, {
   minmax: [201, undefined],
-  types: _objectSpread$E({}, sharedTypes$1)
+  types: _objectSpread$G({}, sharedTypes$1)
 }];
 
-function ownKeys$D(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$F(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$D(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$D(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$D(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$F(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$F(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$F(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -23301,7 +26598,7 @@ const addrAccountIdTypes = {
 };
 const versioned = [{
   minmax: [1, 2],
-  types: _objectSpread$D(_objectSpread$D(_objectSpread$D({}, sharedTypes), addrAccountIdTypes), {}, {
+  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes), addrAccountIdTypes), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     Multiplier: 'Fixed64',
     OpenTip: 'OpenTipTo225',
@@ -23311,7 +26608,7 @@ const versioned = [{
   })
 }, {
   minmax: [3, 22],
-  types: _objectSpread$D(_objectSpread$D(_objectSpread$D({}, sharedTypes), addrAccountIdTypes), {}, {
+  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes), addrAccountIdTypes), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     OpenTip: 'OpenTipTo225',
     RefCount: 'RefCountTo259',
@@ -23319,22 +26616,22 @@ const versioned = [{
   })
 }, {
   minmax: [23, 42],
-  types: _objectSpread$D(_objectSpread$D(_objectSpread$D({}, sharedTypes), addrAccountIdTypes), {}, {
+  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes), addrAccountIdTypes), {}, {
     CompactAssignments: 'CompactAssignmentsTo257',
     RefCount: 'RefCountTo259',
     RewardDestination: 'RewardDestinationTo257'
   })
 }, {
   minmax: [43, 44],
-  types: _objectSpread$D(_objectSpread$D(_objectSpread$D({}, sharedTypes), addrAccountIdTypes), {}, {
+  types: _objectSpread$F(_objectSpread$F(_objectSpread$F({}, sharedTypes), addrAccountIdTypes), {}, {
     RefCount: 'RefCountTo259'
   })
 }, {
   minmax: [45, 47],
-  types: _objectSpread$D(_objectSpread$D({}, sharedTypes), addrAccountIdTypes)
+  types: _objectSpread$F(_objectSpread$F({}, sharedTypes), addrAccountIdTypes)
 }, {
   minmax: [48, undefined],
-  types: _objectSpread$D({}, sharedTypes)
+  types: _objectSpread$F({}, sharedTypes)
 }];
 
 // Copyright 2017-2021 @polkadot/types-known authors & contributors
@@ -23375,7 +26672,7 @@ function checkOrder(network, versions) {
     const prev = versions[index - 1];
     return index === 0 ? false : curr[0] <= prev[0] || curr[1] <= prev[1];
   });
-  assert$a(!ooo.length, `${network}: Mismatched upgrade ordering: ${JSON.stringify(ooo)}`);
+  assert$3(!ooo.length, `${network}: Mismatched upgrade ordering: ${JSON.stringify(ooo)}`);
   return versions;
 }
 /** @internal */
@@ -23383,9 +26680,9 @@ function checkOrder(network, versions) {
 
 function mapRaw([network, versions]) {
   const chain = networks.find(n => n.network === network) || NET_EXTRA[network];
-  assert$a(chain, `Unable to find info for chain ${network}`);
+  assert$3(chain, `Unable to find info for chain ${network}`);
   return {
-    genesisHash: hexToU8a(chain.genesisHash[0]),
+    genesisHash: hexToU8a$2(chain.genesisHash[0]),
     network,
     versions: checkOrder(network, versions).map(([blockNumber, specVersion]) => ({
       blockNumber: new bn(blockNumber),
@@ -23401,18 +26698,18 @@ const upgrades = Object.entries({
   westend: upgrades$1
 }).map(mapRaw);
 
-function ownKeys$C(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$E(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$C(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$C(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$C(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$E(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$E(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$E(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /** @internal */
 
 function filterVersions(versions = [], specVersion) {
   return versions.filter(({
     minmax: [min, max]
-  }) => (isUndefined(min) || specVersion >= min) && (isUndefined(max) || specVersion <= max)).reduce((result, {
+  }) => (isUndefined$2(min) || specVersion >= min) && (isUndefined$2(max) || specVersion <= max)).reduce((result, {
     types
-  }) => _objectSpread$C(_objectSpread$C({}, result), types), {});
+  }) => _objectSpread$E(_objectSpread$E({}, result), types), {});
 }
 /**
  * @description Get types for specific modules (metadata override)
@@ -23424,7 +26721,7 @@ function getModuleTypes({
 }, section) {
   var _knownTypes$typesAlia;
 
-  return _objectSpread$C(_objectSpread$C({}, typesModules[section] || {}), ((_knownTypes$typesAlia = knownTypes.typesAlias) === null || _knownTypes$typesAlia === void 0 ? void 0 : _knownTypes$typesAlia[section]) || {});
+  return _objectSpread$E(_objectSpread$E({}, typesModules[section] || {}), ((_knownTypes$typesAlia = knownTypes.typesAlias) === null || _knownTypes$typesAlia === void 0 ? void 0 : _knownTypes$typesAlia[section]) || {});
 }
 /**
  * @description Based on the chain and runtimeVersion, get the applicable signed extensions (ready for registration)
@@ -23439,7 +26736,7 @@ function getSpecExtensions({
 
   const _specName = specName.toString();
 
-  return _objectSpread$C(_objectSpread$C({}, ((_knownTypes$typesBund = knownTypes.typesBundle) === null || _knownTypes$typesBund === void 0 ? void 0 : (_knownTypes$typesBund2 = _knownTypes$typesBund.spec) === null || _knownTypes$typesBund2 === void 0 ? void 0 : (_knownTypes$typesBund3 = _knownTypes$typesBund2[_specName]) === null || _knownTypes$typesBund3 === void 0 ? void 0 : _knownTypes$typesBund3.signedExtensions) || {}), ((_knownTypes$typesBund4 = knownTypes.typesBundle) === null || _knownTypes$typesBund4 === void 0 ? void 0 : (_knownTypes$typesBund5 = _knownTypes$typesBund4.chain) === null || _knownTypes$typesBund5 === void 0 ? void 0 : (_knownTypes$typesBund6 = _knownTypes$typesBund5[_chainName]) === null || _knownTypes$typesBund6 === void 0 ? void 0 : _knownTypes$typesBund6.signedExtensions) || {});
+  return _objectSpread$E(_objectSpread$E({}, ((_knownTypes$typesBund = knownTypes.typesBundle) === null || _knownTypes$typesBund === void 0 ? void 0 : (_knownTypes$typesBund2 = _knownTypes$typesBund.spec) === null || _knownTypes$typesBund2 === void 0 ? void 0 : (_knownTypes$typesBund3 = _knownTypes$typesBund2[_specName]) === null || _knownTypes$typesBund3 === void 0 ? void 0 : _knownTypes$typesBund3.signedExtensions) || {}), ((_knownTypes$typesBund4 = knownTypes.typesBundle) === null || _knownTypes$typesBund4 === void 0 ? void 0 : (_knownTypes$typesBund5 = _knownTypes$typesBund4.chain) === null || _knownTypes$typesBund5 === void 0 ? void 0 : (_knownTypes$typesBund6 = _knownTypes$typesBund5[_chainName]) === null || _knownTypes$typesBund6 === void 0 ? void 0 : _knownTypes$typesBund6.signedExtensions) || {});
 }
 /**
  * @description Based on the chain and runtimeVersion, get the applicable types (ready for registration)
@@ -23454,13 +26751,13 @@ function getSpecTypes({
 
   const _specName = specName.toString();
 
-  const _specVersion = bnToBn(specVersion).toNumber(); // The order here is always, based on -
+  const _specVersion = bnToBn$1(specVersion).toNumber(); // The order here is always, based on -
   //   - spec then chain
   //   - typesBundle takes higher precedence
   //   - types is the final catch-all override
 
 
-  return _objectSpread$C(_objectSpread$C(_objectSpread$C(_objectSpread$C(_objectSpread$C(_objectSpread$C(_objectSpread$C({}, filterVersions(typesSpec[_specName], _specVersion)), filterVersions(typesChain[_chainName], _specVersion)), filterVersions((_knownTypes$typesBund7 = knownTypes.typesBundle) === null || _knownTypes$typesBund7 === void 0 ? void 0 : (_knownTypes$typesBund8 = _knownTypes$typesBund7.spec) === null || _knownTypes$typesBund8 === void 0 ? void 0 : (_knownTypes$typesBund9 = _knownTypes$typesBund8[_specName]) === null || _knownTypes$typesBund9 === void 0 ? void 0 : _knownTypes$typesBund9.types, _specVersion)), filterVersions((_knownTypes$typesBund10 = knownTypes.typesBundle) === null || _knownTypes$typesBund10 === void 0 ? void 0 : (_knownTypes$typesBund11 = _knownTypes$typesBund10.chain) === null || _knownTypes$typesBund11 === void 0 ? void 0 : (_knownTypes$typesBund12 = _knownTypes$typesBund11[_chainName]) === null || _knownTypes$typesBund12 === void 0 ? void 0 : _knownTypes$typesBund12.types, _specVersion)), ((_knownTypes$typesSpec = knownTypes.typesSpec) === null || _knownTypes$typesSpec === void 0 ? void 0 : _knownTypes$typesSpec[_specName]) || {}), ((_knownTypes$typesChai = knownTypes.typesChain) === null || _knownTypes$typesChai === void 0 ? void 0 : _knownTypes$typesChai[_chainName]) || {}), knownTypes.types || {});
+  return _objectSpread$E(_objectSpread$E(_objectSpread$E(_objectSpread$E(_objectSpread$E(_objectSpread$E(_objectSpread$E({}, filterVersions(typesSpec[_specName], _specVersion)), filterVersions(typesChain[_chainName], _specVersion)), filterVersions((_knownTypes$typesBund7 = knownTypes.typesBundle) === null || _knownTypes$typesBund7 === void 0 ? void 0 : (_knownTypes$typesBund8 = _knownTypes$typesBund7.spec) === null || _knownTypes$typesBund8 === void 0 ? void 0 : (_knownTypes$typesBund9 = _knownTypes$typesBund8[_specName]) === null || _knownTypes$typesBund9 === void 0 ? void 0 : _knownTypes$typesBund9.types, _specVersion)), filterVersions((_knownTypes$typesBund10 = knownTypes.typesBundle) === null || _knownTypes$typesBund10 === void 0 ? void 0 : (_knownTypes$typesBund11 = _knownTypes$typesBund10.chain) === null || _knownTypes$typesBund11 === void 0 ? void 0 : (_knownTypes$typesBund12 = _knownTypes$typesBund11[_chainName]) === null || _knownTypes$typesBund12 === void 0 ? void 0 : _knownTypes$typesBund12.types, _specVersion)), ((_knownTypes$typesSpec = knownTypes.typesSpec) === null || _knownTypes$typesSpec === void 0 ? void 0 : _knownTypes$typesSpec[_specName]) || {}), ((_knownTypes$typesChai = knownTypes.typesChain) === null || _knownTypes$typesChai === void 0 ? void 0 : _knownTypes$typesChai[_chainName]) || {}), knownTypes.types || {});
 }
 function getSpecHasher({
   knownTypes
@@ -23486,7 +26783,7 @@ function getSpecRpc({
 
   const _specName = specName.toString();
 
-  return _objectSpread$C(_objectSpread$C({}, ((_knownTypes$typesBund19 = knownTypes.typesBundle) === null || _knownTypes$typesBund19 === void 0 ? void 0 : (_knownTypes$typesBund20 = _knownTypes$typesBund19.spec) === null || _knownTypes$typesBund20 === void 0 ? void 0 : (_knownTypes$typesBund21 = _knownTypes$typesBund20[_specName]) === null || _knownTypes$typesBund21 === void 0 ? void 0 : _knownTypes$typesBund21.rpc) || {}), ((_knownTypes$typesBund22 = knownTypes.typesBundle) === null || _knownTypes$typesBund22 === void 0 ? void 0 : (_knownTypes$typesBund23 = _knownTypes$typesBund22.chain) === null || _knownTypes$typesBund23 === void 0 ? void 0 : (_knownTypes$typesBund24 = _knownTypes$typesBund23[_chainName]) === null || _knownTypes$typesBund24 === void 0 ? void 0 : _knownTypes$typesBund24.rpc) || {});
+  return _objectSpread$E(_objectSpread$E({}, ((_knownTypes$typesBund19 = knownTypes.typesBundle) === null || _knownTypes$typesBund19 === void 0 ? void 0 : (_knownTypes$typesBund20 = _knownTypes$typesBund19.spec) === null || _knownTypes$typesBund20 === void 0 ? void 0 : (_knownTypes$typesBund21 = _knownTypes$typesBund20[_specName]) === null || _knownTypes$typesBund21 === void 0 ? void 0 : _knownTypes$typesBund21.rpc) || {}), ((_knownTypes$typesBund22 = knownTypes.typesBundle) === null || _knownTypes$typesBund22 === void 0 ? void 0 : (_knownTypes$typesBund23 = _knownTypes$typesBund22.chain) === null || _knownTypes$typesBund23 === void 0 ? void 0 : (_knownTypes$typesBund24 = _knownTypes$typesBund23[_chainName]) === null || _knownTypes$typesBund24 === void 0 ? void 0 : _knownTypes$typesBund24.rpc) || {});
 }
 /**
  * @description Based on the chain and runtimeVersion, get the applicable alias definitions (ready for registration)
@@ -23502,7 +26799,7 @@ function getSpecAlias({
   const _specName = specName.toString(); // as per versions, first spec, then chain then finally non-versioned
 
 
-  return _objectSpread$C(_objectSpread$C(_objectSpread$C({}, ((_knownTypes$typesBund25 = knownTypes.typesBundle) === null || _knownTypes$typesBund25 === void 0 ? void 0 : (_knownTypes$typesBund26 = _knownTypes$typesBund25.spec) === null || _knownTypes$typesBund26 === void 0 ? void 0 : (_knownTypes$typesBund27 = _knownTypes$typesBund26[_specName]) === null || _knownTypes$typesBund27 === void 0 ? void 0 : _knownTypes$typesBund27.alias) || {}), ((_knownTypes$typesBund28 = knownTypes.typesBundle) === null || _knownTypes$typesBund28 === void 0 ? void 0 : (_knownTypes$typesBund29 = _knownTypes$typesBund28.chain) === null || _knownTypes$typesBund29 === void 0 ? void 0 : (_knownTypes$typesBund30 = _knownTypes$typesBund29[_chainName]) === null || _knownTypes$typesBund30 === void 0 ? void 0 : _knownTypes$typesBund30.alias) || {}), knownTypes.typesAlias || {});
+  return _objectSpread$E(_objectSpread$E(_objectSpread$E({}, ((_knownTypes$typesBund25 = knownTypes.typesBundle) === null || _knownTypes$typesBund25 === void 0 ? void 0 : (_knownTypes$typesBund26 = _knownTypes$typesBund25.spec) === null || _knownTypes$typesBund26 === void 0 ? void 0 : (_knownTypes$typesBund27 = _knownTypes$typesBund26[_specName]) === null || _knownTypes$typesBund27 === void 0 ? void 0 : _knownTypes$typesBund27.alias) || {}), ((_knownTypes$typesBund28 = knownTypes.typesBundle) === null || _knownTypes$typesBund28 === void 0 ? void 0 : (_knownTypes$typesBund29 = _knownTypes$typesBund28.chain) === null || _knownTypes$typesBund29 === void 0 ? void 0 : (_knownTypes$typesBund30 = _knownTypes$typesBund29[_chainName]) === null || _knownTypes$typesBund30 === void 0 ? void 0 : _knownTypes$typesBund30.alias) || {}), knownTypes.typesAlias || {});
 }
 /**
  * @description Returns a version record for known chains where upgrades are being tracked
@@ -23515,9 +26812,9 @@ function getUpgradeVersion(genesisHash, blockNumber) {
   }, undefined), known.versions.find(version => blockNumber.lte(version.blockNumber))] : [undefined, undefined];
 }
 
-function ownKeys$B(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$D(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$B(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$B(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$B(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$D(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$D(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$D(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 // in a pure Substrate/Polkadot implementation, any other custom origins won't be handled at all
 
 const KNOWN_ORIGINS = {
@@ -23636,8 +26933,8 @@ function createModule(registry, mod, {
   events,
   storage
 }) {
-  const sectionTypes = getModuleTypes(registry, stringCamelCase(mod.name));
-  return registry.createType('ModuleMetadataLatest', _objectSpread$B(_objectSpread$B({}, mod), {}, {
+  const sectionTypes = getModuleTypes(registry, stringCamelCase$1(mod.name));
+  return registry.createType('ModuleMetadataLatest', _objectSpread$D(_objectSpread$D({}, mod), {}, {
     calls: calls && convertCalls(registry, calls, sectionTypes),
     constants: convertConstants(registry, constants, sectionTypes),
     events: events && convertEvents(registry, events, sectionTypes),
@@ -23678,15 +26975,15 @@ function decodeBitVecU8a(value) {
 
   const [offset, length] = compactFromU8a(value);
   const total = offset + Math.ceil(length.toNumber() / 8);
-  assert$a(total <= value.length, `BitVec: required length less than remainder, expected at least ${total}, found ${value.length}`);
+  assert$4(total <= value.length, `BitVec: required length less than remainder, expected at least ${total}, found ${value.length}`);
   return value.subarray(offset, total);
 }
 /** @internal */
 
 
 function decodeBitVec(value) {
-  if (Array.isArray(value) || isString(value)) {
-    return u8aToU8a(value);
+  if (Array.isArray(value) || isString$4(value)) {
+    return u8aToU8a$2(value);
   }
 
   return decodeBitVecU8a(value);
@@ -23727,7 +27024,7 @@ class BitVec extends Raw {
 
   toU8a(isBare) {
     const bitVec = super.toU8a();
-    return isBare ? bitVec : u8aConcat(compactToU8a(this.bitLength()), bitVec);
+    return isBare ? bitVec : u8aConcat$1(compactToU8a(this.bitLength()), bitVec);
   }
 
 }
@@ -23738,7 +27035,7 @@ class BitVec extends Raw {
 function decodeBool(value) {
   if (value instanceof Boolean) {
     return value.valueOf();
-  } else if (isU8a(value)) {
+  } else if (isU8a$3(value)) {
     return value[0] === 1;
   }
 
@@ -23813,7 +27110,7 @@ class bool extends Boolean {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -23873,17 +27170,17 @@ function decodeBytesU8a(value) {
 
   const [offset, length] = compactFromU8a(value);
   const total = offset + length.toNumber();
-  assert$a(length.lten(MAX_LENGTH$1), `Bytes length ${length.toString()} exceeds ${MAX_LENGTH$1}`);
-  assert$a(total <= value.length, `Bytes: required length less than remainder, expected at least ${total}, found ${value.length}`);
+  assert$4(length.lten(MAX_LENGTH$1), `Bytes length ${length.toString()} exceeds ${MAX_LENGTH$1}`);
+  assert$4(total <= value.length, `Bytes: required length less than remainder, expected at least ${total}, found ${value.length}`);
   return value.subarray(offset, total);
 }
 /** @internal */
 
 
 function decodeBytes(value) {
-  if (Array.isArray(value) || isString(value)) {
-    return u8aToU8a(value);
-  } else if (!(value instanceof Raw) && isU8a(value)) {
+  if (Array.isArray(value) || isString$4(value)) {
+    return u8aToU8a$2(value);
+  } else if (!(value instanceof Raw) && isU8a$3(value)) {
     // We are ensuring we are not a Raw instance. In the case of a Raw we already have gotten
     // rid of the length, i.e. new Bytes(new Bytes(...)) will work as expected
     return decodeBytesU8a(value);
@@ -23957,8 +27254,8 @@ function decodeDataU8a(registry, value) {
 function decodeData(registry, value) {
   if (!value) {
     return [undefined, undefined];
-  } else if (isU8a(value) || isString(value)) {
-    return decodeDataU8a(registry, u8aToU8a(value));
+  } else if (isU8a$3(value) || isString$4(value)) {
+    return decodeDataU8a(registry, u8aToU8a$2(value));
   } // assume we have an Enum or an  object input, handle this via the normal Enum decoding
 
 
@@ -24161,12 +27458,12 @@ function decodeStorageKey(value) {
       method: value.method,
       section: value.section
     };
-  } else if (!value || isString(value) || isU8a(value)) {
+  } else if (!value || isString$4(value) || isU8a$3(value)) {
     // let Bytes handle these inputs
     return {
       key: value
     };
-  } else if (isFunction$1(value)) {
+  } else if (isFunction$4(value)) {
     return {
       key: value(),
       method: value.method,
@@ -24174,7 +27471,7 @@ function decodeStorageKey(value) {
     };
   } else if (Array.isArray(value)) {
     const [fn, ...arg] = value;
-    assert$a(isFunction$1(fn), 'Expected function input for key construction');
+    assert$4(isFunction$4(fn), 'Expected function input for key construction');
     return {
       key: fn(...arg),
       method: fn.method,
@@ -24243,7 +27540,7 @@ class StorageKey extends Bytes {
   static getMeta(value) {
     if (value instanceof StorageKey) {
       return value.meta;
-    } else if (isFunction$1(value)) {
+    } else if (isFunction$4(value)) {
       return value.meta;
     } else if (Array.isArray(value)) {
       const [fn] = value;
@@ -24256,7 +27553,7 @@ class StorageKey extends Bytes {
   static getType(value) {
     if (value instanceof StorageKey) {
       return value.outputType;
-    } else if (isFunction$1(value)) {
+    } else if (isFunction$4(value)) {
       return unwrapStorageType(value.meta.type);
     } else if (Array.isArray(value)) {
       const [fn] = value;
@@ -24357,8 +27654,8 @@ const MAX_LENGTH = 128 * 1024;
 /** @internal */
 
 function decodeText(value) {
-  if (isHex(value)) {
-    return u8aToString(hexToU8a(value.toString()));
+  if (isHex$4(value)) {
+    return u8aToString$2(hexToU8a$3(value.toString()));
   } else if (value instanceof Uint8Array) {
     if (!value.length) {
       return '';
@@ -24367,14 +27664,14 @@ function decodeText(value) {
 
 
     if (value instanceof Raw) {
-      return u8aToString(value);
+      return u8aToString$2(value);
     }
 
     const [offset, length] = compactFromU8a(value);
     const total = offset + length.toNumber();
-    assert$a(length.lten(MAX_LENGTH), `Text length ${length.toString()} exceeds ${MAX_LENGTH}`);
-    assert$a(total <= value.length, `Text: required length less than remainder, expected at least ${total}, found ${value.length}`);
-    return u8aToString(value.subarray(offset, total));
+    assert$4(length.lten(MAX_LENGTH), `Text length ${length.toString()} exceeds ${MAX_LENGTH}`);
+    assert$4(total <= value.length, `Text: required length less than remainder, expected at least ${total}, found ${value.length}`);
+    return u8aToString$2(value.subarray(offset, total));
   }
 
   return value ? value.toString() : '';
@@ -24442,7 +27739,7 @@ class Text extends String {
 
 
   eq(other) {
-    return isString(other) ? this.toString() === other.toString() : false;
+    return isString$4(other) ? this.toString() === other.toString() : false;
   }
   /**
    * @description Set an override value for this
@@ -24460,7 +27757,7 @@ class Text extends String {
   toHex() {
     // like  with Vec<u8>, when we are encoding to hex, we don't actually add
     // the length prefix (it is already implied by the actual string length)
-    return u8aToHex(this.toU8a(true));
+    return u8aToHex$3(this.toU8a(true));
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -24503,7 +27800,7 @@ class Text extends String {
   toU8a(isBare) {
     // NOTE Here we use the super toString (we are not taking overrides into account,
     // rather encoding the original value the string was constructed with)
-    const encoded = stringToU8a(super.toString());
+    const encoded = stringToU8a$3(super.toString());
     return isBare ? encoded : compactAddLength(encoded);
   }
 
@@ -24783,7 +28080,7 @@ class MagicNumber extends u32 {
 
     if (!this.isEmpty) {
       const magic = registry.createType('u32', MAGIC_NUMBER);
-      assert$a(this.eq(magic), `MagicNumber mismatch: expected ${magic.toHex()}, found ${this.toHex()}`);
+      assert$5(this.eq(magic), `MagicNumber mismatch: expected ${magic.toHex()}, found ${this.toHex()}`);
     }
   }
 
@@ -24889,22 +28186,22 @@ function typeSplit(type) {
     }
   }
 
-  assert$a(isNotNested(cDepth, fDepth, sDepth, tDepth), `Invalid definition (missing terminators) found in ${type}`); // the final leg of the journey
+  assert$4(isNotNested(cDepth, fDepth, sDepth, tDepth), `Invalid definition (missing terminators) found in ${type}`); // the final leg of the journey
 
   result.push(type.substr(start, type.length - start).trim());
   return result;
 }
 
-function ownKeys$A(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$C(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$A(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$A(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$A(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$C(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$C(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$C(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const MAX_NESTED = 64;
 
 function isRustEnum(details) {
   const values = Object.values(details);
 
-  if (values.some(v => isNumber(v))) {
-    assert$a(values.every(v => isNumber(v) && v >= 0 && v <= 255), 'Invalid number-indexed enum definition');
+  if (values.some(v => isNumber$1(v))) {
+    assert$4(values.every(v => isNumber$1(v) && v >= 0 && v <= 255), 'Invalid number-indexed enum definition');
     return false;
   }
 
@@ -24926,7 +28223,7 @@ function _decodeEnum(value, details, count) {
       type: 'Null'
     }));
   } else if (isRustEnum(details)) {
-    value.sub = Object.entries(details).map(([name, type], index) => _objectSpread$A(_objectSpread$A({}, getTypeDef(type || 'Null', {
+    value.sub = Object.entries(details).map(([name, type], index) => _objectSpread$C(_objectSpread$C({}, getTypeDef(type || 'Null', {
       name
     }, count)), {}, {
       index
@@ -24984,7 +28281,7 @@ function _decodeFixedVec(value, type, _, count) {
   const [vecType, strLength, displayName] = type.substr(1, type.length - 2).split(';');
   const length = parseInt(strLength.trim(), 10); // as a first round, only u8 via u8aFixed, we can add more support
 
-  assert$a(length <= 256, `${type}: Only support for [Type; <length>], where length <= 256`);
+  assert$4(length <= 256, `${type}: Only support for [Type; <length>], where length <= 256`);
   value.displayName = displayName;
   value.length = length; // eslint-disable-next-line @typescript-eslint/no-use-before-define
 
@@ -25005,7 +28302,7 @@ function _decodeAnyInt(value, type, _, clazz) {
   const [strLength, displayName] = type.substr(clazz.length + 1, type.length - clazz.length - 1 - 1).split(',');
   const length = parseInt(strLength.trim(), 10); // as a first round, only u8 via u8aFixed, we can add more support
 
-  assert$a(length <= 8192 && length % 8 === 0, `${type}: Only support for ${clazz}<bitLength>, where length <= 8192 and a power of 8, found ${length}`);
+  assert$4(length <= 8192 && length % 8 === 0, `${type}: Only support for ${clazz}<bitLength>, where length <= 8192 and a power of 8, found ${length}`);
   value.displayName = displayName;
   value.length = length;
   return value;
@@ -25051,7 +28348,7 @@ function getTypeDef(_type, {
     name,
     type
   };
-  assert$a(++count !== MAX_NESTED, 'getTypeDef: Maximum nested limit reached');
+  assert$4(++count !== MAX_NESTED, 'getTypeDef: Maximum nested limit reached');
   const nested = nestedExtraction.find(nested => hasWrapper(type, nested));
 
   if (nested) {
@@ -25102,7 +28399,7 @@ function extractTypes(types) {
 }
 
 // Copyright 2017-2021 @polkadot/metadata authors & contributors
-const l$8 = logger('metadata');
+const l$8 = logger$2('metadata');
 /** @internal */
 
 function validateTypes(registry, types, throwError) {
@@ -25279,7 +28576,7 @@ class MetadataVersioned extends Struct {
   }
 
   _assertVersion(version) {
-    assert$a(this.version <= version, `Cannot convert metadata from v${this.version} to v${version}`);
+    assert$5(this.version <= version, `Cannot convert metadata from v${this.version} to v${version}`);
     return this.version === version;
   }
 
@@ -25398,12 +28695,12 @@ class MetadataVersioned extends Struct {
 
 const VERSION_IDX = 4; // magic + lowest supported version
 
-const EMPTY_METADATA = u8aConcat(new Uint8Array([0x6d, 0x65, 0x74, 0x61, 9]));
+const EMPTY_METADATA = u8aConcat$2(new Uint8Array([0x6d, 0x65, 0x74, 0x61, 9]));
 const EMPTY_U8A$2 = new Uint8Array();
 
 function sanitizeInput(_value = EMPTY_U8A$2) {
-  if (isString(_value)) {
-    return sanitizeInput(u8aToU8a(_value));
+  if (isString$5(_value)) {
+    return sanitizeInput(u8aToU8a$3(_value));
   }
 
   return _value.length === 0 ? EMPTY_METADATA : _value;
@@ -25456,12 +28753,12 @@ function decorateConstants(registry, {
     } // For access, we change the index names, i.e. Democracy.EnactmentPeriod -> democracy.enactmentPeriod
 
 
-    result[stringCamelCase(name)] = constants.reduce((newModule, meta) => {
+    result[stringCamelCase$1(name)] = constants.reduce((newModule, meta) => {
       // convert to the natural type as received
       const type = meta.type.toString();
-      const codec = registry.createType(type, hexToU8a(meta.value.toHex()));
+      const codec = registry.createType(type, hexToU8a$4(meta.value.toHex()));
       codec.meta = meta;
-      newModule[stringCamelCase(meta.name)] = codec;
+      newModule[stringCamelCase$1(meta.name)] = codec;
       return newModule;
     }, {});
     return result;
@@ -25492,7 +28789,7 @@ function decorateErrors(_, {
     }
 
     const sectionIndex = metaVersion >= 12 ? index.toNumber() : _sectionIndex;
-    result[stringCamelCase(name)] = errors.reduce((newModule, meta, errorIndex) => {
+    result[stringCamelCase$1(name)] = errors.reduce((newModule, meta, errorIndex) => {
       // we don't camelCase the error name
       newModule[meta.name.toString()] = {
         is: moduleError => isError(moduleError, sectionIndex, errorIndex),
@@ -25523,7 +28820,7 @@ function decorateEvents(_, {
     name
   }, _sectionIndex) => {
     const sectionIndex = metaVersion >= 12 ? index.toNumber() : _sectionIndex;
-    result[stringCamelCase(name)] = events.unwrap().reduce((newModule, meta, eventIndex) => {
+    result[stringCamelCase$1(name)] = events.unwrap().reduce((newModule, meta, eventIndex) => {
       // we don't camelCase the event name
       newModule[meta.name.toString()] = {
         is: eventRecord => isEvent(eventRecord, sectionIndex, eventIndex),
@@ -25545,10 +28842,10 @@ function isTx(tx, callIndex) {
 
 function createUnchecked(registry, section, callIndex, callMetadata) {
   const expectedArgs = callMetadata.args;
-  const funcName = stringCamelCase(callMetadata.name);
+  const funcName = stringCamelCase$1(callMetadata.name);
 
   const extrinsicFn = (...args) => {
-    assert$a(expectedArgs.length === args.length, `Extrinsic ${section}.${funcName} expects ${expectedArgs.length.valueOf()} arguments, got ${args.length}.`);
+    assert$5(expectedArgs.length === args.length, `Extrinsic ${section}.${funcName} expects ${expectedArgs.length.valueOf()} arguments, got ${args.length}.`);
     return registry.createType('Call', {
       args,
       callIndex
@@ -25581,9 +28878,9 @@ function decorateExtrinsics(registry, {
     name
   }, _sectionIndex) => {
     const sectionIndex = metaVersion >= 12 ? index.toNumber() : _sectionIndex;
-    const section = stringCamelCase(name);
+    const section = stringCamelCase$1(name);
     result[section] = calls.unwrap().reduce((newModule, callMetadata, methodIndex) => {
-      newModule[stringCamelCase(callMetadata.name)] = createUnchecked(registry, section, new Uint8Array([sectionIndex, methodIndex]), callMetadata);
+      newModule[stringCamelCase$1(callMetadata.name)] = createUnchecked(registry, section, new Uint8Array([sectionIndex, methodIndex]), callMetadata);
       return newModule;
     }, {});
     return result;
@@ -25596,15 +28893,15 @@ const DEFAULT_FN = data => xxhashAsU8a(data, 128);
 
 const HASHERS = {
   Blake2_128: data => // eslint-disable-line camelcase
-  blake2AsU8a(data, 128),
+  blake2AsU8a$1(data, 128),
   Blake2_128Concat: data => // eslint-disable-line camelcase
-  u8aConcat(blake2AsU8a(data, 128), u8aToU8a(data)),
+  u8aConcat$2(blake2AsU8a$1(data, 128), u8aToU8a$3(data)),
   Blake2_256: data => // eslint-disable-line camelcase
-  blake2AsU8a(data, 256),
-  Identity: data => u8aToU8a(data),
+  blake2AsU8a$1(data, 256),
+  Identity: data => u8aToU8a$3(data),
   Twox128: data => xxhashAsU8a(data, 128),
   Twox256: data => xxhashAsU8a(data, 256),
-  Twox64Concat: data => u8aConcat(xxhashAsU8a(data, 64), u8aToU8a(data))
+  Twox64Concat: data => u8aConcat$2(xxhashAsU8a(data, 64), u8aToU8a$3(data))
 };
 /** @internal */
 
@@ -25612,9 +28909,9 @@ function getHasher(hasher) {
   return HASHERS[hasher === null || hasher === void 0 ? void 0 : hasher.type] || DEFAULT_FN;
 }
 
-function ownKeys$z(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$B(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$z(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$z(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$z(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$B(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$B(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$B(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const EMPTY_U8A$1 = new Uint8Array([]);
 
 const NULL_HASHER = value => value; // get the hashers, the base (and  in the case of DoubleMap), the second key
@@ -25644,7 +28941,7 @@ function createPrefixedKey({
   method,
   prefix
 }) {
-  return u8aConcat(xxhashAsU8a(prefix, 128), xxhashAsU8a(method, 128));
+  return u8aConcat$2(xxhashAsU8a(prefix, 128), xxhashAsU8a(method, 128));
 } // create a key for a DoubleMap type
 
 /** @internal */
@@ -25658,15 +28955,15 @@ function createKeyDoubleMap(registry, itemFn, args, [hasher1, hasher2]) {
     }
   } = itemFn; // since we are passing an almost-unknown through, trust, but verify
 
-  assert$a(Array.isArray(args) && !isUndefined(args[0]) && !isNull(args[0]) && !isUndefined(args[1]) && !isNull(args[1]), `${(name || 'unknown').toString()} is a DoubleMap and requires two arguments`); // if this fails, we have bigger issues
+  assert$5(Array.isArray(args) && !isUndefined$4(args[0]) && !isNull$2(args[0]) && !isUndefined$4(args[1]) && !isNull$2(args[1]), `${(name || 'unknown').toString()} is a DoubleMap and requires two arguments`); // if this fails, we have bigger issues
 
-  assert$a(!isUndefined(hasher2), '2 hashing functions should be defined for DoubleMaps');
+  assert$5(!isUndefined$4(hasher2), '2 hashing functions should be defined for DoubleMaps');
   const [key1, key2] = args;
   const map = type.asDoubleMap;
   const val1 = registry.createType(map.key1.toString(), key1).toU8a();
   const val2 = registry.createType(map.key2.toString(), key2).toU8a(); // as per createKey, always add the length prefix (underlying it is Bytes)
 
-  return compactAddLength(u8aConcat(createPrefixedKey(itemFn), hasher1(val1), hasher2(val2)));
+  return compactAddLength$1(u8aConcat$2(createPrefixedKey(itemFn), hasher1(val1), hasher2(val2)));
 } // create a key for either a map or a plain value
 
 /** @internal */
@@ -25683,12 +28980,12 @@ function createKey(registry, itemFn, arg, hasher) {
 
   if (type.isMap) {
     const map = type.asMap;
-    assert$a(!isUndefined(arg) && !isNull(arg), `${name.toString()} is a Map and requires one argument`);
+    assert$5(!isUndefined$4(arg) && !isNull$2(arg), `${name.toString()} is a Map and requires one argument`);
     param = registry.createType(map.key.toString(), arg).toU8a();
   } // StorageKey is a Bytes, so is length-prefixed
 
 
-  return compactAddLength(u8aConcat(createPrefixedKey(itemFn), param.length ? hasher(param) : EMPTY_U8A$1));
+  return compactAddLength$1(u8aConcat$2(createPrefixedKey(itemFn), param.length ? hasher(param) : EMPTY_U8A$1));
 } // attach the metadata to expand to a StorageFunction
 
 /** @internal */
@@ -25707,7 +29004,7 @@ function expandWithMeta({
   storageFn.section = section; // explicitly add the actual method in the toJSON, this gets used to determine caching and without it
   // instances (e.g. collective) will not work since it is only matched on param meta
 
-  storageFn.toJSON = () => _objectSpread$z(_objectSpread$z({}, meta.toJSON()), {}, {
+  storageFn.toJSON = () => _objectSpread$B(_objectSpread$B({}, meta.toJSON()), {}, {
     storage: {
       method,
       prefix,
@@ -25745,7 +29042,7 @@ function extendHeadMeta(registry, {
     method,
     section
   });
-  return arg => !isUndefined(arg) && !isNull(arg) ? registry.createType('StorageKey', iterFn(arg), {
+  return arg => !isUndefined$4(arg) && !isNull$2(arg) ? registry.createType('StorageKey', iterFn(arg), {
     method,
     section
   }) : prefixKey;
@@ -25761,8 +29058,8 @@ function extendPrefixedMap(registry, itemFn, storageFn) {
     }
   } = itemFn;
   storageFn.iterKey = extendHeadMeta(registry, itemFn, storageFn, arg => {
-    assert$a(type.isDoubleMap || isUndefined(arg), 'Filtering arguments for keys/entries are only valid on double maps');
-    return new Raw(registry, type.isDoubleMap && !isUndefined(arg) && !isNull(arg) ? u8aConcat(createPrefixedKey(itemFn), getHasher(type.asDoubleMap.hasher)(registry.createType(type.asDoubleMap.key1.toString(), arg).toU8a())) : createPrefixedKey(itemFn));
+    assert$5(type.isDoubleMap || isUndefined$4(arg), 'Filtering arguments for keys/entries are only valid on double maps');
+    return new Raw(registry, type.isDoubleMap && !isUndefined$4(arg) && !isNull$2(arg) ? u8aConcat$2(createPrefixedKey(itemFn), getHasher(type.asDoubleMap.hasher)(registry.createType(type.asDoubleMap.key1.toString(), arg).toU8a())) : createPrefixedKey(itemFn));
   });
   return storageFn;
 }
@@ -25860,9 +29157,9 @@ function getStorage(registry, metaVersion) {
   };
 }
 
-function ownKeys$y(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$A(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$y(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$y(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$y(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$A(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$A(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$A(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 /** @internal */
 
 function decorateStorage(registry, {
@@ -25876,7 +29173,7 @@ function decorateStorage(registry, {
     const {
       name
     } = moduleMetadata;
-    const section = stringCamelCase(name);
+    const section = stringCamelCase$1(name);
     const unwrapped = moduleMetadata.storage.unwrap();
     const prefix = unwrapped.prefix.toString(); // For access, we change the index names, i.e. System.Account -> system.account
 
@@ -25893,7 +29190,7 @@ function decorateStorage(registry, {
       return newModule;
     }, {});
     return result;
-  }, _objectSpread$y({}, getStorage(registry, metaVersion)));
+  }, _objectSpread$A({}, getStorage(registry, metaVersion)));
 }
 
 // Copyright 2017-2021 @polkadot/metadata authors & contributors
@@ -25902,7 +29199,7 @@ function decorateStorage(registry, {
  */
 
 function expandMetadata(registry, metadata) {
-  assert$a(metadata instanceof Metadata, 'You need to pass a valid Metadata instance to Decorated');
+  assert$5(metadata instanceof Metadata, 'You need to pass a valid Metadata instance to Decorated');
   const latest = metadata.asLatest;
   return {
     consts: decorateConstants(registry, latest),
@@ -25920,12 +29217,12 @@ function createClass$1(registry, type) {
 } // An unsafe version of the `createType` below. It's unsafe because the `type`
 
 function getSubDefArray(value) {
-  assert$a(value.sub && Array.isArray(value.sub), `Expected subtype as TypeDef[] in ${JSON.stringify(value)}`);
+  assert$4(value.sub && Array.isArray(value.sub), `Expected subtype as TypeDef[] in ${JSON.stringify(value)}`);
   return value.sub;
 }
 
 function getSubDef(value) {
-  assert$a(value.sub && !Array.isArray(value.sub), `Expected subtype as TypeDef in ${JSON.stringify(value)}`);
+  assert$4(value.sub && !Array.isArray(value.sub), `Expected subtype as TypeDef in ${JSON.stringify(value)}`);
   return value.sub;
 }
 
@@ -25953,7 +29250,7 @@ function createInt({
   displayName,
   length
 }, Clazz) {
-  assert$a(isNumber(length), `Expected bitLength information for ${displayName || Clazz.constructor.name}<bitLength>`);
+  assert$4(isNumber$1(length), `Expected bitLength information for ${displayName || Clazz.constructor.name}<bitLength>`);
   return Clazz.with(length, displayName);
 }
 
@@ -26031,7 +29328,7 @@ const infoMapping = {
     length,
     sub
   }) => {
-    assert$a(isNumber(length) && !isUndefined(sub), 'Expected length & type information for fixed vector');
+    assert$4(isNumber$1(length) && !isUndefined$3(sub), 'Expected length & type information for fixed vector');
     return sub.type === 'u8' ? U8aFixed.with(length * 8, displayName) : VecFixed.with(sub.type, length);
   }
 }; // Returns the type Class for construction
@@ -26044,12 +29341,12 @@ function getTypeClass(registry, value) {
   }
 
   const getFn = infoMapping[value.info];
-  assert$a(getFn, `Unable to construct class from ${JSON.stringify(value)}`);
+  assert$4(getFn, `Unable to construct class from ${JSON.stringify(value)}`);
   return getFn(registry, value);
 }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
-const l$7 = logger('registry');
+const l$7 = logger$1('registry');
 
 function u8aHasValue(value) {
   return value.some(v => !!v);
@@ -26067,16 +29364,16 @@ function checkInstance(value, created) {
   } // the hex values for what we have
 
 
-  const inHex = u8aToHex(value);
+  const inHex = u8aToHex$3(value);
   const crHex = created.toHex(); // Check equality, based on some different approaches (as decoded)
 
   const isEqual = inHex === crHex || // raw hex values, quick path
   inHex === created.toHex(true) || // wrapped options
-  u8aToHex(value.reverse()) === crHex; // reverse (for numbers, which are BE)
+  u8aToHex$3(value.reverse()) === crHex; // reverse (for numbers, which are BE)
   // if the hex doesn't match and the value for both is non-empty, complain... bitterly
 
   if (!isEqual && (u8aHasValue(value) || u8aHasValue(created.toU8a(true)))) {
-    l$7.warn(`${rawType}:: Input doesn't match output, received ${u8aToHex(value)}, created ${crHex}`);
+    l$7.warn(`${rawType}:: Input doesn't match output, received ${u8aToHex$3(value)}, created ${crHex}`);
   }
 } // Initializes a type with a value. This also checks for fallbacks and in the cases
 // where isPedantic is specified (storage decoding), also check the format/structure
@@ -26087,7 +29384,7 @@ function initType(registry, Type, params = [], isPedantic) {
 
   const [value] = params;
 
-  if (isPedantic && isU8a(value)) {
+  if (isPedantic && isU8a$3(value)) {
     checkInstance(value, created);
   }
 
@@ -26191,14 +29488,14 @@ const substrate = {
   ValidateEquivocationReport: emptyCheck
 };
 
-function ownKeys$x(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$z(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$x(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$x(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$x(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$z(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$z(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$z(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 // we define the extra fields not as a Tuple, but rather as a struct so they can be named. These will be expanded
 // into the various fields when added to the payload (we only support V4 onwards with these, V3 and earlier are
 // deemed fixed and non-changeable)
 
-const allExtensions = _objectSpread$x(_objectSpread$x({}, substrate), polkadot); // the v4 signed extensions (the order is important here, as applied by default)
+const allExtensions = _objectSpread$z(_objectSpread$z({}, substrate), polkadot); // the v4 signed extensions (the order is important here, as applied by default)
 
 
 const defaultExtensions = ['CheckVersion', 'CheckGenesis', 'CheckEra', 'CheckNonce', 'CheckWeight', 'ChargeTransactionPayment', 'CheckBlockGasLimit'];
@@ -26210,12 +29507,12 @@ function findUnknownExtensions(extensions, userExtensions = {}) {
 
 function expandExtensionTypes(extensions, type, userExtensions = {}) {
   return extensions // Always allow user extensions first - these should provide overrides
-  .map(key => userExtensions[key] || allExtensions[key]).filter(info => !!info).reduce((result, info) => _objectSpread$x(_objectSpread$x({}, result), info[type]), {});
+  .map(key => userExtensions[key] || allExtensions[key]).filter(info => !!info).reduce((result, info) => _objectSpread$z(_objectSpread$z({}, result), info[type]), {});
 }
 
-function ownKeys$w(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$y(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$w(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$w(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$w(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$y(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$y(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$y(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 /**
  * @name GenericEventData
  * @description
@@ -26382,7 +29679,7 @@ class GenericEvent extends Struct {
 
 
   toHuman(isExpanded) {
-    return _objectSpread$w(_objectSpread$w({
+    return _objectSpread$y(_objectSpread$y({
       method: this.method,
       section: this.section
     }, isExpanded ? {
@@ -26527,7 +29824,7 @@ class GenericExtrinsicV4 extends Struct {
       return {
         method: value
       };
-    } else if (isU8a(value)) {
+    } else if (isU8a$3(value)) {
       // here we decode manually since we need to pull through the version information
       const signature = registry.createType('ExtrinsicSignatureV4', value, {
         isSigned
@@ -26603,9 +29900,9 @@ class GenericExtrinsicV4 extends Struct {
 
 }
 
-function ownKeys$v(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$x(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$v(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$v(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$v(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$x(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$x(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$x(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const VERSIONS$1 = ['ExtrinsicUnknown', // v0 is unknown
 'ExtrinsicUnknown', 'ExtrinsicUnknown', 'ExtrinsicUnknown', 'ExtrinsicV4'];
 
@@ -26787,8 +30084,8 @@ class GenericExtrinsic extends ExtrinsicBase {
 
 
   static _decodeExtrinsic(registry, value, version = DEFAULT_VERSION) {
-    if (isU8a(value) || Array.isArray(value) || isHex(value)) {
-      return GenericExtrinsic._decodeU8a(registry, u8aToU8a(value), version);
+    if (isU8a$3(value) || Array.isArray(value) || isHex$4(value)) {
+      return GenericExtrinsic._decodeU8a(registry, u8aToU8a$2(value), version);
     } else if (value instanceof registry.createClass('Call')) {
       return GenericExtrinsic._newFromValue(registry, {
         method: value
@@ -26807,7 +30104,7 @@ class GenericExtrinsic extends ExtrinsicBase {
 
     const [offset, length] = compactFromU8a(value);
     const total = offset + length.toNumber();
-    assert$a(total <= value.length, `Extrinsic: length less than remainder, expected at least ${total}, found ${value.length}`);
+    assert$4(total <= value.length, `Extrinsic: length less than remainder, expected at least ${total}, found ${value.length}`);
     const data = value.subarray(offset, total);
     return GenericExtrinsic._newFromValue(registry, data.subarray(1), data[0]);
   }
@@ -26847,7 +30144,7 @@ class GenericExtrinsic extends ExtrinsicBase {
 
 
   toHex(isBare) {
-    return u8aToHex(this.toU8a(isBare));
+    return u8aToHex$3(this.toU8a(isBare));
   }
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
@@ -26855,7 +30152,7 @@ class GenericExtrinsic extends ExtrinsicBase {
 
 
   toHuman(isExpanded) {
-    return _objectSpread$v({
+    return _objectSpread$x({
       isSigned: this.isSigned,
       method: this.method.toHuman(isExpanded)
     }, this.isSigned ? {
@@ -26891,7 +30188,7 @@ class GenericExtrinsic extends ExtrinsicBase {
   toU8a(isBare) {
     // we do not apply bare to the internal values, rather this only determines out length addition,
     // where we strip all lengths this creates an extrinsic that cannot be decoded
-    const encoded = u8aConcat(new Uint8Array([this.version]), this._raw.toU8a());
+    const encoded = u8aConcat$1(new Uint8Array([this.version]), this._raw.toU8a());
     return isBare ? encoded : compactAddLength(encoded);
   }
 
@@ -26944,8 +30241,8 @@ class MortalEra extends Tuple {
   static _decodeMortalEra(registry, value) {
     if (!value) {
       return [new u64(registry), new u64(registry)];
-    } else if (isU8a(value) || isHex(value) || Array.isArray(value)) {
-      return MortalEra._decodeMortalU8a(registry, u8aToU8a(value));
+    } else if (isU8a$3(value) || isHex$4(value) || Array.isArray(value)) {
+      return MortalEra._decodeMortalU8a(registry, u8aToU8a$2(value));
     } else if (isObject$1(value)) {
       return MortalEra._decodeMortalObject(registry, value);
     }
@@ -26981,7 +30278,7 @@ class MortalEra extends Tuple {
     const period = 2 << encoded % (1 << 4);
     const quantizeFactor = Math.max(period >> 12, 1);
     const phase = (encoded >> 4) * quantizeFactor;
-    assert$a(period >= 4 && phase < period, 'Invalid data passed to Mortal era');
+    assert$4(period >= 4 && phase < period, 'Invalid data passed to Mortal era');
     return [new u64(registry, period), new u64(registry, phase)];
   }
   /**
@@ -27057,7 +30354,7 @@ class MortalEra extends Tuple {
 
   birth(current) {
     // FIXME No toNumber() here
-    return Math.floor((Math.max(bnToBn(current).toNumber(), this.phase.toNumber()) - this.phase.toNumber()) / this.period.toNumber()) * this.period.toNumber() + this.phase.toNumber();
+    return Math.floor((Math.max(bnToBn$2(current).toNumber(), this.phase.toNumber()) - this.phase.toNumber()) / this.period.toNumber()) * this.period.toNumber() + this.phase.toNumber();
   }
   /**
    * @description Get the block number of the first block at which the era has ended.
@@ -27090,9 +30387,9 @@ class GenericExtrinsicEra extends Enum {
   static _decodeExtrinsicEra(value = new Uint8Array()) {
     if (value instanceof GenericExtrinsicEra) {
       return GenericExtrinsicEra._decodeExtrinsicEra(value.toU8a());
-    } else if (isHex(value)) {
-      return GenericExtrinsicEra._decodeExtrinsicEra(hexToU8a(value));
-    } else if (!value || isU8a(value)) {
+    } else if (isHex$4(value)) {
+      return GenericExtrinsicEra._decodeExtrinsicEra(hexToU8a$3(value));
+    } else if (!value || isU8a$3(value)) {
       return !(value !== null && value !== void 0 && value.length) || value[0] === 0 ? new Uint8Array([0]) : new Uint8Array([1, value[0], value[1]]);
     } else if (isObject$1(value)) {
       // this is to de-serialize from JSON
@@ -27121,7 +30418,7 @@ class GenericExtrinsicEra extends Enum {
 
 
   get asImmortalEra() {
-    assert$a(this.isImmortalEra, `Cannot convert '${this.type}' via asImmortalEra`);
+    assert$4(this.isImmortalEra, `Cannot convert '${this.type}' via asImmortalEra`);
     return this.value;
   }
   /**
@@ -27130,7 +30427,7 @@ class GenericExtrinsicEra extends Enum {
 
 
   get asMortalEra() {
-    assert$a(this.isMortalEra, `Cannot convert '${this.type}' via asMortalEra`);
+    assert$4(this.isMortalEra, `Cannot convert '${this.type}' via asMortalEra`);
     return this.value;
   }
   /**
@@ -27278,7 +30575,7 @@ class GenericExtrinsicPayload extends Base {
 
 
     return {
-      signature: u8aToHex(signature)
+      signature: u8aToHex$3(signature)
     };
   }
   /**
@@ -27422,7 +30719,7 @@ class GenericSignerPayload extends _Payload {
   toRaw() {
     const payload = this.toPayload(); // NOTE Explicitly pass the bare flag so the method is encoded un-prefixed (non-decodable, for signing only)
 
-    const data = u8aToHex(this.registry.createType('ExtrinsicPayload', payload, {
+    const data = u8aToHex$3(this.registry.createType('ExtrinsicPayload', payload, {
       version: payload.version
     }).toU8a({
       method: true
@@ -27444,9 +30741,9 @@ function sign(registry, signerPair, u8a, options) {
   return signerPair.sign(encoded, options);
 }
 
-function ownKeys$u(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$w(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$u(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$u(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$u(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$w(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$w(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$w(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 /**
  * @name GenericExtrinsicPayloadV4
  * @description
@@ -27458,7 +30755,7 @@ var _signOptions = _classPrivateFieldKey("signOptions");
 
 class GenericExtrinsicPayloadV4 extends Struct {
   constructor(registry, value) {
-    super(registry, _objectSpread$u(_objectSpread$u({
+    super(registry, _objectSpread$w(_objectSpread$w({
       method: 'Bytes'
     }, registry.getSignedExtensionTypes()), registry.getSignedExtensionExtra()), value); // Do detection for the type of extrinsic, in the case of MultiSignature this is an
     // enum, in the case of AnySignature, this is a Hash only (may be 64 or 65 bytes)
@@ -27552,14 +30849,14 @@ class GenericExtrinsicPayloadV4 extends Struct {
 
 }
 
-function ownKeys$t(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$v(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$t(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$t(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$t(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$v(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$v(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$v(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const FAKE_NONE = new Uint8Array();
 const FAKE_SOME = new Uint8Array([1]);
 
 function toAddress(registry, address) {
-  return registry.createType('Address', isU8a(address) ? u8aToHex(address) : address);
+  return registry.createType('Address', isU8a$3(address) ? u8aToHex$3(address) : address);
 }
 /**
  * @name GenericExtrinsicSignatureV4
@@ -27574,7 +30871,7 @@ class GenericExtrinsicSignatureV4 extends Struct {
   constructor(registry, value, {
     isSigned
   } = {}) {
-    super(registry, _objectSpread$t({
+    super(registry, _objectSpread$v({
       signer: 'Address',
       // eslint-disable-next-line sort-keys
       signature: 'ExtrinsicSignature'
@@ -27729,7 +31026,7 @@ class GenericExtrinsicSignatureV4 extends Struct {
   signFake(method, address, options) {
     const signer = toAddress(this.registry, address);
     const payload = this.createPayload(method, options);
-    const signature = this.registry.createType('ExtrinsicSignature', u8aConcat(_classPrivateFieldBase(this, _fakePrefix)[_fakePrefix], new Uint8Array(64).fill(0x42)));
+    const signature = this.registry.createType('ExtrinsicSignature', u8aConcat$1(_classPrivateFieldBase(this, _fakePrefix)[_fakePrefix], new Uint8Array(64).fill(0x42)));
     return this._injectSignature(signer, signature, payload);
   }
   /**
@@ -27748,12 +31045,12 @@ class GenericExtrinsicSignatureV4 extends Struct {
 /** @internal */
 
 function decodeAccountId$1(value) {
-  if (isU8a(value) || Array.isArray(value)) {
-    return u8aToU8a(value);
-  } else if (isHex(value) || isEthereumAddress(value)) {
-    return hexToU8a(value.toString());
-  } else if (isString(value)) {
-    return u8aToU8a(value.toString());
+  if (isU8a$3(value) || Array.isArray(value)) {
+    return u8aToU8a$2(value);
+  } else if (isHex$4(value) || isEthereumAddress(value)) {
+    return hexToU8a$3(value.toString());
+  } else if (isString$4(value)) {
+    return u8aToU8a$2(value.toString());
   }
 
   return value;
@@ -27834,11 +31131,11 @@ function decodeAccountIndex(value) {
     // `value.toBn()` on AccountIndex returns a pure BN (i.e. not an
     // AccountIndex), which has the initial `toString()` implementation.
     return value.toBn();
-  } else if (isBn(value) || isNumber(value) || isHex(value) || isU8a(value) || isBigInt(value)) {
+  } else if (isBn$1(value) || isNumber$1(value) || isHex$4(value) || isU8a$3(value) || isBigInt$3(value)) {
     return value;
   }
 
-  return decodeAccountIndex(decodeAddress(value));
+  return decodeAccountIndex(decodeAddress$1(value));
 }
 /**
  * @name GenericAccountIndex
@@ -27854,7 +31151,7 @@ class GenericAccountIndex extends u32 {
   }
 
   static calcLength(_value) {
-    const value = bnToBn(_value);
+    const value = bnToBn$2(_value);
 
     if (value.lte(MAX_1BYTE)) {
       return 1;
@@ -27903,7 +31200,7 @@ class GenericAccountIndex extends u32 {
 
   eq(other) {
     // shortcut for BN or Number, don't create an object
-    if (isBn(other) || isNumber(other)) {
+    if (isBn$1(other) || isNumber$1(other)) {
       return super.eq(other);
     } // convert and compare
 
@@ -27952,7 +31249,7 @@ const ACCOUNT_ID_PREFIX$1 = new Uint8Array([0xff]);
 /** @internal */
 
 function decodeString$1(registry, value) {
-  const decoded = decodeAddress(value);
+  const decoded = decodeAddress$1(value);
   return decoded.length === 20 ? registry.createType('EthereumAccountId', decoded) : registry.createType('AccountIndex', u8aToBn(decoded, true));
 }
 /** @internal */
@@ -27988,7 +31285,7 @@ class GenericEthereumLookupSource extends Base {
 
 
   static _decodeAddress(registry, value) {
-    return value instanceof GenericEthereumLookupSource ? value._raw : value instanceof GenericEthereumAccountId || value instanceof GenericAccountIndex ? value : isBn(value) || isNumber(value) || isBigInt(value) ? registry.createType('AccountIndex', value) : Array.isArray(value) || isHex(value) || isU8a(value) ? decodeU8a$2(registry, u8aToU8a(value)) : decodeString$1(registry, value);
+    return value instanceof GenericEthereumLookupSource ? value._raw : value instanceof GenericEthereumAccountId || value instanceof GenericAccountIndex ? value : isBn$1(value) || isNumber$1(value) || isBigInt$3(value) ? registry.createType('AccountIndex', value) : Array.isArray(value) || isHex$4(value) || isU8a$3(value) ? decodeU8a$2(registry, u8aToU8a$2(value)) : decodeString$1(registry, value);
   }
   /**
    * @description The length of the value when encoded as a Uint8Array
@@ -28014,7 +31311,7 @@ class GenericEthereumLookupSource extends Base {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Returns the base runtime type name for this instance
@@ -28033,7 +31330,7 @@ class GenericEthereumLookupSource extends Base {
   toU8a(isBare) {
     const encoded = this._raw.toU8a().subarray(0, this._rawLength);
 
-    return isBare ? encoded : u8aConcat(this._raw instanceof GenericAccountIndex ? GenericAccountIndex.writeLength(encoded) : ACCOUNT_ID_PREFIX$1, encoded);
+    return isBare ? encoded : u8aConcat$1(this._raw instanceof GenericAccountIndex ? GenericAccountIndex.writeLength(encoded) : ACCOUNT_ID_PREFIX$1, encoded);
   }
 
 }
@@ -28044,12 +31341,12 @@ class GenericEthereumLookupSource extends Base {
 function decodeAccountId(value) {
   if (!value) {
     return new Uint8Array();
-  } else if (isU8a(value) || Array.isArray(value)) {
-    return u8aToU8a(value);
-  } else if (isHex(value)) {
-    return hexToU8a(value.toString());
-  } else if (isString(value)) {
-    return decodeAddress(value.toString());
+  } else if (isU8a$3(value) || Array.isArray(value)) {
+    return u8aToU8a$2(value);
+  } else if (isHex$4(value)) {
+    return hexToU8a$3(value.toString());
+  } else if (isString$4(value)) {
+    return decodeAddress$1(value.toString());
   }
 
   throw new Error('Unknown type passed to AccountId constructor');
@@ -28067,7 +31364,7 @@ class GenericAccountId extends U8aFixed {
   constructor(registry, value) {
     const decoded = decodeAccountId(value); // Part of stream containing >= 32 bytes or a all empty (defaults)
 
-    assert$a(decoded.length >= 32 || !decoded.some(b => b), `Invalid AccountId provided, expected 32 bytes, found ${decoded.length}`);
+    assert$4(decoded.length >= 32 || !decoded.some(b => b), `Invalid AccountId provided, expected 32 bytes, found ${decoded.length}`);
     super(registry, decoded, 256);
   }
 
@@ -28167,9 +31464,9 @@ class GenericBlock extends Struct {
 
 }
 
-function ownKeys$s(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$u(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$s(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$s(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$s(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$u(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$u(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$u(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /**
  * Get a mapping of `argument name -> argument type` for the function, from
@@ -28242,8 +31539,8 @@ function decodeCallViaU8a(registry, value, _meta) {
 
 
 function decodeCall(registry, value = new Uint8Array(), _meta) {
-  if (isHex(value) || isU8a(value)) {
-    return decodeCallViaU8a(registry, u8aToU8a(value), _meta);
+  if (isHex$4(value) || isU8a$3(value)) {
+    return decodeCallViaU8a(registry, u8aToU8a$2(value), _meta);
   } else if (isObject$1(value) && value.callIndex && value.args) {
     return decodeCallViaObject(registry, value, _meta);
   }
@@ -28382,7 +31679,7 @@ class GenericCall extends Struct {
     } catch (error) {// swallow
     }
 
-    return _objectSpread$s({
+    return _objectSpread$u({
       args: this.args.map(arg => arg.toHuman(isExpanded)),
       // args: this.args.map((arg, index) => call
       //   ? { [call.meta.args[index].name.toString()]: arg.toHuman(isExpanded) }
@@ -28410,11 +31707,11 @@ class GenericCall extends Struct {
 
 function createValue(registry, type, value, asArray = true) {
   // We detect codec here as well - when found, generally this is constructed from itself
-  if (value && isFunction$1(value.unwrapOrDefault)) {
+  if (value && isFunction$4(value.unwrapOrDefault)) {
     return value;
   }
 
-  return registry.createType(type, asArray ? isNull(value) || isUndefined(value) ? null : Array.isArray(value) ? value : [value] : value);
+  return registry.createType(type, asArray ? isNull$1(value) || isUndefined$3(value) ? null : Array.isArray(value) ? value : [value] : value);
 }
 
 function decodeValue(registry, key, value) {
@@ -28423,7 +31720,7 @@ function decodeValue(registry, key, value) {
 
 function decode(registry, value) {
   return ( // allow decoding from a map as well (ourselves)
-  value && isFunction$1(value.entries) ? [...value.entries()] : Object.entries(value || {})).reduce((all, [key, value]) => {
+  value && isFunction$4(value.entries) ? [...value.entries()] : Object.entries(value || {})).reduce((all, [key, value]) => {
     all[key] = decodeValue(registry, key, value);
     return all;
   }, {
@@ -28483,7 +31780,7 @@ const CID_POW = 0x5f776f70; // 'pow_'
 
 class GenericConsensusEngineId extends u32 {
   static idToString(input) {
-    return bnToBn(input).toArray('le').map(code => String.fromCharCode(code)).join('');
+    return bnToBn$2(input).toArray('le').map(code => String.fromCharCode(code)).join('');
   }
 
   static stringToId(input) {
@@ -28580,7 +31877,7 @@ const ACCOUNT_ID_PREFIX = new Uint8Array([0xff]);
 /** @internal */
 
 function decodeString(registry, value) {
-  const decoded = decodeAddress(value);
+  const decoded = decodeAddress$1(value);
   return decoded.length === 32 ? registry.createType('AccountId', decoded) : registry.createType('AccountIndex', u8aToBn(decoded, true));
 }
 /** @internal */
@@ -28616,7 +31913,7 @@ class GenericLookupSource extends Base {
 
 
   static _decodeAddress(registry, value) {
-    return value instanceof GenericLookupSource ? value._raw : value instanceof GenericAccountId || value instanceof GenericAccountIndex ? value : isBn(value) || isNumber(value) || isBigInt(value) ? registry.createType('AccountIndex', value) : Array.isArray(value) || isHex(value) || isU8a(value) ? decodeU8a$1(registry, u8aToU8a(value)) : decodeString(registry, value);
+    return value instanceof GenericLookupSource ? value._raw : value instanceof GenericAccountId || value instanceof GenericAccountIndex ? value : isBn$1(value) || isNumber$1(value) || isBigInt$3(value) ? registry.createType('AccountIndex', value) : Array.isArray(value) || isHex$4(value) || isU8a$3(value) ? decodeU8a$1(registry, u8aToU8a$2(value)) : decodeString(registry, value);
   }
   /**
    * @description The length of the value when encoded as a Uint8Array
@@ -28642,7 +31939,7 @@ class GenericLookupSource extends Base {
 
 
   toHex() {
-    return u8aToHex(this.toU8a());
+    return u8aToHex$3(this.toU8a());
   }
   /**
    * @description Returns the base runtime type name for this instance
@@ -28661,7 +31958,7 @@ class GenericLookupSource extends Base {
   toU8a(isBare) {
     const encoded = this._raw.toU8a().subarray(0, this._rawLength);
 
-    return isBare ? encoded : u8aConcat(this._raw instanceof GenericAccountIndex ? GenericAccountIndex.writeLength(encoded) : ACCOUNT_ID_PREFIX, encoded);
+    return isBare ? encoded : u8aConcat$1(this._raw instanceof GenericAccountIndex ? GenericAccountIndex.writeLength(encoded) : ACCOUNT_ID_PREFIX, encoded);
   }
 
 }
@@ -28693,13 +31990,13 @@ function decodeMultiAny(registry, value) {
     return {
       Id: value
     };
-  } else if (value instanceof GenericAccountIndex || isBn(value) || isNumber(value)) {
+  } else if (value instanceof GenericAccountIndex || isBn$1(value) || isNumber$1(value)) {
     return {
-      Index: isNumber(value) ? value : value.toNumber()
+      Index: isNumber$1(value) ? value : value.toNumber()
     };
-  } else if (isString(value)) {
-    return decodeU8a(registry, decodeAddress(value.toString()));
-  } else if (isU8a(value)) {
+  } else if (isString$4(value)) {
+    return decodeU8a(registry, decodeAddress$1(value.toString()));
+  } else if (isU8a$3(value)) {
     return decodeU8a(registry, value);
   }
 
@@ -28759,11 +32056,11 @@ function decodeVoteType(registry, value) {
 
 
 function decodeVote(registry, value) {
-  if (isUndefined(value) || value instanceof Boolean || isBoolean(value)) {
+  if (isUndefined$3(value) || value instanceof Boolean || isBoolean$2(value)) {
     return decodeVoteBool(new bool(registry, value).isTrue);
-  } else if (isNumber(value)) {
+  } else if (isNumber$1(value)) {
     return decodeVoteBool(value < 0);
-  } else if (isU8a(value)) {
+  } else if (isU8a$3(value)) {
     return decodeVoteU8a(value);
   }
 
@@ -28900,9 +32197,9 @@ var baseTypes = /*#__PURE__*/Object.freeze({
     USize: usize
 });
 
-function ownKeys$r(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$t(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$r(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$r(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$r(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$t(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$t(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$t(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -28926,7 +32223,7 @@ const numberTypes = {
 };
 var runtimeTypes = {
   rpc: {},
-  types: _objectSpread$r(_objectSpread$r({}, numberTypes), {}, {
+  types: _objectSpread$t(_objectSpread$t({}, numberTypes), {}, {
     AccountId: 'GenericAccountId',
     AccountIdOf: 'AccountId',
     AccountIndex: 'GenericAccountIndex',
@@ -30358,9 +33655,9 @@ var definitions$s = {
   }
 };
 
-function ownKeys$q(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$s(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$q(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$q(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$q(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$s(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$s(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$s(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -30391,7 +33688,7 @@ const keyTypes = {
 };
 var definitions$r = {
   rpc: {},
-  types: _objectSpread$q(_objectSpread$q({}, keyTypes), {}, {
+  types: _objectSpread$s(_objectSpread$s({}, keyTypes), {}, {
     FullIdentification: 'Exposure',
     IdentificationTuple: '(ValidatorId, FullIdentification)',
     MembershipProof: {
@@ -30438,9 +33735,9 @@ var definitions$q = {
   }
 };
 
-function ownKeys$p(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$r(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$p(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$p(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$p(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$r(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$r(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$r(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -30551,7 +33848,7 @@ const phragmen = {
 };
 var definitions$p = {
   rpc: {},
-  types: _objectSpread$p(_objectSpread$p(_objectSpread$p({}, deprecated), phragmen), {}, {
+  types: _objectSpread$r(_objectSpread$r(_objectSpread$r({}, deprecated), phragmen), {}, {
     ActiveEraInfo: {
       index: 'EraIndex',
       start: 'Option<Moment>'
@@ -31319,9 +34616,9 @@ var slotTypes = {
   WinnersDataTuple: '(NewBidderOption, ParaId, BalanceOf, SlotRange)'
 };
 
-function ownKeys$o(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$q(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$o(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$o(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$o(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$q(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$q(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$q(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 const proposeTypes = {
   ParachainProposal: {
@@ -31338,7 +34635,7 @@ const proposeTypes = {
 };
 var definitions$e = {
   rpc: {},
-  types: _objectSpread$o(_objectSpread$o(_objectSpread$o(_objectSpread$o({}, proposeTypes), hrmpTypes), slotTypes), {}, {
+  types: _objectSpread$q(_objectSpread$q(_objectSpread$q(_objectSpread$q({}, proposeTypes), hrmpTypes), slotTypes), {}, {
     AbridgedCandidateReceipt: {
       parachainIndex: 'ParaId',
       relayParent: 'Hash',
@@ -31883,9 +35180,9 @@ var definitions$c = {
   }
 };
 
-function ownKeys$n(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$p(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$n(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$n(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$n(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$p(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$p(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$p(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -31985,7 +35282,7 @@ const spec = {
 };
 var definitions$b = {
   rpc: {},
-  types: _objectSpread$n(_objectSpread$n(_objectSpread$n({}, layout), spec), {}, {
+  types: _objectSpread$p(_objectSpread$p(_objectSpread$p({}, layout), spec), {}, {
     ContractProject: {
       // added by ABI serialization
       metadataVersion: 'Text',
@@ -32070,9 +35367,9 @@ var definitions$a = {
   }
 };
 
-function ownKeys$m(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$o(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$m(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$m(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$m(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$o(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$o(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$o(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // Copyright 2017-2021 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
@@ -32115,7 +35412,7 @@ const web3Rpc = {
     type: 'H256'
   }
 };
-const rpc = _objectSpread$m(_objectSpread$m(_objectSpread$m({}, netRpc), web3Rpc), {}, {
+const rpc = _objectSpread$o(_objectSpread$o(_objectSpread$o({}, netRpc), web3Rpc), {}, {
   accounts: {
     description: 'Returns accounts list.',
     params: [],
@@ -33734,10 +37031,10 @@ var definitions = /*#__PURE__*/Object.freeze({
     state: definitions$1
 });
 
-function ownKeys$l(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$n(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$l(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$l(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$l(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-const l$6 = logger('registry'); // create error mapping from metadata
+function _objectSpread$n(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$n(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$n(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+const l$6 = logger$1('registry'); // create error mapping from metadata
 
 function injectErrors(_, metadata, metadataErrors) {
   const modules = metadata.asLatest.modules; // decorate the errors
@@ -33750,7 +37047,7 @@ function injectErrors(_, metadata, metadataErrors) {
       name
     }, index) => {
       const eventIndex = new Uint8Array([sectionIndex, index]);
-      metadataErrors[u8aToHex(eventIndex)] = {
+      metadataErrors[u8aToHex$3(eventIndex)] = {
         documentation: documentation.map(d => d.toString()),
         index,
         method: name.toString(),
@@ -33783,7 +37080,7 @@ function injectEvents(registry, metadata, metadataEvents) {
         l$6.error(error);
       }
 
-      metadataEvents[u8aToHex(eventIndex)] = class extends GenericEventData {
+      metadataEvents[u8aToHex$3(eventIndex)] = class extends GenericEventData {
         constructor(registry, value) {
           super(registry, value, Types, typeDef, meta, sectionName, methodName);
         }
@@ -33798,7 +37095,7 @@ function injectExtrinsics(registry, metadata, metadataCalls) {
   const extrinsics = decorateExtrinsics(registry, metadata.asLatest, metadata.version); // decorate the extrinsics
 
   Object.values(extrinsics).forEach(methods => Object.values(methods).forEach(method => {
-    metadataCalls[u8aToHex(method.callIndex)] = method;
+    metadataCalls[u8aToHex$3(method.callIndex)] = method;
   }));
 } // extract additional properties from the metadata
 
@@ -33883,7 +37180,7 @@ class TypeRegistry {
     });
     Object.defineProperty(this, _hasher, {
       writable: true,
-      value: blake2AsU8a
+      value: blake2AsU8a$1
     });
     Object.defineProperty(this, _knownDefaults, {
       writable: true,
@@ -33905,7 +37202,7 @@ class TypeRegistry {
       writable: true,
       value: void 0
     });
-    _classPrivateFieldBase(this, _knownDefaults)[_knownDefaults] = _objectSpread$l({
+    _classPrivateFieldBase(this, _knownDefaults)[_knownDefaults] = _objectSpread$n({
       Json,
       Metadata,
       Raw
@@ -33989,19 +37286,19 @@ class TypeRegistry {
 
 
   findMetaCall(callIndex) {
-    const hexIndex = u8aToHex(callIndex);
-    return assertReturn(_classPrivateFieldBase(this, _metadataCalls)[_metadataCalls][hexIndex], `findMetaCall: Unable to find Call with index ${hexIndex}/[${callIndex.toString()}]`);
+    const hexIndex = u8aToHex$3(callIndex);
+    return assertReturn$1(_classPrivateFieldBase(this, _metadataCalls)[_metadataCalls][hexIndex], `findMetaCall: Unable to find Call with index ${hexIndex}/[${callIndex.toString()}]`);
   } // finds an error
 
 
   findMetaError(errorIndex) {
-    const hexIndex = u8aToHex(isU8a(errorIndex) ? errorIndex : new Uint8Array([errorIndex.index.toNumber(), errorIndex.error.toNumber()]));
-    return assertReturn(_classPrivateFieldBase(this, _metadataErrors)[_metadataErrors][hexIndex], `findMetaError: Unable to find Error with index ${hexIndex}/[${errorIndex.toString()}]`);
+    const hexIndex = u8aToHex$3(isU8a$3(errorIndex) ? errorIndex : new Uint8Array([errorIndex.index.toNumber(), errorIndex.error.toNumber()]));
+    return assertReturn$1(_classPrivateFieldBase(this, _metadataErrors)[_metadataErrors][hexIndex], `findMetaError: Unable to find Error with index ${hexIndex}/[${errorIndex.toString()}]`);
   }
 
   findMetaEvent(eventIndex) {
-    const hexIndex = u8aToHex(eventIndex);
-    return assertReturn(_classPrivateFieldBase(this, _metadataEvents)[_metadataEvents][hexIndex], `findMetaEvent: Unable to find Event with index ${hexIndex}/[${eventIndex.toString()}]`);
+    const hexIndex = u8aToHex$3(eventIndex);
+    return assertReturn$1(_classPrivateFieldBase(this, _metadataEvents)[_metadataEvents][hexIndex], `findMetaEvent: Unable to find Event with index ${hexIndex}/[${eventIndex.toString()}]`);
   }
 
   get(name, withUnknown) {
@@ -34056,7 +37353,7 @@ class TypeRegistry {
   }
 
   getOrThrow(name, msg) {
-    return assertReturn(this.get(name), msg || `type ${name} not found`);
+    return assertReturn$1(this.get(name), msg || `type ${name} not found`);
   }
 
   getOrUnknown(name) {
@@ -34090,11 +37387,11 @@ class TypeRegistry {
   // eslint-disable-next-line no-dupe-class-members
   register(arg1, arg2) {
     // NOTE Constructors appear as functions here
-    if (isFunction$1(arg1)) {
+    if (isFunction$4(arg1)) {
       _classPrivateFieldBase(this, _classes)[_classes].set(arg1.name, arg1);
-    } else if (isString(arg1)) {
-      assert$a(isFunction$1(arg2), `Expected class definition passed to '${arg1}' registration`);
-      assert$a(arg1 !== arg2.toString(), `Unable to register circular ${arg1} === ${arg1}`);
+    } else if (isString$4(arg1)) {
+      assert$4(isFunction$4(arg2), `Expected class definition passed to '${arg1}' registration`);
+      assert$4(arg1 !== arg2.toString(), `Unable to register circular ${arg1} === ${arg1}`);
 
       _classPrivateFieldBase(this, _classes)[_classes].set(arg1, arg2);
     } else {
@@ -34104,12 +37401,12 @@ class TypeRegistry {
 
   _registerObject(obj) {
     Object.entries(obj).forEach(([name, type]) => {
-      if (isFunction$1(type)) {
+      if (isFunction$4(type)) {
         // This _looks_ a bit funny, but `typeof Clazz === 'function'
         _classPrivateFieldBase(this, _classes)[_classes].set(name, type);
       } else {
-        const def = isString(type) ? type : JSON.stringify(type);
-        assert$a(name !== def, `Unable to register circular ${name} === ${def}`); // we already have this type, remove the classes registered for it
+        const def = isString$4(type) ? type : JSON.stringify(type);
+        assert$4(name !== def, `Unable to register circular ${name} === ${def}`); // we already have this type, remove the classes registered for it
 
         if (_classPrivateFieldBase(this, _classes)[_classes].has(name)) {
           _classPrivateFieldBase(this, _classes)[_classes].delete(name);
@@ -34128,7 +37425,7 @@ class TypeRegistry {
   }
 
   setHasher(hasher) {
-    _classPrivateFieldBase(this, _hasher)[_hasher] = hasher || blake2AsU8a;
+    _classPrivateFieldBase(this, _hasher)[_hasher] = hasher || blake2AsU8a$1;
   }
 
   setKnownTypes(knownTypes) {
@@ -34141,7 +37438,7 @@ class TypeRegistry {
     injectErrors(this, metadata, _classPrivateFieldBase(this, _metadataErrors)[_metadataErrors]);
     injectEvents(this, metadata, _classPrivateFieldBase(this, _metadataEvents)[_metadataEvents]); // setup the available extensions
 
-    this.setSignedExtensions(signedExtensions || (metadata.asLatest.extrinsic.version.gt(BN_ZERO) ? metadata.asLatest.extrinsic.signedExtensions.map(key => key.toString()) : defaultExtensions), userExtensions); // setup the chain properties with format overrides
+    this.setSignedExtensions(signedExtensions || (metadata.asLatest.extrinsic.version.gt(BN_ZERO$1) ? metadata.asLatest.extrinsic.signedExtensions.map(key => key.toString()) : defaultExtensions), userExtensions); // setup the chain properties with format overrides
 
     this.setChainProperties(extractProperties(this, metadata));
   } // sets the available signed extensions
@@ -34159,8 +37456,1548 @@ class TypeRegistry {
 
 }
 
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$2(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$2(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined$1(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$2(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$2(message) ? message() : message);
+  }
+}
+/**
+ * @name assertReturn
+ * @summart Returns when the value is not undefined, otherwise throws assertion error
+ */
+
+function assertReturn(value, message) {
+  assert$2(!isUndefined$1(value), message);
+  return value;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const DEDUPE$1 = 'Either remove and explicitly install matching versions or deupe using your package manager.\nThe following conflicting packages were found:';
+/** @internal */
+
+function getEntry$1(name) {
+  const _global = xglobal;
+
+  if (!_global.__polkadotjs) {
+    _global.__polkadotjs = {};
+  }
+
+  if (!_global.__polkadotjs[name]) {
+    _global.__polkadotjs[name] = [];
+  }
+
+  return _global.__polkadotjs[name];
+}
+
+function getVersionLength$1(all) {
+  return all.reduce((max, {
+    version
+  }) => Math.max(max, version.length), 0);
+}
+/** @internal */
+
+
+function flattenInfos$1(all) {
+  const verLength = getVersionLength$1(all);
+  return all.map(({
+    name,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${name}`).join('\n');
+}
+/** @internal */
+
+
+function flattenVersions$1(entry) {
+  const all = entry.map(version => isString$2(version) ? {
+    version
+  } : version);
+  const verLength = getVersionLength$1(all);
+  return all.map(({
+    path,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${!path || path.length < 5 ? '<unknown>' : path}`).join('\n');
+}
+/** @internal */
+
+
+function getPath$1(pathOrFn) {
+  if (isFunction$2(pathOrFn)) {
+    try {
+      return pathOrFn() || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  return pathOrFn || '';
+}
+/**
+ * @name detectPackage
+ * @summary Checks that a specific package is only imported once
+ */
+
+
+function detectPackage$1({
+  name,
+  version
+}, pathOrFn, deps = []) {
+  assert$2(name.startsWith('@polkadot'), `Invalid package descriptor ${name}`);
+  const entry = getEntry$1(name);
+  entry.push({
+    path: getPath$1(pathOrFn),
+    version
+  });
+
+  if (entry.length !== 1) {
+    console.warn(`${name} has multiple versions, ensure that there is only one installed.\n${DEDUPE$1}\n${flattenVersions$1(entry)}`);
+  } else {
+    const mismatches = deps.filter(d => d && d.version !== version);
+
+    if (mismatches.length) {
+      console.warn(`${name} requires direct dependencies exactly matching version ${version}.\n${DEDUPE$1}\n${flattenInfos$1(mismatches)}`);
+    }
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// This is supposed to be a faster concat...
+// https://dev.to/uilicious/javascript-array-push-is-945x-faster-than-array-concat-1oki
+
+/**
+ * @name arrayFlatten
+ * @summary Merge T[][] into T[]
+ * @description
+ * Returns a new array with all arrays merged into one
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { arrayFlatten } from '@polkadot/util';
+ *
+ * arrayFlatten([[1, 2], [3, 4], [5]]); // [1, 2, 3, 4, 5]
+ * ```
+ */
+function arrayFlatten(arrays) {
+  // pre-allocate based on the combined size
+  const output = new Array(arrays.reduce((length, array) => length + array.length, 0));
+  let index = -1;
+
+  for (let a = 0; a < arrays.length; a++) {
+    const array = arrays[a]; // instead of pushing, we just set the entries
+
+    for (let e = 0; e < array.length; e++) {
+      output[++index] = array[e];
+    }
+  }
+
+  return output;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name BN_ZERO
+ * @summary BN constant for 0.
+ */
+
+const BN_ZERO = new bn(0);
+/**
+ * @name BN_ONE
+ * @summary BN constant for 1.
+ */
+
+const BN_ONE = new bn(1);
+/**
+ * @name BN_TWO
+ * @summary BN constant for 2.
+ */
+
+new bn(2);
+/**
+ * @name BN_THREE
+ * @summary BN constant for 3.
+ */
+
+new bn(3);
+/**
+ * @name BN_FOUR
+ * @summary BN constant for 4.
+ */
+
+new bn(4);
+/**
+ * @name BN_FIVE
+ * @summary BN constant for 5.
+ */
+
+new bn(5);
+/**
+ * @name BN_SIX
+ * @summary BN constant for 6.
+ */
+
+new bn(6);
+/**
+ * @name BN_SEVEN
+ * @summary BN constant for 7.
+ */
+
+new bn(7);
+/**
+ * @name BN_EIGHT
+ * @summary BN constant for 8.
+ */
+
+new bn(8);
+/**
+ * @name BN_NINE
+ * @summary BN constant for 9.
+ */
+
+new bn(9);
+/**
+ * @name BN_TEN
+ * @summary BN constant for 10.
+ */
+
+new bn(10);
+/**
+ * @name BN_HUNDRED
+ * @summary BN constant for 100.
+ */
+
+new bn(100);
+/**
+ * @name BN_THOUSAND
+ * @summary BN constant for 1,000.
+ */
+
+new bn(1000);
+/**
+ * @name BN_MILLION
+ * @summary BN constant for 1,000,000.
+ */
+
+new bn(1000000);
+/**
+ * @name BN_BILLION
+ * @summary BN constant for 1,000,000,000.
+ */
+
+const BN_BILLION = new bn(1000000000);
+/**
+ * @name BN_QUINTILL
+ * @summary BN constant for 1,000,000,000,000,000,000.
+ */
+
+BN_BILLION.mul(BN_BILLION);
+/**
+ * @name BN_MAX_INTEGER
+ * @summary BN constant for MAX_SAFE_INTEGER
+ */
+
+const BN_MAX_INTEGER = new bn(Number.MAX_SAFE_INTEGER);
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBoolean
+ * @summary Tests for a boolean value.
+ * @description
+ * Checks to see if the input value is a JavaScript boolean.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBoolean } from '@polkadot/util';
+ *
+ * isBoolean(false); // => true
+ * ```
+ */
+function isBoolean(value) {
+  return typeof value === 'boolean';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$2 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$2(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$2(value) && HEX_REGEX$2.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$2(value) {
+  return !!(value && isHex$2(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$2 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$2(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$2(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$2.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+function ownKeys$m(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$m(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$m(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$m(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function reverse(value) {
+  return (value.match(/.{1,2}/g) || []).reverse().join('');
+}
+/**
+ * @name hexToBn
+ * @summary Creates a BN.js bignumber object from a hex string.
+ * @description
+ * `null` inputs returns a `BN(0)` result. Hex input values return the actual value converted to a BN. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @param _value The value to convert
+ * @param _options Options to pass while converting
+ * @param _options.isLe Convert using Little Endian
+ * @param _options.isNegative Convert using two's complement
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToBn } from '@polkadot/util';
+ *
+ * hexToBn('0x123480001f'); // => BN(0x123480001f)
+ * ```
+ */
+
+
+function hexToBn(value, options = {
+  isLe: false,
+  isNegative: false
+}) {
+  if (!value) {
+    return new bn(0);
+  }
+
+  const _options = _objectSpread$m({
+    isLe: false,
+    isNegative: false
+  }, isBoolean(options) ? {
+    isLe: options
+  } : options);
+
+  const _value = hexStripPrefix$2(value); // FIXME: Use BN's 3rd argument `isLe` once this issue is fixed
+  // https://github.com/indutny/bn.js/issues/208
+
+
+  const bn$1 = new bn((_options.isLe ? reverse(_value) : _value) || '00', 16); // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4.
+
+  return _options.isNegative ? bn$1.fromTwos(_value.length * 4) : bn$1;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function checkMaxMin(type, items) {
+  assert$2(items.length >= 1, 'Must provide one or more BN arguments');
+  return items.reduce((acc, val) => bn[type](acc, val), items[0]);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name bnMax
+ * @summary Finds and returns the highest value in an array of BNs.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnMax } from '@polkadot/util';
+ *
+ * bnMax([new BN(1), new BN(3), new BN(2)]).toString(); // => '3'
+ * ```
+ */
+
+function bnMax(...items) {
+  return checkMaxMin('max', items);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt$1(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+function isToBn(value) {
+  return !!value && isFunction$2(value.toBn);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function numberToBn(value) {
+  return bn.isBN(value) ? value : isToBn(value) ? value.toBn() : new bn(value);
+}
+/**
+ * @name bnToBn
+ * @summary Creates a BN value from a BN, BigInt, string (base 10 or hex) or number input.
+ * @description
+ * `null` inputs returns a `0x0` result, BN values returns the value, numbers returns a BN representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnToBn } from '@polkadot/util';
+ *
+ * bnToBn(0x1234); // => BN(0x1234)
+ * bnToBn(new BN(0x1234)); // => BN(0x1234)
+ * ```
+ */
+
+
+function bnToBn(value) {
+  if (!value) {
+    return new bn(0);
+  } else if (isHex$2(value)) {
+    return hexToBn(value.toString());
+  } else if (isBigInt$1(value)) {
+    return new bn(value.toString());
+  }
+
+  return numberToBn(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name bnSqrt
+ * @summary Calculates the integer square root of a BN
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { bnSqrt } from '@polkadot/util';
+ *
+ * bnSqrt(new BN(16)).toString(); // => '4'
+ * ```
+ */
+
+function bnSqrt(value) {
+  const n = bnToBn(value);
+  assert$2(n.gte(BN_ZERO), 'square root of negative numbers is not supported'); // https://stackoverflow.com/questions/53683995/javascript-big-integer-square-root/
+  // shortcut <= 2^53 - 1 to use the JS utils
+
+  if (n.lte(BN_MAX_INTEGER)) {
+    return new bn(Math.floor(Math.sqrt(n.toNumber())));
+  } // Use sqrt(MAX_SAFE_INTEGER) as starting point. since we already know the
+  // output will be larger than this, we expect this to be a safe start
+
+
+  let x0 = new bn(94906265);
+
+  while (true) {
+    const x1 = n.div(x0).iadd(x0).ishrn(1);
+
+    if (x0.eq(x1) || x0.eq(x1.sub(BN_ONE))) {
+      return x0;
+    }
+
+    x0 = x1;
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNumber
+ * @summary Tests for a JavaScript number.
+ * @description
+ * Checks to see if the input value is a valid number.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNumber } from '@polkadot/util';
+ *
+ * console.log('isNumber', isNumber(1234)); // => true
+ * ```
+ */
+function isNumber(value) {
+  return typeof value === 'number';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$2 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$2(value) {
+  return value ? encoder$2.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$2 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$2(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$2[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$2(value, halfLength) {
+  return `${u8aToHex$2(value.subarray(0, halfLength), -1, false)}…${u8aToHex$2(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$2(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$2(value, Math.ceil(byteLength / 2)) : extract$2(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const decoder$1 = new TextDecoder('utf-8');
+/**
+ * @name u8aToString
+ * @summary Creates a utf-8 string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual decoded utf-8 string. `null` or `undefined` values returns an empty string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToString } from '@polkadot/util';
+ *
+ * u8aToString(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0x6f])); // hello
+ * ```
+ */
+
+function u8aToString$1(value) {
+  return !(value !== null && value !== void 0 && value.length) ? '' : decoder$1.decode(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$2(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$2(value) {
+  return isInstanceOf$2(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function defaultGetId$1() {
+  return 'none';
+}
+
+function normalize$1(args) {
+  return JSON.stringify(args, (_, value) => isBigInt$1(value) ? value.toString() : value);
+} // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+
+function memoize$1(fn, {
+  getInstanceId = defaultGetId$1
+} = {}) {
+  const cache = {};
+
+  const memoized = (...args) => {
+    const stringParams = normalize$1(args);
+    const instanceId = getInstanceId();
+
+    if (!cache[instanceId]) {
+      cache[instanceId] = {};
+    }
+
+    if (isUndefined$1(cache[instanceId][stringParams])) {
+      cache[instanceId][stringParams] = fn(...args);
+    }
+
+    return cache[instanceId][stringParams];
+  };
+
+  memoized.unmemoize = (...args) => {
+    const stringParams = normalize$1(args);
+    const instanceId = getInstanceId();
+
+    if (cache[instanceId] && !isUndefined$1(cache[instanceId][stringParams])) {
+      delete cache[instanceId][stringParams];
+    }
+  };
+
+  return memoized;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name stringToHex
+ * @summary Creates a hex string from a utf-8 string
+ * @description
+ * String input values return the actual encoded hex value.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToHex } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // 0x68656c6c6f
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToHex$1(value) {
+  return u8aToHex$2(stringToU8a$2(value));
+}
+
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
-detectPackage(packageInfo$7, typeof __dirname !== 'undefined' && __dirname, [packageInfo$1, packageInfo$5, packageInfo$3]);
+detectPackage$1(packageInfo$7, typeof __dirname !== 'undefined' && __dirname, [packageInfo$1, packageInfo$5, packageInfo$3]);
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction$1(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString$1(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isUndefined
+ * @summary Tests for a `undefined` values.
+ * @description
+ * Checks to see if the input value is `undefined`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUndefined } from '@polkadot/util';
+ *
+ * console.log('isUndefined', isUndefined(void(0))); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isUndefined(value) {
+  return typeof value === 'undefined';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert$1(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction$1(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const DEDUPE = 'Either remove and explicitly install matching versions or deupe using your package manager.\nThe following conflicting packages were found:';
+/** @internal */
+
+function getEntry(name) {
+  const _global = xglobal;
+
+  if (!_global.__polkadotjs) {
+    _global.__polkadotjs = {};
+  }
+
+  if (!_global.__polkadotjs[name]) {
+    _global.__polkadotjs[name] = [];
+  }
+
+  return _global.__polkadotjs[name];
+}
+
+function getVersionLength(all) {
+  return all.reduce((max, {
+    version
+  }) => Math.max(max, version.length), 0);
+}
+/** @internal */
+
+
+function flattenInfos(all) {
+  const verLength = getVersionLength(all);
+  return all.map(({
+    name,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${name}`).join('\n');
+}
+/** @internal */
+
+
+function flattenVersions(entry) {
+  const all = entry.map(version => isString$1(version) ? {
+    version
+  } : version);
+  const verLength = getVersionLength(all);
+  return all.map(({
+    path,
+    version
+  }) => `\t${version.padEnd(verLength)}\t${!path || path.length < 5 ? '<unknown>' : path}`).join('\n');
+}
+/** @internal */
+
+
+function getPath(pathOrFn) {
+  if (isFunction$1(pathOrFn)) {
+    try {
+      return pathOrFn() || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  return pathOrFn || '';
+}
+/**
+ * @name detectPackage
+ * @summary Checks that a specific package is only imported once
+ */
+
+
+function detectPackage({
+  name,
+  version
+}, pathOrFn, deps = []) {
+  assert$1(name.startsWith('@polkadot'), `Invalid package descriptor ${name}`);
+  const entry = getEntry(name);
+  entry.push({
+    path: getPath(pathOrFn),
+    version
+  });
+
+  if (entry.length !== 1) {
+    console.warn(`${name} has multiple versions, ensure that there is only one installed.\n${DEDUPE}\n${flattenVersions(entry)}`);
+  } else {
+    const mismatches = deps.filter(d => d && d.version !== version);
+
+    if (mismatches.length) {
+      console.warn(`${name} requires direct dependencies exactly matching version ${version}.\n${DEDUPE}\n${flattenInfos(mismatches)}`);
+    }
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isNull
+ * @summary Tests for a `null` values.
+ * @description
+ * Checks to see if the input value is `null`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isNull } from '@polkadot/util';
+ *
+ * console.log('isNull', isNull(null)); // => true
+ * ```
+ */
+function isNull(value) {
+  return value === null;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX$1 = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex$1(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString$1(value) && HEX_REGEX$1.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix$1(value) {
+  return !!(value && isHex$1(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX$1 = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix$1(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix$1(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX$1.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBigInt
+ * @summary Tests for a `BigInt` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BigInt`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBigInt } from '@polkadot/util';
+ *
+ * console.log('isBigInt', isBigInt(123_456n)); // => true
+ * ```
+ */
+function isBigInt(value) {
+  return typeof value === 'bigint';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a$1(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a$1(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert$1(isHex$1(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix$1(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer$1(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder$1 = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a$1(value) {
+  return value ? encoder$1.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray$1(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString$1(value) {
+  return isHex$1(value) ? hexToU8a$1(value) : stringToU8a$1(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a$1(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer$1(value)) {
+    return bufferToU8a$1(value);
+  } else if (isString$1(value)) {
+    return convertString$1(value);
+  }
+
+  return convertArray$1(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET$1 = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract$1(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET$1[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim$1(value, halfLength) {
+  return `${u8aToHex$1(value.subarray(0, halfLength), -1, false)}…${u8aToHex$1(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex$1(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim$1(value, Math.ceil(byteLength / 2)) : extract$1(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/** @internal */
+function zeroPad(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function formatDate(date) {
+  const year = date.getFullYear().toString();
+  const month = zeroPad(date.getMonth() + 1);
+  const day = zeroPad(date.getDate());
+  const hour = zeroPad(date.getHours());
+  const minute = zeroPad(date.getMinutes());
+  const second = zeroPad(date.getSeconds());
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isBn
+ * @summary Tests for a `BN` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `BN` (bn.js).
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import BN from 'bn.js';
+ * import { isBn } from '@polkadot/util';
+ *
+ * console.log('isBn', isBn(new BN(1))); // => true
+ * ```
+ */
+
+function isBn(value) {
+  return bn.isBN(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf$1(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+function isObject(value) {
+  return typeof value === 'object';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a$1(value) {
+  return isInstanceOf$1(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const logTo = {
+  debug: 'log',
+  error: 'error',
+  log: 'log',
+  warn: 'warn'
+};
+
+function formatOther(value) {
+  if (value && isObject(value) && value.constructor === Object) {
+    return Object.keys(value).reduce((result, key) => {
+      result[key] = loggerFormat(value[key]);
+      return result;
+    }, {});
+  }
+
+  return value;
+}
+
+function loggerFormat(value) {
+  if (Array.isArray(value)) {
+    return value.map(loggerFormat);
+  } else if (isBn(value)) {
+    return value.toString();
+  } else if (isU8a$1(value) || isBuffer$1(value)) {
+    return u8aToHex$1(u8aToU8a$1(value));
+  }
+
+  return formatOther(value);
+}
+
+function apply(log, type, values, maxSize = -1) {
+  if (values.length === 1 && isFunction$1(values[0])) {
+    const fnResult = values[0]();
+    return apply(log, type, Array.isArray(fnResult) ? fnResult : [fnResult], maxSize);
+  }
+
+  console[logTo[log]](formatDate(new Date()), type, ...values.map(loggerFormat).map(v => {
+    if (maxSize <= 0) {
+      return v;
+    }
+
+    const r = `${v}`;
+    return r.length < maxSize ? v : `${r.substr(0, maxSize)} ...`;
+  }));
+}
+
+function noop() {// noop
+}
+
+function parseEnv(type) {
+  var _process, _process$env, _process2, _process2$env;
+
+  const maxSize = parseInt(((_process = process) === null || _process === void 0 ? void 0 : (_process$env = _process.env) === null || _process$env === void 0 ? void 0 : _process$env.DEBUG_MAX) || '-1', 10);
+  return [(((_process2 = process) === null || _process2 === void 0 ? void 0 : (_process2$env = _process2.env) === null || _process2$env === void 0 ? void 0 : _process2$env.DEBUG) || '').toLowerCase().split(',').some(e => !!e && (e === '*' || type.startsWith(e))), isNaN(maxSize) ? -1 : maxSize];
+}
+/**
+ * @name Logger
+ * @summary Creates a consistent log interface for messages
+ * @description
+ * Returns a `Logger` that has `.log`, `.error`, `.warn` and `.debug` (controlled with environment `DEBUG=typeA,typeB`) methods. Logging is done with a consistent prefix (type of logger, date) followed by the actual message using the underlying console.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { logger } from '@polkadot';
+ *
+ * const l = logger('test');
+ * ```
+ */
+
+
+function logger(_type) {
+  const type = `${_type.toUpperCase()}:`.padStart(16);
+  const [isDebug, maxSize] = parseEnv(_type.toLowerCase());
+  return {
+    debug: isDebug ? (...values) => apply('debug', type, values, maxSize) : noop,
+    error: (...values) => apply('error', type, values),
+    log: (...values) => apply('log', type, values),
+    noop,
+    warn: (...values) => apply('warn', type, values)
+  };
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function defaultGetId() {
+  return 'none';
+}
+
+function normalize(args) {
+  return JSON.stringify(args, (_, value) => isBigInt(value) ? value.toString() : value);
+} // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+
+function memoize(fn, {
+  getInstanceId = defaultGetId
+} = {}) {
+  const cache = {};
+
+  const memoized = (...args) => {
+    const stringParams = normalize(args);
+    const instanceId = getInstanceId();
+
+    if (!cache[instanceId]) {
+      cache[instanceId] = {};
+    }
+
+    if (isUndefined(cache[instanceId][stringParams])) {
+      cache[instanceId][stringParams] = fn(...args);
+    }
+
+    return cache[instanceId][stringParams];
+  };
+
+  memoized.unmemoize = (...args) => {
+    const stringParams = normalize(args);
+    const instanceId = getInstanceId();
+
+    if (cache[instanceId] && !isUndefined(cache[instanceId][stringParams])) {
+      delete cache[instanceId][stringParams];
+    }
+  };
+
+  return memoized;
+}
 
 // Copyright 2017-2021 @polkadot/rpc-core authors & contributors
 /** @internal */
@@ -34296,7 +39133,7 @@ setDeriveCache();
 
 /** @internal */
 function memo(instanceId, inner) {
-  const cached = memoize((...params) => new Observable(observer => {
+  const cached = memoize$1((...params) => new Observable(observer => {
     const subscription = inner(...params).subscribe(observer);
     return () => {
       cached.unmemoize(...params);
@@ -34311,7 +39148,7 @@ function memo(instanceId, inner) {
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
 
 function retrieve$1(api, address) {
-  const decoded = isU8a(address) ? address : decodeAddress((address || '').toString());
+  const decoded = isU8a$2(address) ? address : decodeAddress$1((address || '').toString());
 
   if (decoded.length > 8) {
     return of(api.registry.createType('AccountId', decoded));
@@ -34363,7 +39200,7 @@ function flags(instanceId, api) {
 function retrieve(api, address) {
   try {
     // yes, this can fail, don't care too much, catch will catch it
-    const decoded = isU8a(address) ? address : decodeAddress((address || '').toString());
+    const decoded = isU8a$2(address) ? address : decodeAddress$1((address || '').toString());
 
     if (decoded.length > 8) {
       const accountId = api.registry.createType('AccountId', decoded);
@@ -34421,7 +39258,7 @@ const UNDEF_HEX = {
 };
 
 function dataAsString(data) {
-  return data.isRaw ? u8aToString(data.asRaw.toU8a(true)) : data.isNone ? undefined : data.toHex();
+  return data.isRaw ? u8aToString$1(data.asRaw.toU8a(true)) : data.isNone ? undefined : data.toHex();
 }
 
 function extractOther(additional) {
@@ -34508,7 +39345,7 @@ function hasIdentityMulti(instanceId, api) {
       if (identityOfOpt && identityOfOpt.isSome) {
         const value = dataAsString(identityOfOpt.unwrap().info.display);
 
-        if (value && !isHex(value)) {
+        if (value && !isHex$2(value)) {
           display = value;
         }
       }
@@ -34584,7 +39421,7 @@ function indexes$1(instanceId, api) {
 function retrieveNick(api, accountId) {
   var _api$query$nicks;
 
-  return (accountId && (_api$query$nicks = api.query.nicks) !== null && _api$query$nicks !== void 0 && _api$query$nicks.nameOf ? api.query.nicks.nameOf(accountId) : of(undefined)).pipe(map(nameOf => nameOf !== null && nameOf !== void 0 && nameOf.isSome ? u8aToString(nameOf.unwrap()[0]).substr(0, api.consts.nicks.maxLength.toNumber()) : undefined));
+  return (accountId && (_api$query$nicks = api.query.nicks) !== null && _api$query$nicks !== void 0 && _api$query$nicks.nameOf ? api.query.nicks.nameOf(accountId) : of(undefined)).pipe(map(nameOf => nameOf !== null && nameOf !== void 0 && nameOf.isSome ? u8aToString$1(nameOf.unwrap()[0]).substr(0, api.consts.nicks.maxLength.toNumber()) : undefined));
 }
 /**
  * @name info
@@ -34623,9 +39460,9 @@ var accounts$1 = /*#__PURE__*/Object.freeze({
     info: info$4
 });
 
-function ownKeys$k(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$l(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$k(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$k(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$k(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$l(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$l(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$l(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const VESTING_ID = '0x76657374696e6720';
 
 function calcLocked(api, bestNumber, locks) {
@@ -34675,7 +39512,7 @@ function calcShared(api, bestNumber, data, locks) {
     vestingLocked
   } = calcLocked(api, bestNumber, locks);
   const availableBalance = api.registry.createType('Balance', allLocked ? 0 : bnMax(new bn(0), data.freeBalance.sub(lockedBalance)));
-  return _objectSpread$k(_objectSpread$k({}, data), {}, {
+  return _objectSpread$l(_objectSpread$l({}, data), {}, {
     availableBalance,
     lockedBalance,
     lockedBreakdown,
@@ -34699,7 +39536,7 @@ function calcBalances$1(api, [data, bestNumber, [vesting, allLocks]]) {
   const isVesting = isStarted && !shared.vestingLocked.isZero();
   const vestedClaimable = api.registry.createType('Balance', isVesting ? shared.vestingLocked.sub(vestingTotal.sub(vestedBalance)) : 0);
   const vestingEndBlock = api.registry.createType('BlockNumber', isVesting ? vestingTotal.div(perBlock).add(startingBlock) : 0);
-  return _objectSpread$k(_objectSpread$k({}, shared), {}, {
+  return _objectSpread$l(_objectSpread$l({}, shared), {}, {
     accountId: data.accountId,
     accountNonce: data.accountNonce,
     additional: allLocks.filter((_, index) => index !== 0).map((l, index) => calcShared(api, bestNumber, data.additional[index], l)),
@@ -34764,7 +39601,7 @@ function queryCurrent$1(api, accountId, balanceInstances = ['balances']) {
  */
 
 
-function all(instanceId, api) {
+function all$1(instanceId, api) {
   const balanceInstances = api.registry.getModuleInstances(api.runtimeVersion.specName.toString(), 'balances');
   return memo(instanceId, address => api.derive.balances.account(address).pipe(switchMap(account => {
     var _api$query$system, _api$query$balances;
@@ -34773,9 +39610,9 @@ function all(instanceId, api) {
   }), map(result => calcBalances$1(api, result))));
 }
 
-function ownKeys$j(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$k(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$j(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$j(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$j(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$k(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$k(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$k(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function getBalance(api, [freeBalance, reservedBalance, frozenFee, frozenMisc]) {
   return {
@@ -34789,8 +39626,8 @@ function getBalance(api, [freeBalance, reservedBalance, frozenFee, frozenMisc]) 
 
 function calcBalances(api, [accountId, [accountNonce, balances]]) {
   const primary = balances[0];
-  assert$a(primary, 'No balances retrieved for account');
-  return _objectSpread$j({
+  assert$2(primary, 'No balances retrieved for account');
+  return _objectSpread$k({
     accountId,
     accountNonce,
     additional: balances.filter((_, index) => index !== 0).map(b => getBalance(api, b))
@@ -34812,7 +39649,7 @@ function queryBalancesAccount(api, accountId, modules = ['balances']) {
     reserved
   }) => [free, reserved, feeFrozen, miscFrozen]);
 
-  return isFunction$1(api.query.system.account) ? api.queryMulti([[api.query.system.account, accountId], ...balances]).pipe(map(([{
+  return isFunction$2(api.query.system.account) ? api.queryMulti([[api.query.system.account, accountId], ...balances]).pipe(map(([{
     nonce
   }, ...balances]) => [nonce, extract(balances)])) : api.queryMulti([[api.query.system.accountNonce, accountId], ...balances]).pipe(map(([nonce, ...balances]) => [nonce, extract(balances)]));
 }
@@ -34849,7 +39686,7 @@ function queryCurrent(api, accountId) {
 
 function account$1(instanceId, api) {
   const balanceInstances = api.registry.getModuleInstances(api.runtimeVersion.specName.toString(), 'balances');
-  return memo(instanceId, address => api.derive.accounts.accountId(address).pipe(switchMap(accountId => accountId ? combineLatest([of(accountId), balanceInstances ? queryBalancesAccount(api, accountId, balanceInstances) : isFunction$1(api.query.system.account) ? queryCurrent(api, accountId) : isFunction$1(api.query.balances.account) ? queryBalancesAccount(api, accountId) : queryBalancesFree(api, accountId)]) : of([api.registry.createType('AccountId'), [api.registry.createType('Index'), [[api.registry.createType('Balance'), api.registry.createType('Balance'), api.registry.createType('Balance'), api.registry.createType('Balance')]]]])), map(result => calcBalances(api, result))));
+  return memo(instanceId, address => api.derive.accounts.accountId(address).pipe(switchMap(accountId => accountId ? combineLatest([of(accountId), balanceInstances ? queryBalancesAccount(api, accountId, balanceInstances) : isFunction$2(api.query.system.account) ? queryCurrent(api, accountId) : isFunction$2(api.query.balances.account) ? queryBalancesAccount(api, accountId) : queryBalancesFree(api, accountId)]) : of([api.registry.createType('AccountId'), [api.registry.createType('Index'), [[api.registry.createType('Balance'), api.registry.createType('Balance'), api.registry.createType('Balance'), api.registry.createType('Balance')]]]])), map(result => calcBalances(api, result))));
 }
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -34889,11 +39726,11 @@ function votingBalances(instanceId, api) {
 }
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
-const votingBalance = all;
+const votingBalance = all$1;
 
 var balances = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    all: all,
+    all: all$1,
     votingBalance: votingBalance,
     account: account$1,
     fees: fees$1,
@@ -35307,7 +40144,7 @@ function _proposalsFrom(instanceId, api, section = 'council') {
   return memo(instanceId, hashes => {
     var _api$query$section;
 
-    return (isFunction$1((_api$query$section = api.query[section]) === null || _api$query$section === void 0 ? void 0 : _api$query$section.proposals) && hashes.length ? combineLatest([of(hashes), combineLatest(hashes.map(hash => // this should simply be api.query[section].proposalOf.multi<Option<Proposal>>(hashes),
+    return (isFunction$2((_api$query$section = api.query[section]) === null || _api$query$section === void 0 ? void 0 : _api$query$section.proposals) && hashes.length ? combineLatest([of(hashes), combineLatest(hashes.map(hash => // this should simply be api.query[section].proposalOf.multi<Option<Proposal>>(hashes),
     // however we have had cases on Edgeware where the indices have moved around after an
     // upgrade, which results in invalid on-chain data
     api.query[section].proposalOf(hash).pipe(catchError(() => of(null))))), api.query[section].voting.multi(hashes)]) : of([[], [], []])).pipe(map(result => parse$4(api, result)));
@@ -35320,7 +40157,7 @@ function proposals$4(instanceId, api, section = 'council') {
   return memo(instanceId, () => {
     var _api$query$section2;
 
-    return isFunction$1((_api$query$section2 = api.query[section]) === null || _api$query$section2 === void 0 ? void 0 : _api$query$section2.proposals) ? api.query[section].proposals().pipe(switchMap(proposalsFrom)) : of([]);
+    return isFunction$2((_api$query$section2 = api.query[section]) === null || _api$query$section2 === void 0 ? void 0 : _api$query$section2.proposals) ? api.query[section].proposals().pipe(switchMap(proposalsFrom)) : of([]);
   });
 }
 function proposal$1(instanceId, api, section = 'council') {
@@ -35329,7 +40166,7 @@ function proposal$1(instanceId, api, section = 'council') {
   return memo(instanceId, hash => {
     var _api$query$section3;
 
-    return isFunction$1((_api$query$section3 = api.query[section]) === null || _api$query$section3 === void 0 ? void 0 : _api$query$section3.proposals) ? proposalsFrom([hash]).pipe(map(([proposal]) => proposal)) : of(null);
+    return isFunction$2((_api$query$section3 = api.query[section]) === null || _api$query$section3 === void 0 ? void 0 : _api$query$section3.proposals) ? proposalsFrom([hash]).pipe(map(([proposal]) => proposal)) : of(null);
   });
 }
 
@@ -35419,10 +40256,10 @@ var council = /*#__PURE__*/Object.freeze({
     votesOf: votesOf
 });
 
-function ownKeys$i(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$j(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$i(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$i(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$i(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-const DEMOCRACY_ID = stringToHex('democrac');
+function _objectSpread$j(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$j(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$j(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+const DEMOCRACY_ID = stringToHex$1('democrac');
 
 function queryQueue(api) {
   return api.query.democracy.dispatchQueue().pipe(switchMap(dispatches => combineLatest([of(dispatches), api.derive.democracy.preimages(dispatches.map(([, hash]) => hash))])), map(([dispatches, images]) => dispatches.map(([at, imageHash, index], dispatchIndex) => ({
@@ -35470,7 +40307,7 @@ function queryScheduler(api) {
     return combineLatest([of(result), api.derive.democracy.preimages(result.map(({
       imageHash
     }) => imageHash))]);
-  }), map(([infos, images]) => infos.map((info, index) => _objectSpread$i(_objectSpread$i({}, info), {}, {
+  }), map(([infos, images]) => infos.map((info, index) => _objectSpread$j(_objectSpread$j({}, info), {}, {
     image: images[index]
   }))));
 }
@@ -35479,7 +40316,7 @@ function dispatchQueue(instanceId, api) {
   return memo(instanceId, () => {
     var _api$query$scheduler;
 
-    return isFunction$1((_api$query$scheduler = api.query.scheduler) === null || _api$query$scheduler === void 0 ? void 0 : _api$query$scheduler.agenda) ? queryScheduler(api) : api.query.democracy.dispatchQueue ? queryQueue(api) : of([]);
+    return isFunction$2((_api$query$scheduler = api.query.scheduler) === null || _api$query$scheduler === void 0 ? void 0 : _api$query$scheduler.agenda) ? queryScheduler(api) : api.query.democracy.dispatchQueue ? queryQueue(api) : of([]);
   });
 }
 
@@ -35542,7 +40379,7 @@ function directLocks(api, {
     return of([]);
   }
 
-  return api.query.democracy.referendumInfoOf.multi(votes.map(([referendumId]) => referendumId)).pipe(map(referendums => votes.map((vote, index) => [vote, referendums[index].unwrapOr(null)]).filter(item => !!item[1] && isUndefined(item[1].end) && item[0][1].isStandard).map(([directVote, referendum]) => parseLock(api, directVote, referendum))));
+  return api.query.democracy.referendumInfoOf.multi(votes.map(([referendumId]) => referendumId)).pipe(map(referendums => votes.map((vote, index) => [vote, referendums[index].unwrapOr(null)]).filter(item => !!item[1] && isUndefined$1(item[1].end) && item[0][1].isStandard).map(([directVote, referendum]) => parseLock(api, directVote, referendum))));
 }
 
 function locks(instanceId, api) {
@@ -35572,9 +40409,9 @@ function nextExternal(instanceId, api) {
   });
 }
 
-function ownKeys$h(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$i(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$h(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$h(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$h(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$i(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$i(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$i(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function isOldInfo(info) {
   return !!info.proposalHash;
@@ -35686,7 +40523,7 @@ function calcVotesCurrent(tally, votes) {
 
 function calcVotes(sqrtElectorate, referendum, votes) {
   const state = isCurrentStatus(referendum.status) ? calcVotesCurrent(referendum.status.tally, votes) : calcVotesPrev(votes);
-  return _objectSpread$h(_objectSpread$h({}, state), {}, {
+  return _objectSpread$i(_objectSpread$i({}, state), {}, {
     isPassing: calcPassing(referendum.status.threshold, sqrtElectorate, state),
     votes
   });
@@ -35759,15 +40596,15 @@ function preimages(instanceId, api) {
   return memo(instanceId, hashes => api.query.democracy.preimages.multi(hashes).pipe(map(images => images.map(imageOpt => parseImage(api, imageOpt)))));
 }
 
-function ownKeys$g(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$h(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$g(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$g(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$g(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$h(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$h(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$h(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isNewDepositors(depositors) {
   // Detect balance...
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  return isFunction$1(depositors[1].mul);
+  return isFunction$2(depositors[1].mul);
 }
 
 function parse$3([proposals, images, optDepositors]) {
@@ -35777,7 +40614,7 @@ function parse$3([proposals, images, optDepositors]) {
     return !!((_optDepositors$index = optDepositors[index]) !== null && _optDepositors$index !== void 0 && _optDepositors$index.isSome) && !proposer.isEmpty;
   }).map(([index, imageHash, proposer], proposalIndex) => {
     const depositors = optDepositors[proposalIndex].unwrap();
-    return _objectSpread$g(_objectSpread$g({}, isNewDepositors(depositors) ? {
+    return _objectSpread$h(_objectSpread$h({}, isNewDepositors(depositors) ? {
       balance: depositors[1],
       seconds: depositors[0]
     } : {
@@ -35810,11 +40647,11 @@ function referendumIds(instanceId, api) {
   });
 }
 
-function ownKeys$f(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$g(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$f(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$f(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$f(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$g(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$g(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$g(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 function referendums(instanceId, api) {
-  return memo(instanceId, () => api.derive.democracy.referendumsActive().pipe(switchMap(referendums => combineLatest([of(referendums), api.derive.democracy._referendumsVotes(referendums)])), map(([referendums, votes]) => referendums.map((referendum, index) => _objectSpread$f(_objectSpread$f({}, referendum), votes[index])))));
+  return memo(instanceId, () => api.derive.democracy.referendumsActive().pipe(switchMap(referendums => combineLatest([of(referendums), api.derive.democracy._referendumsVotes(referendums)])), map(([referendums, votes]) => referendums.map((referendum, index) => _objectSpread$g(_objectSpread$g({}, referendum), votes[index])))));
 }
 
 // Copyright 2017-2021 @polkadot/api-derive authors & contributors
@@ -35827,9 +40664,9 @@ function referendumsFinished(instanceId, api) {
   return memo(instanceId, () => api.derive.democracy.referendumIds().pipe(switchMap(ids => api.query.democracy.referendumInfoOf.multi(ids)), map(infos => infos.filter(optInfo => optInfo.isSome).map(optInfo => optInfo.unwrap()).filter(info => info.isFinished).map(info => info.asFinished))));
 }
 
-function ownKeys$e(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$f(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$e(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$e(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$e(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$f(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$f(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$f(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function votesPrev(api, referendumId) {
   return api.query.democracy.votersFor(referendumId).pipe(switchMap(votersFor => combineLatest([of(votersFor), votersFor.length ? api.query.democracy.voteOf.multi(votersFor.map(accountId => [referendumId, accountId])) : of([]), api.derive.balances.votingBalances(votersFor)])), map(([votersFor, votes, balances]) => votersFor.map((accountId, index) => ({
@@ -35844,7 +40681,7 @@ function extractVotes(mapped, referendumId) {
   return mapped.filter(([, voting]) => voting.isDirect).map(([accountId, voting]) => [accountId, voting.asDirect.votes.filter(([idx]) => idx.eq(referendumId))]).filter(([, directVotes]) => !!directVotes.length).reduce((result, [accountId, votes]) => // FIXME We are ignoring split votes
   votes.reduce((result, [, vote]) => {
     if (vote.isStandard) {
-      result.push(_objectSpread$e({
+      result.push(_objectSpread$f({
         accountId,
         isDelegating: false
       }, vote.asStandard));
@@ -35890,7 +40727,7 @@ function votesCurr(api, referendumId) {
 }
 
 function _referendumVotes(instanceId, api) {
-  return memo(instanceId, referendum => combineLatest([api.derive.democracy.sqrtElectorate(), isFunction$1(api.query.democracy.votingOf) ? votesCurr(api, referendum.index) : votesPrev(api, referendum.index)]).pipe(map(([sqrtElectorate, votes]) => calcVotes(sqrtElectorate, referendum, votes))));
+  return memo(instanceId, referendum => combineLatest([api.derive.democracy.sqrtElectorate(), isFunction$2(api.query.democracy.votingOf) ? votesCurr(api, referendum.index) : votesPrev(api, referendum.index)]).pipe(map(([sqrtElectorate, votes]) => calcVotes(sqrtElectorate, referendum, votes))));
 }
 function _referendumsVotes(instanceId, api) {
   return memo(instanceId, referendums => referendums.length ? combineLatest(referendums.map(referendum => api.derive.democracy._referendumVotes(referendum))) : of([]));
@@ -36046,16 +40883,16 @@ function didUpdateToBool(didUpdate, id) {
   return didUpdate.isSome ? didUpdate.unwrap().some(paraId => paraId.eq(id)) : false;
 }
 
-function ownKeys$d(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$e(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$d(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$d(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$d(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$e(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$e(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$e(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function parseActive(id, active) {
   const found = active.find(([paraId]) => paraId === id);
 
   if (found && found[1].isSome) {
     const [collatorId, retriable] = found[1].unwrap();
-    return _objectSpread$d({
+    return _objectSpread$e({
       collatorId
     }, retriable.isWithRetries ? {
       isRetriable: true,
@@ -36086,7 +40923,7 @@ function parse$2(id, [active, retryQueue, selectedThreads, didUpdate, info, pend
     didUpdate: didUpdateToBool(didUpdate, id),
     heads,
     id,
-    info: _objectSpread$d({
+    info: _objectSpread$e({
       id
     }, info.unwrap()),
     pendingSwapId: pendingSwap.unwrapOr(null),
@@ -36100,15 +40937,15 @@ function info$2(instanceId, api) {
   return memo(instanceId, id => api.query.registrar && api.query.parachains ? api.queryMulti([api.query.registrar.active, api.query.registrar.retryQueue, api.query.registrar.selectedThreads, api.query.parachains.didUpdate, [api.query.registrar.paras, id], [api.query.registrar.pendingSwap, id], [api.query.parachains.heads, id], [api.query.parachains.relayDispatchQueue, id]]).pipe(map(result => parse$2(api.registry.createType('ParaId', id), result))) : of(null));
 }
 
-function ownKeys$c(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$d(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$c(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$c(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$c(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$d(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$d(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$d(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function parse$1([ids, didUpdate, infos, pendingSwaps, relayDispatchQueueSizes]) {
   return ids.map((id, index) => ({
     didUpdate: didUpdateToBool(didUpdate, id),
     id,
-    info: _objectSpread$c({
+    info: _objectSpread$d({
       id
     }, infos[index].unwrapOr(null)),
     pendingSwapId: pendingSwaps[index].unwrapOr(null),
@@ -36222,22 +41059,22 @@ function info$1(instanceId, api) {
   return memo(instanceId, () => api.consts.babe ? queryBabe$1(api) : queryAura$1(api));
 }
 
-function ownKeys$b(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$c(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$b(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$b(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$b(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$c(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$c(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$c(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function createDerive(api, info, [currentSlot, epochIndex, epochOrGenesisStartSlot, activeEraStartSessionIndex]) {
   const epochStartSlot = epochIndex.mul(info.sessionLength).iadd(epochOrGenesisStartSlot);
   const sessionProgress = currentSlot.sub(epochStartSlot);
   const eraProgress = info.currentIndex.sub(activeEraStartSessionIndex).imul(info.sessionLength).iadd(sessionProgress);
-  return _objectSpread$b(_objectSpread$b({}, info), {}, {
+  return _objectSpread$c(_objectSpread$c({}, info), {}, {
     eraProgress: api.registry.createType('BlockNumber', eraProgress),
     sessionProgress: api.registry.createType('BlockNumber', sessionProgress)
   });
 }
 
 function queryAura(api) {
-  return api.derive.session.info().pipe(map(info => _objectSpread$b(_objectSpread$b({}, info), {}, {
+  return api.derive.session.info().pipe(map(info => _objectSpread$c(_objectSpread$c({}, info), {}, {
     eraProgress: api.registry.createType('BlockNumber'),
     sessionProgress: api.registry.createType('BlockNumber')
   })));
@@ -36345,9 +41182,9 @@ var society = /*#__PURE__*/Object.freeze({
     members: members
 });
 
-function ownKeys$a(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$b(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$a(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$a(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$a(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$b(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$b(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$b(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const QUERY_OPTS = {
   withDestination: true,
   withLedger: true,
@@ -36386,7 +41223,7 @@ function redeemableSum(api, stakingLedger, sessionInfo) {
 }
 
 function parseResult$1(api, sessionInfo, keys, query) {
-  return _objectSpread$a(_objectSpread$a(_objectSpread$a({}, keys), query), {}, {
+  return _objectSpread$b(_objectSpread$b(_objectSpread$b({}, keys), query), {}, {
     redeemable: redeemableSum(api, query.stakingLedger, sessionInfo),
     unlocking: calculateUnlocking(api, query.stakingLedger, sessionInfo)
   });
@@ -36685,9 +41522,9 @@ function keysMulti(instanceId, api) {
   }), map(([queuedKeys, nextKeys]) => stashIds.map((stashId, index) => extractsIds(stashId, queuedKeys, nextKeys[index])))) : of([]));
 }
 
-function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$a(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$9(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$a(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$a(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$a(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 /**
  * @description Retrieve the staking overview, including elected and points earned
  */
@@ -36696,7 +41533,7 @@ function overview(instanceId, api) {
   return memo(instanceId, () => combineLatest([api.derive.session.indexes(), api.derive.staking.validators()]).pipe(map(([indexes, {
     nextElected,
     validators
-  }]) => _objectSpread$9(_objectSpread$9({}, indexes), {}, {
+  }]) => _objectSpread$a(_objectSpread$a({}, indexes), {}, {
     nextElected,
     validators
   }))));
@@ -36870,9 +41707,9 @@ function stakerPrefs(instanceId, api) {
   return memo(instanceId, (accountId, withActive = false) => api.derive.staking.erasHistoric(withActive).pipe(switchMap(eras => api.derive.staking._stakerPrefs(accountId, eras, withActive))));
 }
 
-function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$9(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$9(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$9(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$9(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function parseRewards(api, stashId, [erasPoints, erasPrefs, erasRewards], exposures) {
   return exposures.map(({
@@ -36999,7 +41836,7 @@ function filterRewards(eras, valInfo, {
     return true;
   }).filter(({
     validators
-  }) => Object.keys(validators).length !== 0).map(reward => _objectSpread$8(_objectSpread$8({}, reward), {}, {
+  }) => Object.keys(validators).length !== 0).map(reward => _objectSpread$9(_objectSpread$9({}, reward), {}, {
     nominators: reward.nominating.filter(n => reward.validators[n.validatorId])
   }));
 }
@@ -37301,8 +42138,8 @@ function signingHeader(api) {
 function signingInfo(_instanceId, api) {
   // no memo, we want to do this fresh on each run
   return (address, nonce, era) => combineLatest([// retrieve nonce if none was specified
-  isUndefined(nonce) ? latestNonce(api, address) : nonce === -1 ? nextNonce(api, address) : of(api.registry.createType('Index', nonce)), // if no era (create) or era > 0 (mortal), do block retrieval
-  isUndefined(era) || isNumber(era) && era > 0 ? signingHeader(api) : of(null)]).pipe(map(([nonce, header]) => {
+  isUndefined$1(nonce) ? latestNonce(api, address) : nonce === -1 ? nextNonce(api, address) : of(api.registry.createType('Index', nonce)), // if no era (create) or era > 0 (mortal), do block retrieval
+  isUndefined$1(era) || isNumber(era) && era > 0 ? signingHeader(api) : of(null)]).pipe(map(([nonce, header]) => {
     var _api$consts$system, _api$consts$system$bl, _api$consts$babe, _api$consts$timestamp;
 
     return {
@@ -37321,9 +42158,9 @@ var tx = /*#__PURE__*/Object.freeze({
     signingInfo: signingInfo
 });
 
-function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$8(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$8(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$8(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$8(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const derive = {
   accounts: accounts$1,
   balances,
@@ -37386,15 +42223,15 @@ function injectFunctions(instanceId, api, allSections) {
 
 
 function decorateDerive(instanceId, api, custom = {}) {
-  return _objectSpread$7(_objectSpread$7({}, injectFunctions(instanceId, api, derive)), injectFunctions(instanceId, api, custom));
+  return _objectSpread$8(_objectSpread$8({}, injectFunctions(instanceId, api, derive)), injectFunctions(instanceId, api, custom));
 }
 
 // Copyright 2017-2021 @polkadot/rpc-core authors & contributors
 detectPackage(packageInfo$5, typeof __dirname !== 'undefined' && __dirname, [packageInfo$6, packageInfo$4, packageInfo$3]);
 
-function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$7(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$7(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$7(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$7(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const jsonrpc = {};
 Object.keys(definitions).filter(key => Object.keys(definitions[key].rpc || {}).length !== 0).forEach(_section => {
   jsonrpc[_section] = {};
@@ -37406,7 +42243,7 @@ Object.keys(definitions).filter(key => Object.keys(definitions[key].rpc || {}).l
       jsonrpc[section] = {};
     }
 
-    jsonrpc[section][method] = _objectSpread$6(_objectSpread$6({}, def), {}, {
+    jsonrpc[section][method] = _objectSpread$7(_objectSpread$7({}, def), {}, {
       isSubscription,
       jsonrpc: `${section}_${method}`,
       method,
@@ -37415,9 +42252,9 @@ Object.keys(definitions).filter(key => Object.keys(definitions[key].rpc || {}).l
   });
 });
 
-function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$6(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$6(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$6(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$6(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const l$4 = logger('rpc-core');
 const EMPTY_META = {
   fallback: undefined,
@@ -37533,7 +42370,7 @@ class RpcCore {
     this.system = void 0;
     this.web3 = void 0;
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    assert$a(provider && isFunction$1(provider.send), 'Expected Provider to API create');
+    assert$1(provider && isFunction$1(provider.send), 'Expected Provider to API create');
     _classPrivateFieldBase(this, _instanceId$1)[_instanceId$1] = instanceId;
     _classPrivateFieldBase(this, _registryDefault)[_registryDefault] = registry;
     this.provider = provider;
@@ -37584,7 +42421,7 @@ class RpcCore {
 
       (_ref = this)[_ref2 = sectionName] || (_ref[_ref2] = {});
       const section = this[sectionName];
-      Object.entries(_objectSpread$5(_objectSpread$5({}, this._createInterface(sectionName, jsonrpc[sectionName] || {})), this._createInterface(sectionName, userRpc[sectionName] || {}))).forEach(([key, value]) => {
+      Object.entries(_objectSpread$6(_objectSpread$6({}, this._createInterface(sectionName, jsonrpc[sectionName] || {})), this._createInterface(sectionName, userRpc[sectionName] || {}))).forEach(([key, value]) => {
         section[key] || (section[key] = value);
       });
     });
@@ -37599,7 +42436,7 @@ class RpcCore {
       const def = methods[method];
       const isSubscription = !!def.pubsub;
       const jsonrpc = endpoint || `${section}_${method}`;
-      this.mapping.set(jsonrpc, _objectSpread$5(_objectSpread$5({}, def), {}, {
+      this.mapping.set(jsonrpc, _objectSpread$6(_objectSpread$6({}, def), {}, {
         isSubscription,
         jsonrpc,
         method,
@@ -37758,7 +42595,7 @@ class RpcCore {
       isOptional
     }) => !isOptional).length;
     const optText = reqArgCount === def.params.length ? '' : ` (${def.params.length - reqArgCount} optional)`;
-    assert$a(inputs.length >= reqArgCount && inputs.length <= def.params.length, `Expected ${def.params.length} parameters${optText}, ${inputs.length} found instead`);
+    assert$1(inputs.length >= reqArgCount && inputs.length <= def.params.length, `Expected ${def.params.length} parameters${optText}, ${inputs.length} found instead`);
     return inputs.map((input, index) => createTypeUnsafe(registry, def.params[index].type, [input]));
   }
 
@@ -37785,7 +42622,7 @@ class RpcCore {
     const isEmpty = isNull(value); // we convert to Uint8Array since it maps to the raw encoding, all
     // data will be correctly encoded (incl. numbers, excl. :code)
 
-    const input = isEmpty ? null : isTreatAsHex(key) ? value : u8aToU8a(value);
+    const input = isEmpty ? null : isTreatAsHex(key) ? value : u8aToU8a$1(value);
     return this._newType(registry, key, input, isEmpty);
   }
 
@@ -37811,7 +42648,7 @@ class RpcCore {
 
     const value = isUndefined(found) ? witCache && _classPrivateFieldBase(this, _storageCache)[_storageCache].get(hexKey) || null : found[1];
     const isEmpty = isNull(value);
-    const input = isEmpty || isTreatAsHex(key) ? value : u8aToU8a(value); // store the retrieved result - the only issue with this cache is that there is no
+    const input = isEmpty || isTreatAsHex(key) ? value : u8aToU8a$1(value); // store the retrieved result - the only issue with this cache is that there is no
     // clearing of it, so very long running processes (not just a couple of hours, longer)
     // will increase memory beyond what is allowed.
 
@@ -37844,7 +42681,7 @@ class RpcCore {
     }
 
     try {
-      return createTypeUnsafe(registry, type, [isEmpty ? meta.fallback ? hexToU8a(meta.fallback.toHex()) : undefined : input], {
+      return createTypeUnsafe(registry, type, [isEmpty ? meta.fallback ? hexToU8a$1(meta.fallback.toHex()) : undefined : input], {
         isPedantic: true
       });
     } catch (error) {
@@ -37891,7 +42728,7 @@ function decorateSections(allSections, decorateMethod) {
 }
 
 // Copyright 2017-2021 @polkadot/api authors & contributors
-const l$3 = logger('api/util');
+const l$3 = logger$4('api/util');
 
 // Copyright 2017-2021 @polkadot/api authors & contributors
 function filterEvents(extHash, {
@@ -37923,7 +42760,7 @@ function filterEvents(extHash, {
 
 // Copyright 2017-2021 @polkadot/api authors & contributors
 function isKeyringPair(account) {
-  return isFunction$1(account.sign);
+  return isFunction$9(account.sign);
 }
 
 // Copyright 2017-2021 @polkadot/api authors & contributors
@@ -38023,9 +42860,9 @@ class SubmittableResult {
 
 }
 
-function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$5(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$5(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$5(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$5(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 const identity = input => input;
 
@@ -38082,7 +42919,7 @@ function createClass({
           nonce
         }) => {
           if (!header) {
-            if (isNumber(options.era)) {
+            if (isNumber$5(options.era)) {
               // since we have no header, it is immortal, remove any option overrides
               // so we only supply the genesisHash and no era to the construction
               delete options.era;
@@ -38107,7 +42944,7 @@ function createClass({
       Object.defineProperty(this, _makeSignOptions, {
         writable: true,
         value: (options, extras) => {
-          return _objectSpread$4(_objectSpread$4(_objectSpread$4({
+          return _objectSpread$5(_objectSpread$5(_objectSpread$5({
             blockHash: api.genesisHash,
             genesisHash: api.genesisHash
           }, options), extras), {}, {
@@ -38122,10 +42959,10 @@ function createClass({
         value: (optionsOrStatus, statusCb) => {
           let options = {};
 
-          if (isFunction$1(optionsOrStatus)) {
+          if (isFunction$9(optionsOrStatus)) {
             statusCb = optionsOrStatus;
           } else {
-            options = _objectSpread$4({}, optionsOrStatus);
+            options = _objectSpread$5({}, optionsOrStatus);
           }
 
           return [options, statusCb];
@@ -38189,7 +43026,7 @@ function createClass({
       Object.defineProperty(this, _optionsOrNonce, {
         writable: true,
         value: (optionsOrNonce = {}) => {
-          return isBn(optionsOrNonce) || isNumber(optionsOrNonce) ? {
+          return isBn$4(optionsOrNonce) || isNumber$5(optionsOrNonce) ? {
             nonce: optionsOrNonce
           } : optionsOrNonce;
         }
@@ -38198,8 +43035,8 @@ function createClass({
         writable: true,
         value: async (address, options, header) => {
           const signer = options.signer || api.signer;
-          assert$a(signer, 'No signer specified, either via api.setSigner or via sign options. You possibly need to pass through an explicit keypair for the origin so it can be used for signing.');
-          const payload = this.registry.createType('SignerPayload', _objectSpread$4(_objectSpread$4({}, options), {}, {
+          assert$i(signer, 'No signer specified, either via api.setSigner or via sign options. You possibly need to pass through an explicit keypair for the origin so it can be used for signing.');
+          const payload = this.registry.createType('SignerPayload', _objectSpread$5(_objectSpread$5({}, options), {}, {
             address,
             blockNumber: header ? header.number : 0,
             method: this.method
@@ -38234,7 +43071,7 @@ function createClass({
 
 
     dryRun(account, optionsOrHash) {
-      if (isString(optionsOrHash) || isU8a(optionsOrHash)) {
+      if (isString$8(optionsOrHash) || isU8a$7(optionsOrHash)) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return decorateMethod(() => api.rpc.system.dryRun(this.toHex(), optionsOrHash));
       } // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-call
@@ -38245,7 +43082,7 @@ function createClass({
 
 
     paymentInfo(account, optionsOrHash) {
-      if (isString(optionsOrHash) || isU8a(optionsOrHash)) {
+      if (isString$8(optionsOrHash) || isU8a$7(optionsOrHash)) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return decorateMethod(() => api.rpc.payment.queryInfo(this.toHex(), optionsOrHash));
       }
@@ -38325,7 +43162,7 @@ function createSubmittable(apiType, api, decorateMethod) {
 }
 
 // Copyright 2017-2021 @polkadot/api authors & contributors
-const l$2 = logger('api/augment');
+const l$2 = logger$4('api/augment');
 
 function logLength(type, values, and = []) {
   return values.length ? ` ${values.length} ${type}${and.length ? ' and' : ''}` : '';
@@ -38414,7 +43251,7 @@ function doDoubleMap(creator, args) {
     key1,
     key2
   } = creator.meta.type.asDoubleMap;
-  assert$a(args.length === 2, `${sig(creator, key1, key2)} is a doublemap, requiring 2 arguments, ${args.length} found`); // pass as tuple
+  assert$i(args.length === 2, `${sig(creator, key1, key2)} is a doublemap, requiring 2 arguments, ${args.length} found`); // pass as tuple
 
   return [creator, args];
 }
@@ -38423,7 +43260,7 @@ function doMap(creator, args) {
   const {
     key
   } = creator.meta.type.asMap;
-  assert$a(args.length === 1, `${sig(creator, key)} is a map, requiring 1 argument, ${args.length} found`); // expand
+  assert$i(args.length === 1, `${sig(creator, key)} is a map, requiring 1 argument, ${args.length} found`); // expand
 
   return args.length ? [creator, args[0]] : [creator];
 } // sets up the arguments in the form of [creator, args] ready to be used in a storage
@@ -38431,7 +43268,7 @@ function doMap(creator, args) {
 
 
 function extractStorageArgs(creator, _args) {
-  const args = _args.filter(arg => !isUndefined(arg));
+  const args = _args.filter(arg => !isUndefined$6(arg));
 
   if (creator.meta.type.isDoubleMap) {
     return doDoubleMap(creator, args);
@@ -38439,7 +43276,7 @@ function extractStorageArgs(creator, _args) {
     return doMap(creator, args);
   }
 
-  assert$a(args.length === 0, `${sig(creator)} does not take any arguments, ${args.length} found`); // no args
+  assert$i(args.length === 0, `${sig(creator)} does not take any arguments, ${args.length} found`); // no args
 
   return [creator];
 }
@@ -38540,12 +43377,12 @@ class Events {
 
 }
 
-function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$4(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$4(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$4(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$4(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 // the max amount of keys/values that we will retrieve at once
 const PAGE_SIZE = 384;
-const l$1 = logger('api/init');
+const l$1 = logger$4('api/init');
 let instanceCounter = 0;
 
 var _instanceId = _classPrivateFieldKey("instanceId");
@@ -38871,9 +43708,9 @@ class Decorate extends Events {
 
     decorated.is = key => key.section === creator.section && key.method === creator.method;
 
-    decorated.key = (arg1, arg2) => u8aToHex(compactStripLength(creator(creator.meta.type.isDoubleMap ? [arg1, arg2] : arg1))[1]);
+    decorated.key = (arg1, arg2) => u8aToHex$7(compactStripLength$1(creator(creator.meta.type.isDoubleMap ? [arg1, arg2] : arg1))[1]);
 
-    decorated.keyPrefix = key1 => u8aToHex(creator.keyPrefix(key1));
+    decorated.keyPrefix = key1 => u8aToHex$7(creator.keyPrefix(key1));
 
     decorated.range = decorateMethod((range, arg1, arg2) => this._decorateStorageRange(decorated, [arg1, arg2], range));
     decorated.size = decorateMethod((arg1, arg2) => this._rpcCore.state.getStorageSize(getArgs(arg1, arg2)));
@@ -38922,7 +43759,7 @@ class Decorate extends Events {
       return of([]);
     }
 
-    return combineLatest(arrayChunk(keys, PAGE_SIZE).map(keys => (this.hasSubscriptions ? this._rpcCore.state.subscribeStorage : this._rpcCore.state.queryStorageAt)(keys))).pipe(map(valsArr => arrayFlatten(valsArr)));
+    return combineLatest(arrayChunk(keys, PAGE_SIZE).map(keys => (this.hasSubscriptions ? this._rpcCore.state.subscribeStorage : this._rpcCore.state.queryStorageAt)(keys))).pipe(map(valsArr => arrayFlatten$1(valsArr)));
   }
 
   _retrieveMapKeys({
@@ -38931,14 +43768,14 @@ class Decorate extends Events {
     method,
     section
   }, at, arg) {
-    assert$a(iterKey && (meta.type.isMap || meta.type.isDoubleMap), 'keys can only be retrieved on maps, linked maps and double maps');
+    assert$i(iterKey && (meta.type.isMap || meta.type.isDoubleMap), 'keys can only be retrieved on maps, linked maps and double maps');
     const headKey = iterKey(arg).toHex();
     const startSubject = new BehaviorSubject(headKey);
     const query = at ? startKey => this._rpcCore.state.getKeysPaged(headKey, PAGE_SIZE, startKey, at) : startKey => this._rpcCore.state.getKeysPaged(headKey, PAGE_SIZE, startKey);
     return startSubject.pipe(switchMap(startKey => query(startKey).pipe(map(keys => keys.map(key => key.setMeta(meta, section, method))))), tap(keys => {
       keys.length === PAGE_SIZE ? startSubject.next(keys[PAGE_SIZE - 1].toHex()) : startSubject.complete();
     }), toArray(), // toArray since we want to startSubject to be completed
-    map(keysArr => arrayFlatten(keysArr)));
+    map(keysArr => arrayFlatten$1(keysArr)));
   }
 
   _retrieveMapKeysPaged({
@@ -38947,14 +43784,14 @@ class Decorate extends Events {
     method,
     section
   }, opts) {
-    assert$a(iterKey && (meta.type.isMap || meta.type.isDoubleMap), 'keys can only be retrieved on maps, linked maps and double maps');
+    assert$i(iterKey && (meta.type.isMap || meta.type.isDoubleMap), 'keys can only be retrieved on maps, linked maps and double maps');
     const headKey = iterKey(opts.arg).toHex();
     return this._rpcCore.state.getKeysPaged(headKey, opts.pageSize, opts.startKey || headKey).pipe(map(keys => keys.map(key => key.setMeta(meta, section, method))));
   }
 
   _retrieveMapEntries(entry, at, arg) {
     const query = at ? keyset => this._rpcCore.state.queryStorageAt(keyset, at) : keyset => this._rpcCore.state.queryStorageAt(keyset);
-    return this._retrieveMapKeys(entry, at, arg).pipe(switchMap(keys => keys.length ? combineLatest(arrayChunk(keys, PAGE_SIZE).map(query)).pipe(map(valsArr => arrayFlatten(valsArr).map((value, index) => [keys[index], value]))) : of([])));
+    return this._retrieveMapKeys(entry, at, arg).pipe(switchMap(keys => keys.length ? combineLatest(arrayChunk(keys, PAGE_SIZE).map(query)).pipe(map(valsArr => arrayFlatten$1(valsArr).map((value, index) => [keys[index], value]))) : of([])));
   }
 
   _retrieveMapEntriesPaged(entry, opts) {
@@ -38966,7 +43803,7 @@ class Decorate extends Events {
 
     const specName = (_this$_runtimeVersion = this._runtimeVersion) === null || _this$_runtimeVersion === void 0 ? void 0 : _this$_runtimeVersion.specName.toString();
 
-    const derives = _objectSpread$3(_objectSpread$3({}, this._options.derives), ((_this$_options$typesB = this._options.typesBundle) === null || _this$_options$typesB === void 0 ? void 0 : (_this$_options$typesB2 = _this$_options$typesB.spec) === null || _this$_options$typesB2 === void 0 ? void 0 : (_this$_options$typesB3 = _this$_options$typesB2[specName !== null && specName !== void 0 ? specName : '']) === null || _this$_options$typesB3 === void 0 ? void 0 : _this$_options$typesB3.derives) || {}); // Pull in derive from api-derive
+    const derives = _objectSpread$4(_objectSpread$4({}, this._options.derives), ((_this$_options$typesB = this._options.typesBundle) === null || _this$_options$typesB === void 0 ? void 0 : (_this$_options$typesB2 = _this$_options$typesB.spec) === null || _this$_options$typesB2 === void 0 ? void 0 : (_this$_options$typesB3 = _this$_options$typesB2[specName !== null && specName !== void 0 ? specName : '']) === null || _this$_options$typesB3 === void 0 ? void 0 : _this$_options$typesB3.derives) || {}); // Pull in derive from api-derive
 
 
     const derive = decorateDerive(_classPrivateFieldBase(this, _instanceId)[_instanceId], this._rx, derives);
@@ -39024,14 +43861,14 @@ function detectedCapabilities(api, blockHash) {
   }), take(1));
 }
 
-function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 const KEEPALIVE_INTERVAL = 15000;
 const DEFAULT_BLOCKNUMBER = {
-  unwrap: () => BN_ZERO
+  unwrap: () => BN_ZERO$2
 };
-const l = logger('api/init');
+const l = logger$4('api/init');
 
 var _healthTimer = _classPrivateFieldKey("healthTimer");
 
@@ -39161,7 +43998,7 @@ class Init extends Decorate {
       registry.knownTypes.typesAlias = getSpecAlias(registry, chain, version.specName);
     }
 
-    registry.setMetadata(metadata, undefined, _objectSpread$2(_objectSpread$2({}, getSpecExtensions(registry, chain, version.specName)), this._options.signedExtensions || {}));
+    registry.setMetadata(metadata, undefined, _objectSpread$3(_objectSpread$3({}, getSpecExtensions(registry, chain, version.specName)), this._options.signedExtensions || {}));
     return registry;
   }
   /**
@@ -39171,7 +44008,7 @@ class Init extends Decorate {
 
   async getBlockRegistry(blockHash) {
     // shortcut in the case where we have an immediate-same request
-    const lastBlockHash = u8aToU8a(blockHash);
+    const lastBlockHash = u8aToU8a$6(blockHash);
 
     const existingViaHash = _classPrivateFieldBase(this, _registries)[_registries].find(r => r.lastBlockHash && u8aEq(lastBlockHash, r.lastBlockHash));
 
@@ -39180,14 +44017,14 @@ class Init extends Decorate {
     } // ensure we have everything required
 
 
-    assert$a(this._genesisHash && this._runtimeVersion, 'Cannot retrieve data on an uninitialized chain'); // We have to assume that on the RPC layer the calls used here does not call back into
+    assert$i(this._genesisHash && this._runtimeVersion, 'Cannot retrieve data on an uninitialized chain'); // We have to assume that on the RPC layer the calls used here does not call back into
     // the registry swap, so getHeader & getRuntimeVersion should not be historic
 
     const header = this._genesisHash.eq(blockHash) ? {
       number: DEFAULT_BLOCKNUMBER,
       parentHash: this._genesisHash
     } : await this._rpcCore.chain.getHeader(blockHash).toPromise();
-    assert$a((header === null || header === void 0 ? void 0 : header.parentHash) && !header.parentHash.isEmpty, 'Unable to retrieve header and parent from supplied hash'); // get the runtime version, either on-chain or via an known upgrade history
+    assert$i((header === null || header === void 0 ? void 0 : header.parentHash) && !header.parentHash.isEmpty, 'Unable to retrieve header and parent from supplied hash'); // get the runtime version, either on-chain or via an known upgrade history
 
     const [firstVersion, lastVersion] = getUpgradeVersion(this._genesisHash, header.number.unwrap());
     const version = firstVersion && (lastVersion || firstVersion.specVersion.eq(this._runtimeVersion.specVersion)) ? {
@@ -39263,7 +44100,7 @@ class Init extends Decorate {
     detectedCapabilities(this._rx, blockHash).toPromise().then(types => {
       if (Object.keys(types).length) {
         (registry || this.registry).register(types);
-        l.debug(`Capabilities detected${blockHash ? ` (${u8aToHex(u8aToU8a(blockHash))})` : ''}: ${JSON.stringify(types)}`);
+        l.debug(`Capabilities detected${blockHash ? ` (${u8aToHex$7(u8aToU8a$6(blockHash))})` : ''}: ${JSON.stringify(types)}`);
       }
     }).catch(l.error);
   } // subscribe to metadata updates, inject the types on changes
@@ -39288,7 +44125,7 @@ class Init extends Decorate {
             isDefault
           }) => isDefault);
 
-          assert$a(thisRegistry, 'Initialization error, cannot find the default registry'); // setup the data as per the current versions
+          assert$i(thisRegistry, 'Initialization error, cannot find the default registry'); // setup the data as per the current versions
 
           thisRegistry.metadata = metadata;
           thisRegistry.metadataConsts = null;
@@ -39361,7 +44198,7 @@ class Init extends Decorate {
 // Copyright 2017-2021 @polkadot/api authors & contributors
 
 function assertResult(value) {
-  return assertReturn(value, 'Api needs to be initialized before using, listen on \'ready\'');
+  return assertReturn$2(value, 'Api needs to be initialized before using, listen on \'ready\'');
 }
 
 class Getters extends Init {
@@ -39580,9 +44417,9 @@ class Getters extends Init {
 
 }
 
-function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 class ApiBase extends Getters {
   /**
    * @description Create an instance of the class
@@ -39627,7 +44464,7 @@ class ApiBase extends Getters {
 
 
   findCall(callIndex) {
-    return this.registry.findMetaCall(u8aToU8a(callIndex));
+    return this.registry.findMetaCall(u8aToU8a$6(callIndex));
   }
   /**
    * @description Finds the definition for a specific [[RegistryError]] based on the index supplied
@@ -39635,7 +44472,7 @@ class ApiBase extends Getters {
 
 
   findError(errorIndex) {
-    return this.registry.findMetaError(u8aToU8a(errorIndex));
+    return this.registry.findMetaError(u8aToU8a$6(errorIndex));
   }
   /**
    * @description Set an external signer which will be used to sign extrinsic when account passed in is not KeyringPair
@@ -39653,18 +44490,18 @@ class ApiBase extends Getters {
   async sign(address, data, {
     signer
   } = {}) {
-    if (isString(address)) {
+    if (isString$8(address)) {
       const _signer = signer || this._rx.signer;
 
-      assert$a(_signer === null || _signer === void 0 ? void 0 : _signer.signRaw, 'No signer exists with a signRaw interface. You possibly need to pass through an explicit keypair for the origin so it can be used for signing.');
-      return (await _signer.signRaw(_objectSpread$1(_objectSpread$1({
+      assert$i(_signer === null || _signer === void 0 ? void 0 : _signer.signRaw, 'No signer exists with a signRaw interface. You possibly need to pass through an explicit keypair for the origin so it can be used for signing.');
+      return (await _signer.signRaw(_objectSpread$2(_objectSpread$2({
         type: 'bytes'
       }, data), {}, {
         address
       }))).signature;
     }
 
-    return u8aToHex(address.sign(u8aToU8a(data.data)));
+    return u8aToHex$7(address.sign(u8aToU8a$6(data.data)));
   }
 
 }
@@ -39745,7 +44582,7 @@ class Combinator {
   }
 
   _triggerUpdate() {
-    if (!_classPrivateFieldBase(this, _isActive)[_isActive] || !isFunction$1(_classPrivateFieldBase(this, _callback)[_callback]) || !this._allHasFired()) {
+    if (!_classPrivateFieldBase(this, _isActive)[_isActive] || !isFunction$9(_classPrivateFieldBase(this, _callback)[_callback]) || !this._allHasFired()) {
       return;
     }
 
@@ -39767,7 +44604,7 @@ class Combinator {
       try {
         const unsubscribe = await subscription;
 
-        if (isFunction$1(unsubscribe)) {
+        if (isFunction$9(unsubscribe)) {
           unsubscribe();
         }
       } catch (error) {// ignore
@@ -39777,9 +44614,9 @@ class Combinator {
 
 }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 // extract the arguments and callback params from a value array possibly containing a callback
 function extractArgs(args, needsCallback) {
@@ -39787,12 +44624,12 @@ function extractArgs(args, needsCallback) {
   const actualArgs = args.slice(); // If the last arg is a function, we pop it, put it into callback.
   // actualArgs will then hold the actual arguments to be passed to `method`
 
-  if (args.length && isFunction$1(args[args.length - 1])) {
+  if (args.length && isFunction$9(args[args.length - 1])) {
     callback = actualArgs.pop();
   } // When we need a subscription, ensure that a valid callback is actually passed
 
 
-  assert$a(!needsCallback || isFunction$1(callback), 'Expected a callback to be passed with subscriptions');
+  assert$i(!needsCallback || isFunction$9(callback), 'Expected a callback to be passed with subscriptions');
   return [actualArgs, callback];
 } // a Promise completion tracker, wrapping an isComplete variable that ensures the promise only resolves once
 
@@ -40029,7 +44866,7 @@ class ApiPromise extends ApiBase {
 
 
   clone() {
-    return new ApiPromise(_objectSpread(_objectSpread({}, this._options), {}, {
+    return new ApiPromise(_objectSpread$1(_objectSpread$1({}, this._options), {}, {
       source: this
     }));
   }
@@ -40062,6 +44899,484 @@ class ApiPromise extends ApiBase {
     };
   }
 
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+function isFunction(value) {
+  return typeof value === 'function';
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isString
+ * @summary Tests for a string.
+ * @description
+ * Checks to see if the input value is a JavaScript string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isString } from '@polkadot/util';
+ *
+ * console.log('isString', isString('test')); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isString(value) {
+  return typeof value === 'string' || value instanceof String;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+/**
+ * @name assert
+ * @summary Checks for a valid test, if not Error is thrown.
+ * @description
+ * Checks that `test` is a truthy value. If value is falsy (`null`, `undefined`, `false`, ...), it throws an Error with the supplied `message`. When `test` passes, `true` is returned.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * const { assert } from '@polkadot/util';
+ *
+ * assert(true, 'True should be true'); // passes
+ * assert(false, 'False should not be true'); // Error thrown
+ * assert(false, () => 'message'); // Error with 'message'
+ * ```
+ */
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error(isFunction(message) ? message() : message);
+  }
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const HEX_REGEX = /^0x[a-fA-F0-9]+$/;
+/**
+ * @name isHex
+ * @summary Tests for a hex string.
+ * @description
+ * Checks to see if the input value is a `0x` prefixed hex string. Optionally (`bitLength` !== -1) checks to see if the bitLength is correct.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isHex } from '@polkadot/util';
+ *
+ * isHex('0x1234'); // => true
+ * isHex('0x1234', 8); // => false
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function isHex(value, bitLength = -1, ignoreLength = false) {
+  const isValidHex = value === '0x' || isString(value) && HEX_REGEX.test(value.toString());
+
+  if (isValidHex && bitLength !== -1) {
+    return value.length === 2 + Math.ceil(bitLength / 4);
+  }
+
+  return isValidHex && (ignoreLength || value.length % 2 === 0);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexHasPrefix
+ * @summary Tests for the existence of a `0x` prefix.
+ * @description
+ * Checks for a valid hex input value and if the start matched `0x`
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexHasPrefix } from '@polkadot/util';
+ *
+ * console.log('has prefix', hexHasPrefix('0x1234')); // => true
+ * ```
+ */
+
+function hexHasPrefix(value) {
+  return !!(value && isHex(value, -1, true) && value.substr(0, 2) === '0x');
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const UNPREFIX_HEX_REGEX = /^[a-fA-F0-9]+$/;
+/**
+ * @name hexStripPrefix
+ * @summary Strips any leading `0x` prefix.
+ * @description
+ * Tests for the existence of a `0x` prefix, and returns the value without the prefix. Un-prefixed values are returned as-is.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexStripPrefix } from '@polkadot/util';
+ *
+ * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
+ * ```
+ */
+
+function hexStripPrefix(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (hexHasPrefix(value)) {
+    return value.substr(2);
+  }
+
+  if (UNPREFIX_HEX_REGEX.test(value)) {
+    return value;
+  }
+
+  throw new Error(`Invalid hex ${value} passed to hexStripPrefix`);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name bufferToU8a
+ * @summary Creates a Uint8Array value from a Buffer object.
+ * @description
+ * `null` inputs returns an empty result, `Buffer` values return the actual value as a `Uint8Array`. Anything that is not a `Buffer` object throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { bufferToU8a } from '@polkadot/util';
+ *
+ * bufferToU8a(Buffer.from([1, 2, 3]));
+ * ```
+ */
+function bufferToU8a(buffer) {
+  return new Uint8Array(buffer || []);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * `null` inputs returns an empty `Uint8Array` result. Hex input values return the actual bytes value converted to a Uint8Array. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToU8a } from '@polkadot/util';
+ *
+ * hexToU8a('0x80001f'); // Uint8Array([0x80, 0x00, 0x1f])
+ * hexToU8a('0x80001f', 32); // Uint8Array([0x00, 0x80, 0x00, 0x1f])
+ * ```
+ */
+
+function hexToU8a(_value, bitLength = -1) {
+  if (!_value) {
+    return new Uint8Array();
+  }
+
+  assert(isHex(_value), `Expected hex value to convert, found '${_value}'`);
+  const value = hexStripPrefix(_value);
+  const valLength = value.length / 2;
+  const bufLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
+  const result = new Uint8Array(bufLength);
+  const offset = Math.max(0, bufLength - valLength);
+
+  for (let index = 0; index < bufLength; index++) {
+    result[index + offset] = parseInt(value.substr(index * 2, 2), 16);
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isBuffer
+ * @summary Tests for a `Buffer` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Buffer`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isBuffer } from '@polkadot/util';
+ *
+ * console.log('isBuffer', isBuffer(Buffer.from([]))); // => true
+ * ```
+ */
+function isBuffer(value) {
+  return Buffer.isBuffer(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const encoder = new TextEncoder();
+/**
+ * @name stringToU8a
+ * @summary Creates a Uint8Array object from a utf-8 string.
+ * @description
+ * String input values return the actual encoded `UInt8Array`. `null` or `undefined` values returns an empty encoded array.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToU8a } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // [0x68, 0x65, 0x6c, 0x6c, 0x6f]
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToU8a(value) {
+  return value ? encoder.encode(value.toString()) : new Uint8Array();
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+
+function convertArray(value) {
+  return Array.isArray(value) ? Uint8Array.from(value) : value;
+}
+
+function convertString(value) {
+  return isHex(value) ? hexToU8a(value) : stringToU8a(value);
+}
+/**
+ * @name u8aToU8a
+ * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
+ * @description
+ * `null` or `undefined` inputs returns a `[]` result, Uint8Array values returns the value, hex strings returns a Uint8Array representation.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aToU8a } from '@polkadot/util';
+ *
+ * u8aToU8a(new Uint8Array([0x12, 0x34]); // => Uint8Array([0x12, 0x34])
+ * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
+ * ```
+ */
+
+
+function u8aToU8a(value) {
+  if (!value) {
+    return new Uint8Array();
+  } else if (isBuffer(value)) {
+    return bufferToU8a(value);
+  } else if (isString(value)) {
+    return convertString(value);
+  }
+
+  return convertArray(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name u8aConcat
+ * @summary Creates a concatenated Uint8Array from the inputs.
+ * @description
+ * Concatenates the input arrays into a single `UInt8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { { u8aConcat } from '@polkadot/util';
+ *
+ * u8aConcat(
+ *   new Uint8Array([1, 2, 3]),
+ *   new Uint8Array([4, 5, 6])
+ * ); // [1, 2, 3, 4, 5, 6]
+ * ```
+ */
+
+function u8aConcat(...list) {
+  let length = 0;
+  let offset = 0;
+  const u8as = new Array(list.length);
+
+  for (let i = 0; i < list.length; i++) {
+    u8as[i] = u8aToU8a(list[i]);
+    length += u8as[i].length;
+  }
+
+  const result = new Uint8Array(length);
+
+  for (let i = 0; i < u8as.length; i++) {
+    result.set(u8as[i], offset);
+    offset += u8as[i].length;
+  }
+
+  return result;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+const ALPHABET = new Array(256).fill(0).map((_, n) => n.toString(16).padStart(2, '0'));
+/** @internal */
+
+function extract(value) {
+  const result = new Array(value.length);
+
+  for (let i = 0; i < value.length; i++) {
+    result[i] = ALPHABET[value[i]];
+  }
+
+  return result.join('');
+}
+/** @internal */
+
+
+function trim(value, halfLength) {
+  return `${u8aToHex(value.subarray(0, halfLength), -1, false)}…${u8aToHex(value.subarray(value.length - halfLength), -1, false)}`;
+}
+/**
+ * @name u8aToHex
+ * @summary Creates a hex string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual hex string. `null` or `undefined` values returns an `0x` string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToHex } from '@polkadot/util';
+ *
+ * u8aToHex(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0xf])); // 0x68656c0f
+ * ```
+ */
+
+
+function u8aToHex(value, bitLength = -1, isPrefixed = true) {
+  const prefix = isPrefixed ? '0x' : '';
+
+  if (!(value !== null && value !== void 0 && value.length)) {
+    return prefix;
+  }
+
+  const byteLength = Math.ceil(bitLength / 8);
+  return prefix + (byteLength > 0 && value.length > byteLength ? trim(value, Math.ceil(byteLength / 2)) : extract(value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+const decoder = new TextDecoder('utf-8');
+/**
+ * @name u8aToString
+ * @summary Creates a utf-8 string from a Uint8Array object.
+ * @description
+ * `UInt8Array` input values return the actual decoded utf-8 string. `null` or `undefined` values returns an empty string.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { u8aToString } from '@polkadot/util';
+ *
+ * u8aToString(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0x6f])); // hello
+ * ```
+ */
+
+function u8aToString(value) {
+  return !(value !== null && value !== void 0 && value.length) ? '' : decoder.decode(value);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name hexToU8a
+ * @summary Creates a Uint8Array object from a hex string.
+ * @description
+ * Hex input values return the actual bytes value converted to a string. Anything that is not a hex string (including the `0x` prefix) throws an error.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { hexToString } from '@polkadot/util';
+ *
+ * hexToU8a('0x68656c6c6f'); // hello
+ * ```
+ */
+
+function hexToString(_value) {
+  return u8aToString(hexToU8a(_value));
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+// SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @name isInstanceOf
+ * @summary Tests for a instance of a class.
+ * @description
+ * Checks to see if the input value is an instance of the test class.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isInstanceOf } from '@polkadot/util';
+ *
+ * console.log('isInstanceOf', isInstanceOf(new Array(0), Array)); // => true
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function isInstanceOf(value, clazz) {
+  return value instanceof clazz;
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name isU8a
+ * @summary Tests for a `Uint8Array` object instance.
+ * @description
+ * Checks to see if the input object is an instance of `Uint8Array`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isUint8Array } from '@polkadot/util';
+ *
+ * console.log('isU8a', isU8a([])); // => false
+ * ```
+ */
+
+function isU8a(value) {
+  return isInstanceOf(value, Uint8Array);
+}
+
+// Copyright 2017-2021 @polkadot/util authors & contributors
+/**
+ * @name stringToHex
+ * @summary Creates a hex string from a utf-8 string
+ * @description
+ * String input values return the actual encoded hex value.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { stringToHex } from '@polkadot/util';
+ *
+ * stringToU8a('hello'); // 0x68656c6c6f
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+
+function stringToHex(value) {
+  return u8aToHex(stringToU8a(value));
 }
 
 const getApi = async (wsEndpoint) => {
@@ -40236,7 +45551,7 @@ const validateCollection = (remark) => {
     try {
         validateBase(remark, OP_TYPES.MINT);
         const obj = getRemarkData(dataString);
-        return assert$b(obj, CollectionStruct);
+        return assert$j(obj, CollectionStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40249,7 +45564,7 @@ const validateNFT = (remark) => {
     try {
         validateBase(remark, OP_TYPES.MINTNFT);
         const obj = getRemarkData(dataString);
-        return assert$b(obj, NFTStruct);
+        return assert$j(obj, NFTStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40261,7 +45576,7 @@ const validateList = (remark) => {
     const [_prefix, _op_type, _version, id, price] = remark.split("::");
     try {
         validateBase(remark, OP_TYPES.LIST);
-        return assert$b({ id, price }, LISTStruct);
+        return assert$j({ id, price }, LISTStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40273,7 +45588,7 @@ const validateSend = (remark) => {
     const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
     try {
         validateBase(remark, OP_TYPES.SEND);
-        return assert$b({ id, recipient }, SENDStruct);
+        return assert$j({ id, recipient }, SENDStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40285,7 +45600,7 @@ const validateEmote = (remark) => {
     const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
     try {
         validateBase(remark, OP_TYPES.EMOTE);
-        return assert$b({ id, unicode }, EMOTEStruct);
+        return assert$j({ id, unicode }, EMOTEStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40297,7 +45612,7 @@ const validateChangeIssuer = (remark) => {
     const [_prefix, _op_type, _version, id, issuer] = remark.split("::");
     try {
         validateBase(remark, OP_TYPES.CHANGEISSUER);
-        return assert$b({ id, issuer }, CHANGEISSUERStruct);
+        return assert$j({ id, issuer }, CHANGEISSUERStruct);
     }
     catch (error) {
         console.log("StructError is:", error);
@@ -40571,6 +45886,563 @@ class Emote {
     }
 }
 Emote.V = "1.0.0";
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+
+const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+const bs58 = src(BASE58_ALPHABET);
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+const BASE_CONFIG = {
+  alphabet: BASE58_ALPHABET,
+  ipfsChar: 'z',
+  type: 'base58'
+};
+function validateChars({
+  alphabet,
+  ipfsChar,
+  type
+}, value, ipfsCompat) {
+  assert(value, `Expected non-null, non-empty ${type} input`);
+  assert(!ipfsCompat || value[0] === ipfsChar, `Expected ${type} to start with '${ipfsChar}'`);
+
+  for (let i = ipfsCompat ? 1 : 0; i < value.length; i++) {
+    assert(alphabet.includes(value[i]), `Invalid ${type} character "${value[i]}" (0x${value.charCodeAt(i).toString(16)}) at index ${i}`);
+  }
+
+  return true;
+}
+/**
+ * @name base58Validate
+ * @summary Validates a base58 value.
+ * @description
+ * Validates the the supplied value is valid base58
+ */
+
+function base58Validate(value, ipfsCompat) {
+  return validateChars(BASE_CONFIG, value, ipfsCompat);
+}
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+/**
+ * @name base58Decode
+ * @summary Decodes a base58 value.
+ * @description
+ * From the provided input, decode the base58 and return the result as an `Uint8Array`.
+ */
+
+function base58Decode(value, ipfsCompat) {
+  base58Validate(value, ipfsCompat);
+  return bufferToU8a(bs58.decode(value.substr(ipfsCompat ? 1 : 0)));
+}
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+/**
+ * @name blake2AsU8a
+ * @summary Creates a blake2b u8a from the input.
+ * @description
+ * From a `Uint8Array` input, create the blake2b and return the result as a u8a with the specified `bitLength`.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { blake2AsU8a } from '@polkadot/util-crypto';
+ *
+ * blake2AsU8a('abc'); // => [0xba, 0x80, 0xa53, 0xf98, 0x1c, 0x4d, 0x0d]
+ * ```
+ */
+
+function blake2AsU8a(data, bitLength = 256, key = null, onlyJs = false) {
+  const byteLength = Math.ceil(bitLength / 8);
+  return blakejs.blake2b(u8aToU8a(data), key, byteLength);
+}
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+const SS58_PREFIX = stringToU8a('SS58PRE');
+function sshash(key) {
+  return blake2AsU8a(u8aConcat(SS58_PREFIX, key), 512);
+}
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+function checkAddressChecksum(decoded) {
+  const ss58Length = decoded[0] & 0b01000000 ? 2 : 1;
+  const ss58Decoded = ss58Length === 1 ? decoded[0] : (decoded[0] & 0b00111111) << 2 | decoded[1] >> 6 | (decoded[1] & 0b00111111) << 8; // 32/33 bytes public + 2 bytes checksum + prefix
+
+  const isPublicKey = [34 + ss58Length, 35 + ss58Length].includes(decoded.length);
+  const length = decoded.length - (isPublicKey ? 2 : 1); // calculate the hash and do the checksum byte checks
+
+  const hash = sshash(decoded.subarray(0, length));
+  const isValid = (decoded[0] & 0b10000000) === 0 && ![46, 47].includes(decoded[0]) && (isPublicKey ? decoded[decoded.length - 2] === hash[0] && decoded[decoded.length - 1] === hash[1] : decoded[decoded.length - 1] === hash[0]);
+  return [isValid, length, ss58Length, ss58Decoded];
+}
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+const UNSORTED = [0, 2, 42]; // NOTE: In the case where the network was hard-spooned and multiple genesisHashes
+// are provided, it needs to be in reverse order, i.e. most-recent first, oldest
+// last. This make lookups for the current a simple genesisHash[0]
+// (See Kusama as an example)
+
+const createReserved = (prefix, displayName, network = null) => ({
+  decimals: null,
+  displayName,
+  isIgnored: true,
+  network,
+  prefix,
+  standardAccount: null,
+  symbols: null,
+  website: null
+});
+
+const all = [{
+  decimals: [10],
+  displayName: 'Polkadot Relay Chain',
+  genesisHash: ['0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3'],
+  hasLedgerSupport: true,
+  icon: 'polkadot',
+  network: 'polkadot',
+  prefix: 0,
+  slip44: 0x00000162,
+  standardAccount: '*25519',
+  symbols: ['DOT'],
+  website: 'https://polkadot.network'
+}, createReserved(1, 'Bare 32-bit Schnorr/Ristretto (S/R 25519) public key.'), {
+  decimals: [12],
+  displayName: 'Kusama Relay Chain',
+  genesisHash: ['0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // Kusama CC3,
+  '0xe3777fa922cafbff200cadeaea1a76bd7898ad5b89f7848999058b50e715f636', // Kusama CC2
+  '0x3fd7b9eb6a00376e5be61f01abb429ffb0b104be05eaff4d458da48fcd425baf' // Kusama CC1
+  ],
+  hasLedgerSupport: true,
+  icon: 'polkadot',
+  network: 'kusama',
+  prefix: 2,
+  slip44: 0x000001b2,
+  standardAccount: '*25519',
+  symbols: ['KSM'],
+  website: 'https://kusama.network'
+}, createReserved(3, 'Bare 32-bit Ed25519 public key.'), {
+  decimals: null,
+  displayName: 'Katal Chain',
+  network: 'katalchain',
+  prefix: 4,
+  standardAccount: '*25519',
+  symbols: null,
+  website: null
+}, {
+  decimals: null,
+  displayName: 'Plasm Network',
+  genesisHash: ['0x3e86364d4b4894021cb2a0390bcf2feb5517d5292f2de2bb9404227e908b0b8b'],
+  network: 'plasm',
+  prefix: 5,
+  standardAccount: '*25519',
+  symbols: ['PLM'],
+  website: null
+}, {
+  decimals: [12],
+  displayName: 'Bifrost',
+  network: 'bifrost',
+  prefix: 6,
+  standardAccount: '*25519',
+  symbols: ['BNC'],
+  website: 'https://bifrost.finance/'
+}, {
+  decimals: [18],
+  displayName: 'Edgeware',
+  genesisHash: ['0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b'],
+  network: 'edgeware',
+  prefix: 7,
+  standardAccount: '*25519',
+  symbols: ['EDG'],
+  website: 'https://edgewa.re'
+}, {
+  decimals: [18],
+  displayName: 'Acala Karura Canary',
+  network: 'karura',
+  prefix: 8,
+  standardAccount: '*25519',
+  symbols: ['KAR'],
+  website: 'https://acala.network/'
+}, {
+  decimals: [18],
+  displayName: 'Laminar Reynolds Canary',
+  network: 'reynolds',
+  prefix: 9,
+  standardAccount: '*25519',
+  symbols: ['REY'],
+  website: 'http://laminar.network/'
+}, {
+  decimals: [18],
+  displayName: 'Acala',
+  network: 'acala',
+  prefix: 10,
+  standardAccount: '*25519',
+  symbols: ['ACA'],
+  website: 'https://acala.network/'
+}, {
+  decimals: [18],
+  displayName: 'Laminar',
+  network: 'laminar',
+  prefix: 11,
+  standardAccount: '*25519',
+  symbols: ['LAMI'],
+  website: 'http://laminar.network/'
+}, {
+  decimals: [6],
+  displayName: 'Polymesh',
+  genesisHash: ['0x12fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7'],
+  hasLedgerSupport: true,
+  network: 'polymesh',
+  prefix: 12,
+  slip44: 0x00000253,
+  standardAccount: '*25519',
+  symbols: ['POLYX'],
+  website: 'https://polymath.network/'
+}, {
+  decimals: null,
+  displayName: 'SubstraTEE',
+  network: 'substratee',
+  prefix: 13,
+  standardAccount: '*25519',
+  symbols: null,
+  website: 'https://www.substratee.com'
+}, {
+  decimals: [0],
+  displayName: 'Totem',
+  network: 'totem',
+  prefix: 14,
+  standardAccount: '*25519',
+  symbols: ['XTX'],
+  website: 'https://totemaccounting.com'
+}, {
+  decimals: [12],
+  displayName: 'Synesthesia',
+  network: 'synesthesia',
+  prefix: 15,
+  standardAccount: '*25519',
+  symbols: ['SYN'],
+  website: 'https://synesthesia.network/'
+}, {
+  decimals: [12],
+  displayName: 'Kulupu',
+  genesisHash: ['0xf7a99d3cb92853d00d5275c971c132c074636256583fee53b3bbe60d7b8769ba'],
+  network: 'kulupu',
+  prefix: 16,
+  standardAccount: '*25519',
+  symbols: ['KLP'],
+  website: 'https://kulupu.network/'
+}, {
+  decimals: null,
+  displayName: 'Dark Mainnet',
+  network: 'dark',
+  prefix: 17,
+  standardAccount: '*25519',
+  symbols: null,
+  website: null
+}, {
+  decimals: [9, 9],
+  displayName: 'Darwinia Network',
+  network: 'darwinia',
+  prefix: 18,
+  standardAccount: '*25519',
+  symbols: ['RING', 'KTON'],
+  website: 'https://darwinia.network/'
+}, {
+  decimals: [12],
+  displayName: 'GeekCash',
+  network: 'geek',
+  prefix: 19,
+  standardAccount: '*25519',
+  symbols: ['GEEK'],
+  website: 'https://geekcash.org'
+}, {
+  decimals: [12],
+  displayName: 'Stafi',
+  genesisHash: ['0x290a4149f09ea0e402c74c1c7e96ae4239588577fe78932f94f5404c68243d80'],
+  network: 'stafi',
+  prefix: 20,
+  standardAccount: '*25519',
+  symbols: ['FIS'],
+  website: 'https://stafi.io'
+}, {
+  decimals: [6],
+  displayName: 'Dock Testnet',
+  isIgnored: true,
+  // testnet
+  network: 'dock-testnet',
+  prefix: 21,
+  standardAccount: '*25519',
+  symbols: ['DCK'],
+  website: 'https://dock.io'
+}, {
+  decimals: [6],
+  displayName: 'Dock Mainnet',
+  genesisHash: ['0xf73467c6544aa68df2ee546b135f955c46b90fa627e9b5d7935f41061bb8a5a9'],
+  hasLedgerSupport: true,
+  network: 'dock-mainnet',
+  prefix: 22,
+  slip44: 0x00000252,
+  standardAccount: '*25519',
+  symbols: ['DCK'],
+  website: 'https://dock.io'
+}, {
+  decimals: null,
+  displayName: 'ShiftNrg',
+  network: 'shift',
+  prefix: 23,
+  standardAccount: '*25519',
+  symbols: null,
+  website: null
+}, {
+  decimals: [18],
+  displayName: 'ZERO',
+  network: 'zero',
+  prefix: 24,
+  standardAccount: '*25519',
+  symbols: ['PLAY'],
+  website: 'https://zero.io'
+}, {
+  decimals: [18],
+  displayName: 'ZERO Alphaville',
+  isIgnored: true,
+  // testnet
+  network: 'zero-alphaville',
+  prefix: 25,
+  standardAccount: '*25519',
+  symbols: ['PLAY'],
+  website: 'https://zero.io'
+}, {
+  decimals: [10],
+  displayName: 'Jupiter',
+  isIgnored: true,
+  // testnet
+  network: 'jupiter',
+  prefix: 26,
+  standardAccount: '*25519',
+  symbols: ['jDOT'],
+  website: 'https://jupiter.patract.io'
+}, {
+  decimals: [10, 12],
+  displayName: 'Patract',
+  network: 'patract',
+  prefix: 27,
+  standardAccount: '*25519',
+  symbols: ['pDOT', 'pKSM'],
+  website: 'https://patract.network'
+}, {
+  decimals: null,
+  displayName: 'Subsocial',
+  genesisHash: ['0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8'],
+  network: 'subsocial',
+  prefix: 28,
+  standardAccount: '*25519',
+  symbols: null,
+  website: null
+}, {
+  decimals: [18],
+  displayName: 'Dhiway CORD Network',
+  network: 'cord',
+  prefix: 29,
+  standardAccount: '*25519',
+  symbols: ['DCU'],
+  website: 'https://dhiway.com/'
+}, {
+  decimals: [12],
+  displayName: 'Phala Network',
+  network: 'phala',
+  prefix: 30,
+  standardAccount: '*25519',
+  symbols: ['PHA'],
+  website: 'https://phala.network'
+}, {
+  decimals: [12],
+  displayName: 'Litentry Network',
+  network: 'litentry',
+  prefix: 31,
+  standardAccount: '*25519',
+  symbols: ['LIT'],
+  website: 'https://litentry.com/'
+}, {
+  decimals: [9],
+  displayName: 'Robonomics',
+  network: 'robonomics',
+  prefix: 32,
+  standardAccount: '*25519',
+  symbols: ['XRT'],
+  website: 'https://robonomics.network'
+}, {
+  decimals: null,
+  displayName: 'DataHighway',
+  network: 'datahighway',
+  prefix: 33,
+  standardAccount: '*25519',
+  symbols: null,
+  website: null
+}, {
+  decimals: [12],
+  displayName: 'Ares Protocol',
+  network: 'ares',
+  prefix: 34,
+  standardAccount: '*25519',
+  symbols: ['ARES'],
+  website: 'https://www.aresprotocol.com/'
+}, {
+  decimals: [15],
+  displayName: 'Valiu Liquidity Network',
+  network: 'vln',
+  prefix: 35,
+  standardAccount: '*25519',
+  symbols: ['USDv'],
+  website: 'https://valiu.com/'
+}, {
+  decimals: [18],
+  displayName: 'Centrifuge Chain',
+  network: 'centrifuge',
+  prefix: 36,
+  standardAccount: '*25519',
+  symbols: ['RAD'],
+  website: 'https://centrifuge.io/'
+}, {
+  decimals: [18],
+  displayName: 'Nodle Chain',
+  network: 'nodle',
+  prefix: 37,
+  standardAccount: '*25519',
+  symbols: ['NODL'],
+  website: 'https://nodle.io/'
+}, {
+  decimals: [18],
+  displayName: 'KILT Chain',
+  network: 'kilt',
+  prefix: 38,
+  standardAccount: '*25519',
+  symbols: ['KILT'],
+  website: 'https://kilt.io/'
+}, {
+  decimals: [18],
+  displayName: 'MathChain mainnet',
+  network: 'mathchain',
+  prefix: 39,
+  standardAccount: '*25519',
+  symbols: ['MATH'],
+  website: 'https://mathwallet.org'
+}, {
+  decimals: [18],
+  displayName: 'MathChain testnet',
+  isIgnored: true,
+  // testnet
+  network: 'mathchain-testnet',
+  prefix: 40,
+  standardAccount: '*25519',
+  symbols: ['MATH'],
+  website: 'https://mathwallet.org'
+}, {
+  decimals: null,
+  displayName: 'Polimec Chain',
+  network: 'poli',
+  prefix: 41,
+  standardAccount: '*25519',
+  symbols: null,
+  website: 'https://polimec.io/'
+}, {
+  decimals: null,
+  displayName: 'Substrate',
+  network: 'substrate',
+  prefix: 42,
+  standardAccount: '*25519',
+  symbols: null,
+  website: 'https://substrate.dev/'
+}, createReserved(43, 'Bare 32-bit ECDSA SECP-256k1 public key.'), {
+  decimals: [8],
+  displayName: 'ChainX',
+  network: 'chainx',
+  prefix: 44,
+  standardAccount: '*25519',
+  symbols: ['PCX'],
+  website: 'https://chainx.org/'
+}, {
+  decimals: [12, 12],
+  displayName: 'UniArts Network',
+  network: 'uniarts',
+  prefix: 45,
+  standardAccount: '*25519',
+  symbols: ['UART', 'UINK'],
+  website: 'https://uniarts.me'
+}, createReserved(46, 'This prefix is reserved.', 'reserved46'), createReserved(47, 'This prefix is reserved.', 'reserved47'), {
+  decimals: [12],
+  displayName: 'Neatcoin Mainnet',
+  network: 'neatcoin',
+  prefix: 48,
+  standardAccount: '*25519',
+  symbols: ['NEAT'],
+  website: 'https://neatcoin.org'
+}, {
+  decimals: [12],
+  displayName: 'HydraDX',
+  network: 'hydradx',
+  prefix: 63,
+  standardAccount: '*25519',
+  symbols: ['HDX'],
+  website: 'https://hydradx.io'
+}, {
+  decimals: [18],
+  displayName: 'AvN Mainnet',
+  network: 'aventus',
+  prefix: 65,
+  standardAccount: '*25519',
+  symbols: ['AVT'],
+  website: 'https://aventus.io'
+}, {
+  decimals: [12],
+  displayName: 'Crust Network',
+  network: 'crust',
+  prefix: 66,
+  standardAccount: '*25519',
+  symbols: ['CRU'],
+  website: 'https://crust.network'
+}]; // The list of available/claimed prefixes
+//   - no testnets
+//   - we only include those where we have a standardAccount
+//   - when no icon has been specified, default to substrate
+//   - sort by name, however we keep 0, 2, 42 first in the list
+
+const available = all.filter(n => !n.isIgnored && !!n.network).map(n => _objectSpread(_objectSpread({}, n), {}, {
+  genesisHash: n.genesisHash || [],
+  icon: n.icon || 'substrate'
+})).sort((a, b) => UNSORTED.includes(a.prefix) && UNSORTED.includes(b.prefix) ? 0 : UNSORTED.includes(a.prefix) ? -1 : UNSORTED.includes(b.prefix) ? 1 : a.displayName.localeCompare(b.displayName)); // A filtered list of those chains we have details about (genesisHashes)
+
+available.filter(n => n.genesisHash.length || n.prefix === 42);
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+const defaults = {
+  allowedDecodedLengths: [1, 2, 4, 8, 32, 33],
+  // publicKey has prefix + 2 checksum bytes, short only prefix + 1 checksum byte
+  allowedEncodedLengths: [3, 4, 6, 10, 35, 36, 37, 38],
+  allowedPrefix: available.map(({
+    prefix
+  }) => prefix),
+  prefix: 42
+};
+
+// Copyright 2017-2021 @polkadot/util-crypto authors & contributors
+function decodeAddress(encoded, ignoreChecksum, ss58Format = -1) {
+  if (isU8a(encoded) || isHex(encoded)) {
+    return u8aToU8a(encoded);
+  }
+
+  try {
+    const decoded = base58Decode(encoded);
+    assert(defaults.allowedEncodedLengths.includes(decoded.length), 'Invalid decoded address length');
+    const [isValid, endPos, ss58Length, ss58Decoded] = checkAddressChecksum(decoded);
+    assert(ignoreChecksum || isValid, 'Invalid decoded address checksum');
+    assert([-1, ss58Decoded].includes(ss58Format), `Expected ss58Format ${ss58Format}, received ${ss58Decoded}`);
+    return decoded.slice(ss58Length, endPos);
+  } catch (error) {
+    throw new Error(`Decoding ${encoded}: ${error.message}`);
+  }
+}
 
 // import * as fs from "fs";
 class Consolidator {

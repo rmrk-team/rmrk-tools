@@ -190,9 +190,10 @@
       </div>
     </form>
     <hr />
-    <script src="rmrk.js"></script>
+    <script src="rmrk-tools.js"></script>
+    <script src="polkadot-utils.js"></script>
     <script>
-
+      const {extensionDapps, utilCrypto, api} = window.polkadotUtils;
       start();
 
       async function start() {
@@ -201,13 +202,13 @@
       }
 
       async function initWeb3Login() {
-        dappex.web3Enable("RMRK Test").then(function () {
-          if (!dappex.isWeb3Injected) {
+        extensionDapps.web3Enable("RMRK Test").then(function () {
+          if (!extensionDapps.isWeb3Injected) {
             alert(
               "You need a Web3 enabled browser to log in with Web3. The easiest solution is probably to install the Polkadot{js} extension."
             );
           } else {
-            dappex.web3Accounts().then(async (accounts) => {
+            extensionDapps.web3Accounts().then(async (accounts) => {
               console.log(accounts);
               let picker = document.querySelector("#account_picker");
               let options = "";
@@ -241,7 +242,7 @@
               return false;
             }
 
-            const c1 = new c100.Collection(
+            const c1 = new rmrkTools.c100.Collection(
               0,
               name,
               max,
@@ -277,7 +278,7 @@
 
             if (!transferable) transferable = 1;
 
-            const n1 = new n100.NFT(
+            const n1 = new rmrkTools.n100.NFT(
               0,
               coll,
               name,
@@ -313,10 +314,10 @@
         return document.querySelector("#account_picker").value;
       }
       function pubkeyForAddress() {
-        return util_crypto.decodeAddress(selectedAddress());
+        return utilCrypto.decodeAddress(selectedAddress());
       }
       function generateCollectionId(symbol, pubkey) {
-        return c100.Collection.generateId(util.u8aToHex(pubkey), symbol);
+        return rmrkTools.c100.Collection.generateId(util.u8aToHex(pubkey), symbol);
       }
       function getJson(s) {
         let encoded = s.split("::").pop();
@@ -367,7 +368,7 @@
       async function submitRemark(remark) {
         if (myApi) {
           console.log("Submitting from " + selectedAddress());
-          let acc = await dappex.web3FromAddress(selectedAddress());
+          let acc = await extensionDapps.web3FromAddress(selectedAddress());
           console.log(acc);
           myApi.tx.system.remark(remark).signAndSend(selectedAddress(), {signer: acc.signer})
         } else {
