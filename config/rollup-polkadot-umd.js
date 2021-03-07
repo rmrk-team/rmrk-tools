@@ -5,11 +5,11 @@ import { terser } from "rollup-plugin-terser";
 import node from "@rollup/plugin-node-resolve";
 
 export default {
-  input: "./src/index.ts",
+  input: "./umd/polkadot.ts",
   output: {
-    file: "./umd/rmrk-tools.min.js",
-    format: "umd",
-    name: "rmrkTools",
+    file: "./umd/polkadot.min.js",
+    format: "iife",
+    name: "polkadotUtils",
     inlineDynamicImports: true,
   },
   plugins: [
@@ -32,15 +32,14 @@ export default {
       ],
     }),
 
+    node(),
+
     cjs({
-      sourceMap: true,
       include: "node_modules/**",
     }),
 
     json(),
 
-    node({
-      extensions: [".ts"],
-    }),
+    terser(),
   ],
 };

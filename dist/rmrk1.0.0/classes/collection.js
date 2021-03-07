@@ -1,6 +1,6 @@
 import { validateCollection } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
-import { OP_TYPES } from "../../tools/constants";
+import { OP_TYPES, VERSION } from "../../tools/constants";
 export class Collection {
     constructor(block, name, max, issuer, symbol, id, metadata) {
         this.changes = [];
@@ -16,7 +16,7 @@ export class Collection {
         if (this.block) {
             throw new Error("An already existing collection cannot be minted!");
         }
-        return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(JSON.stringify({
+        return `RMRK::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(JSON.stringify({
             name: this.name,
             max: this.max,
             issuer: this.issuer,
@@ -31,7 +31,7 @@ export class Collection {
                 " If it has been deployed on chain, load the existing " +
                 "collection as a new instance first, then change issuer.");
         }
-        return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
+        return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
     }
     addChange(c) {
         this.changes.push(c);
@@ -72,7 +72,6 @@ export class Collection {
         return {};
     }
 }
-Collection.V = "1.0.0";
 export var DisplayType;
 (function (DisplayType) {
     DisplayType[DisplayType["null"] = 0] = "null";

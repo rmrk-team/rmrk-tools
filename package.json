@@ -14,11 +14,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:max && yarn build:min",
+    "build": "tsc && yarn build:es && yarn build:cjs",
     "build:es": "rollup --config ./config/rollup.js",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
-    "build:max": "tsc && rollup --config ./config/rollup-umd.js",
-    "build:min": "rollup --config ./config/rollup-umd-min.js",
     "clean": "rm -rf build",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",

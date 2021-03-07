@@ -1,5 +1,6 @@
 import { validateNFT } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
+import { VERSION } from "../../tools/constants";
 export class NFT {
     constructor(block, collection, name, instance, transferable, sn, metadata, data) {
         this.changes = [];
@@ -28,7 +29,7 @@ export class NFT {
         if (this.block) {
             throw new Error("An already existing NFT cannot be minted!");
         }
-        return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(JSON.stringify({
+        return `RMRK::MINTNFT::${VERSION}::${encodeURIComponent(JSON.stringify({
             collection: this.collection,
             name: this.name,
             instance: this.instance,
@@ -42,7 +43,7 @@ export class NFT {
             throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
+        return `RMRK::SEND::${VERSION}::${this.getId()}::${recipient}`;
     }
     // @todo build this out, maybe data type?
     static checkDataFormat(data) {
@@ -74,21 +75,21 @@ export class NFT {
             throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::LIST::${NFT.V}::${this.getId()}::${price > 0 ? price : "cancel"}`;
+        return `RMRK::LIST::${VERSION}::${this.getId()}::${price > 0 ? price : "cancel"}`;
     }
     buy() {
         if (!this.block) {
             throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+        return `RMRK::BUY::${VERSION}::${this.getId()}`;
     }
     consume() {
         if (!this.block) {
             throw new Error(`You can only consume an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+        return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
     }
     /**
      * TBD - hard dependency on Axios / IPFS to fetch remote

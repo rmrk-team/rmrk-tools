@@ -40190,16 +40190,44 @@ const NFTStruct = type({
     data: optional(DataStruct),
     metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
+const IsBigInt = define("BigInt", (value) => {
+    try {
+        if (!is(value, string())) {
+            return false;
+        }
+        const priceBigInt = BigInt(parseInt(value));
+        return typeof priceBigInt === "bigint";
+    }
+    catch (error) {
+        return false;
+    }
+});
+const LISTStruct = type({
+    id: string(),
+    price: IsBigInt,
+});
+const SENDStruct = type({
+    id: string(),
+    recipient: string(),
+});
+const EMOTEStruct = type({
+    id: string(),
+    unicode: string(),
+});
+const CHANGEISSUERStruct = type({
+    id: string(),
+    issuer: string(),
+});
 const validateBase = (remark, opType) => {
     const [prefix, op_type, version] = remark.split("::");
-    if (prefix !== PREFIX) {
+    if (prefix.toUpperCase() !== PREFIX) {
         throw new Error("Invalid remark - does not start with RMRK");
-    }
-    if (version !== VERSION) {
-        throw new Error(`This remark was issued under version ${version} instead of ${VERSION}`);
     }
     if (op_type !== opType) {
         throw new Error(`The op code needs to be ${opType}, but it is ${op_type}`);
+    }
+    if (version !== VERSION) {
+        throw new Error(`This remark was issued under version ${version} instead of ${VERSION}`);
     }
 };
 const validateCollection = (remark) => {
@@ -40212,7 +40240,7 @@ const validateCollection = (remark) => {
     }
     catch (error) {
         console.log("StructError is:", error);
-        return new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrrong during remark validation");
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
 const validateNFT = (remark) => {
@@ -40225,7 +40253,55 @@ const validateNFT = (remark) => {
     }
     catch (error) {
         console.log("StructError is:", error);
-        return new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrrong during remark validation");
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
+    }
+};
+const validateList = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, id, price] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.LIST);
+        return assert$b({ id, price }, LISTStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
+    }
+};
+const validateSend = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.SEND);
+        return assert$b({ id, recipient }, SENDStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
+    }
+};
+const validateEmote = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.EMOTE);
+        return assert$b({ id, unicode }, EMOTEStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
+    }
+};
+const validateChangeIssuer = (remark) => {
+    // With array destructuring it's important to not remove unused destructured variables, as order is important
+    const [_prefix, _op_type, _version, id, issuer] = remark.split("::");
+    try {
+        validateBase(remark, OP_TYPES.CHANGEISSUER);
+        return assert$b({ id, issuer }, CHANGEISSUERStruct);
+    }
+    catch (error) {
+        console.log("StructError is:", error);
+        throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
 
@@ -40244,7 +40320,7 @@ class Collection {
         if (this.block) {
             throw new Error("An already existing collection cannot be minted!");
         }
-        return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(JSON.stringify({
+        return `RMRK::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(JSON.stringify({
             name: this.name,
             max: this.max,
             issuer: this.issuer,
@@ -40259,7 +40335,7 @@ class Collection {
                 " If it has been deployed on chain, load the existing " +
                 "collection as a new instance first, then change issuer.");
         }
-        return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
+        return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
     }
     addChange(c) {
         this.changes.push(c);
@@ -40300,7 +40376,6 @@ class Collection {
         return {};
     }
 }
-Collection.V = "1.0.0";
 var DisplayType$1;
 (function (DisplayType) {
     DisplayType[DisplayType["null"] = 0] = "null";
@@ -40337,7 +40412,7 @@ class NFT {
         if (this.block) {
             throw new Error("An already existing NFT cannot be minted!");
         }
-        return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(JSON.stringify({
+        return `RMRK::MINTNFT::${VERSION}::${encodeURIComponent(JSON.stringify({
             collection: this.collection,
             name: this.name,
             instance: this.instance,
@@ -40351,7 +40426,7 @@ class NFT {
             throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
+        return `RMRK::SEND::${VERSION}::${this.getId()}::${recipient}`;
     }
     // @todo build this out, maybe data type?
     static checkDataFormat(data) {
@@ -40383,21 +40458,21 @@ class NFT {
             throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::LIST::${NFT.V}::${this.getId()}::${price > 0 ? price : "cancel"}`;
+        return `RMRK::LIST::${VERSION}::${this.getId()}::${price > 0 ? price : "cancel"}`;
     }
     buy() {
         if (!this.block) {
             throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+        return `RMRK::BUY::${VERSION}::${this.getId()}`;
     }
     consume() {
         if (!this.block) {
             throw new Error(`You can only consume an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+        return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
     }
     /**
      * TBD - hard dependency on Axios / IPFS to fetch remote
@@ -40423,28 +40498,19 @@ class ChangeIssuer {
         this.id = id;
     }
     static fromRemark(remark) {
-        const exploded = remark.split("::");
+        remark.split("::");
         try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != ChangeIssuer.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${ChangeIssuer.V}`);
-            if (exploded[1] != "CHANGEISSUER")
-                throw new Error("The op code needs to be CHANGEISSUER, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or new issuer");
-            }
+            validateChangeIssuer(remark);
+            const [prefix, op_type, version, id, issuer] = remark.split("::");
+            return new ChangeIssuer(id, issuer);
         }
         catch (e) {
             console.error(e.message);
             console.log(`CHANGEISSUER error: full input was ${remark}`);
             return e.message;
         }
-        const ci = new ChangeIssuer(exploded[4], exploded[3]);
-        return ci;
     }
 }
-ChangeIssuer.V = "1.0.0";
 
 class Send {
     constructor(id, recipient) {
@@ -40452,24 +40518,16 @@ class Send {
         this.id = id;
     }
     static fromRemark(remark) {
-        const exploded = remark.split("::");
         try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != Send.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Send.V}`);
-            if (exploded[1] != "SEND")
-                throw new Error("The op code needs to be SEND, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or recipient");
-            }
+            validateSend(remark);
+            const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
+            return new Send(id, recipient);
         }
         catch (e) {
             console.error(e.message);
             console.log(`SEND error: full input was ${remark}`);
             return e.message;
         }
-        return new Send(exploded[3], exploded[4]);
     }
 }
 Send.V = "1.0.0";
@@ -40480,24 +40538,16 @@ class List {
         this.id = id;
     }
     static fromRemark(remark) {
-        const exploded = remark.split("::");
         try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != List.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${List.V}`);
-            if (exploded[1] != "LIST")
-                throw new Error("The op code needs to be LIST, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or price");
-            }
+            validateList(remark);
+            const [_prefix, _op_type, _version, id, price] = remark.split("::");
+            return new List(id, BigInt(price));
         }
         catch (e) {
             console.error(e.message);
             console.log(`SEND error: full input was ${remark}`);
             return e.message;
         }
-        return new List(exploded[3], BigInt(exploded[4]));
     }
 }
 List.V = "1.0.0";
@@ -40508,24 +40558,16 @@ class Emote {
         this.id = id;
     }
     static fromRemark(remark) {
-        const exploded = remark.split("::");
         try {
-            if (exploded[0] != "RMRK")
-                throw new Error("Invalid remark - does not start with RMRK");
-            if (exploded[2] != Emote.V)
-                throw new Error(`Version mismatch. Is ${exploded[2]}, should be ${Emote.V}`);
-            if (exploded[1] != "EMOTE")
-                throw new Error("The op code needs to be EMOTE, is " + exploded[1]);
-            if (undefined === exploded[3] || undefined == exploded[4]) {
-                throw new Error("Cound not find ID or unicode");
-            }
+            validateEmote(remark);
+            const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
+            return new Emote(id, unicode);
         }
         catch (e) {
             console.error(e.message);
             console.log(`EMOTE error: full input was ${remark}`);
             return e.message;
         }
-        return new Emote(exploded[3], exploded[4]);
     }
 }
 Emote.V = "1.0.0";

@@ -2,6 +2,7 @@
 import { Change } from "../changelog";
 import { validateNFT } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
+import { VERSION } from "../../tools/constants";
 
 export class NFT {
   readonly block: number;
@@ -56,7 +57,7 @@ export class NFT {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
-    return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(
+    return `RMRK::MINTNFT::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         collection: this.collection,
         name: this.name,
@@ -75,7 +76,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
+    return `RMRK::SEND::${VERSION}::${this.getId()}::${recipient}`;
   }
 
   // @todo build this out, maybe data type?
@@ -120,7 +121,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::LIST::${NFT.V}::${this.getId()}::${
+    return `RMRK::LIST::${VERSION}::${this.getId()}::${
       price > 0 ? price : "cancel"
     }`;
   }
@@ -132,7 +133,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+    return `RMRK::BUY::${VERSION}::${this.getId()}`;
   }
 
   public consume(): string {
@@ -142,7 +143,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+    return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
   }
 
   /**

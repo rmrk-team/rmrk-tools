@@ -2,7 +2,7 @@
 import { Change } from "../changelog";
 import { validateCollection } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
-import { OP_TYPES } from "../../tools/constants";
+import { OP_TYPES, VERSION } from "../../tools/constants";
 
 export class Collection {
   readonly block: number;
@@ -12,7 +12,6 @@ export class Collection {
   readonly symbol: string;
   readonly id: string;
   readonly metadata: string;
-  static V = "1.0.0";
   private changes: Change[] = [];
   loadedMetadata?: CollectionMetadata;
 
@@ -38,7 +37,7 @@ export class Collection {
     if (this.block) {
       throw new Error("An already existing collection cannot be minted!");
     }
-    return `RMRK::${OP_TYPES.MINT}::${Collection.V}::${encodeURIComponent(
+    return `RMRK::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         name: this.name,
         max: this.max,
@@ -58,7 +57,7 @@ export class Collection {
           "collection as a new instance first, then change issuer."
       );
     }
-    return `RMRK::CHANGEISSUER::${Collection.V}::${this.id}::${address}`;
+    return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
   }
 
   public addChange(c: Change): Collection {

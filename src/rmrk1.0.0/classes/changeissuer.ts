@@ -3,7 +3,6 @@ import { validateChangeIssuer } from "../../tools/validate-remark";
 export class ChangeIssuer {
   issuer: string;
   id: string;
-  static V = "1.0.0";
 
   constructor(issuer: string, id: string) {
     this.issuer = issuer;

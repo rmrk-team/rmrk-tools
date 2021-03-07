@@ -7,7 +7,6 @@ export declare class Collection {
     readonly symbol: string;
     readonly id: string;
     readonly metadata: string;
-    static V: string;
     private changes;
     loadedMetadata?: CollectionMetadata;
     constructor(block: number, name: string, max: number, issuer: string, symbol: string, id: string, metadata: string);
