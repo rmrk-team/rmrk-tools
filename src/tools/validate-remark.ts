@@ -57,6 +57,10 @@ const LISTStruct = type({
   price: IsBigInt,
 });
 
+const BUYStruct = type({
+  id: string(),
+});
+
 const SENDStruct = type({
   id: string(),
   recipient: string(),
@@ -171,6 +175,21 @@ export const validateChangeIssuer = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
+  } catch (error) {
+    console.log("StructError is:", error);
+    throw new Error(
+      error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateBuy = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id] = remark.split("::");
+
+  try {
+    validateBase(remark, OP_TYPES.BUY);
+    return assert({ id }, BUYStruct);
   } catch (error) {
     console.log("StructError is:", error);
     throw new Error(

@@ -2,7 +2,7 @@
 import { Change } from "../changelog";
 import { validateNFT } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
-import { VERSION } from "../../tools/constants";
+import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
 
 export class NFT {
   readonly block: number;
@@ -17,7 +17,6 @@ export class NFT {
   reactions: Reactionmap;
   private changes: Change[] = [];
   owner: string;
-  static V = "1.0.0";
   loadedMetadata?: NFTMetadata;
   constructor(
     block: number,
@@ -57,7 +56,7 @@ export class NFT {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
-    return `RMRK::MINTNFT::${VERSION}::${encodeURIComponent(
+    return `${PREFIX}::${OP_TYPES.MINTNFT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         collection: this.collection,
         name: this.name,
@@ -76,7 +75,9 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::SEND::${VERSION}::${this.getId()}::${recipient}`;
+    return `${PREFIX}::${
+      OP_TYPES.SEND
+    }::${VERSION}::${this.getId()}::${recipient}`;
   }
 
   // @todo build this out, maybe data type?
@@ -121,7 +122,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::LIST::${VERSION}::${this.getId()}::${
+    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
       price > 0 ? price : "cancel"
     }`;
   }
@@ -133,7 +134,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::BUY::${VERSION}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}`;
   }
 
   public consume(): string {

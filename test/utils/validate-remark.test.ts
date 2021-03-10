@@ -1,6 +1,7 @@
 import test from "ava";
 import {
   validateBase,
+  validateBuy,
   validateCollection,
   validateNFT,
 } from "../../src/tools/validate-remark";
@@ -113,5 +114,13 @@ test("validation: validateNFT", (t) => {
   t.is(
     metadataError.message,
     'At path: metadata -- Expected a string matching `/^(https?|ipfs):\\/\\/.*$/` but received "hpfs://ipfs/QmQ2Q57PVpaP8QvWvvH9kfn1CdCY49pcv1AaLBjDwS2p4g"'
+  );
+});
+
+test("validation: validateBuy", (t) => {
+  t.notThrows(() =>
+    validateBuy(
+      "rmrk::BUY::1.0.0::5105000-0aff6865bed3a66b-VALHELLO-POTION_HEAL-0000000000000001"
+    )
   );
 });

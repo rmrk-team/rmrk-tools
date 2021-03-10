@@ -3,7 +3,6 @@ import { validateSend } from "../../tools/validate-remark";
 export class Send {
   recipient: string;
   id: string;
-  static V = "1.0.0";
 
   constructor(id: string, recipient: string) {
     this.recipient = recipient;

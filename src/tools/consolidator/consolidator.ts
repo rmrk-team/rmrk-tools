@@ -11,6 +11,7 @@ import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
+import { Buy } from "../../rmrk1.0.0/classes/buy";
 // import * as fs from "fs";
 
 export class Consolidator {
@@ -29,6 +30,19 @@ export class Consolidator {
   }
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
+  }
+  private findExistingEvent(nft: Send | Buy): N100 | undefined {
+    return this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = nft.id.split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
   }
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
     const invalidCallBase: Partial<InvalidCall> = {
@@ -172,18 +186,7 @@ export class Consolidator {
       return true;
     }
 
-    const nft = this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-
-      const idExpand2 = send.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-
-      return uniquePart1 === uniquePart2;
-    });
-
+    const nft = this.findExistingEvent(send);
     if (!nft) {
       invalidate(
         send.id,
@@ -228,6 +231,27 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
     );
+
+    // @todo finish list implementation
+    return true;
+  }
+
+  private buy(remark: Remark): boolean {
+    // A Listed NFT was purchased
+    console.log("Instantiating buy");
+    const buy = Buy.fromRemark(remark.remark);
+    const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
+
+    console.log(this.nfts);
+
+    // const nft = this.findExistingEvent(buy);
+    // if (!nft) {
+    //   invalidate(
+    //     buy.id,
+    //     `[${OP_TYPES.SEND}] Attempting to BUY non-existant NFT ${buy.id}`
+    //   );
+    //   return true;
+    // }
 
     // @todo finish list implementation
     return true;
@@ -365,6 +389,9 @@ export class Consolidator {
 
         case OP_TYPES.BUY:
           // An NFT was bought after being LISTed
+          if (this.buy(remark)) {
+            continue;
+          }
           break;
 
         case OP_TYPES.LIST:

@@ -31,7 +31,8 @@
     "cli:seed": "ts-node --project tsconfig.cli.json cli/index seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json ava"
+    "test": "TS_NODE_PROJECT=tsconfig.test.json ava",
+    "test:watch": "TS_NODE_PROJECT=tsconfig.test.json ava --watch"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
