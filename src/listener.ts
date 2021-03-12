@@ -11,6 +11,7 @@ import { Observable } from "rxjs";
 import { RpcPromiseResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
+import { reject } from "ramda";
 
 const DEFAULT_GATEWAY =
   "https://gateway.pinata.cloud/ipfs/QmNSkd7e5ShjpvqJUGjub1fD6Tg2g3YqDBdgnkC3jgCjCR";
@@ -20,8 +21,9 @@ export class RemarkListener {
   private providerInterface: ProviderInterface;
   private apiPromise: Promise<ApiPromise>;
   private initialBlockCalls: BlockCalls[];
-  private missingCallBlocks: BlockCalls[];
-  private latestCallBlocks: BlockCalls[];
+  private missingBlockCalls: BlockCalls[];
+  private latestBlockCalls: BlockCalls[];
+  private latestBlockCallsFinalised: BlockCalls[];
 
   constructor(
     providerInterface: ProviderInterface,
@@ -32,8 +34,9 @@ export class RemarkListener {
     this.apiPromise = ApiPromise.create({ provider: this.providerInterface });
 
     this.initialBlockCalls = [];
-    this.missingCallBlocks = [];
-    this.latestCallBlocks = [];
+    this.missingBlockCalls = [];
+    this.latestBlockCalls = [];
+    this.latestBlockCallsFinalised = [];
   }
 
   private getLastBlockNumber = (blocks: Block[]): number => {
@@ -42,11 +45,12 @@ export class RemarkListener {
   };
 
   public initialize = async () => {
-    await this.initialiseListener();
-    this.initialBlockCalls = await this.fetchInitialRemarks();
-    this.missingCallBlocks = await this.fetchMissingCallBlocks(
-      this.initialBlockCalls
-    );
+    await this.initialiseListener(false);
+    await this.initialiseListener(true);
+    // this.initialBlockCalls = await this.fetchInitialRemarks();
+    // this.missingBlockCalls = await this.fetchMissingBlockCalls(
+    //   this.initialBlockCalls
+    // );
   };
 
   public async fetchInitialRemarks(): Promise<Block[] | []> {
@@ -63,7 +67,7 @@ export class RemarkListener {
     }
   }
 
-  public async fetchMissingCallBlocks(
+  public async fetchMissingBlockCalls(
     initialBlocks: Block[]
   ): Promise<Block[]> {
     try {
@@ -85,8 +89,18 @@ export class RemarkListener {
     return api.rpc.chain.subscribeNewHeads;
   }
 
-  public async initialiseListener() {
-    const headSubscriber = await this.getHeadSubscrber();
+  public async getFinalisedHeadSubscrber(): Promise<
+    RpcPromiseResult<() => Observable<Header>>
+  > {
+    const api = await this.apiPromise;
+    return api.rpc.chain.subscribeFinalizedHeads;
+  }
+
+  public async initialiseListener(finalised: boolean) {
+    const headSubscriber = finalised
+      ? await this.getFinalisedHeadSubscrber()
+      : await this.getHeadSubscrber();
+
     headSubscriber(async (header) => {
       console.log(`Chain is at block: #${header.number}`);
       if (header.number.toNumber() === 0) {
@@ -99,13 +113,25 @@ export class RemarkListener {
         header.number.toNumber()
       );
       const block = await api.rpc.chain.getBlock(blockHash);
-      const blockCall = await getBlockCallsFromSignedBlock(block, [], api);
-      if (blockCall.length > 0) {
+      const calls = await getBlockCallsFromSignedBlock(block, [], api);
+      if (calls.length > 0) {
         const blockCalls: BlockCalls = {
           block: header.number.toNumber(),
-          calls: blockCall,
+          calls,
         };
-        this.latestCallBlocks.push(blockCalls);
+        if (finalised) {
+          console.log("FINALISED BLOCK", blockCalls);
+          this.latestBlockCallsFinalised.push(blockCalls);
+
+          // Now that block has been finalised, remove it from unfinalised blockCalls array
+          this.latestBlockCalls = reject(
+            (o) => o.block === blockCalls.block,
+            this.latestBlockCalls
+          );
+        } else {
+          console.log("LATEST BLOCK", blockCalls);
+          this.latestBlockCalls.push(blockCalls);
+        }
       }
     });
   }
