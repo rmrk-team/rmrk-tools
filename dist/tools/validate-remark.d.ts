@@ -6,3 +6,4 @@ export declare const validateList: (remark: string) => any;
 export declare const validateSend: (remark: string) => any;
 export declare const validateEmote: (remark: string) => any;
 export declare const validateChangeIssuer: (remark: string) => any;
+export declare const validateBuy: (remark: string) => any;

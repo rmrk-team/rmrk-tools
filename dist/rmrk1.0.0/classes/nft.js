@@ -1,6 +1,6 @@
 import { validateNFT } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
-import { VERSION } from "../../tools/constants";
+import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
 export class NFT {
     constructor(block, collection, name, instance, transferable, sn, metadata, data) {
         this.changes = [];
@@ -14,7 +14,7 @@ export class NFT {
         this.metadata = metadata;
         this.owner = "";
         this.reactions = {};
-        this.forsale = false;
+        this.forsale = BigInt(0);
     }
     getId() {
         if (!this.block)
@@ -29,7 +29,7 @@ export class NFT {
         if (this.block) {
             throw new Error("An already existing NFT cannot be minted!");
         }
-        return `RMRK::MINTNFT::${VERSION}::${encodeURIComponent(JSON.stringify({
+        return `${PREFIX}::${OP_TYPES.MINTNFT}::${VERSION}::${encodeURIComponent(JSON.stringify({
             collection: this.collection,
             name: this.name,
             instance: this.instance,
@@ -43,7 +43,7 @@ export class NFT {
             throw new Error(`You can only send an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::SEND::${VERSION}::${this.getId()}::${recipient}`;
+        return `${PREFIX}::${OP_TYPES.SEND}::${VERSION}::${this.getId()}::${recipient}`;
     }
     // @todo build this out, maybe data type?
     static checkDataFormat(data) {
@@ -75,14 +75,14 @@ export class NFT {
             throw new Error(`You can only list an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::LIST::${VERSION}::${this.getId()}::${price > 0 ? price : "cancel"}`;
+        return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${price > 0 ? price : "cancel"}`;
     }
     buy() {
         if (!this.block) {
             throw new Error(`You can only buy an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`);
         }
-        return `RMRK::BUY::${VERSION}::${this.getId()}`;
+        return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}`;
     }
     consume() {
         if (!this.block) {
@@ -100,7 +100,6 @@ export class NFT {
         return {};
     }
 }
-NFT.V = "1.0.0";
 export var DisplayType;
 (function (DisplayType) {
     DisplayType[DisplayType["null"] = 0] = "null";

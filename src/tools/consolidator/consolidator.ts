@@ -221,6 +221,19 @@ export class Consolidator {
     } as Change);
 
     nft.owner = send.recipient;
+
+    // Cancel LIST, if any
+    if (nft.forsale > BigInt(0)) {
+      nft.addChange({
+        field: "forsale",
+        old: nft.forsale,
+        new: BigInt(0),
+        caller: remark.caller,
+        block: remark.block,
+      } as Change);
+      nft.forsale = BigInt(0);
+    }
+
     return false;
   }
 
@@ -232,7 +245,63 @@ export class Consolidator {
       this
     );
 
-    // @todo finish list implementation
+    if (typeof list === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.LIST}] Dead before instantiation: ${list}`
+      );
+      return true;
+    }
+
+    // Find the NFT in question
+    const nft = this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = list.id.split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
+
+    if (!nft) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`
+      );
+      return true;
+    }
+
+    // Check if allowed to issue send - if owner == caller
+    if (nft.owner != remark.caller) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${list.id}, real owner: ${nft.owner}`
+      );
+      return true;
+    }
+
+    if (nft.transferable === 0) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${list.id}.`
+      );
+      return true;
+    }
+
+    if (list.price !== nft.forsale) {
+      nft.addChange({
+        field: "forsale",
+        old: nft.forsale,
+        new: list.price,
+        caller: remark.caller,
+        block: remark.block,
+      } as Change);
+      nft.forsale = list.price;
+    }
+
     return true;
   }
 
@@ -254,25 +323,6 @@ export class Consolidator {
     // }
 
     // @todo finish list implementation
-    return true;
-  }
-
-  // This function is defined separately so that it can be called from send, buy, and consume.
-  // These other interactions will cancel a listing, so it's easier if we abstract the function out.
-  // @todo add this into these functions
-  private changeListStatus(
-    nft: N100,
-    status: BigInt | boolean,
-    remark: Remark
-  ): boolean {
-    nft.addChange({
-      field: "forsale",
-      old: nft.forsale,
-      new: status,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.forsale = status;
     return true;
   }
 
@@ -392,7 +442,39 @@ export class Consolidator {
           if (this.buy(remark)) {
             continue;
           }
+
+          // @todo: do not forget to cancel LIST via
+          /*
+          // Cancel LIST, if any
+          if (nft.forsale > BigInt(0)) {
+            nft.addChange({
+              field: "forsale",
+              old: nft.forsale,
+              new: BigInt(0),
+              caller: remark.caller,
+              block: remark.block,
+            } as Change);
+            nft.forsale = BigInt(0);
+          }
+                */
           break;
+
+        // case OP_TYPES.CONSUME:
+        //   // @todo: do not forget to cancel LIST via
+        //   /*
+        //   // Cancel LIST, if any
+        //   if (nft.forsale > BigInt(0)) {
+        //     nft.addChange({
+        //       field: "forsale",
+        //       old: nft.forsale,
+        //       new: BigInt(0),
+        //       caller: remark.caller,
+        //       block: remark.block,
+        //     } as Change);
+        //     nft.forsale = BigInt(0);
+        //   }
+        //   */
+        //   break;
 
         case OP_TYPES.LIST:
           // An NFT was listed for sale
