@@ -47,10 +47,10 @@ export class RemarkListener {
   public initialize = async () => {
     await this.initialiseListener(false);
     await this.initialiseListener(true);
-    // this.initialBlockCalls = await this.fetchInitialRemarks();
-    // this.missingBlockCalls = await this.fetchMissingBlockCalls(
-    //   this.initialBlockCalls
-    // );
+    this.initialBlockCalls = await this.fetchInitialRemarks();
+    this.missingBlockCalls = await this.fetchMissingBlockCalls(
+      this.initialBlockCalls
+    );
   };
 
   public async fetchInitialRemarks(): Promise<Block[] | []> {
