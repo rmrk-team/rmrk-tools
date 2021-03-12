@@ -13,7 +13,7 @@ import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import { reject } from "ramda";
 
-const DEFAULT_GATEWAY =
+const DEFAULT_DUMP_GATEWAY =
   "https://gateway.pinata.cloud/ipfs/QmNSkd7e5ShjpvqJUGjub1fD6Tg2g3YqDBdgnkC3jgCjCR";
 
 export class RemarkListener {
@@ -29,7 +29,7 @@ export class RemarkListener {
     providerInterface: ProviderInterface,
     initialRemarksUrl?: string
   ) {
-    this.initialRemarksUrl = initialRemarksUrl || DEFAULT_GATEWAY;
+    this.initialRemarksUrl = initialRemarksUrl || DEFAULT_DUMP_GATEWAY;
     this.providerInterface = providerInterface;
     this.apiPromise = ApiPromise.create({ provider: this.providerInterface });
 
@@ -45,9 +45,13 @@ export class RemarkListener {
   };
 
   public initialize = async () => {
+    // Subscribe to latest head blocks (unfinalised)
     await this.initialiseListener(false);
+    // Subscribe to latest head blocks (finalised)
     await this.initialiseListener(true);
+    // Fetch latest remark blocks from dump
     this.initialBlockCalls = await this.fetchInitialRemarks();
+    // Fetch latest remark blocks since last block in the dump above
     this.missingBlockCalls = await this.fetchMissingBlockCalls(
       this.initialBlockCalls
     );
@@ -96,6 +100,12 @@ export class RemarkListener {
     return api.rpc.chain.subscribeFinalizedHeads;
   }
 
+  /*
+    Subscribe to latest block heads, (finalised, and un-finalised)
+    Save them to 2 separate arrays, and once block is finalised, remove it from unfinalised array
+    this.latestBlockCalls is array of unfinalised blocks,
+    we keep it for reference incase consumer wants to disable remarks that are being interacted with
+   */
   public async initialiseListener(finalised: boolean) {
     const headSubscriber = finalised
       ? await this.getFinalisedHeadSubscrber()
