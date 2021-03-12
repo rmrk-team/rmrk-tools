@@ -3,18 +3,22 @@ import {
   Block,
   getBlockCallsFromSignedBlock,
   getLatestFinalizedBlock,
+  getRemarksFromBlocks,
 } from "./tools/utils";
 import { ProviderInterface } from "@polkadot/rpc-provider/types";
 import { ApiPromise } from "@polkadot/api";
 import fetchRemarks from "./tools/fetchRemarks";
-import { Observable } from "rxjs";
+import { Observable, Subscriber } from "rxjs";
 import { RpcPromiseResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import { reject } from "ramda";
+import { Consolidator } from "./tools/consolidator/consolidator";
+import { NFT } from "./rmrk1.0.0/classes/nft";
+import { Collection } from "./rmrk1.0.0/classes/collection";
 
 const DEFAULT_DUMP_GATEWAY =
-  "https://gateway.pinata.cloud/ipfs/QmNSkd7e5ShjpvqJUGjub1fD6Tg2g3YqDBdgnkC3jgCjCR";
+  "https://gateway.pinata.cloud/ipfs/QmUGqohXP8KzzUBJG2xB8tKxHbMGHt6N1YQpX6MkD7YFti";
 
 export class RemarkListener {
   private initialRemarksUrl: string;
@@ -24,6 +28,7 @@ export class RemarkListener {
   private missingBlockCalls: BlockCalls[];
   private latestBlockCalls: BlockCalls[];
   private latestBlockCallsFinalised: BlockCalls[];
+  private observer: Subscriber<unknown> | null;
 
   constructor(
     providerInterface: ProviderInterface,
@@ -37,6 +42,7 @@ export class RemarkListener {
     this.missingBlockCalls = [];
     this.latestBlockCalls = [];
     this.latestBlockCallsFinalised = [];
+    this.observer = null;
   }
 
   private getLastBlockNumber = (blocks: Block[]): number => {
@@ -55,6 +61,16 @@ export class RemarkListener {
     this.missingBlockCalls = await this.fetchMissingBlockCalls(
       this.initialBlockCalls
     );
+
+    this.consolidate();
+  };
+
+  public initialiseObservable = (): Observable<unknown> => {
+    const subscriber = new Observable((observer) => {
+      this.observer = observer;
+    });
+
+    return subscriber;
   };
 
   public async fetchInitialRemarks(): Promise<Block[] | []> {
@@ -86,19 +102,33 @@ export class RemarkListener {
     }
   }
 
-  public async getHeadSubscrber(): Promise<
+  private async getHeadSubscrber(): Promise<
     RpcPromiseResult<() => Observable<Header>>
   > {
     const api = await this.apiPromise;
     return api.rpc.chain.subscribeNewHeads;
   }
 
-  public async getFinalisedHeadSubscrber(): Promise<
+  private async getFinalisedHeadSubscrber(): Promise<
     RpcPromiseResult<() => Observable<Header>>
   > {
     const api = await this.apiPromise;
     return api.rpc.chain.subscribeFinalizedHeads;
   }
+
+  private consolidate = () => {
+    const concatinatedBlockCalls = [
+      ...this.initialBlockCalls,
+      ...this.missingBlockCalls,
+      ...this.latestBlockCallsFinalised,
+    ];
+    const remarks = getRemarksFromBlocks(concatinatedBlockCalls);
+    const consolidator = new Consolidator();
+    const consolidatedFinal = consolidator.consolidate(remarks);
+    if (this.observer) {
+      this.observer.next(consolidatedFinal);
+    }
+  };
 
   /*
     Subscribe to latest block heads, (finalised, and un-finalised)
@@ -106,7 +136,7 @@ export class RemarkListener {
     this.latestBlockCalls is array of unfinalised blocks,
     we keep it for reference incase consumer wants to disable remarks that are being interacted with
    */
-  public async initialiseListener(finalised: boolean) {
+  private async initialiseListener(finalised: boolean) {
     const headSubscriber = finalised
       ? await this.getFinalisedHeadSubscrber()
       : await this.getHeadSubscrber();
@@ -138,11 +168,15 @@ export class RemarkListener {
             (o) => o.block === blockCalls.block,
             this.latestBlockCalls
           );
+
+          this.consolidate();
         } else {
           console.log("LATEST BLOCK", blockCalls);
           this.latestBlockCalls.push(blockCalls);
         }
       }
     });
+
+    return;
   }
 }

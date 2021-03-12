@@ -242,7 +242,7 @@ export class Consolidator {
     const buy = Buy.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
 
-    console.log(this.nfts);
+    // console.log(this.nfts);
 
     // const nft = this.findExistingEvent(buy);
     // if (!nft) {
@@ -420,8 +420,8 @@ export class Consolidator {
           );
       }
     }
-    deeplog(this.nfts);
-    deeplog(this.collections);
+    // deeplog(this.nfts);
+    // deeplog(this.collections);
     // console.log(this.invalidCalls);
     return { nfts: this.nfts, collections: this.collections };
   }
