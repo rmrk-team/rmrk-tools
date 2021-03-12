@@ -12,10 +12,7 @@ import { Observable, Subscriber } from "rxjs";
 import { RpcPromiseResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
-import { reject } from "ramda";
 import { Consolidator } from "./tools/consolidator/consolidator";
-import { NFT } from "./rmrk1.0.0/classes/nft";
-import { Collection } from "./rmrk1.0.0/classes/collection";
 
 const DEFAULT_DUMP_GATEWAY =
   "https://gateway.pinata.cloud/ipfs/QmUGqohXP8KzzUBJG2xB8tKxHbMGHt6N1YQpX6MkD7YFti";
@@ -164,9 +161,8 @@ export class RemarkListener {
           this.latestBlockCallsFinalised.push(blockCalls);
 
           // Now that block has been finalised, remove it from unfinalised blockCalls array
-          this.latestBlockCalls = reject(
-            (o) => o.block === blockCalls.block,
-            this.latestBlockCalls
+          this.latestBlockCalls = this.latestBlockCalls.filter(
+            (item) => item?.block !== blockCalls.block
           );
 
           this.consolidate();
