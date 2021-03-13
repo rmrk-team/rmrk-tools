@@ -86,6 +86,7 @@ export const getRemarksFromBlocks = (blocks) => {
                 interaction_type: meta.type,
                 version: meta.version,
                 remark: remark,
+                extra_ex: call.extras,
             };
             remarks.push(r);
         }

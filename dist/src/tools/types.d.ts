@@ -22,6 +22,7 @@ export declare type BlockCall = {
     call: string;
     value: string;
     caller: string;
+    extras?: BlockCall[];
 };
 export declare enum OP_TYPES {
     BUY = "BUY",
