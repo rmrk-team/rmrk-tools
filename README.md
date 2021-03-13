@@ -5,6 +5,9 @@ Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec
 ![Tests](https://github.com/Swader/rmrk-tools/actions/workflows/run-tests.yml/badge.svg)
 
 ## Installation
+
+> Note: NodeJS 14+ is required. Please install with [NVM](https://nvm.sh).
+
 `yarn install git+https://github.com/Swader/rmrk-tools`
 
 ## Usage
@@ -16,16 +19,16 @@ import { fetchRemarks, utils, Consolidator } from 'rmrk-tools';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
 const wsProvider = new WsProvider('wss://node.rmrk.app');
-    
+
 const fetchAndConsolidate = async () => {
     try {
         const api = await ApiPromise.create({ provider: wsProvider });
         const to = await utils.getLatestFinalizedBlock(api);
-    
+
         const remarkBlocks = await fetchRemarks(api, 6431422, to, ['']);
         if (remarkBlocks && !isEmpty(remarkBlocks)) {
           const remarks = utils.getRemarksFromBlocks(remarkBlocks);
-          const consolidator = new Consolidator();    
+          const consolidator = new Consolidator();
           const { nfts, collections } = consolidator.consolidate(remarks);
           console.log('Consolidated nfts:', nfts);
           console.log('Consolidated collections:', collections);
@@ -37,6 +40,7 @@ const fetchAndConsolidate = async () => {
 ```
 
 ### Browser
+
 ```
 <script src="node_modules/rmrk-tools"></script>
 <script>

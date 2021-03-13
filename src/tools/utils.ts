@@ -3,10 +3,7 @@ import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
 import { Remark } from "./consolidator/remark";
 import { OP_TYPES } from "./constants";
-import {
-  SignedBlock,
-  Block as TBlock,
-} from "@polkadot/types/interfaces/runtime";
+import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
@@ -86,6 +83,7 @@ interface Call {
   call: string;
   value: string;
   caller: string;
+  extras?: BlockCall[];
 }
 
 export type Block = {
@@ -118,6 +116,7 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
+        extra_ex: call.extras,
       };
       remarks.push(r);
     }

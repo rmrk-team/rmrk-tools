@@ -193,7 +193,7 @@
     <script src="rmrk-tools.js"></script>
     <script src="polkadot-utils.js"></script>
     <script>
-      const {extensionDapps, utilCrypto, api} = window.polkadotUtils;
+      const {extensionDapps, utilCrypto, util, api} = window.polkadotUtils;
       start();
 
       async function start() {
@@ -242,7 +242,7 @@
               return false;
             }
 
-            const c1 = new rmrkTools.c100.Collection(
+            const c1 = new rmrkTools.c100(
               0,
               name,
               max,
@@ -278,7 +278,7 @@
 
             if (!transferable) transferable = 1;
 
-            const n1 = new rmrkTools.n100.NFT(
+            const n1 = new rmrkTools.n100(
               0,
               coll,
               name,
@@ -317,7 +317,7 @@
         return utilCrypto.decodeAddress(selectedAddress());
       }
       function generateCollectionId(symbol, pubkey) {
-        return rmrkTools.c100.Collection.generateId(util.u8aToHex(pubkey), symbol);
+        return rmrkTools.c100.generateId(util.u8aToHex(pubkey), symbol);
       }
       function getJson(s) {
         let encoded = s.split("::").pop();
