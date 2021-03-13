@@ -1,3 +1,10 @@
+import { Send } from "../rmrk1.0.0/classes/send";
+import { Buy } from "../rmrk1.0.0/classes/buy";
+import { List } from "../rmrk1.0.0/classes/list";
+import { NFT } from "../rmrk1.0.0/classes/nft";
+import { Emote } from "../rmrk1.0.0/classes/emote";
+import { ChangeIssuer } from "../rmrk1.0.0/classes/changeissuer";
+
 export type Options = {
   ws: string;
   from: string;
@@ -31,3 +38,5 @@ export enum OP_TYPES {
   CONSUME = "CONSUME",
   CHANGEISSUER = "CHANGEISSUER",
 }
+
+export type Interaction = Send | Buy | List | NFT | Emote | ChangeIssuer;

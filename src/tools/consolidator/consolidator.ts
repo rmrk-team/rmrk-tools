@@ -12,6 +12,7 @@ import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 import { Buy } from "../../rmrk1.0.0/classes/buy";
+import { Interaction } from "../types";
 // import * as fs from "fs";
 
 export class Consolidator {
@@ -31,7 +32,7 @@ export class Consolidator {
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
   }
-  private findExistingNFT(interaction: Send | Buy): N100 | boolean {
+  private findExistingNFT(interaction: Interaction): N100 | boolean {
     return (
       this.nfts.find((el) => {
         const idExpand1 = el.getId().split("-");
