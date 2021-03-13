@@ -1,0 +1,44 @@
+name: NPM publish CD workflow
+
+on:
+  release:
+    # This specifies that the build will be triggered when we publish a release
+    types: [published]
+
+jobs:
+  build:
+
+    # Run on latest version of ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # "ref" specifies the branch to check out.
+          # "github.event.release.target_commitish" is a global variable and specifies the branch the release targeted
+          ref: ${{ github.event.release.target_commitish }}
+      # install Node.js
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          # Specifies the registry, this field is required!
+          registry-url: https://npm.pkg.github.com/
+          scope: "@Swader"
+      # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
+      - run: yarn install
+      # set up git since we will later push to the repo
+      - run: git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com" && git config --global user.name "$GITHUB_ACTOR"
+      # upgrade npm version in package.json to the tag used in the release.
+      - run: yarn version --new-version ${{ github.event.release.tag_name }}
+      # run tests just in case
+      - run: yarn test
+      # publish to NPM -> there is one caveat, continue reading for the fix
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # push the version changes to GitHub
+      - run: git push
+        env:
+          # The secret is passed automatically. Nothing to configure.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
