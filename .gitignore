@@ -5,7 +5,6 @@ archive
 .vscode
 .idea
 
-/dist/rmrk.js
 /remarks*.json
 /dump-*.json
 throwaway.js

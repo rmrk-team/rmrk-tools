@@ -1,6 +1,8 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { stringToHex } from "@polkadot/util";
+import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
+import { Remark } from "./consolidator/remark";
+import { OP_TYPES } from "./constants";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -53,4 +55,70 @@ export const prefixToArray = function (prefix: string): string[] {
     }
   }
   return returnArray;
+};
+
+const getMeta = (call: Call, block: number): RemarkMeta | false => {
+  const str = hexToString(call.value);
+  const arr = str.split("::");
+  if (arr.length < 3) {
+    console.error(`Invalid RMRK in block ${block}: ${str}`);
+    return false;
+  }
+  return {
+    type: arr[1],
+    version: parseFloat(arr[2]) ? arr[2] : "0.1",
+  } as RemarkMeta;
+};
+
+type RemarkMeta = {
+  type: string;
+  version: string;
+};
+
+type Call = {
+  call: string;
+  value: string;
+  caller: string;
+};
+
+type Block = {
+  block: number;
+  calls: Call[];
+};
+
+export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
+  const remarks: Remark[] = [];
+  for (const row of blocks) {
+    for (const call of row.calls) {
+      if (call.call !== "system.remark") continue;
+      const meta = getMeta(call, row.block);
+      if (!meta) continue;
+      let remark;
+
+      switch (meta.type) {
+        case OP_TYPES.MINTNFT:
+        case OP_TYPES.MINT:
+          remark = decodeURI(hexToString(call.value));
+          break;
+        default:
+          remark = hexToString(call.value);
+          break;
+      }
+
+      const r: Remark = {
+        block: row.block,
+        caller: call.caller,
+        interaction_type: meta.type,
+        version: meta.version,
+        remark: remark,
+      };
+      remarks.push(r);
+    }
+  }
+  return remarks;
+};
+
+export const getRemarkData = (dataString: string) => {
+  const data = decodeURIComponent(dataString);
+  return JSON.parse(data);
 };

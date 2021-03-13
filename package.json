@@ -1,25 +1,50 @@
 {
   "name": "rmrk-tools",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "Suite of libraries implementing RMRK.app specs",
-  "main": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "browser": "./browser/rmrk-tools.js",
+  "exports": {
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs",
+    "browser": "./browser/rmrk-tools.js"
+  },
+  "files": [
+    "umd",
+    "dist",
+    "browser"
+  ],
   "scripts": {
-    "build": "tsc --outDir build",
+    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:browser",
+    "build:es": "rollup --config ./config/rollup.js",
+    "build:cjs": "rollup --config ./config/rollup-cjs.js",
+    "build:umd": "webpack --config ./config/webpack.config.umd.js",
+    "build:polkadot-browser": "webpack --config ./config/webpack.config.polkadot-umd.js",
+    "build:browser": "yarn build:umd && yarn build:polkadot-browser",
     "clean": "rm -rf build",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "start": "ts-node src/index start",
-    "fetch": "ts-node src/index fetch",
-    "consolidate": "ts-node src/index consolidate",
-    "seed": "ts-node src/index seed",
-    "getevents": "ts-node src/index getevents",
-    "test": "ava",
-    "validate": "ts-node src/index validate",
-    "bundle": "yarn build && npx browserify bundle.js > dist/rmrk.js"
+    "cli:fetch": "ts-node --project tsconfig.cli.json cli/index fetch",
+    "cli:consolidate": "ts-node --project tsconfig.cli.json cli/index consolidate",
+    "cli:seed": "ts-node --project tsconfig.cli.json cli/index seed",
+    "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
+    "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
+    "test": "TS_NODE_PROJECT=tsconfig.test.json ava",
+    "test:watch": "TS_NODE_PROJECT=tsconfig.test.json ava --watch"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/preset-typescript": "^7.13.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
@@ -29,14 +54,23 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-security": "^1.4.0",
     "prettier": "^2.1.2",
+    "process": "^0.11.10",
+    "rollup": "^2.40.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-loader": "^8.0.17",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0"
   },
   "dependencies": {
     "@polkadot/api": "^3.7.3",
     "@polkadot/extension-dapp": "^0.37.2",
+    "@polkadot/keyring": "^6.0.4-0",
+    "@polkadot/util": "^6.0.4-0",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
+    "superstruct": "^0.14.2",
     "winston": "^3.3.3"
   },
   "ava": {
@@ -45,6 +79,9 @@
     ],
     "require": [
       "ts-node/register"
+    ],
+    "files": [
+      "test/**/*.test.ts"
     ]
   }
 }

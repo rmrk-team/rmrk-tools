@@ -11,22 +11,39 @@ import { deeplog } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
-import { OP_TYPES } from "../types";
+import { OP_TYPES } from "../constants";
+import { Interaction } from "../types";
 // import * as fs from "fs";
 
 export class Consolidator {
-  private adapter: JsonAdapter;
+  private adapter?: JsonAdapter;
   private invalidCalls: InvalidCall[];
   private collections: C100[];
   private nfts: N100[];
-  constructor(initializedAdapter: JsonAdapter) {
-    this.adapter = initializedAdapter;
+  constructor(initializedAdapter?: JsonAdapter) {
+    if (initializedAdapter) {
+      this.adapter = initializedAdapter;
+    }
+
     this.invalidCalls = [];
     this.collections = [];
     this.nfts = [];
   }
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
+  }
+  private findExistingNFT(interaction: Interaction): N100 | undefined {
+    return this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = interaction.id.split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
   }
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
     const invalidCallBase: Partial<InvalidCall> = {
@@ -170,18 +187,7 @@ export class Consolidator {
       return true;
     }
 
-    const nft = this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-
-      const idExpand2 = send.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-
-      return uniquePart1 === uniquePart2;
-    });
-
+    const nft = this.findExistingNFT(send);
     if (!nft) {
       invalidate(
         send.id,
@@ -456,8 +462,13 @@ export class Consolidator {
     return false;
   }
 
-  public consolidate(): void {
-    const remarks = this.adapter.getRemarks();
+  public consolidate(
+    rmrks?: Remark[]
+  ): {
+    nfts: N100[];
+    collections: C100[];
+  } {
+    const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
       console.log("==============================");
@@ -483,38 +494,42 @@ export class Consolidator {
 
         case OP_TYPES.BUY:
           // An NFT was bought after being LISTed
+          if (this.buy(remark)) {
+            continue;
+          }
+
           // @todo: do not forget to cancel LIST via
           /*
-    // Cancel LIST, if any
-    if (nft.forsale > BigInt(0)) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: BigInt(0),
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = BigInt(0);
-    }
-          */
+          // Cancel LIST, if any
+          if (nft.forsale > BigInt(0)) {
+            nft.addChange({
+              field: "forsale",
+              old: nft.forsale,
+              new: BigInt(0),
+              caller: remark.caller,
+              block: remark.block,
+            } as Change);
+            nft.forsale = BigInt(0);
+          }
+                */
           break;
 
-        case OP_TYPES.CONSUME:
-          // @todo: do not forget to cancel LIST via
-          /*
-    // Cancel LIST, if any
-    if (nft.forsale > BigInt(0)) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: BigInt(0),
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = BigInt(0);
-    }
-          */
-          break;
+        // case OP_TYPES.CONSUME:
+        //   // @todo: do not forget to cancel LIST via
+        //   /*
+        //   // Cancel LIST, if any
+        //   if (nft.forsale > BigInt(0)) {
+        //     nft.addChange({
+        //       field: "forsale",
+        //       old: nft.forsale,
+        //       new: BigInt(0),
+        //       caller: remark.caller,
+        //       block: remark.block,
+        //     } as Change);
+        //     nft.forsale = BigInt(0);
+        //   }
+        //   */
+        //   break;
 
         case OP_TYPES.LIST:
           // An NFT was listed for sale
@@ -544,11 +559,13 @@ export class Consolidator {
     }
     deeplog(this.nfts);
     deeplog(this.collections);
+
     //console.log(this.invalidCalls);
     console.log(
       `${this.nfts.length} NFTs across ${this.collections.length} collections.`
     );
     console.log(`${this.invalidCalls.length} invalid calls.`);
+    return { nfts: this.nfts, collections: this.collections };
   }
 }
 
