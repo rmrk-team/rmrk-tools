@@ -9,7 +9,7 @@ export declare class Consolidator {
     private nfts;
     constructor(initializedAdapter?: JsonAdapter);
     private findExistingCollection;
-    private findExistingEvent;
+    private findExistingNFT;
     private updateInvalidCalls;
     private mint;
     private mintNFT;

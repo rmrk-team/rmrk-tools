@@ -21,6 +21,10 @@ export const getLatestFinalizedBlock = async (api) => {
     return header.number.toNumber();
 };
 export const deeplog = function (obj) {
+    //@ts-ignore
+    BigInt.prototype.toJSON = function () {
+        return this.toString();
+    };
     console.log(JSON.stringify(obj, null, 2));
 };
 export const stringIsAValidUrl = (s) => {
