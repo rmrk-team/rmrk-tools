@@ -14,11 +14,16 @@ import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import { Consolidator } from "./tools/consolidator/consolidator";
 
-const DEFAULT_DUMP_GATEWAY =
-  "https://gateway.pinata.cloud/ipfs/QmUGqohXP8KzzUBJG2xB8tKxHbMGHt6N1YQpX6MkD7YFti";
+import defaultDump from "../dumps/remarks-4892957-6588851-0x726d726b,0x524d524b.json";
+
+interface IProps {
+  providerInterface: ProviderInterface;
+  prefixes?: string[];
+  initialRemarksUrl?: string;
+}
 
 export class RemarkListener {
-  private initialRemarksUrl: string;
+  private initialRemarksUrl?: string;
   private providerInterface: ProviderInterface;
   private apiPromise: Promise<ApiPromise>;
   private initialBlockCalls: BlockCalls[];
@@ -26,12 +31,10 @@ export class RemarkListener {
   private latestBlockCalls: BlockCalls[];
   private latestBlockCallsFinalised: BlockCalls[];
   private observer: Subscriber<unknown> | null;
+  private prefixes: string[];
 
-  constructor(
-    providerInterface: ProviderInterface,
-    initialRemarksUrl?: string
-  ) {
-    this.initialRemarksUrl = initialRemarksUrl || DEFAULT_DUMP_GATEWAY;
+  constructor({ providerInterface, prefixes, initialRemarksUrl }: IProps) {
+    this.initialRemarksUrl = initialRemarksUrl;
     this.providerInterface = providerInterface;
     this.apiPromise = ApiPromise.create({ provider: this.providerInterface });
 
@@ -40,6 +43,7 @@ export class RemarkListener {
     this.latestBlockCalls = [];
     this.latestBlockCallsFinalised = [];
     this.observer = null;
+    this.prefixes = prefixes || [];
   }
 
   private getLastBlockNumber = (blocks: Block[]): number => {
@@ -47,7 +51,7 @@ export class RemarkListener {
     return lastBlock.block;
   };
 
-  public initialize = async () => {
+  private initialize = async () => {
     // Subscribe to latest head blocks (unfinalised)
     await this.initialiseListener(false);
     // Subscribe to latest head blocks (finalised)
@@ -66,12 +70,15 @@ export class RemarkListener {
     const subscriber = new Observable((observer) => {
       this.observer = observer;
     });
-
+    this.initialize();
     return subscriber;
   };
 
   public async fetchInitialRemarks(): Promise<Block[] | []> {
     try {
+      if (!this.initialRemarksUrl) {
+        return defaultDump;
+      }
       const response = await fetch(this.initialRemarksUrl);
       if (response.status === 200) {
         const initialRemarks = await response.json();
@@ -91,7 +98,8 @@ export class RemarkListener {
       const api = await this.apiPromise;
       const from = await this.getLastBlockNumber(initialBlocks);
       const to = await getLatestFinalizedBlock(api);
-      const missingBlocks = await fetchRemarks(api, from, to, []);
+      console.log(from, to);
+      const missingBlocks = await fetchRemarks(api, from, to, this.prefixes);
       return missingBlocks;
     } catch (error) {
       console.log(error);
@@ -150,7 +158,11 @@ export class RemarkListener {
         header.number.toNumber()
       );
       const block = await api.rpc.chain.getBlock(blockHash);
-      const calls = await getBlockCallsFromSignedBlock(block, [], api);
+      const calls = await getBlockCallsFromSignedBlock(
+        block,
+        this.prefixes,
+        api
+      );
       if (calls.length > 0) {
         const blockCalls: BlockCalls = {
           block: header.number.toNumber(),

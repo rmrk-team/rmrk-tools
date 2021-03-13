@@ -242,7 +242,7 @@
               return false;
             }
 
-            const c1 = new rmrkTools.c100(
+            const c1 = new rmrkTools.Collection(
               0,
               name,
               max,
@@ -278,7 +278,7 @@
 
             if (!transferable) transferable = 1;
 
-            const n1 = new rmrkTools.n100(
+            const n1 = new rmrkTools.NFT(
               0,
               coll,
               name,
@@ -317,7 +317,7 @@
         return utilCrypto.decodeAddress(selectedAddress());
       }
       function generateCollectionId(symbol, pubkey) {
-        return rmrkTools.c100.generateId(util.u8aToHex(pubkey), symbol);
+        return rmrkTools.Collection.generateId(util.u8aToHex(pubkey), symbol);
       }
       function getJson(s) {
         let encoded = s.split("::").pop();

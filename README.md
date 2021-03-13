@@ -14,8 +14,10 @@ Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec
 
 ### ESM / Typescript
 
+#### Fetch Manually and consolidate
+
 ```
-import { fetchRemarks, utils, Consolidator } from 'rmrk-tools';
+import { fetchRemarks, getRemarksFromBlocks, getLatestFinalizedBlock, Consolidator } from 'rmrk-tools';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
 const wsProvider = new WsProvider('wss://node.rmrk.app');
@@ -23,11 +25,11 @@ const wsProvider = new WsProvider('wss://node.rmrk.app');
 const fetchAndConsolidate = async () => {
     try {
         const api = await ApiPromise.create({ provider: wsProvider });
-        const to = await utils.getLatestFinalizedBlock(api);
+        const to = await getLatestFinalizedBlock(api);
 
         const remarkBlocks = await fetchRemarks(api, 6431422, to, ['']);
         if (remarkBlocks && !isEmpty(remarkBlocks)) {
-          const remarks = utils.getRemarksFromBlocks(remarkBlocks);
+          const remarks = getRemarksFromBlocks(remarkBlocks);
           const consolidator = new Consolidator();
           const { nfts, collections } = consolidator.consolidate(remarks);
           console.log('Consolidated nfts:', nfts);
@@ -39,12 +41,29 @@ const fetchAndConsolidate = async () => {
 }
 ```
 
+#### Subscribe to Remarks
+
+```
+import { RemarkListener } from 'rmrk-tools';
+import { WsProvider } from "@polkadot/api";
+
+const wsProvider = new WsProvider("wss://node.rmrk.app");
+
+const startListening = async () => {
+  const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://optional-urlp-for-remarks-dumps' });
+  const subscriber = listener.initialiseObservable();
+  subscriber.subscribe((val) => console.log(val));
+};
+
+startListening();
+```
+
 ### Browser
 
 ```
 <script src="node_modules/rmrk-tools"></script>
 <script>
-    const { c100, n100, Consolidator, fetchRemarks, utils } = window.rmrkTools;
+    const { Collection, NFT, Consolidator, fetchRemarks } = window.rmrkTools;
 </script>
 ```
 
@@ -68,7 +87,7 @@ Optional parameters:
 - `--from FROM`: block from which to start, defaults to 0 (note that for RMRK, canonically the block 4892957 is genesis)
 - `--to TO`: block until which to search, defaults to latest
 - `--prefixes PREFIXES`: limit return data to only remarks with these prefixes. Can be comma separated list. Prefixes can be hex or utf8. Case sensitive. Example: 0x726d726b,0x524d524b
-- `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable. Example: `yarn fetch --prefixes=0x726d726b,0x524d524b --append=somefile.json`
+- `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable. Example: `yarn cli:fetch --prefixes=0x726d726b,0x524d524b --append=somefile.json`
 
 The return data will look like this:
 
