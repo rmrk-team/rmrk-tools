@@ -1,5 +1,6 @@
 import { ApiPromise } from "@polkadot/api";
 import { Remark } from "./consolidator/remark";
+import { BlockCall } from "./types";
 export declare const getApi: (wsEndpoint: string) => Promise<ApiPromise>;
 export declare const getLatestBlock: (api: ApiPromise) => Promise<number>;
 export declare const getLatestFinalizedBlock: (api: ApiPromise) => Promise<number>;
@@ -10,6 +11,7 @@ declare type Call = {
     call: string;
     value: string;
     caller: string;
+    extras?: BlockCall[];
 };
 declare type Block = {
     block: number;

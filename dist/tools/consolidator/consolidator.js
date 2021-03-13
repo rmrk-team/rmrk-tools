@@ -163,15 +163,7 @@ export class Consolidator {
             return true;
         }
         // Find the NFT in question
-        const nft = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-            const idExpand2 = list.id.split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-            return uniquePart1 === uniquePart2;
-        });
+        const nft = this.findExistingNFT(list);
         if (!nft) {
             invalidate(list.id, `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`);
             return true;
@@ -198,6 +190,7 @@ export class Consolidator {
         return true;
     }
     buy(remark) {
+        var _a, _b;
         // An NFT was bought after having been LISTed for sale
         console.log("Instantiating buy");
         const buy = Buy.fromRemark(remark.remark);
@@ -207,15 +200,7 @@ export class Consolidator {
             return true;
         }
         // Find the NFT in question
-        const nft = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-            const idExpand2 = buy.id.split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-            return uniquePart1 === uniquePart2;
-        });
+        const nft = this.findExistingNFT(buy);
         if (!nft) {
             invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`);
             return true;
@@ -229,23 +214,44 @@ export class Consolidator {
             invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`);
             return true;
         }
-        // Check the transaction
-        // Balance transfer in same batch
-        // - must go to nft owner
-        // - must match nft.forsale for amount
-        // if (list.price !== nft.forsale) {
-        //   nft.addChange({
-        //     field: "forsale",
-        //     old: nft.forsale,
-        //     new: list.price,
-        //     caller: remark.caller,
-        //     block: remark.block,
-        //   } as Change);
-        //   nft.forsale = list.price;
-        // }
-        // @todo do not forget to cancel list
-        // @todo do not forget to addChange of owner
-        // @todo do not forget to apply new owner to nft
+        // Check if we have extra calls in the batch
+        if (((_a = remark.extra_ex) === null || _a === void 0 ? void 0 : _a.length) === 0) {
+            invalidate(buy.id, `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buy.id}.`);
+            return true;
+        }
+        else {
+            // Check if the transfer is valid, i.e. matches target recipient and value.
+            let transferValid = false;
+            let transferValue = "";
+            (_b = remark.extra_ex) === null || _b === void 0 ? void 0 : _b.forEach((el) => {
+                if (el.call === "balances.transfer") {
+                    transferValue = el.value;
+                    if (el.value === `${nft.owner},${nft.forsale}`) {
+                        transferValid = true;
+                    }
+                }
+            });
+            if (!transferValid) {
+                invalidate(buy.id, `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buy.id} not valid. 
+          Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`);
+                return true;
+            }
+        }
+        nft.addChange({
+            field: "owner",
+            old: nft.owner,
+            new: remark.caller,
+            caller: remark.caller,
+            block: remark.block,
+        });
+        nft.owner = remark.caller;
+        nft.addChange({
+            field: "forsale",
+            old: nft.forsale,
+            new: BigInt(0),
+            caller: remark.caller,
+            block: remark.block,
+        });
         return true;
     }
     emote(remark) {
