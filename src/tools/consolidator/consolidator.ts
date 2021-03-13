@@ -12,7 +12,6 @@ import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
-import { Buy } from "../../rmrk1.0.0/classes/buy";
 import { Interaction } from "../types";
 // import * as fs from "fs";
 
