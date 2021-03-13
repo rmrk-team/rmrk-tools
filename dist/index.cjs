@@ -46926,15 +46926,7 @@ class Consolidator {
             return true;
         }
         // Find the NFT in question
-        const nft = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-            const idExpand2 = list.id.split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-            return uniquePart1 === uniquePart2;
-        });
+        const nft = this.findExistingNFT(list);
         if (!nft) {
             invalidate(list.id, `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`);
             return true;
@@ -46970,15 +46962,7 @@ class Consolidator {
             return true;
         }
         // Find the NFT in question
-        const nft = this.nfts.find((el) => {
-            const idExpand1 = el.getId().split("-");
-            idExpand1.shift();
-            const uniquePart1 = idExpand1.join("-");
-            const idExpand2 = buy.id.split("-");
-            idExpand2.shift();
-            const uniquePart2 = idExpand2.join("-");
-            return uniquePart1 === uniquePart2;
-        });
+        const nft = this.findExistingNFT(buy);
         if (!nft) {
             invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`);
             return true;
