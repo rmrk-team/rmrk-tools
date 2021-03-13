@@ -39,4 +39,4 @@ export enum OP_TYPES {
   CHANGEISSUER = "CHANGEISSUER",
 }
 
-export type Interaction = Send | Buy | List | NFT | Emote | ChangeIssuer;
+export type Interaction = Send | Buy | List | Emote | ChangeIssuer;
