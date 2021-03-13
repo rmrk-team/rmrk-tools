@@ -3,6 +3,7 @@ import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
 import { Remark } from "./consolidator/remark";
 import { OP_TYPES } from "./constants";
+import { BlockCall } from "./types";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -79,6 +80,7 @@ type Call = {
   call: string;
   value: string;
   caller: string;
+  extras?: BlockCall[];
 };
 
 type Block = {
@@ -111,6 +113,7 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
+        extra_ex: call.extras,
       };
       remarks.push(r);
     }

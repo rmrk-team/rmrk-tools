@@ -12,7 +12,7 @@ import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
-import { Interaction } from "../types";
+import { BlockCall, Interaction } from "../types";
 // import * as fs from "fs";
 
 export class Consolidator {
@@ -338,25 +338,51 @@ export class Consolidator {
       return true;
     }
 
-    // Check the transaction
-    // Balance transfer in same batch
-    // - must go to nft owner
-    // - must match nft.forsale for amount
+    // Check if we have extra calls in the batch
+    if (remark.extra_ex?.length === 0) {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buy.id}.`
+      );
+      return true;
+    } else {
+      // Check if the transfer is valid, i.e. matches target recipient and value.
+      let transferValid = false;
+      let transferValue = "";
+      remark.extra_ex?.forEach((el: BlockCall) => {
+        if (el.call === "balances.transfer") {
+          transferValue = el.value;
+          if (el.value === `${nft.owner},${nft.forsale}`) {
+            transferValid = true;
+          }
+        }
+      });
+      if (!transferValid) {
+        invalidate(
+          buy.id,
+          `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buy.id} not valid. 
+          Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
+        );
+        return true;
+      }
+    }
 
-    // if (list.price !== nft.forsale) {
-    //   nft.addChange({
-    //     field: "forsale",
-    //     old: nft.forsale,
-    //     new: list.price,
-    //     caller: remark.caller,
-    //     block: remark.block,
-    //   } as Change);
-    //   nft.forsale = list.price;
-    // }
+    nft.addChange({
+      field: "owner",
+      old: nft.owner,
+      new: remark.caller,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+    nft.owner = remark.caller;
 
-    // @todo do not forget to cancel list
-    // @todo do not forget to addChange of owner
-    // @todo do not forget to apply new owner to nft
+    nft.addChange({
+      field: "forsale",
+      old: nft.forsale,
+      new: BigInt(0),
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
 
     return true;
   }
