@@ -1,7 +1,14 @@
 {
-  "name": "rmrk-tools",
-  "version": "0.0.1",
+  "name": "@Swader/rmrk-tools",
+  "version": "0.0.3",
   "description": "Suite of libraries implementing RMRK.app specs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Swader/rmrk-tools"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "main": "dist/index.cjs",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
@@ -32,7 +39,8 @@
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
     "test": "TS_NODE_PROJECT=tsconfig.test.json ava",
-    "test:watch": "TS_NODE_PROJECT=tsconfig.test.json ava --watch"
+    "test:watch": "TS_NODE_PROJECT=tsconfig.test.json ava --watch",
+    "prepublishOnly": "yarn build"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
