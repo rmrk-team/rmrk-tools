@@ -24,15 +24,13 @@ jobs:
           node-version: 14
           # Specifies the registry, this field is required!
           registry-url: https://npm.pkg.github.com/
-          scope: "@Yuripetusko"
+          scope: "@Swader"
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: yarn install
       # set up git since we will later push to the repo
       - run: git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com" && git config --global user.name "$GITHUB_ACTOR"
       # upgrade npm version in package.json to the tag used in the release.
       - run: yarn version --new-version ${{ github.event.release.tag_name }}
-      # build the project
-      - run: yarn build
       # run tests just in case
       - run: yarn test
       # publish to NPM -> there is one caveat, continue reading for the fix

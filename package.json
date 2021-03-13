@@ -4,7 +4,7 @@
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Yuripetusko/rmrk-tools"
+    "url": "https://github.com/Swader/rmrk-tools"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
