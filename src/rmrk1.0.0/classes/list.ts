@@ -16,7 +16,7 @@ export class List {
       return new List(id, BigInt(price));
     } catch (e) {
       console.error(e.message);
-      console.log(`SEND error: full input was ${remark}`);
+      console.log(`LIST error: full input was ${remark}`);
       return e.message;
     }
   }

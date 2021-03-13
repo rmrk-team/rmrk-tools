@@ -17,5 +17,4 @@ export class List {
         }
     }
 }
-List.V = "1.0.0";
 //# sourceMappingURL=list.js.map
