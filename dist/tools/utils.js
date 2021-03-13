@@ -21,6 +21,10 @@ export const getLatestFinalizedBlock = async (api) => {
     return header.number.toNumber();
 };
 export const deeplog = function (obj) {
+    //@ts-ignore
+    BigInt.prototype.toJSON = function () {
+        return this.toString();
+    };
     console.log(JSON.stringify(obj, null, 2));
 };
 export const stringIsAValidUrl = (s) => {
@@ -87,6 +91,70 @@ export const getRemarksFromBlocks = (blocks) => {
         }
     }
     return remarks;
+};
+export const isBatchInterrupted = async (api, blockHash, extrinsicIndex) => {
+    const records = await api.query.system.events.at(blockHash);
+    const events = records.filter(({ phase, event }) => phase.isApplyExtrinsic &&
+        phase.asApplyExtrinsic.eq(extrinsicIndex) &&
+        (event.method.toString() === "BatchInterrupted" ||
+            event.method.toString() === "ExtrinsicFailed"));
+    return Boolean(events.length);
+};
+const isSystemRemark = (call, prefixes) => {
+    return (call.section === "system" &&
+        call.method === "remark" &&
+        prefixes.some((word) => call.args.toString().startsWith(word)));
+};
+const isUtilityBatch = (call) => call.section === "utility" &&
+    (call.method === "batch" || call.method === "batchAll");
+export const getBlockCallsFromSignedBlock = async (signedBlock, prefixes, api) => {
+    var _a, _b, _c;
+    const blockCalls = [];
+    const extrinsics = (_a = signedBlock === null || signedBlock === void 0 ? void 0 : signedBlock.block) === null || _a === void 0 ? void 0 : _a.extrinsics;
+    if (!Array.isArray(extrinsics)) {
+        return blockCalls;
+    }
+    let extrinsicIndex = 0;
+    for (const extrinsic of extrinsics) {
+        if (extrinsic.isEmpty || !extrinsic.isSigned) {
+            extrinsicIndex++;
+            continue;
+        }
+        if (isSystemRemark(extrinsic.method, prefixes)) {
+            blockCalls.push({
+                call: "system.remark",
+                value: extrinsic.args.toString(),
+                caller: extrinsic.signer.toString(),
+            });
+        }
+        else if (isUtilityBatch(extrinsic.method)) {
+            // @ts-ignore
+            const batchArgs = extrinsic.method.args[0];
+            let remarkExists = false;
+            batchArgs.forEach((el) => {
+                if (isSystemRemark(el, prefixes)) {
+                    remarkExists = true;
+                }
+            });
+            if (remarkExists) {
+                const skip = await isBatchInterrupted(api, signedBlock.block.hash, extrinsicIndex);
+                if (skip) {
+                    console.log(`Skipping batch ${(_c = (_b = signedBlock.block) === null || _b === void 0 ? void 0 : _b.header) === null || _c === void 0 ? void 0 : _c.number}-${extrinsicIndex} due to BatchInterrupted`);
+                    extrinsicIndex++;
+                    continue;
+                }
+                batchArgs.forEach((el) => {
+                    blockCalls.push({
+                        call: `${el.section}.${el.method}`,
+                        value: el.args.toString(),
+                        caller: extrinsic.signer.toString(),
+                    });
+                });
+            }
+        }
+        extrinsicIndex++;
+    }
+    return blockCalls;
 };
 export const getRemarkData = (dataString) => {
     const data = decodeURIComponent(dataString);

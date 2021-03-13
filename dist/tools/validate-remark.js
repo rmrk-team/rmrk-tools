@@ -76,7 +76,6 @@ export const validateCollection = (remark) => {
         return assert(obj, CollectionStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -89,7 +88,6 @@ export const validateNFT = (remark) => {
         return assert(obj, NFTStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -101,7 +99,6 @@ export const validateList = (remark) => {
         return assert({ id, price }, LISTStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -113,7 +110,6 @@ export const validateSend = (remark) => {
         return assert({ id, recipient }, SENDStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -125,7 +121,6 @@ export const validateEmote = (remark) => {
         return assert({ id, unicode }, EMOTEStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -137,7 +132,6 @@ export const validateChangeIssuer = (remark) => {
         return assert({ id, issuer }, CHANGEISSUERStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -149,7 +143,6 @@ export const validateBuy = (remark) => {
         return assert({ id }, BUYStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };

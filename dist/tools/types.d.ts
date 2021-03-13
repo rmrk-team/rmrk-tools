@@ -1,3 +1,8 @@
+import { Send } from "../rmrk1.0.0/classes/send";
+import { Buy } from "../rmrk1.0.0/classes/buy";
+import { List } from "../rmrk1.0.0/classes/list";
+import { Emote } from "../rmrk1.0.0/classes/emote";
+import { ChangeIssuer } from "../rmrk1.0.0/classes/changeissuer";
 export declare type Options = {
     ws: string;
     from: string;
@@ -28,3 +33,4 @@ export declare enum OP_TYPES {
     CONSUME = "CONSUME",
     CHANGEISSUER = "CHANGEISSUER"
 }
+export declare type Interaction = Send | Buy | List | Emote | ChangeIssuer;

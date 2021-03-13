@@ -45237,6 +45237,10 @@ const getLatestFinalizedBlock = async (api) => {
     return header.number.toNumber();
 };
 const deeplog = function (obj) {
+    //@ts-ignore
+    BigInt.prototype.toJSON = function () {
+        return this.toString();
+    };
     console.log(JSON.stringify(obj, null, 2));
 };
 const stringIsAValidUrl = (s) => {
@@ -45304,6 +45308,70 @@ const getRemarksFromBlocks = (blocks) => {
     }
     return remarks;
 };
+const isBatchInterrupted = async (api, blockHash, extrinsicIndex) => {
+    const records = await api.query.system.events.at(blockHash);
+    const events = records.filter(({ phase, event }) => phase.isApplyExtrinsic &&
+        phase.asApplyExtrinsic.eq(extrinsicIndex) &&
+        (event.method.toString() === "BatchInterrupted" ||
+            event.method.toString() === "ExtrinsicFailed"));
+    return Boolean(events.length);
+};
+const isSystemRemark = (call, prefixes) => {
+    return (call.section === "system" &&
+        call.method === "remark" &&
+        prefixes.some((word) => call.args.toString().startsWith(word)));
+};
+const isUtilityBatch = (call) => call.section === "utility" &&
+    (call.method === "batch" || call.method === "batchAll");
+const getBlockCallsFromSignedBlock = async (signedBlock, prefixes, api) => {
+    var _a, _b, _c;
+    const blockCalls = [];
+    const extrinsics = (_a = signedBlock === null || signedBlock === void 0 ? void 0 : signedBlock.block) === null || _a === void 0 ? void 0 : _a.extrinsics;
+    if (!Array.isArray(extrinsics)) {
+        return blockCalls;
+    }
+    let extrinsicIndex = 0;
+    for (const extrinsic of extrinsics) {
+        if (extrinsic.isEmpty || !extrinsic.isSigned) {
+            extrinsicIndex++;
+            continue;
+        }
+        if (isSystemRemark(extrinsic.method, prefixes)) {
+            blockCalls.push({
+                call: "system.remark",
+                value: extrinsic.args.toString(),
+                caller: extrinsic.signer.toString(),
+            });
+        }
+        else if (isUtilityBatch(extrinsic.method)) {
+            // @ts-ignore
+            const batchArgs = extrinsic.method.args[0];
+            let remarkExists = false;
+            batchArgs.forEach((el) => {
+                if (isSystemRemark(el, prefixes)) {
+                    remarkExists = true;
+                }
+            });
+            if (remarkExists) {
+                const skip = await isBatchInterrupted(api, signedBlock.block.hash, extrinsicIndex);
+                if (skip) {
+                    console.log(`Skipping batch ${(_c = (_b = signedBlock.block) === null || _b === void 0 ? void 0 : _b.header) === null || _c === void 0 ? void 0 : _c.number}-${extrinsicIndex} due to BatchInterrupted`);
+                    extrinsicIndex++;
+                    continue;
+                }
+                batchArgs.forEach((el) => {
+                    blockCalls.push({
+                        call: `${el.section}.${el.method}`,
+                        value: el.args.toString(),
+                        caller: extrinsic.signer.toString(),
+                    });
+                });
+            }
+        }
+        extrinsicIndex++;
+    }
+    return blockCalls;
+};
 const getRemarkData = (dataString) => {
     const data = decodeURIComponent(dataString);
     return JSON.parse(data);
@@ -45318,6 +45386,8 @@ var utils = /*#__PURE__*/Object.freeze({
     stringIsAValidUrl: stringIsAValidUrl,
     prefixToArray: prefixToArray,
     getRemarksFromBlocks: getRemarksFromBlocks,
+    isBatchInterrupted: isBatchInterrupted,
+    getBlockCallsFromSignedBlock: getBlockCallsFromSignedBlock,
     getRemarkData: getRemarkData
 });
 
@@ -45396,7 +45466,6 @@ const validateCollection = (remark) => {
         return assert$k(obj, CollectionStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45409,7 +45478,6 @@ const validateNFT = (remark) => {
         return assert$k(obj, NFTStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45421,7 +45489,6 @@ const validateList = (remark) => {
         return assert$k({ id, price }, LISTStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45433,7 +45500,6 @@ const validateSend = (remark) => {
         return assert$k({ id, recipient }, SENDStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45445,7 +45511,6 @@ const validateEmote = (remark) => {
         return assert$k({ id, unicode }, EMOTEStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45457,7 +45522,6 @@ const validateChangeIssuer = (remark) => {
         return assert$k({ id, issuer }, CHANGEISSUERStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45469,7 +45533,6 @@ const validateBuy = (remark) => {
         return assert$k({ id }, BUYStruct);
     }
     catch (error) {
-        console.log("StructError is:", error);
         throw new Error((error === null || error === void 0 ? void 0 : error.message) || "Something went wrong during remark validation");
     }
 };
@@ -45709,6 +45772,25 @@ class List {
             validateList(remark);
             const [_prefix, _op_type, _version, id, price] = remark.split("::");
             return new List(id, BigInt(price));
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`LIST error: full input was ${remark}`);
+            return e.message;
+        }
+    }
+}
+
+class Buy {
+    constructor(id, price) {
+        this.price = price;
+        this.id = id;
+    }
+    static fromRemark(remark) {
+        try {
+            validateBuy(remark);
+            const [_prefix, _op_type, _version, id, price] = remark.split("::");
+            return new Buy(id, BigInt(price));
         }
         catch (e) {
             console.error(e.message);
@@ -46679,35 +46761,6 @@ function decodeAddress(encoded, ignoreChecksum, ss58Format = -1) {
   }
 }
 
-class Buy {
-    constructor(id, price) {
-        this.price = price;
-        this.id = id;
-    }
-    static fromRemark(remark) {
-        try {
-            validateBuy(remark);
-            const [_prefix, _op_type, _version, id, price] = remark.split("::");
-            return new Buy(id, BigInt(price));
-        }
-        catch (e) {
-            console.error(e.message);
-            console.log(`SEND error: full input was ${remark}`);
-            return e.message;
-        }
-    }
-}
-/*
-- if OP is BUY
-- instantiate BUY interaction
-- get price
-- check if there is a matching LIST for the same NFT, if not FALSE, someone is trying to buy something not for sale
-- check if BUY is in a batchAll call, if not FALSE
-- check if BUY is in a batchAll call with a balances.transfer extrinsic of the same price, if not FALSE
-- check if BUY is in a batchAll call with a balances.transfer extrinsic and there was ExtrinsicSuccess event on that batchAll call, return TRUE
-
- */
-
 // import * as fs from "fs";
 class Consolidator {
     constructor(initializedAdapter) {
@@ -46721,12 +46774,12 @@ class Consolidator {
     findExistingCollection(id) {
         return this.collections.find((el) => el.id === id);
     }
-    findExistingEvent(nft) {
+    findExistingNFT(interaction) {
         return this.nfts.find((el) => {
             const idExpand1 = el.getId().split("-");
             idExpand1.shift();
             const uniquePart1 = idExpand1.join("-");
-            const idExpand2 = nft.id.split("-");
+            const idExpand2 = interaction.id.split("-");
             idExpand2.shift();
             const uniquePart2 = idExpand2.join("-");
             return uniquePart1 === uniquePart2;
@@ -46817,7 +46870,7 @@ class Consolidator {
             invalidate(remark.remark, `[${OP_TYPES.SEND}] Dead before instantiation: ${send}`);
             return true;
         }
-        const nft = this.findExistingEvent(send);
+        const nft = this.findExistingNFT(send);
         if (!nft) {
             invalidate(send.id, `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`);
             return true;
@@ -46897,20 +46950,54 @@ class Consolidator {
         return true;
     }
     buy(remark) {
-        // A Listed NFT was purchased
+        // An NFT was bought after having been LISTed for sale
         console.log("Instantiating buy");
-        Buy.fromRemark(remark.remark);
-        this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
-        console.log(this.nfts);
-        // const nft = this.findExistingEvent(buy);
-        // if (!nft) {
-        //   invalidate(
-        //     buy.id,
-        //     `[${OP_TYPES.SEND}] Attempting to BUY non-existant NFT ${buy.id}`
-        //   );
-        //   return true;
+        const buy = Buy.fromRemark(remark.remark);
+        const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
+        if (typeof buy === "string") {
+            invalidate(remark.remark, `[${OP_TYPES.BUY}] Dead before instantiation: ${buy}`);
+            return true;
+        }
+        // Find the NFT in question
+        const nft = this.nfts.find((el) => {
+            const idExpand1 = el.getId().split("-");
+            idExpand1.shift();
+            const uniquePart1 = idExpand1.join("-");
+            const idExpand2 = buy.id.split("-");
+            idExpand2.shift();
+            const uniquePart2 = idExpand2.join("-");
+            return uniquePart1 === uniquePart2;
+        });
+        if (!nft) {
+            invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`);
+            return true;
+        }
+        // Check if allowed to issue send - if owner == caller
+        if (nft.forsale <= BigInt(0)) {
+            invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buy.id}`);
+            return true;
+        }
+        if (nft.transferable === 0) {
+            invalidate(buy.id, `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`);
+            return true;
+        }
+        // Check the transaction
+        // Balance transfer in same batch
+        // - must go to nft owner
+        // - must match nft.forsale for amount
+        // if (list.price !== nft.forsale) {
+        //   nft.addChange({
+        //     field: "forsale",
+        //     old: nft.forsale,
+        //     new: list.price,
+        //     caller: remark.caller,
+        //     block: remark.block,
+        //   } as Change);
+        //   nft.forsale = list.price;
         // }
-        // @todo finish list implementation
+        // @todo do not forget to cancel list
+        // @todo do not forget to addChange of owner
+        // @todo do not forget to apply new owner to nft
         return true;
     }
     emote(remark) {
@@ -47052,7 +47139,9 @@ class Consolidator {
         }
         deeplog(this.nfts);
         deeplog(this.collections);
-        // console.log(this.invalidCalls);
+        //console.log(this.invalidCalls);
+        console.log(`${this.nfts.length} NFTs across ${this.collections.length} collections.`);
+        console.log(`${this.invalidCalls.length} invalid calls.`);
         return { nfts: this.nfts, collections: this.collections };
     }
 }
@@ -47069,68 +47158,16 @@ var fetchRemarks = async (api, from, to, prefixes) => {
         }
         const blockHash = await api.rpc.chain.getBlockHash(i);
         const block = await api.rpc.chain.getBlock(blockHash);
-        const bc = [];
         if (block.block === undefined) {
             console.error("block.block is undefined for block " + i);
             deeplog(block);
             continue;
         }
-        let exIndex = 0;
-        exLoop: for (const ex of block.block.extrinsics) {
-            if (ex.isEmpty || !ex.isSigned) {
-                exIndex++;
-                continue;
-            }
-            const { method: { args, method, section }, } = ex;
-            if (section === "system" && method === "remark") {
-                const remark = args.toString();
-                if (prefixes.some((word) => remark.startsWith(word))) {
-                    //if (remark.indexOf(prefix) === 0) {
-                    bc.push({
-                        call: "system.remark",
-                        value: remark,
-                        caller: ex.signer.toString(),
-                    });
-                }
-            }
-            else if (section === "utility" &&
-                (method === "batch" || method == "batchAll")) {
-                // @ts-ignore
-                const batchargs = args[0];
-                let remarkExists = false;
-                batchargs.forEach((el) => {
-                    if (el.section === "system" &&
-                        el.method === "remark" &&
-                        prefixes.some((word) => el.args.toString().startsWith(word))) {
-                        remarkExists = true;
-                    }
-                });
-                if (remarkExists) {
-                    const records = await api.query.system.events.at(blockHash);
-                    const events = records.filter(({ phase, event }) => phase.isApplyExtrinsic &&
-                        phase.asApplyExtrinsic.eq(exIndex) &&
-                        (event.method.toString() === "BatchInterrupted" ||
-                            event.method.toString() === "ExtrinsicFailed"));
-                    if (events.length) {
-                        console.log(`Skipping batch ${i}-${exIndex} due to BatchInterrupted`);
-                        exIndex++;
-                        continue exLoop;
-                    }
-                    batchargs.forEach((el) => {
-                        bc.push({
-                            call: `${el.section}.${el.method}`,
-                            value: el.args.toString(),
-                            caller: ex.signer.toString(),
-                        });
-                    });
-                }
-            }
-            exIndex++;
-        }
-        if (bc.length) {
+        const blockCalls = await getBlockCallsFromSignedBlock(block, prefixes, api);
+        if (blockCalls.length) {
             bcs.push({
                 block: i,
-                calls: bc,
+                calls: blockCalls,
             });
         }
     }

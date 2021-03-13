@@ -17,14 +17,4 @@ export class Buy {
         }
     }
 }
-/*
-- if OP is BUY
-- instantiate BUY interaction
-- get price
-- check if there is a matching LIST for the same NFT, if not FALSE, someone is trying to buy something not for sale
-- check if BUY is in a batchAll call, if not FALSE
-- check if BUY is in a batchAll call with a balances.transfer extrinsic of the same price, if not FALSE
-- check if BUY is in a batchAll call with a balances.transfer extrinsic and there was ExtrinsicSuccess event on that batchAll call, return TRUE
-
- */
 //# sourceMappingURL=buy.js.map

@@ -4,4 +4,10 @@ export declare type Remark = {
     caller: string;
     version: string;
     remark: string;
+    extra_ex?: Extrinsic[];
+};
+export declare type Extrinsic = {
+    module: string;
+    method: string;
+    arg: string;
 };
