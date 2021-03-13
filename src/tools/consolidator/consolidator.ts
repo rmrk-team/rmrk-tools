@@ -31,18 +31,20 @@ export class Consolidator {
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
   }
-  private findExistingEvent(nft: Send | Buy): N100 | undefined {
-    return this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
+  private findExistingNFT(interaction: Send | Buy): N100 | boolean {
+    return (
+      this.nfts.find((el) => {
+        const idExpand1 = el.getId().split("-");
+        idExpand1.shift();
+        const uniquePart1 = idExpand1.join("-");
 
-      const idExpand2 = nft.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
+        const idExpand2 = interaction.id.split("-");
+        idExpand2.shift();
+        const uniquePart2 = idExpand2.join("-");
 
-      return uniquePart1 === uniquePart2;
-    });
+        return uniquePart1 === uniquePart2;
+      }) || false
+    );
   }
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
     const invalidCallBase: Partial<InvalidCall> = {
