@@ -8,11 +8,10 @@ export declare class NFT {
     readonly data?: string;
     readonly sn: string;
     readonly metadata?: string;
-    forsale: BigInt | boolean;
+    forsale: BigInt;
     reactions: Reactionmap;
     private changes;
     owner: string;
-    static V: string;
     loadedMetadata?: NFTMetadata;
     constructor(block: number, collection: string, name: string, instance: string, transferable: number, sn: string, metadata?: string, data?: string);
     getId(): string;

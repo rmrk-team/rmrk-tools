@@ -9,12 +9,13 @@ export declare class Consolidator {
     private nfts;
     constructor(initializedAdapter?: JsonAdapter);
     private findExistingCollection;
+    private findExistingEvent;
     private updateInvalidCalls;
     private mint;
     private mintNFT;
     private send;
     private list;
-    private changeListStatus;
+    private buy;
     private emote;
     private changeIssuer;
     consolidate(rmrks?: Remark[]): {

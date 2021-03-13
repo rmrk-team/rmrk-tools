@@ -17,5 +17,4 @@ export class Send {
         }
     }
 }
-Send.V = "1.0.0";
 //# sourceMappingURL=send.js.map

@@ -4,4 +4,11 @@ export type Remark = {
   caller: string;
   version: string;
   remark: string;
+  extra_ex?: Extrinsic[];
+};
+
+export type Extrinsic = {
+  module: string;
+  method: string;
+  arg: string;
 };
