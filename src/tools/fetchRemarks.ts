@@ -76,11 +76,15 @@ export default async (
           );
           if (events.length) {
             console.log(
-              `Skipping batch ${i}-${exIndex} due to BatchInterrupted`
+              `Skipping batch ${i}-${exIndex} due to BatchInterrupted or ExtrinsicFailed`
             );
             exIndex++;
             continue exLoop;
           }
+
+          // @todo - create extras field in first call
+          // add all batch companions into extras field
+          // should result in remark with children like balance.transfer
 
           batchargs.forEach((el) => {
             bc.push({

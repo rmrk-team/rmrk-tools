@@ -64,7 +64,7 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
-    "@polkadot/api": "^3.7.3",
+    "@polkadot/api": "^4.0.3",
     "@polkadot/extension-dapp": "^0.37.2",
     "@polkadot/keyring": "^6.0.4-0",
     "@polkadot/util": "^6.0.4-0",

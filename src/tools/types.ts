@@ -26,6 +26,7 @@ export type BlockCall = {
   call: string;
   value: string;
   caller: string;
+  extras?: BlockCall[];
 };
 
 export enum OP_TYPES {
