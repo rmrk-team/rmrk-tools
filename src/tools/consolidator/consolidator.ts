@@ -188,7 +188,7 @@ export class Consolidator {
       return true;
     }
 
-    const nft = this.findExistingEvent(send);
+    const nft = this.findExistingNFT(send);
     if (!nft) {
       invalidate(
         send.id,
@@ -315,7 +315,7 @@ export class Consolidator {
 
     console.log(this.nfts);
 
-    // const nft = this.findExistingEvent(buy);
+    // const nft = this.findExistingNFT(buy);
     // if (!nft) {
     //   invalidate(
     //     buy.id,
