@@ -2,6 +2,8 @@
 
 Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec/).
 
+![Tests](https://github.com/Swader/rmrk-tools/actions/workflows/run-tests.yml/badge.svg)
+
 ## Installation
 `yarn install git+https://github.com/Swader/rmrk-tools`
 
