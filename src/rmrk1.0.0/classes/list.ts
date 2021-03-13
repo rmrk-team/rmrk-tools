@@ -25,7 +25,7 @@ export class List {
       }
     } catch (e) {
       console.error(e.message);
-      console.log(`SEND error: full input was ${remark}`);
+      console.log(`LIST error: full input was ${remark}`);
       return e.message;
     }
     return new List(exploded[3], BigInt(exploded[4]));

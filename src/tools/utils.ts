@@ -26,6 +26,10 @@ export const getLatestFinalizedBlock = async (
 };
 
 export const deeplog = function (obj: any): void {
+  //@ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
   console.log(JSON.stringify(obj, null, 2));
 };
 
