@@ -3,28 +3,47 @@ import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
 import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
+import { List } from "../../rmrk1.0.0/classes/list";
+import { Buy } from "../../rmrk1.0.0/classes/buy";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
 import { decodeAddress } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
-import { OP_TYPES } from "../types";
+import { OP_TYPES } from "../constants";
+import { BlockCall, Interaction } from "../types";
 // import * as fs from "fs";
 
 export class Consolidator {
-  private adapter: JsonAdapter;
+  private adapter?: JsonAdapter;
   private invalidCalls: InvalidCall[];
   private collections: C100[];
   private nfts: N100[];
-  constructor(initializedAdapter: JsonAdapter) {
-    this.adapter = initializedAdapter;
+  constructor(initializedAdapter?: JsonAdapter) {
+    if (initializedAdapter) {
+      this.adapter = initializedAdapter;
+    }
+
     this.invalidCalls = [];
     this.collections = [];
     this.nfts = [];
   }
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
+  }
+  private findExistingNFT(interaction: Interaction): N100 | undefined {
+    return this.nfts.find((el) => {
+      const idExpand1 = el.getId().split("-");
+      idExpand1.shift();
+      const uniquePart1 = idExpand1.join("-");
+
+      const idExpand2 = interaction.id.split("-");
+      idExpand2.shift();
+      const uniquePart2 = idExpand2.join("-");
+
+      return uniquePart1 === uniquePart2;
+    });
   }
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
     const invalidCallBase: Partial<InvalidCall> = {
@@ -168,20 +187,7 @@ export class Consolidator {
       return true;
     }
 
-    const nft = this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-
-      const idExpand2 = send.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-
-      return uniquePart1 === uniquePart2;
-    });
-
-    // @todo add condition for transferable!
-
+    const nft = this.findExistingNFT(send);
     if (!nft) {
       invalidate(
         send.id,
@@ -199,6 +205,14 @@ export class Consolidator {
       return true;
     }
 
+    if (nft.transferable === 0) {
+      invalidate(
+        send.id,
+        `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`
+      );
+      return true;
+    }
+
     nft.addChange({
       field: "owner",
       old: nft.owner,
@@ -208,7 +222,169 @@ export class Consolidator {
     } as Change);
 
     nft.owner = send.recipient;
+
+    // Cancel LIST, if any
+    if (nft.forsale > BigInt(0)) {
+      nft.addChange({
+        field: "forsale",
+        old: nft.forsale,
+        new: BigInt(0),
+        caller: remark.caller,
+        block: remark.block,
+      } as Change);
+      nft.forsale = BigInt(0);
+    }
+
     return false;
+  }
+
+  private list(remark: Remark): boolean {
+    // An NFT was listed for sale
+    console.log("Instantiating list");
+    const list = List.fromRemark(remark.remark);
+    const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
+      this
+    );
+
+    if (typeof list === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.LIST}] Dead before instantiation: ${list}`
+      );
+      return true;
+    }
+
+    // Find the NFT in question
+    const nft = this.findExistingNFT(list);
+
+    if (!nft) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`
+      );
+      return true;
+    }
+
+    // Check if allowed to issue send - if owner == caller
+    if (nft.owner != remark.caller) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${list.id}, real owner: ${nft.owner}`
+      );
+      return true;
+    }
+
+    if (nft.transferable === 0) {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${list.id}.`
+      );
+      return true;
+    }
+
+    if (list.price !== nft.forsale) {
+      nft.addChange({
+        field: "forsale",
+        old: nft.forsale,
+        new: list.price,
+        caller: remark.caller,
+        block: remark.block,
+      } as Change);
+      nft.forsale = list.price;
+    }
+
+    return true;
+  }
+
+  private buy(remark: Remark): boolean {
+    // An NFT was bought after having been LISTed for sale
+    console.log("Instantiating buy");
+    const buy = Buy.fromRemark(remark.remark);
+    const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
+
+    if (typeof buy === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.BUY}] Dead before instantiation: ${buy}`
+      );
+      return true;
+    }
+
+    // Find the NFT in question
+    const nft = this.findExistingNFT(buy);
+
+    if (!nft) {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`
+      );
+      return true;
+    }
+
+    // Check if allowed to issue send - if owner == caller
+    if (nft.forsale <= BigInt(0)) {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buy.id}`
+      );
+      return true;
+    }
+
+    if (nft.transferable === 0) {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`
+      );
+      return true;
+    }
+
+    // Check if we have extra calls in the batch
+    if (remark.extra_ex?.length === 0) {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buy.id}.`
+      );
+      return true;
+    } else {
+      // Check if the transfer is valid, i.e. matches target recipient and value.
+      let transferValid = false;
+      let transferValue = "";
+      remark.extra_ex?.forEach((el: BlockCall) => {
+        if (el.call === "balances.transfer") {
+          transferValue = el.value;
+          if (el.value === `${nft.owner},${nft.forsale}`) {
+            transferValid = true;
+          }
+        }
+      });
+      if (!transferValid) {
+        invalidate(
+          buy.id,
+          `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buy.id} not valid. 
+          Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
+        );
+        return true;
+      }
+    }
+
+    nft.addChange({
+      field: "owner",
+      old: nft.owner,
+      new: remark.caller,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+    nft.owner = remark.caller;
+
+    nft.addChange({
+      field: "forsale",
+      old: nft.forsale,
+      new: BigInt(0),
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+
+    return true;
   }
 
   private emote(remark: Remark): boolean {
@@ -232,6 +408,9 @@ export class Consolidator {
         `[${OP_TYPES.EMOTE}] Attempting to emote on non-existant NFT ${emote.id}`
       );
       return true;
+    }
+    if (undefined === target.reactions[emote.unicode]) {
+      target.reactions[emote.unicode] = [];
     }
     const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
     if (index > -1) {
@@ -289,8 +468,13 @@ export class Consolidator {
     return false;
   }
 
-  public consolidate(): void {
-    const remarks = this.adapter.getRemarks();
+  public consolidate(
+    rmrks?: Remark[]
+  ): {
+    nfts: N100[];
+    collections: C100[];
+  } {
+    const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
       console.log("==============================");
@@ -316,10 +500,48 @@ export class Consolidator {
 
         case OP_TYPES.BUY:
           // An NFT was bought after being LISTed
+          if (this.buy(remark)) {
+            continue;
+          }
+
+          // @todo: do not forget to cancel LIST via
+          /*
+          // Cancel LIST, if any
+          if (nft.forsale > BigInt(0)) {
+            nft.addChange({
+              field: "forsale",
+              old: nft.forsale,
+              new: BigInt(0),
+              caller: remark.caller,
+              block: remark.block,
+            } as Change);
+            nft.forsale = BigInt(0);
+          }
+                */
           break;
+
+        // case OP_TYPES.CONSUME:
+        //   // @todo: do not forget to cancel LIST via
+        //   /*
+        //   // Cancel LIST, if any
+        //   if (nft.forsale > BigInt(0)) {
+        //     nft.addChange({
+        //       field: "forsale",
+        //       old: nft.forsale,
+        //       new: BigInt(0),
+        //       caller: remark.caller,
+        //       block: remark.block,
+        //     } as Change);
+        //     nft.forsale = BigInt(0);
+        //   }
+        //   */
+        //   break;
 
         case OP_TYPES.LIST:
           // An NFT was listed for sale
+          if (this.list(remark)) {
+            continue;
+          }
           break;
 
         case OP_TYPES.EMOTE:
@@ -343,7 +565,13 @@ export class Consolidator {
     }
     deeplog(this.nfts);
     deeplog(this.collections);
-    console.log(this.invalidCalls);
+
+    //console.log(this.invalidCalls);
+    console.log(
+      `${this.nfts.length} NFTs across ${this.collections.length} collections.`
+    );
+    console.log(`${this.invalidCalls.length} invalid calls.`);
+    return { nfts: this.nfts, collections: this.collections };
   }
 }
 

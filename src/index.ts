@@ -1,14 +1,5 @@
-import program from "commander";
-import * as fetch from "./cli-commands/fetch";
-import * as consolidate from "./cli-commands/consolidate";
-import * as seed from "./cli-commands/seed";
-import * as getevents from "./cli-commands/getevents";
-import * as validate from "./cli-commands/validate";
-
-fetch.addTo(program);
-consolidate.addTo(program);
-seed.addTo(program);
-getevents.addTo(program);
-validate.addTo(program);
-
-program.parse(process.argv);
+export * from "./tools/consolidator/consolidator";
+export { Collection as c100 } from "./rmrk1.0.0/classes/collection";
+export { NFT as n100 } from "./rmrk1.0.0/classes/nft";
+export { default as fetchRemarks } from "./tools/fetchRemarks";
+export * as utils from "./tools/utils";

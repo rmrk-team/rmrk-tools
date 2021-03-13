@@ -1,5 +1,8 @@
 // @todo add data field
 import { Change } from "../changelog";
+import { validateNFT } from "../../tools/validate-remark";
+import { getRemarkData } from "../../tools/utils";
+import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
 
 export class NFT {
   readonly block: number;
@@ -10,10 +13,10 @@ export class NFT {
   readonly data?: string;
   readonly sn: string;
   readonly metadata?: string;
+  forsale: BigInt;
   reactions: Reactionmap;
   private changes: Change[] = [];
   owner: string;
-  static V = "RMRK1.0.0";
   loadedMetadata?: NFTMetadata;
   constructor(
     block: number,
@@ -35,6 +38,7 @@ export class NFT {
     this.metadata = metadata;
     this.owner = "";
     this.reactions = {};
+    this.forsale = BigInt(0);
   }
 
   public getId(): string {
@@ -52,7 +56,7 @@ export class NFT {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
-    return `RMRK::MINTNFT::${NFT.V}::${encodeURIComponent(
+    return `${PREFIX}::${OP_TYPES.MINTNFT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         collection: this.collection,
         name: this.name,
@@ -71,7 +75,9 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::SEND::${NFT.V}::${this.getId()}::${recipient}`;
+    return `${PREFIX}::${
+      OP_TYPES.SEND
+    }::${VERSION}::${this.getId()}::${recipient}`;
   }
 
   // @todo build this out, maybe data type?
@@ -83,47 +89,18 @@ export class NFT {
     if (!block) {
       block = 0;
     }
-    const exploded = remark.split("::");
     try {
-      if (exploded[0].toUpperCase() != "RMRK")
-        throw new Error("Invalid remark - does not start with RMRK");
-      if (exploded[1] != "MINTNFT")
-        throw new Error("The op code needs to be MINTNFT, is " + exploded[1]);
-      if (exploded[2] != NFT.V) {
-        throw new Error(
-          `This remark was issued under version ${exploded[2]} instead of ${NFT.V}`
-        );
-      }
-      const data = decodeURIComponent(exploded[3]);
-      const obj = JSON.parse(data);
-      if (!obj) throw new Error(`Could not parse object from: ${data}`);
-      // Check if the object has either data or metadata
-      if (
-        (undefined === obj.metadata ||
-          (!obj.metadata.startsWith("ipfs") &&
-            !obj.metadata.startsWith("http"))) &&
-        undefined === obj.data
-      )
-        throw new Error(
-          `Invalid metadata (not an HTTP or IPFS URL) and missing data`
-        );
-      if (obj.data) {
-        NFT.checkDataFormat(obj.data);
-      }
-      if (undefined === obj.name) throw new Error(`Missing field: name`);
-      if (undefined === obj.collection)
-        throw new Error(`Missing field: collection`);
-      if (undefined === obj.instance)
-        throw new Error(`Missing field: instance`);
-      if (undefined === obj.transferable)
-        throw new Error(`Missing field: transferable`);
-      if (undefined === obj.sn) throw new Error(`Missing field: sn`);
+      validateNFT(remark);
+      const [prefix, op_type, version, dataString] = remark.split("::");
+      const obj = getRemarkData(dataString);
       return new this(
         block,
         obj.collection,
         obj.name,
         obj.instance,
-        obj.transferable,
+        typeof obj.transferable === "number"
+          ? obj.transferable
+          : parseInt(obj.transferable, 10),
         obj.sn,
         obj.metadata,
         obj.data
@@ -145,7 +122,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::LIST::${NFT.V}::${this.getId()}::${
+    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
       price > 0 ? price : "cancel"
     }`;
   }
@@ -157,7 +134,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::BUY::${NFT.V}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}`;
   }
 
   public consume(): string {
@@ -167,7 +144,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::CONSUME::${NFT.V}::${this.getId()}`;
+    return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
   }
 
   /**
