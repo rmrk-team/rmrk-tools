@@ -7,7 +7,7 @@
     "url": "https://github.com/Yuripetusko/rmrk-tools"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/yourOrganizationOrAccount"
+    "registry": "https://npm.pkg.github.com/"
   },
   "main": "dist/index.cjs",
   "module": "./dist/index.es.js",
