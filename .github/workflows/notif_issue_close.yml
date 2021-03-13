@@ -1,0 +1,18 @@
+name: Issue notification - close
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  notify:
+    name: Notify about issue changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send TG message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: "rmrk-tools [issue #${{ github.event.issue.number }}](https://github.com/swader/rmrk-tools/issues/${{ github.event.issue.number }}): ${{ github.event.issue.title }} has been **closed**."

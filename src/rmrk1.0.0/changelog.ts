@@ -1,7 +1,7 @@
 export type Change = {
   field: string;
-  old: string;
-  new: string;
+  old: any;
+  new: any;
   caller: string;
   block: number;
   valid: boolean;

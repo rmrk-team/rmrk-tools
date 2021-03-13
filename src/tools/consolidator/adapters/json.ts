@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
-import { hexToString } from "@polkadot/util";
+import { getRemarksFromBlocks } from "../../utils";
 
 /**
  * The JSON adapter expects to find a JSON array with elements 
@@ -32,53 +32,9 @@ export default class JsonAdapter {
   }
 
   public getRemarks(): Remark[] {
-    const remarks: Remark[] = [];
-    for (const row of this.inputData) {
-      for (const call of row.calls) {
-        if (call.call !== "system.remark") continue;
-        const meta = getMeta(call, row.block);
-        if (!meta) continue;
-        let remark;
-        switch (meta.type) {
-          case "MINTNFT":
-          case "MINT":
-            remark = decodeURI(hexToString(call.value));
-            break;
-          default:
-            remark = hexToString(call.value);
-            break;
-        }
-        const r: Remark = {
-          block: row.block,
-          caller: call.caller,
-          interaction_type: meta.type,
-          version: meta.version,
-          remark: remark,
-        };
-        remarks.push(r);
-      }
-    }
-    return remarks;
+    return getRemarksFromBlocks(this.inputData);
   }
 }
-
-function getMeta(call: Call, block: number): RemarkMeta | false {
-  const str = hexToString(call.value);
-  const arr = str.split("::");
-  if (arr.length < 3) {
-    console.error(`Invalid RMRK in block ${block}: ${str}`);
-    return false;
-  }
-  return {
-    type: arr[1],
-    version: parseFloat(arr[2]) ? arr[2] : "0.1",
-  } as RemarkMeta;
-}
-
-type JsonRow = {
-  block: number;
-  calls: Call[];
-};
 
 type Call = {
   call: string;
@@ -86,7 +42,7 @@ type Call = {
   caller: string;
 };
 
-type RemarkMeta = {
-  type: string;
-  version: string;
+type JsonRow = {
+  block: number;
+  calls: Call[];
 };
