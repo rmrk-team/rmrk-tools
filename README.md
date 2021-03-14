@@ -58,6 +58,12 @@ const startListening = async () => {
 startListening();
 ```
 
+if you want to subscribe to consolidated state that includes unfinilised blocks to react to them quickly, you can use:
+```
+const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
+unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised consolidated:', val));
+```
+
 ### Browser
 
 ```

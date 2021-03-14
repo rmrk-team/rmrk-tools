@@ -14,6 +14,7 @@ import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import { Consolidator } from "./tools/consolidator/consolidator";
 
+//TODO: Once we have a cron-job that fetches latest dumps, change that to point to ipfs url with that dump
 import defaultDump from "../dumps/remarks-4892957-6588851-0x726d726b,0x524d524b.json";
 
 interface IProps {
@@ -31,6 +32,8 @@ export class RemarkListener {
   private latestBlockCalls: BlockCalls[];
   private latestBlockCallsFinalised: BlockCalls[];
   private observer: Subscriber<unknown> | null;
+  private observerUnfinalised: Subscriber<unknown> | null;
+  private initialised: boolean;
   private prefixes: string[];
 
   constructor({ providerInterface, prefixes, initialRemarksUrl }: IProps) {
@@ -43,6 +46,8 @@ export class RemarkListener {
     this.latestBlockCalls = [];
     this.latestBlockCallsFinalised = [];
     this.observer = null;
+    this.observerUnfinalised = null;
+    this.initialised = false;
     this.prefixes = prefixes || [];
   }
 
@@ -52,23 +57,34 @@ export class RemarkListener {
   };
 
   private initialize = async () => {
-    // Subscribe to latest head blocks (unfinalised)
-    await this.initialiseListener(false);
-    // Subscribe to latest head blocks (finalised)
-    await this.initialiseListener(true);
-    // Fetch latest remark blocks from dump
-    this.initialBlockCalls = await this.fetchInitialRemarks();
-    // Fetch latest remark blocks since last block in the dump above
-    this.missingBlockCalls = await this.fetchMissingBlockCalls(
-      this.initialBlockCalls
-    );
+    if (!this.initialised) {
+      this.initialised = true;
+      // Subscribe to latest head blocks (unfinalised)
+      await this.initialiseListener(false);
+      // Subscribe to latest head blocks (finalised)
+      await this.initialiseListener(true);
+      // Fetch latest remark blocks from dump
+      this.initialBlockCalls = await this.fetchInitialRemarks();
+      // Fetch latest remark blocks since last block in the dump above
+      this.missingBlockCalls = await this.fetchMissingBlockCalls(
+        this.initialBlockCalls
+      );
 
-    this.consolidate();
+      this.consolidate();
+    }
   };
 
   public initialiseObservable = (): Observable<unknown> => {
     const subscriber = new Observable((observer) => {
       this.observer = observer;
+    });
+    this.initialize();
+    return subscriber;
+  };
+
+  public initialiseObservableUnfinalised = (): Observable<unknown> => {
+    const subscriber = new Observable((observer) => {
+      this.observerUnfinalised = observer;
     });
     this.initialize();
     return subscriber;
@@ -98,7 +114,6 @@ export class RemarkListener {
       const api = await this.apiPromise;
       const from = await this.getLastBlockNumber(initialBlocks);
       const to = await getLatestFinalizedBlock(api);
-      console.log(from, to);
       const missingBlocks = await fetchRemarks(api, from, to, this.prefixes);
       return missingBlocks;
     } catch (error) {
@@ -122,16 +137,29 @@ export class RemarkListener {
   }
 
   private consolidate = () => {
-    const concatinatedBlockCalls = [
+    const concatinatedBlockCallsBase = [
       ...this.initialBlockCalls,
       ...this.missingBlockCalls,
-      ...this.latestBlockCallsFinalised,
     ];
-    const remarks = getRemarksFromBlocks(concatinatedBlockCalls);
+
     const consolidator = new Consolidator();
-    const consolidatedFinal = consolidator.consolidate(remarks);
+
     if (this.observer) {
+      const remarks = getRemarksFromBlocks([
+        ...concatinatedBlockCallsBase,
+        ...this.latestBlockCallsFinalised,
+      ]);
+      const consolidatedFinal = consolidator.consolidate(remarks);
       this.observer.next(consolidatedFinal);
+    }
+
+    if (this.observerUnfinalised) {
+      const remarks = getRemarksFromBlocks([
+        ...concatinatedBlockCallsBase,
+        ...this.latestBlockCalls,
+      ]);
+      const consolidatedFinal = consolidator.consolidate(remarks);
+      this.observerUnfinalised.next(consolidatedFinal);
     }
   };
 
