@@ -153,11 +153,9 @@ export class RemarkListener {
       this.observer.next(consolidatedFinal);
     }
 
+    /* Return now updated unfinalised blocks array */
     if (this.observerUnfinalised) {
-      const remarks = getRemarksFromBlocks([
-        ...concatinatedBlockCallsBase,
-        ...this.latestBlockCalls,
-      ]);
+      const remarks = getRemarksFromBlocks(this.latestBlockCalls);
       const consolidatedFinal = consolidator.consolidate(remarks);
       this.observerUnfinalised.next(consolidatedFinal);
     }
@@ -197,7 +195,6 @@ export class RemarkListener {
           calls,
         };
         if (finalised) {
-          console.log("FINALISED BLOCK", blockCalls);
           this.latestBlockCallsFinalised.push(blockCalls);
 
           // Now that block has been finalised, remove it from unfinalised blockCalls array
@@ -207,8 +204,15 @@ export class RemarkListener {
 
           this.consolidate();
         } else {
-          console.log("LATEST BLOCK", blockCalls);
           this.latestBlockCalls.push(blockCalls);
+
+          /* If someone is listening to unfinalised blocks, return them */
+          if (this.observerUnfinalised) {
+            const consolidator = new Consolidator();
+            const remarks = getRemarksFromBlocks(this.latestBlockCalls);
+            const consolidatedFinal = consolidator.consolidate(remarks);
+            this.observerUnfinalised.next(consolidatedFinal);
+          }
         }
       }
     });
