@@ -473,6 +473,7 @@ export class Consolidator {
   ): {
     nfts: N100[];
     collections: C100[];
+    invalid: InvalidCall[];
   } {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
@@ -503,21 +504,6 @@ export class Consolidator {
           if (this.buy(remark)) {
             continue;
           }
-
-          // @todo: do not forget to cancel LIST via
-          /*
-          // Cancel LIST, if any
-          if (nft.forsale > BigInt(0)) {
-            nft.addChange({
-              field: "forsale",
-              old: nft.forsale,
-              new: BigInt(0),
-              caller: remark.caller,
-              block: remark.block,
-            } as Change);
-            nft.forsale = BigInt(0);
-          }
-                */
           break;
 
         // case OP_TYPES.CONSUME:
@@ -571,7 +557,11 @@ export class Consolidator {
       `${this.nfts.length} NFTs across ${this.collections.length} collections.`
     );
     console.log(`${this.invalidCalls.length} invalid calls.`);
-    return { nfts: this.nfts, collections: this.collections };
+    return {
+      nfts: this.nfts,
+      collections: this.collections,
+      invalid: this.invalidCalls,
+    };
   }
 }
 
