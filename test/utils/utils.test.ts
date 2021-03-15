@@ -13,7 +13,7 @@ describe("utils: getRemarksFromBlocks", () => {
 });
 
 // Test stringIsAValidUrl
-const testUrls: Record<string, string> = {
+const testUrls = {
   url: "https://rmrk.app/",
   wrongUrl: "wrong url",
 };
@@ -31,8 +31,25 @@ describe("utils: stringIsAValidUrl", () => {
 });
 
 // Test prefixToArray
+const testPrefixes = {
+  prefix: "0x726d726b,0x524d524b",
+  prefix2: "0x726d726b,RMRK",
+};
+
 describe("utils: prefixToArray", () => {
-  it("should check if string is a URL and return true", () => {
-    expect(prefixToArray(testUrls.url)).toBeTruthy();
+  it("should take prefix string and split it into an array", () => {
+    expect(prefixToArray(testPrefixes.prefix)).toEqual([
+      "0x726d726b",
+      "0x524d524b",
+    ]);
+  });
+});
+
+describe("utils: prefixToArray", () => {
+  it("should take prefix string and split it into an array and convert string to hex", () => {
+    expect(prefixToArray(testPrefixes.prefix2)).toEqual([
+      "0x726d726b",
+      "0x524d524b",
+    ]);
   });
 });
