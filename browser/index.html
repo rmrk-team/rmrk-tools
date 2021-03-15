@@ -303,7 +303,7 @@
               coll,
               name,
               instance,
-              transferable,
+              parseInt(transferable),
               sn,
               metadata
             );
@@ -406,6 +406,7 @@
 
       const renderNFTs = ({nfts, collections}) => {
         const container = document.getElementById("nft_list");
+        container.innerHTML = '';
         if (nfts.length > 0) {
           nfts.forEach(nft => {
             const nftComponent = document.createElement('div');
