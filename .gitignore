@@ -10,3 +10,4 @@ dist
 /remarks*.json
 /dump-*.json
 throwaway.js
+coverage
