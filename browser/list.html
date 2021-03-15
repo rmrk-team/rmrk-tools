@@ -111,6 +111,13 @@
               <p>Transferable: ${
                 nft.transferable > 0 ? nft.transferable : "No"
               }</p>
+              <p>Burned: ${
+                nft.burned == ""
+                  ? "No"
+                  : nft.burned
+                      .replace("<consume>", "")
+                      .replace("</consume>", "")
+              }</p>
               <p>Owner: ${nft.owner}</p>
               <p>For sale: ${
                 nft.forsale > BigInt(0) ? nft.forsale.toString() : "Not listed"
