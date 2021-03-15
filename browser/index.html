@@ -190,16 +190,24 @@
       </div>
     </form>
     <hr />
+
+    <div>
+      <div id="nft_list">
+
+      </div>
+    </div>
     <script src="rmrk-tools.js"></script>
     <script src="polkadot-utils.js"></script>
     <script>
       const {extensionDapps, utilCrypto, util, api} = window.polkadotUtils;
+      const wsProvider = new api.WsProvider('ws://127.0.0.1:9944');
       start();
 
       async function start() {
         let myApi = await initWeb3Connection();
         await initWeb3Login();
-      }
+        initListener();
+      };
 
       async function initWeb3Login() {
         extensionDapps.web3Enable("RMRK Test").then(function () {
@@ -222,6 +230,18 @@
             });
           }
         });
+      }
+
+      const initListener = async(wsProvider) => {
+        const listener = new rmrkTools.RemarkListener({
+          providerInterface: wsProvider,
+          prefixes: [],
+        });
+        const subscriber = listener.initialiseObservable();
+        subscriber.subscribe(renderNFTs);
+
+        const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
+        unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
       }
 
       async function initRest() {
@@ -377,10 +397,21 @@
       }
       async function initWeb3Connection() {
         try {
-        const wsProvider = new api.WsProvider('ws://127.0.0.1:9944');
+
         myApi = await api.ApiPromise.create({ provider: wsProvider });
         } catch (e) {
           console.error(e);
+        }
+      }
+
+      const renderNFTs = ({nfts, collections}) => {
+        const container = document.getElementById("nft_list");
+        if (nfts.length > 0) {
+          nfts.forEach(nft => {
+            const nftComponent = document.createElement('div');
+            nftComponent.innerText = `NFT name: ${nft.name}`;
+            container.appendChild(nftComponent);
+          })
         }
       }
     </script>
