@@ -38,7 +38,7 @@
     "cli:seed": "ts-node --project tsconfig.cli.json cli/index seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
-    "test": "jest",
+    "test": "jest --silent",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
     "prepublishOnly": "yarn build"
   },

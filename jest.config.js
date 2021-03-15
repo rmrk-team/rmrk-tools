@@ -6,5 +6,9 @@ module.exports = {
     "/node_modules/(?!(@polkadot|@babel/runtime/helpers/esm/))",
   ],
   collectCoverage: true,
-  collectCoverageFrom: ["src/tools/utils.ts", "src/tools/validate-remark.ts"],
+  collectCoverageFrom: [
+    "src/tools/utils.ts",
+    "src/tools/validate-remark.ts",
+    "src/tools/consolidator/consolidator.ts",
+  ],
 };
