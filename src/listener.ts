@@ -15,7 +15,7 @@ import { BlockCalls } from "./tools/types";
 import { Consolidator } from "./tools/consolidator/consolidator";
 
 //TODO: Once we have a cron-job that fetches latest dumps, change that to point to ipfs url with that dump
-import defaultDump from "../dumps/remarks-4892957-6588851-0x726d726b,0x524d524b.json";
+import defaultDump from "../dumps/remarks-4892957-6619194-0x726d726b,0x524d524b.json";
 
 interface IProps {
   providerInterface: ProviderInterface;

@@ -18,6 +18,7 @@ export class NFT {
   changes: Change[] = [];
   owner: string;
   loadedMetadata?: NFTMetadata;
+  burned: string;
   constructor(
     block: number,
     collection: string,
@@ -39,6 +40,7 @@ export class NFT {
     this.owner = "";
     this.reactions = {};
     this.forsale = BigInt(0);
+    this.burned = "";
   }
 
   public getId(): string {
