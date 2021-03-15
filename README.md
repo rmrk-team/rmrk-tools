@@ -41,7 +41,30 @@ const fetchAndConsolidate = async () => {
 }
 ```
 
-#### Subscribe to Remarks
+### Browser
+
+```
+<script src="node_modules/rmrk-tools"></script>
+<script>
+    const { Collection, NFT, Consolidator, fetchRemarks } = window.rmrkTools;
+</script>
+```
+
+TBD
+
+## API
+
+### `Consolidator`
+
+```
+import { Consolidator } from 'rmrk-tools';
+
+const consolidator = new Consolidator();
+const { nfts, collections } = consolidator.consolidate(remarks);
+```
+
+### `RemarkListener`
+Subscribe to new Remarks
 
 ```
 import { RemarkListener } from 'rmrk-tools';
@@ -58,22 +81,69 @@ const startListening = async () => {
 startListening();
 ```
 
-if you want to subscribe to consolidated state that includes unfinilised blocks to react to them quickly, you can use:
+if you want to subscribe remarks that are included in unfinilised blocks to react to them quickly, you can use:
 ```
 const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
-unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised consolidated:', val));
+unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 ```
 
-### Browser
+### `Collection`
 
 ```
-<script src="node_modules/rmrk-tools"></script>
-<script>
-    const { Collection, NFT, Consolidator, fetchRemarks } = window.rmrkTools;
-</script>
+import { Collection } from 'rmrk-tools';
 ```
 
-TBD
+Turn a remark into a collection object
+```
+Collection.fromRemark(remark)
+```
+
+Create new collecton
+```
+const collection = new Collection(
+  0,
+  "Foo",
+  5,
+  this.accounts[0].address,
+  "FOO",
+  Collection.generateId(u8aToHex(this.accounts[0].publicKey), "FOO"),
+  "https://some.url"
+);
+```
+
+### `NFT`
+```
+import { fetchRemarks } from 'rmrk-tools';
+```
+... TODO
+
+### `fetchRemarks`
+```
+import { fetchRemarks } from 'rmrk-tools';
+
+const wsProvider = new WsProvider('wss://node.rmrk.app');
+const api = await ApiPromise.create({ provider: wsProvider });
+await api.isReady;
+const remarkBlocks = await fetchRemarks(api, 6431422, 6431424, ['']);
+```
+
+### `getLatestFinalizedBlock`
+Get latest block number on the provided chain using polkadot api
+```
+import { getLatestFinalizedBlock } from 'rmrk-tools';
+
+const wsProvider = new WsProvider('wss://node.rmrk.app');
+const api = await ApiPromise.create({ provider: wsProvider });
+const to = await utils.getLatestFinalizedBlock(api);
+```
+
+### `getRemarksFromBlocks`
+Turn extrinsics into remark objects
+
+```
+import { getRemarksFromBlocks } from 'rmrk-tools';
+const remarks = getRemarksFromBlocks(remarkBlocks);
+```
 
 ## Helper Tools
 

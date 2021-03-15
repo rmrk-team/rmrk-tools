@@ -1,7 +1,7 @@
 import { RemarkListener } from "../src/listener";
 import { WsProvider } from "@polkadot/api";
 
-const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+const wsProvider = new WsProvider("wss://node.rmrk.app");
 
 const test = async () => {
   const listener = new RemarkListener({
@@ -12,7 +12,7 @@ const test = async () => {
   subscriber.subscribe((val) => console.log(val));
 
   const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
-  unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised consolidated:', val));
+  unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 };
 
 test();
