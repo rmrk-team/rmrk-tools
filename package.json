@@ -74,9 +74,9 @@
   },
   "dependencies": {
     "@polkadot/api": "^4.0.3",
-    "@polkadot/extension-dapp": "^0.37.2",
-    "@polkadot/keyring": "^6.0.4-0",
-    "@polkadot/util": "^6.0.4-0",
+    "@polkadot/extension-dapp": "^0.37.3-5",
+    "@polkadot/keyring": "^6.0.5",
+    "@polkadot/util": "^6.0.5",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "node-fetch": "^2.6.1",
