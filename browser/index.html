@@ -206,7 +206,6 @@
       async function start() {
         let myApi = await initWeb3Connection();
         await initWeb3Login();
-        initListener();
       };
 
       async function initWeb3Login() {
@@ -230,18 +229,6 @@
             });
           }
         });
-      }
-
-      const initListener = async() => {
-        const listener = new rmrkTools.RemarkListener({
-          providerInterface: wsProvider,
-          prefixes: [],
-        });
-        const subscriber = listener.initialiseObservable();
-        subscriber.subscribe(renderNFTs);
-
-        const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
-        unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
       }
 
       async function initRest() {
@@ -401,18 +388,6 @@
         myApi = await api.ApiPromise.create({ provider: wsProvider });
         } catch (e) {
           console.error(e);
-        }
-      }
-
-      const renderNFTs = ({nfts, collections}) => {
-        const container = document.getElementById("nft_list");
-        container.innerHTML = '';
-        if (nfts.length > 0) {
-          nfts.forEach(nft => {
-            const nftComponent = document.createElement('div');
-            nftComponent.innerText = `NFT name: ${nft.name}`;
-            container.appendChild(nftComponent);
-          })
         }
       }
     </script>
