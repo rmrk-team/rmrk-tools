@@ -5,6 +5,7 @@ import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
 import { List } from "../../rmrk1.0.0/classes/list";
 import { Buy } from "../../rmrk1.0.0/classes/buy";
+import { Consume } from "../../rmrk1.0.0/classes/consume";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
@@ -196,6 +197,14 @@ export class Consolidator {
       return true;
     }
 
+    if (nft.burned != "") {
+      invalidate(
+        send.id,
+        `[${OP_TYPES.SEND}] Attempting to send burned NFT ${send.id}`
+      );
+      return true;
+    }
+
     // Check if allowed to issue send - if owner == caller
     if (nft.owner != remark.caller) {
       invalidate(
@@ -265,6 +274,14 @@ export class Consolidator {
       return true;
     }
 
+    if (nft.burned != "") {
+      invalidate(
+        list.id,
+        `[${OP_TYPES.LIST}] Attempting to list burned NFT ${list.id}`
+      );
+      return true;
+    }
+
     // Check if allowed to issue send - if owner == caller
     if (nft.owner != remark.caller) {
       invalidate(
@@ -296,6 +313,84 @@ export class Consolidator {
     return true;
   }
 
+  private consume(remark: Remark): boolean {
+    // An NFT was consumed
+    console.log("Instantiating consume");
+    const burn = Consume.fromRemark(remark.remark);
+    const invalidate = this.updateInvalidCalls(OP_TYPES.CONSUME, remark).bind(
+      this
+    );
+
+    // Check if consume is valid
+    if (typeof burn === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${burn}`
+      );
+      return true;
+    }
+
+    // Find the NFT in question
+    const nft = this.findExistingNFT(burn);
+    if (!nft) {
+      invalidate(
+        burn.id,
+        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-existant NFT ${burn.id}`
+      );
+      return true;
+    }
+
+    if (nft.burned != "") {
+      invalidate(
+        burn.id,
+        `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${burn.id}`
+      );
+      return true;
+    }
+
+    // Check if burner is owner of NFT
+    if (nft.owner != remark.caller) {
+      invalidate(
+        burn.id,
+        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-owned NFT ${burn.id}`
+      );
+      return true;
+    }
+
+    // Burn and note reason
+
+    let burnReasons: string[] = [];
+    // Check if we have extra calls in the batch
+    if (remark.extra_ex?.length) {
+      // Check if the transfer is valid, i.e. matches target recipient and value.
+      remark.extra_ex?.forEach((el: BlockCall) => {
+        burnReasons.push(`<consume>${el.value}</consume>`);
+      });
+    }
+
+    const burnReason = burnReasons.join(",");
+    nft.addChange({
+      field: "burned",
+      old: "",
+      new: burnReason,
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+    nft.burned = burnReason;
+
+    // Delist if listed for sale
+    nft.addChange({
+      field: "forsale",
+      old: nft.forsale,
+      new: BigInt(0),
+      caller: remark.caller,
+      block: remark.block,
+    } as Change);
+    nft.forsale = BigInt(0);
+
+    return true;
+  }
+
   private buy(remark: Remark): boolean {
     // An NFT was bought after having been LISTed for sale
     console.log("Instantiating buy");
@@ -321,7 +416,14 @@ export class Consolidator {
       return true;
     }
 
-    // Check if allowed to issue send - if owner == caller
+    if (nft.burned != "") {
+      invalidate(
+        buy.id,
+        `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buy.id}`
+      );
+      return true;
+    }
+
     if (nft.forsale <= BigInt(0)) {
       invalidate(
         buy.id,
@@ -383,6 +485,7 @@ export class Consolidator {
       caller: remark.caller,
       block: remark.block,
     } as Change);
+    nft.forsale = BigInt(0);
 
     return true;
   }
@@ -409,6 +512,15 @@ export class Consolidator {
       );
       return true;
     }
+
+    if (target.burned != "") {
+      invalidate(
+        emote.id,
+        `[${OP_TYPES.EMOTE}] Cannot emote to a burned NFT ${emote.id}`
+      );
+      return true;
+    }
+
     if (undefined === target.reactions[emote.unicode]) {
       target.reactions[emote.unicode] = [];
     }
@@ -506,22 +618,12 @@ export class Consolidator {
           }
           break;
 
-        // case OP_TYPES.CONSUME:
-        //   // @todo: do not forget to cancel LIST via
-        //   /*
-        //   // Cancel LIST, if any
-        //   if (nft.forsale > BigInt(0)) {
-        //     nft.addChange({
-        //       field: "forsale",
-        //       old: nft.forsale,
-        //       new: BigInt(0),
-        //       caller: remark.caller,
-        //       block: remark.block,
-        //     } as Change);
-        //     nft.forsale = BigInt(0);
-        //   }
-        //   */
-        //   break;
+        case OP_TYPES.CONSUME:
+          // An NFT was burned
+          if (this.consume(remark)) {
+            continue;
+          }
+          break;
 
         case OP_TYPES.LIST:
           // An NFT was listed for sale
