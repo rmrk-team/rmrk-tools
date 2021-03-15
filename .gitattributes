@@ -1,1 +1,2 @@
 *.snap linguist-generated=true
+test/mocks/* linguist-generated=true
