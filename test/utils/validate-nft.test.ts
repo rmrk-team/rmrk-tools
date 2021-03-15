@@ -3,7 +3,7 @@ import { validMintNFTRemarkEvent } from "../mocks/remark-mocks";
 
 describe("validation: validateNFT", () => {
   it("should be valid NFT 1", () => {
-    expect(validateNFT(validMintNFTRemarkEvent)).toBeUndefined();
+    expect(() => validateNFT(validMintNFTRemarkEvent)).not.toThrow();
   });
 
   it("should throw - invalid op code", () => {
