@@ -142,9 +142,8 @@ export class RemarkListener {
       ...this.missingBlockCalls,
     ];
 
-    const consolidator = new Consolidator();
-
     if (this.observer) {
+      const consolidator = new Consolidator();
       const remarks = getRemarksFromBlocks([
         ...concatinatedBlockCallsBase,
         ...this.latestBlockCallsFinalised,
@@ -155,6 +154,7 @@ export class RemarkListener {
 
     /* Return now updated unfinalised blocks array */
     if (this.observerUnfinalised) {
+      const consolidator = new Consolidator();
       const remarks = getRemarksFromBlocks(this.latestBlockCalls);
       const consolidatedFinal = consolidator.consolidate(remarks);
       this.observerUnfinalised.next(consolidatedFinal);
@@ -211,6 +211,7 @@ export class RemarkListener {
             const consolidator = new Consolidator();
             const remarks = getRemarksFromBlocks(this.latestBlockCalls);
             const consolidatedFinal = consolidator.consolidate(remarks);
+
             this.observerUnfinalised.next(consolidatedFinal);
           }
         }
