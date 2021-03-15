@@ -60,9 +60,9 @@ export class RemarkListener {
     if (!this.initialised) {
       this.initialised = true;
       // Subscribe to latest head blocks (unfinalised)
-      await this.initialiseListener(false);
+      await this.initialiseListener({ finalised: false });
       // Subscribe to latest head blocks (finalised)
-      await this.initialiseListener(true);
+      await this.initialiseListener({ finalised: true });
       // Fetch latest remark blocks from dump
       this.initialBlockCalls = await this.fetchInitialRemarks();
       // Fetch latest remark blocks since last block in the dump above
@@ -167,7 +167,7 @@ export class RemarkListener {
     this.latestBlockCalls is array of unfinalised blocks,
     we keep it for reference incase consumer wants to disable remarks that are being interacted with
    */
-  private async initialiseListener(finalised: boolean) {
+  private async initialiseListener({ finalised }: { finalised: boolean }) {
     const headSubscriber = finalised
       ? await this.getFinalisedHeadSubscrber()
       : await this.getHeadSubscrber();
