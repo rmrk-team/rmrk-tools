@@ -74,6 +74,7 @@ export class RemarkListener {
     }
   };
 
+  /* Rxjs observable for finalised remarks, this will return all of consolidated remarks */
   public initialiseObservable = (): Observable<unknown> => {
     const subscriber = new Observable((observer) => {
       this.observer = observer;
@@ -82,6 +83,10 @@ export class RemarkListener {
     return subscriber;
   };
 
+  /*
+   Rxjs observable for un-finalised remarks, this will return remarks that are only present in latest block
+   This listener fires again when blocks are removed if they are present in finalised block
+  */
   public initialiseObservableUnfinalised = (): Observable<unknown> => {
     const subscriber = new Observable((observer) => {
       this.observerUnfinalised = observer;
@@ -90,6 +95,10 @@ export class RemarkListener {
     return subscriber;
   };
 
+  /*
+   Fetch initial remarks from provided dump url, or from local JSON if url is not provided
+   TODO: change this to fetch from set of ipfs cids
+   */
   public async fetchInitialRemarks(): Promise<Block[] | []> {
     try {
       if (!this.initialRemarksUrl) {
@@ -107,6 +116,9 @@ export class RemarkListener {
     }
   }
 
+  /*
+   Fetch blocks between last block in dump and last block on chain
+   */
   public async fetchMissingBlockCalls(
     initialBlocks: Block[]
   ): Promise<Block[]> {
@@ -122,6 +134,9 @@ export class RemarkListener {
     }
   }
 
+  /*
+    returns polkadot api latest block head listener
+  */
   private async getHeadSubscrber(): Promise<
     RpcPromiseResult<() => Observable<Header>>
   > {
@@ -129,6 +144,9 @@ export class RemarkListener {
     return api.rpc.chain.subscribeNewHeads;
   }
 
+  /*
+    returns polkadot api latest unfinalised block head listener
+  */
   private async getFinalisedHeadSubscrber(): Promise<
     RpcPromiseResult<() => Observable<Header>>
   > {
@@ -136,27 +154,37 @@ export class RemarkListener {
     return api.rpc.chain.subscribeFinalizedHeads;
   }
 
+  /*
+    Consolidates remarks and firs listeners
+  */
   private consolidate = () => {
+    // Join dump blocks and missing blocks (since dump)
     const concatinatedBlockCallsBase = [
       ...this.initialBlockCalls,
       ...this.missingBlockCalls,
     ];
 
+    // Only consolidate and fire event if user subscribed to finalised blocks listener
     if (this.observer) {
       const consolidator = new Consolidator();
+      // Consolidate all historical blocks and new blocks received from polkadot api
       const remarks = getRemarksFromBlocks([
         ...concatinatedBlockCallsBase,
         ...this.latestBlockCallsFinalised,
       ]);
       const consolidatedFinal = consolidator.consolidate(remarks);
+      // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
     }
 
-    /* Return now updated unfinalised blocks array */
+    // Only consolidate and fire event if user subscribed to UN-finalised blocks listener
     if (this.observerUnfinalised) {
       const consolidator = new Consolidator();
+      // Only extract and consolidate remarks from unfinalised block, no need to consolidate whole thing here
+      // User can then decide what to do with them
       const remarks = getRemarksFromBlocks(this.latestBlockCalls);
       const consolidatedFinal = consolidator.consolidate(remarks);
+      // Fire event to a subscriber
       this.observerUnfinalised.next(consolidatedFinal);
     }
   };
@@ -194,24 +222,29 @@ export class RemarkListener {
           block: header.number.toNumber(),
           calls,
         };
+        // If we are listening to finalised blocks
         if (finalised) {
           this.latestBlockCallsFinalised.push(blockCalls);
 
-          // Now that block has been finalised, remove it from unfinalised blockCalls array
+          // Now that block has been finalised,
+          // remove remarks that we found in it from unfinalised blockCalls array that we keep in memory
           this.latestBlockCalls = this.latestBlockCalls.filter(
             (item) => item?.block !== blockCalls.block
           );
 
+          // Call consolidate to re-consolidate and fire subscription event back to subscriber
           this.consolidate();
         } else {
           this.latestBlockCalls.push(blockCalls);
 
-          /* If someone is listening to unfinalised blocks, return them */
+          /* If someone is listening to unfinalised blocks, return them here */
           if (this.observerUnfinalised) {
             const consolidator = new Consolidator();
+            // Only extract and consolidate remarks from unfinalised block, no need to consolidate whole thing here
+            // User can then decide what to do with them
             const remarks = getRemarksFromBlocks(this.latestBlockCalls);
             const consolidatedFinal = consolidator.consolidate(remarks);
-
+            // Fire event to a subscriber
             this.observerUnfinalised.next(consolidatedFinal);
           }
         }
