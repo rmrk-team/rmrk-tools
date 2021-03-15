@@ -3,6 +3,9 @@ node_modules
 build
 archive
 .vscode
+.idea
+.npmrc
+dist
 
 /remarks*.json
 /dump-*.json

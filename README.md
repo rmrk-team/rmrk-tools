@@ -2,25 +2,53 @@
 
 Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec/).
 
+![Tests](https://github.com/Swader/rmrk-tools/actions/workflows/run-tests.yml/badge.svg)
+
+## Installation
+
+> Note: NodeJS 14+ is required. Please install with [NVM](https://nvm.sh).
+
+`yarn install git+https://github.com/Swader/rmrk-tools`
+
 ## Usage
 
+### ESM / Typescript
+
+```
+import { fetchRemarks, utils, Consolidator } from 'rmrk-tools';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+
+const wsProvider = new WsProvider('wss://node.rmrk.app');
+
+const fetchAndConsolidate = async () => {
+    try {
+        const api = await ApiPromise.create({ provider: wsProvider });
+        const to = await utils.getLatestFinalizedBlock(api);
+
+        const remarkBlocks = await fetchRemarks(api, 6431422, to, ['']);
+        if (remarkBlocks && !isEmpty(remarkBlocks)) {
+          const remarks = utils.getRemarksFromBlocks(remarkBlocks);
+          const consolidator = new Consolidator();
+          const { nfts, collections } = consolidator.consolidate(remarks);
+          console.log('Consolidated nfts:', nfts);
+          console.log('Consolidated collections:', collections);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+```
+
+### Browser
+
+```
+<script src="node_modules/rmrk-tools"></script>
+<script>
+    const { c100, n100, Consolidator, fetchRemarks, utils } = window.rmrkTools;
+</script>
+```
+
 TBD
-
-## Read VS Write
-
-Some applications (wallets, portfolios, galleries) might need only _read_ functionality, while others will need both _read_ and _write_ (auction houses). Reading happens through the State object which can be populated in different ways. Writing happens though the Polkadot JS API object. Each has to be configured and injected separately, but once injected into the RMRK class' instance, the injections will be inherited by the underlying logic.
-
-You can inject the State and API instances into Collection and NFT objects as well, but note that this is very inefficient as the RMRK class does this for you when building these objects, and also automatically calls the state's `refresh` function before every write.
-
-### State
-
-Because RMRK relies on an append-only log of system remarks (blockchain graffiti), it is **absolutely imperative** that the current and latest state of all RMRK NFTs in the system is up to date and available to the library before performing any write operations like SEND or BUY.
-
-This is made possible with the State object which defines an interface for fetching the current and past states. Three types of State are supported out of the box:
-
-- SQLState
-- LiveState
-- StaticState
 
 ## Helper Tools
 
@@ -31,7 +59,7 @@ Grabs all `system.remark` extrinsics in a block range and logs an array of them 
 Export functionality will be added soon (SQL and file, total and in chunks).
 
 ```bash
-yarn fetch
+yarn cli:fetch
 ```
 
 Optional parameters:
@@ -39,8 +67,8 @@ Optional parameters:
 - `--ws URL`: websocket URL to connecto to, defaults to `127.0.0.1:9944`
 - `--from FROM`: block from which to start, defaults to 0 (note that for RMRK, canonically the block 4892957 is genesis)
 - `--to TO`: block until which to search, defaults to latest
-- `--prefix PREFIX`: limit return data to only remarks with this prefix
-- `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable.
+- `--prefixes PREFIXES`: limit return data to only remarks with these prefixes. Can be comma separated list. Prefixes can be hex or utf8. Case sensitive. Example: 0x726d726b,0x524d524b
+- `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable. Example: `yarn fetch --prefixes=0x726d726b,0x524d524b --append=somefile.json`
 
 The return data will look like this:
 
@@ -77,7 +105,7 @@ The return data will look like this:
 Takes as input a JSON file and processes all remarks within it to reach a final state of the NFT ecosystem based on that JSON.
 
 ```bash
- yarn consolidate --json=dumps/remarks-4892957-5437981-0x726d726b.json
+ yarn cli:consolidate --json=dumps/remarks-4892957-5437981-0x726d726b.json
 ```
 
 Todo:
@@ -94,7 +122,7 @@ Todo:
 A local chain must be running in `--dev` mode for this to work.
 
 ```bash
-yarn seed --folder=[folder]
+yarn cli:seed --folder=[folder]
 ```
 
 When running a local chain, you can run `yarn seed` to populate the chain with pre-written NFT configurations. This is good for testing UIs, wallets, etc. It will use the unlocked ALICE, BOB, and CHARLIE accounts so `--dev` is required here.

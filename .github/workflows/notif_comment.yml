@@ -1,0 +1,31 @@
+name: Notify on issue and PR comments
+on: issue_comment
+
+jobs:
+  pr_commented:
+    # This job only runs for pull request comments
+    name: PR comment
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send TG message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: "rmrk-tools [PR #${{ github.event.issue.number }}](https://github.com/swader/rmrk-tools/pulls/${{ github.event.issue.number }}): ${{ github.event.issue.title }} new comment added."
+
+  issue-commented:
+    # This job only runs for issue comments
+    name: Issue comment
+    if: ${{ !github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send TG message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: "rmrk-tools [issue #${{ github.event.issue.number }}](https://github.com/swader/rmrk-tools/issues/${{ github.event.issue.number }}): ${{ github.event.issue.title }} new comment added."
