@@ -37,6 +37,11 @@ export class RemarkListener {
   private prefixes: string[];
 
   constructor({ providerInterface, prefixes, initialRemarksUrl }: IProps) {
+    if (!providerInterface) {
+      throw new Error(
+        `"providerInterface" is missing. Please provide polkadot.js provider interface. for example: const wsProvider = new WsProvider("ws://127.0.0.1:9944");`
+      );
+    }
     this.initialRemarksUrl = initialRemarksUrl;
     this.providerInterface = providerInterface;
     this.apiPromise = ApiPromise.create({ provider: this.providerInterface });

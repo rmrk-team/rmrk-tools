@@ -81,7 +81,7 @@ const startListening = async () => {
 startListening();
 ```
 
-if you want to subscribe remarks that are included in unfinilised blocks to react to them quickly, you can use:
+if you want to subscribe to remarks that are included in unfinilised blocks to react to them quickly, you can use:
 ```
 const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
