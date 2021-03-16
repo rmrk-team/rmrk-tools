@@ -73,7 +73,7 @@ import { WsProvider } from "@polkadot/api";
 const wsProvider = new WsProvider("wss://node.rmrk.app");
 
 const startListening = async () => {
-  const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://optional-urlp-for-remarks-dumps' });
+  const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://url-for-remarks-dump' });
   const subscriber = listener.initialiseObservable();
   subscriber.subscribe((val) => console.log(val));
 };
