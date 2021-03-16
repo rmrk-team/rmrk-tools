@@ -7,7 +7,7 @@
     "url": "https://github.com/Swader/rmrk-tools"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/Yuripetusko"
+    "registry": "https://npm.pkg.github.com/"
   },
   "main": "dist/index.cjs",
   "module": "./dist/index.es.js",

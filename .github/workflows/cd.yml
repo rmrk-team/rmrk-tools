@@ -25,6 +25,7 @@ jobs:
           # Specifies the registry, this field is required!
           registry-url: https://npm.pkg.github.com/
           scope: "@Yuripetusko"
+      - run: echo "registry=https://npm.pkg.github.com/@Yuripetusko" >> .npmrc
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: yarn install
       # set up git since we will later push to the repo
@@ -34,7 +35,7 @@ jobs:
       # run tests just in case
       - run: yarn test
       # publish to NPM -> there is one caveat, continue reading for the fix
-      - run: yarn publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       # push the version changes to GitHub
