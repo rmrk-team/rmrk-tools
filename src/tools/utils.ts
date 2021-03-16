@@ -181,10 +181,10 @@ export const getBlockCallsFromSignedBlock = async (
     } else if (isUtilityBatch(extrinsic.method as TCall)) {
       // @ts-ignore
       const batchArgs: TCall[] = extrinsic.method.args[0];
-      let remarkExists = false;
+      let remarkExists = 0;
       batchArgs.forEach((el) => {
         if (isSystemRemark(el, prefixes)) {
-          remarkExists = true;
+          remarkExists++;
         }
       });
 
@@ -203,13 +203,35 @@ export const getBlockCallsFromSignedBlock = async (
           continue;
         }
 
-        batchArgs.forEach((el) => {
-          blockCalls.push({
-            call: `${el.section}.${el.method}`,
-            value: el.args.toString(),
-            caller: extrinsic.signer.toString(),
-          } as BlockCall);
+        let batchRoot = {} as BlockCall;
+        const batchExtras: BlockCall[] = [];
+        batchArgs.forEach((el, i) => {
+          if (el.section === "system" && el.method === "remark") {
+            if (i < remarkExists - 1) {
+              blockCalls.push({
+                call: `${el.section}.${el.method}`,
+                value: el.args.toString(),
+                caller: extrinsic.signer.toString(),
+              } as BlockCall);
+            } else {
+              batchRoot = {
+                call: `${el.section}.${el.method}`,
+                value: el.args.toString(),
+                caller: extrinsic.signer.toString(),
+              } as BlockCall;
+            }
+          } else {
+            batchExtras.push({
+              call: `${el.section}.${el.method}`,
+              value: el.args.toString(),
+              caller: extrinsic.signer.toString(),
+            } as BlockCall);
+          }
         });
+
+        if (batchExtras.length) {
+          batchRoot.extras = batchExtras;
+        }
       }
     }
     extrinsicIndex++;
