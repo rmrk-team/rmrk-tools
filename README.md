@@ -50,7 +50,33 @@ const fetchAndConsolidate = async () => {
 </script>
 ```
 
-TBD
+### CLI
+
+You can use this package as a CLI tool
+`npm install --save-dev rmrk-tools@latest`
+
+Now you can use rmrk-tools coomands in your bash or npm scripts:
+You can use any of the available [Helper Tools](#helper-tools) by prepending `rmrk-tools-`
+
+```
+"scripts": {
+  "fetch": "rmrk-tools-fetch",
+  "consolidate": "rmrk-tools-consolidate",
+  "seed": "rmrk-tools-seed",
+  "getevents": "rmrk-tools-getevents",
+  "validate": "rmrk-tools-validate",
+  "run-listener": "rmrk-tools-run-listener"
+},
+```
+
+Or in bash scripts
+
+```
+#! /usr/bin/env node
+var shell = require("shelljs");
+
+shell.exec("rmrk-tools-fetch");
+```
 
 ## API
 
