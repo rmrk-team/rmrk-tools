@@ -4,6 +4,7 @@ import {
   stringIsAValidUrl,
   prefixToArray,
   isSystemRemark,
+  isUtilityBatch,
 } from "../../src/tools/utils";
 import { Call as TCall } from "@polkadot/types/interfaces";
 
@@ -58,7 +59,7 @@ describe("utils: prefixToArray", () => {
 
 // Test isSystemRemark
 
-const isRemark = {
+const isSystemRemarkTestData = {
   call: {
     args: ["0x726d726b", "0x524d524b"],
     section: "system",
@@ -76,7 +77,10 @@ const isRemark = {
 describe("utils: isSystemRemark", () => {
   it("should check if passed data is a remark and return a boolean - true", () => {
     expect(
-      isSystemRemark(isRemark.call as any, isRemark.prefixes)
+      isSystemRemark(
+        isSystemRemarkTestData.call as any,
+        isSystemRemarkTestData.prefixes
+      )
     ).toBeTruthy();
   });
 });
@@ -84,7 +88,54 @@ describe("utils: isSystemRemark", () => {
 describe("utils: isSystemRemark", () => {
   it("should check if passed data is a remark and return a boolean - false", () => {
     expect(
-      isSystemRemark(isRemark.call2 as any, isRemark.prefixes)
+      isSystemRemark(
+        isSystemRemarkTestData.call2 as any,
+        isSystemRemarkTestData.prefixes
+      )
     ).toBeFalsy();
+  });
+});
+
+// Test isSystemRemark
+const isUtilityBatchTestData = {
+  call: {
+    section: "utility",
+    method: "batch",
+  },
+  call2: {
+    section: "utility",
+    method: "batchAll",
+  },
+  call3: {
+    section: "remark",
+    method: "batchAll",
+  },
+  call4: {
+    section: "utility",
+    method: "wrong",
+  },
+};
+
+describe("utils: isUtilityBatch", () => {
+  it("should check if passed a utility and return a boolean - true", () => {
+    expect(isUtilityBatch(isUtilityBatchTestData.call as TCall)).toBeTruthy();
+  });
+});
+
+describe("utils: isUtilityBatch", () => {
+  it("should check if passed a utility and return a boolean - true", () => {
+    expect(isUtilityBatch(isUtilityBatchTestData.call2 as TCall)).toBeTruthy();
+  });
+});
+
+describe("utils: isUtilityBatch", () => {
+  it("should check if passed a utility and return a boolean - false", () => {
+    expect(isUtilityBatch(isUtilityBatchTestData.call3 as TCall)).toBeFalsy();
+  });
+});
+
+describe("utils: isUtilityBatch", () => {
+  it("should check if passed a utility and return a boolean - false", () => {
+    expect(isUtilityBatch(isUtilityBatchTestData.call4 as TCall)).toBeFalsy();
   });
 });

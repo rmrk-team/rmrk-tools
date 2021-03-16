@@ -142,7 +142,7 @@ export const isSystemRemark = (call: TCall, prefixes: string[]): Boolean =>
   (prefixes.length < 1 ||
     prefixes.some((word) => call.args.toString().startsWith(word)));
 
-const isUtilityBatch = (call: TCall) =>
+export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
   (call.method === "batch" || call.method === "batchAll");
 
