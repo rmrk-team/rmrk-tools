@@ -45,18 +45,13 @@ export const stringIsAValidUrl = (s: string): boolean => {
   }
 };
 
-export const prefixToArray = function (prefix: string): string[] {
-  const returnArray = [];
-  const exploded = prefix.split(",");
-  for (const p of exploded) {
-    if (p.indexOf("0x") === 0) {
-      returnArray.push(p);
-    } else {
-      returnArray.push(stringToHex(p));
+export const prefixToArray = (prefix: string): string[] =>
+  prefix.split(",").map((item) => {
+    if (item.indexOf("0x") === 0) {
+      return item;
     }
-  }
-  return returnArray;
-};
+    return stringToHex(item);
+  });
 
 const getMeta = (call: Call, block: number): RemarkMeta | false => {
   const str = hexToString(call.value);
