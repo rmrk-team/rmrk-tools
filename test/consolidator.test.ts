@@ -1,9 +1,8 @@
 import { Consolidator } from "../src";
-import { getRemarkData, getRemarksFromBlocks } from "../src/tools/utils";
+import { getRemarksFromBlocks } from "../src/tools/utils";
 import {
   blockCollectionMintedTwice,
   blockNFTMintedTwice,
-  validBlocks,
 } from "./mocks/blocks";
 import { blocks647x_661x } from "./mocks/blocks-dump";
 
@@ -20,6 +19,7 @@ import { blocks647x_661x } from "./mocks/blocks-dump";
  [ ] collection reassigned by someone not owner
  */
 
+/*
 const logRemarksHelper = () => {
   const remarks = getRemarksFromBlocks(validBlocks).map((rmk) => {
     const [_prefix, _op_type, _version, dataString] = rmk.remark.split("::");
@@ -33,6 +33,8 @@ const logRemarksHelper = () => {
   });
   console.log(JSON.stringify(remarks, null, 4));
 };
+(
+ */
 
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", () => {
