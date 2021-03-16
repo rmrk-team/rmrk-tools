@@ -23,8 +23,7 @@ jobs:
         with:
           node-version: 14
           # Specifies the registry, this field is required!
-          registry-url: https://npm.pkg.github.com/
-          scope: "@Swader"
+          registry-url: 'https://registry.npmjs.org'
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: yarn install
       # set up git since we will later push to the repo
@@ -34,9 +33,9 @@ jobs:
       # run tests just in case
       - run: yarn test
       # publish to NPM -> there is one caveat, continue reading for the fix
-      - run: yarn publish
+      - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       # push the version changes to GitHub
       - run: git push
         env:
