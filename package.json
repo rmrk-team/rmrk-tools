@@ -1,13 +1,10 @@
 {
-  "name": "@Yuripetusko/rmrk-tools",
+  "name": "rmrk-tools",
   "version": "0.0.3",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
     "url": "https://github.com/Swader/rmrk-tools"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   },
   "main": "dist/index.cjs",
   "module": "./dist/index.es.js",

@@ -23,9 +23,7 @@ jobs:
         with:
           node-version: 14
           # Specifies the registry, this field is required!
-          registry-url: https://npm.pkg.github.com/
-          scope: "@Yuripetusko"
-      - run: echo "registry=https://npm.pkg.github.com/@Yuripetusko" >> .npmrc
+          registry-url: 'https://registry.npmjs.org'
       # clean install of your projects' deps. We use "npm ci" to avoid package lock changes
       - run: yarn install
       # set up git since we will later push to the repo
