@@ -16,33 +16,21 @@ describe("utils: getRemarksFromBlocks", () => {
   });
 });
 
-// Test stringIsAValidUrl
-const testUrls = {
-  url: "https://rmrk.app/",
-  wrongUrl: "wrong url",
-};
-
 describe("utils: stringIsAValidUrl", () => {
   it("should check if string is a URL and return true", () => {
-    expect(stringIsAValidUrl(testUrls.url)).toBeTruthy();
+    expect(stringIsAValidUrl("https://rmrk.app/")).toBeTruthy();
   });
 });
 
 describe("utils: stringIsAValidUrl", () => {
   it("should check if string is a URL and return false", () => {
-    expect(stringIsAValidUrl(testUrls.wrongUrl)).toBeFalsy();
+    expect(stringIsAValidUrl("wrong url")).toBeFalsy();
   });
 });
 
-// Test prefixToArray
-const testPrefixes = {
-  prefix: "0x726d726b,0x524d524b",
-  prefix2: "0x726d726b,RMRK",
-};
-
 describe("utils: prefixToArray", () => {
   it("should take prefix string and split it into an array", () => {
-    expect(prefixToArray(testPrefixes.prefix)).toEqual([
+    expect(prefixToArray("0x726d726b,0x524d524b")).toEqual([
       "0x726d726b",
       "0x524d524b",
     ]);
@@ -51,35 +39,23 @@ describe("utils: prefixToArray", () => {
 
 describe("utils: prefixToArray", () => {
   it("should take prefix string and split it into an array and convert string to hex", () => {
-    expect(prefixToArray(testPrefixes.prefix2)).toEqual([
+    expect(prefixToArray("0x726d726b,RMRK")).toEqual([
       "0x726d726b",
       "0x524d524b",
     ]);
   });
 });
 
-// Test isSystemRemark
-const isSystemRemarkTestData = {
-  call: {
-    args: ["0x726d726b", "0x524d524b"],
-    section: "system",
-    method: "remark",
-  },
-
-  call2: {
-    args: "",
-    section: "system",
-    method: "",
-  },
-  prefixes: ["0x726d726b", "0x524d524b"],
-};
-
 describe("utils: isSystemRemark", () => {
   it("should check if passed data is a remark and return a boolean - true", () => {
     expect(
       isSystemRemark(
-        isSystemRemarkTestData.call as any,
-        isSystemRemarkTestData.prefixes
+        {
+          args: ["0x726d726b", "0x524d524b"],
+          section: "system",
+          method: "remark",
+        } as any,
+        ["0x726d726b", "0x524d524b"]
       )
     ).toBeTruthy();
   });
@@ -89,65 +65,65 @@ describe("utils: isSystemRemark", () => {
   it("should check if passed data is a remark and return a boolean - false", () => {
     expect(
       isSystemRemark(
-        isSystemRemarkTestData.call2 as any,
-        isSystemRemarkTestData.prefixes
+        {
+          args: "",
+          section: "system",
+          method: "",
+        } as any,
+        ["0x726d726b", "0x524d524b"]
       )
     ).toBeFalsy();
   });
 });
 
-// Test isUtilityBatch
-const isUtilityBatchTestData = {
-  call: {
-    section: "utility",
-    method: "batch",
-  },
-  call2: {
-    section: "utility",
-    method: "batchAll",
-  },
-  call3: {
-    section: "remark",
-    method: "batchAll",
-  },
-  call4: {
-    section: "utility",
-    method: "wrong",
-  },
-};
-
 describe("utils: isUtilityBatch", () => {
   it("should check if passed a utility and return a boolean - true", () => {
-    expect(isUtilityBatch(isUtilityBatchTestData.call as TCall)).toBeTruthy();
+    expect(
+      isUtilityBatch({
+        section: "utility",
+        method: "batch",
+      } as TCall)
+    ).toBeTruthy();
   });
 });
 
 describe("utils: isUtilityBatch", () => {
   it("should check if passed a utility and return a boolean - true", () => {
-    expect(isUtilityBatch(isUtilityBatchTestData.call2 as TCall)).toBeTruthy();
+    expect(
+      isUtilityBatch({
+        section: "utility",
+        method: "batchAll",
+      } as TCall)
+    ).toBeTruthy();
   });
 });
 
 describe("utils: isUtilityBatch", () => {
   it("should check if passed a utility and return a boolean - false", () => {
-    expect(isUtilityBatch(isUtilityBatchTestData.call3 as TCall)).toBeFalsy();
+    expect(
+      isUtilityBatch({
+        section: "remark",
+        method: "batchAll",
+      } as TCall)
+    ).toBeFalsy();
   });
 });
 
 describe("utils: isUtilityBatch", () => {
   it("should check if passed a utility and return a boolean - false", () => {
-    expect(isUtilityBatch(isUtilityBatchTestData.call4 as TCall)).toBeFalsy();
+    expect(
+      isUtilityBatch({
+        section: "utility",
+        method: "wrong",
+      } as TCall)
+    ).toBeFalsy();
   });
 });
-
-// Test getRemarkData
-const getRemarkDataTestData = {
-  rmrk:
-    '{"collection"%3A"241B8516516F381A-OKSM"%2C"name"%3A"Kusama Octahedron"%2C"transferable"%3A1%2C"sn"%3A"0000000000000004"%2C"metadata"%3A"ipfs%3A//ipfs/QmXwp5VsPmTdWvFKmc9VwnFkp9jN6ktFiKc5tSMHCuN4pW"}',
-};
 
 describe("utils: getRemarkData", () => {
   it("should take a remark string and turn into json", () => {
-    expect(getRemarkData(getRemarkDataTestData.rmrk)).toMatchSnapshot();
+    const remark =
+      '{"collection"%3A"241B8516516F381A-OKSM"%2C"name"%3A"Kusama Octahedron"%2C"transferable"%3A1%2C"sn"%3A"0000000000000004"%2C"metadata"%3A"ipfs%3A//ipfs/QmXwp5VsPmTdWvFKmc9VwnFkp9jN6ktFiKc5tSMHCuN4pW"}';
+    expect(getRemarkData(remark)).toMatchSnapshot();
   });
 });
