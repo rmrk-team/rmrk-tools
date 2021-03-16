@@ -10,5 +10,6 @@ module.exports = {
     "src/tools/utils.ts",
     "src/tools/validate-remark.ts",
     "src/tools/consolidator/consolidator.ts",
+    "src/rmrk1.0.0/classes/*",
   ],
 };
