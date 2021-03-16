@@ -214,7 +214,7 @@ export class Consolidator {
       return true;
     }
 
-    if (nft.transferable === 0) {
+    if (nft.transferable === 0 || nft.transferable >= remark.block) {
       invalidate(
         send.id,
         `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`
@@ -291,7 +291,7 @@ export class Consolidator {
       return true;
     }
 
-    if (nft.transferable === 0) {
+    if (nft.transferable === 0 || nft.transferable >= remark.block) {
       invalidate(
         list.id,
         `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${list.id}.`
@@ -432,7 +432,7 @@ export class Consolidator {
       return true;
     }
 
-    if (nft.transferable === 0) {
+    if (nft.transferable === 0 || nft.transferable >= remark.block) {
       invalidate(
         buy.id,
         `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`
