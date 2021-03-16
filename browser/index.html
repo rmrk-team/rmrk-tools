@@ -190,16 +190,23 @@
       </div>
     </form>
     <hr />
+
+    <div>
+      <div id="nft_list">
+
+      </div>
+    </div>
     <script src="rmrk-tools.js"></script>
     <script src="polkadot-utils.js"></script>
     <script>
       const {extensionDapps, utilCrypto, util, api} = window.polkadotUtils;
+      const wsProvider = new api.WsProvider('ws://127.0.0.1:9944');
       start();
 
       async function start() {
         let myApi = await initWeb3Connection();
         await initWeb3Login();
-      }
+      };
 
       async function initWeb3Login() {
         extensionDapps.web3Enable("RMRK Test").then(function () {
@@ -242,10 +249,10 @@
               return false;
             }
 
-            const c1 = new rmrkTools.c100(
+            const c1 = new rmrkTools.Collection(
               0,
               name,
-              max,
+              parseInt(max),
               issuer,
               symbol,
               generateCollectionId(symbol, pubkeyForAddress()),
@@ -278,12 +285,12 @@
 
             if (!transferable) transferable = 1;
 
-            const n1 = new rmrkTools.n100(
+            const n1 = new rmrkTools.NFT(
               0,
               coll,
               name,
               instance,
-              transferable,
+              parseInt(transferable),
               sn,
               metadata
             );
@@ -317,7 +324,7 @@
         return utilCrypto.decodeAddress(selectedAddress());
       }
       function generateCollectionId(symbol, pubkey) {
-        return rmrkTools.c100.generateId(util.u8aToHex(pubkey), symbol);
+        return rmrkTools.Collection.generateId(util.u8aToHex(pubkey), symbol);
       }
       function getJson(s) {
         let encoded = s.split("::").pop();
@@ -377,7 +384,7 @@
       }
       async function initWeb3Connection() {
         try {
-        const wsProvider = new api.WsProvider('ws://127.0.0.1:9944');
+
         myApi = await api.ApiPromise.create({ provider: wsProvider });
         } catch (e) {
           console.error(e);

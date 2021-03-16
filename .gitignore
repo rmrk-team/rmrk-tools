@@ -6,6 +6,8 @@ archive
 .idea
 .npmrc
 dist
+dist-cli
+.DS_Store
 
 /remarks*.json
 /dump-*.json
