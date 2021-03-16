@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import commander from "commander";
 import { Options } from "../src/tools/types";
 import { NFT as N100 } from "../src/rmrk1.0.0/classes/nft";

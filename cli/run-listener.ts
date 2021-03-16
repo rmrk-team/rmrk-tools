@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { RemarkListener } from "../src/listener";
 import { WsProvider } from "@polkadot/api";
 import defaultDump from "../dumps/remarks-4892957-6619194-0x726d726b,0x524d524b.json";
