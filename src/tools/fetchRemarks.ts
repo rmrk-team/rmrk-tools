@@ -55,14 +55,14 @@ export default async (
       ) {
         // @ts-ignore
         const batchargs: Call[] = args[0];
-        let remarkExists = false;
+        let remarkExists = 0;
         batchargs.forEach((el) => {
           if (
             el.section === "system" &&
             el.method === "remark" &&
             prefixes.some((word) => el.args.toString().startsWith(word))
           ) {
-            remarkExists = true;
+            remarkExists++;
           }
         });
         if (remarkExists) {
@@ -82,19 +82,23 @@ export default async (
             continue exLoop;
           }
 
-          // @todo - create extras field in remark blockcall
-          // add all batch companions into extras field
-          // should result in remark with children like balance.transfer
-
           let batchRoot = {} as BlockCall;
           let batchExtras: BlockCall[] = [];
-          batchargs.forEach((el) => {
+          batchargs.forEach((el, i) => {
             if (el.section === "system" && el.method === "remark") {
-              batchRoot = {
-                call: `${el.section}.${el.method}`,
-                value: el.args.toString(),
-                caller: ex.signer.toString(),
-              } as BlockCall;
+              if (i < remarkExists - 1) {
+                bc.push({
+                  call: `${el.section}.${el.method}`,
+                  value: el.args.toString(),
+                  caller: ex.signer.toString(),
+                } as BlockCall);
+              } else {
+                batchRoot = {
+                  call: `${el.section}.${el.method}`,
+                  value: el.args.toString(),
+                  caller: ex.signer.toString(),
+                } as BlockCall;
+              }
             } else {
               batchExtras.push({
                 call: `${el.section}.${el.method}`,
@@ -109,14 +113,6 @@ export default async (
           }
 
           bc.push(batchRoot);
-
-          // batchargs.forEach((el) => {
-          //   bc.push({
-          //     call: `${el.section}.${el.method}`,
-          //     value: el.args.toString(),
-          //     caller: ex.signer.toString(),
-          //   } as BlockCall);
-          // });
         }
       }
       exIndex++;
