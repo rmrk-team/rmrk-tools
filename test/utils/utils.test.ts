@@ -1,4 +1,4 @@
-import { blocks489x_630x } from "../mocks/blocks";
+import { blocks489x_630x } from "../mocks/blocks-dump";
 import {
   getRemarksFromBlocks,
   stringIsAValidUrl,
