@@ -38,7 +38,7 @@
     "cli:seed": "ts-node --project tsconfig.cli.json cli/index seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/index getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/index validate",
-    "cli:test-listener": "ts-node --project tsconfig.cli.json cli/test.ts",
+    "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "test": "TS_NODE_PROJECT=tsconfig.test.json ava",
     "test:watch": "TS_NODE_PROJECT=tsconfig.test.json ava --watch",
     "prepublishOnly": "yarn build"

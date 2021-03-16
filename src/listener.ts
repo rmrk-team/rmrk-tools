@@ -14,9 +14,6 @@ import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import { Consolidator } from "./tools/consolidator/consolidator";
 
-//TODO: Once we have a cron-job that fetches latest dumps, change that to point to ipfs url with that dump
-import defaultDump from "../dumps/remarks-4892957-6619194-0x726d726b,0x524d524b.json";
-
 interface IProps {
   providerInterface: ProviderInterface;
   prefixes?: string[];
@@ -43,9 +40,14 @@ export class RemarkListener {
     initialBlockCalls,
     initialRemarksUrl,
   }: IProps) {
-    if (!providerInterface && !initialBlockCalls) {
+    if (!providerInterface) {
       throw new Error(
-        `"providerInterface" or "initialBlockCalls" is missing. Please provide polkadot.js provider interface or pre-fetched block calls.`
+        `"providerInterface" is missing. Please provide polkadot.js provider interface (i.e. websocket)`
+      );
+    }
+    if (!initialRemarksUrl && !initialBlockCalls) {
+      throw new Error(
+        `"initialRemarksUrl" or "initialBlockCalls" are missing. Please provide url to your remarks dump or pre-fetched block calls.`
       );
     }
     this.initialRemarksUrl = initialRemarksUrl;
@@ -109,13 +111,14 @@ export class RemarkListener {
   };
 
   /*
-   Fetch initial remarks from provided dump url, or from local JSON if url is not provided
-   TODO: change this to fetch from set of ipfs cids
+   Fetch initial remarks from provided dump url
    */
   public async fetchInitialRemarks(): Promise<Block[] | []> {
     try {
       if (!this.initialRemarksUrl) {
-        return defaultDump;
+        throw new Error(
+          `"initialRemarksUrl" is missing. Please provide url to your remarks dump`
+        );
       }
       const response = await fetch(this.initialRemarksUrl);
       if (response.status === 200) {
