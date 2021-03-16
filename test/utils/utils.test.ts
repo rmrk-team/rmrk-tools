@@ -5,6 +5,7 @@ import {
   prefixToArray,
   isSystemRemark,
   isUtilityBatch,
+  getRemarkData,
 } from "../../src/tools/utils";
 import { Call as TCall } from "@polkadot/types/interfaces";
 
@@ -58,7 +59,6 @@ describe("utils: prefixToArray", () => {
 });
 
 // Test isSystemRemark
-
 const isSystemRemarkTestData = {
   call: {
     args: ["0x726d726b", "0x524d524b"],
@@ -96,7 +96,7 @@ describe("utils: isSystemRemark", () => {
   });
 });
 
-// Test isSystemRemark
+// Test isUtilityBatch
 const isUtilityBatchTestData = {
   call: {
     section: "utility",
@@ -137,5 +137,17 @@ describe("utils: isUtilityBatch", () => {
 describe("utils: isUtilityBatch", () => {
   it("should check if passed a utility and return a boolean - false", () => {
     expect(isUtilityBatch(isUtilityBatchTestData.call4 as TCall)).toBeFalsy();
+  });
+});
+
+// Test getRemarkData
+const getRemarkDataTestData = {
+  rmrk:
+    '{"collection"%3A"241B8516516F381A-OKSM"%2C"name"%3A"Kusama Octahedron"%2C"transferable"%3A1%2C"sn"%3A"0000000000000004"%2C"metadata"%3A"ipfs%3A//ipfs/QmXwp5VsPmTdWvFKmc9VwnFkp9jN6ktFiKc5tSMHCuN4pW"}',
+};
+
+describe("utils: getRemarkData", () => {
+  it("should take a remark string and turn into json", () => {
+    expect(getRemarkData(getRemarkDataTestData.rmrk)).toMatchSnapshot();
   });
 });

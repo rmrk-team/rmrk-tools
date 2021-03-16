@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`utils: getRemarkData should take a remark string and turn into json 1`] = `
+Object {
+  "collection": "241B8516516F381A-OKSM",
+  "metadata": "ipfs://ipfs/QmXwp5VsPmTdWvFKmc9VwnFkp9jN6ktFiKc5tSMHCuN4pW",
+  "name": "Kusama Octahedron",
+  "sn": "0000000000000004",
+  "transferable": 1,
+}
+`;
+
 exports[`utils: getRemarksFromBlocks should return remarks from blocks 1`] = `
 Array [
   Object {
