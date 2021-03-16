@@ -35,7 +35,7 @@ jobs:
       # publish to NPM -> there is one caveat, continue reading for the fix
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       # push the version changes to GitHub
       - run: git push
         env:
