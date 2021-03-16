@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import commander from "commander";
 import { Options } from "../src/tools/types";
 import fs from "fs";

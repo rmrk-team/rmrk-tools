@@ -9,4 +9,5 @@ export enum OP_TYPES {
   SEND = "SEND",
   EMOTE = "EMOTE",
   CHANGEISSUER = "CHANGEISSUER",
+  CONSUME = "CONSUME",
 }

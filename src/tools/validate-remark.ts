@@ -39,7 +39,7 @@ const NFTStruct = type({
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
-const IsBigInt = define("BigInt", (value) => {
+const IsBigInt = define("BigInt", (value: any) => {
   try {
     if (!is(value, string())) {
       return false;
@@ -58,6 +58,10 @@ const LISTStruct = type({
 });
 
 const BUYStruct = type({
+  id: string(),
+});
+
+const CONSUMEStruct = type({
   id: string(),
 });
 
@@ -100,7 +104,6 @@ export const validateCollection = (remark: string): any => {
     const obj = getRemarkData(dataString);
     return assert(obj, CollectionStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -116,7 +119,6 @@ export const validateNFT = (remark: string): any => {
     const obj = getRemarkData(dataString);
     return assert(obj, NFTStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -131,7 +133,6 @@ export const validateList = (remark: string): any => {
     validateBase(remark, OP_TYPES.LIST);
     return assert({ id, price }, LISTStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -146,7 +147,6 @@ export const validateSend = (remark: string): any => {
     validateBase(remark, OP_TYPES.SEND);
     return assert({ id, recipient }, SENDStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -161,7 +161,6 @@ export const validateEmote = (remark: string): any => {
     validateBase(remark, OP_TYPES.EMOTE);
     return assert({ id, unicode }, EMOTEStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -176,7 +175,6 @@ export const validateChangeIssuer = (remark: string): any => {
     validateBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -190,6 +188,20 @@ export const validateBuy = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.BUY);
     return assert({ id }, BUYStruct);
+  } catch (error) {
+    throw new Error(
+      error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateConsume = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id] = remark.split("::");
+
+  try {
+    validateBase(remark, OP_TYPES.CONSUME);
+    return assert({ id }, CONSUMEStruct);
   } catch (error) {
     console.log("StructError is:", error);
     throw new Error(

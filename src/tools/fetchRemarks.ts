@@ -1,7 +1,6 @@
-import { BlockCall, BlockCalls } from "./types";
-import { deeplog } from "../tools/utils";
+import { BlockCalls } from "./types";
+import { deeplog, getBlockCallsFromSignedBlock } from "../tools/utils";
 import { ApiPromise } from "@polkadot/api";
-import { Call } from "@polkadot/types/interfaces";
 
 export default async (
   api: ApiPromise,
@@ -21,7 +20,6 @@ export default async (
 
     const blockHash = await api.rpc.chain.getBlockHash(i);
     const block = await api.rpc.chain.getBlock(blockHash);
-    const bc: BlockCall[] = [];
 
     if (block.block === undefined) {
       console.error("block.block is undefined for block " + i);
@@ -29,103 +27,12 @@ export default async (
       continue;
     }
 
-    let exIndex = 0;
-    exLoop: for (const ex of block.block.extrinsics) {
-      if (ex.isEmpty || !ex.isSigned) {
-        exIndex++;
-        continue;
-      }
-      const {
-        method: { args, method, section },
-      } = ex;
+    const blockCalls = await getBlockCallsFromSignedBlock(block, prefixes, api);
 
-      if (section === "system" && method === "remark") {
-        const remark = args.toString();
-        if (prefixes.some((word) => remark.startsWith(word))) {
-          //if (remark.indexOf(prefix) === 0) {
-          bc.push({
-            call: "system.remark",
-            value: remark,
-            caller: ex.signer.toString(),
-          } as BlockCall);
-        }
-      } else if (
-        section === "utility" &&
-        (method === "batch" || method == "batchAll")
-      ) {
-        // @ts-ignore
-        const batchargs: Call[] = args[0];
-        let remarkExists = false;
-        batchargs.forEach((el) => {
-          if (
-            el.section === "system" &&
-            el.method === "remark" &&
-            prefixes.some((word) => el.args.toString().startsWith(word))
-          ) {
-            remarkExists = true;
-          }
-        });
-        if (remarkExists) {
-          const records = await api.query.system.events.at(blockHash);
-          const events = records.filter(
-            ({ phase, event }) =>
-              phase.isApplyExtrinsic &&
-              phase.asApplyExtrinsic.eq(exIndex) &&
-              (event.method.toString() === "BatchInterrupted" ||
-                event.method.toString() === "ExtrinsicFailed")
-          );
-          if (events.length) {
-            console.log(
-              `Skipping batch ${i}-${exIndex} due to BatchInterrupted or ExtrinsicFailed`
-            );
-            exIndex++;
-            continue exLoop;
-          }
-
-          // @todo - create extras field in remark blockcall
-          // add all batch companions into extras field
-          // should result in remark with children like balance.transfer
-
-          let batchRoot = {} as BlockCall;
-          let batchExtras: BlockCall[] = [];
-          batchargs.forEach((el) => {
-            if (el.section === "system" && el.method === "remark") {
-              batchRoot = {
-                call: `${el.section}.${el.method}`,
-                value: el.args.toString(),
-                caller: ex.signer.toString(),
-              } as BlockCall;
-            } else {
-              batchExtras.push({
-                call: `${el.section}.${el.method}`,
-                value: el.args.toString(),
-                caller: ex.signer.toString(),
-              } as BlockCall);
-            }
-          });
-
-          if (batchExtras.length) {
-            batchRoot.extras = batchExtras;
-          }
-
-          bc.push(batchRoot);
-
-          // batchargs.forEach((el) => {
-          //   bc.push({
-          //     call: `${el.section}.${el.method}`,
-          //     value: el.args.toString(),
-          //     caller: ex.signer.toString(),
-          //   } as BlockCall);
-          // });
-        }
-      }
-      exIndex++;
-    }
-
-    if (bc.length) {
+    if (blockCalls.length) {
       bcs.push({
         block: i,
-        calls: bc,
+        calls: blockCalls,
       } as BlockCalls);
     }
   }

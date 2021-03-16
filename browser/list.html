@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RMRK tools demo - NFT list</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css"
+    />
+  </head>
+  <body>
+    <style>
+
+      #nfts, #collections {
+          display: flex;
+          flex-wrap: wrap;
+      }
+
+      #nfts > div, #collections > div {
+          width: 230px;
+          margin: 10px;
+      }
+    </style>
+    <h1>Consolidator testing page</h1>
+
+    <select name="account_picker" id="account_picker"></select>
+
+    <h2>Minted collections</h2>
+    <div id="collections"></div>
+    <hr />
+    <h2>Minted NFTs</h2>
+    <div id="nfts"></div>
+    <hr />
+    <h2>Invalid calls</h2>
+    <div id="bad"></div>
+    <hr />
+    <script src="ipfs.js"></script>
+    <script src="rmrk-tools.js"></script>
+    <script src="polkadot-utils.js"></script>
+    <script>
+      const { extensionDapps, utilCrypto, util, api } = window.polkadotUtils;
+      const wsProvider = new api.WsProvider("ws://127.0.0.1:9944");
+      start();
+      let ipfsNode;
+
+      async function start() {
+        let myApi = await initWeb3Connection();
+        await initWeb3Login();
+        ipfsNode = await ipfs.create();
+        initListener();
+      }
+
+      const sanitizeIpfsUrl = (ipfsUrl) => {
+        const isDouble = /^ipfs:\/\/ipfs/;
+        if (isDouble.test(ipfsUrl)) {
+          return ipfsUrl.replace("ipfs://", "https://gateway.pinata.cloud/");
+        }
+
+        const isSlashed = /^ipfs:\/\//;
+        if (isSlashed.test(ipfsUrl)) {
+          return ipfsUrl.replace(
+            "ipfs://",
+            "https://gateway.pinata.cloud/ipfs/"
+          );
+        }
+
+        return ipfsUrl;
+      };
+
+      async function initWeb3Login() {
+        extensionDapps.web3Enable("RMRK Test").then(function () {
+          if (!extensionDapps.isWeb3Injected) {
+            alert(
+              "You need a Web3 enabled browser to log in with Web3. The easiest solution is probably to install the Polkadot{js} extension."
+            );
+          } else {
+            extensionDapps.web3Accounts().then(async (accounts) => {
+              console.log(accounts);
+              let picker = document.querySelector("#account_picker");
+              let options = "";
+              for (acc of accounts) {
+                options += `<option value='${acc.address}'>${
+                  acc.meta.name + " - " + acc.address
+                }</option>`;
+              }
+              picker.innerHTML = options;
+              await initRest();
+            });
+          }
+        });
+      }
+
+      const renderNFTs = async (nfts) => {
+        let nftBox = "";
+        console.log('nfts', nfts)
+        for (const nft of nfts) {
+          const image = await fetchIPFSImage(nft.metadata);
+
+          nftBox += `
+            <div class='nft'>
+              <h3>${nft.name} (${nft.instance}) #${nft.block}</h3>
+              <h4>${nft.getId()}, collection ${nft.collection}</h4>
+              <p>Transferable: ${
+            nft.transferable > 0 ? nft.transferable : "No"
+          }</p>
+              <p>Burned: ${
+            nft.burned == ""
+              ? "No"
+              : nft.burned
+                .replace("<consume>", "")
+                .replace("</consume>", "")
+          }</p>
+              <p>Owner: ${nft.owner}</p>
+              <p>For sale: ${
+            nft.forsale > BigInt(0) ? nft.forsale.toString() : "Not listed"
+          }
+            `;
+          if (image) {
+            const imgSrc = sanitizeIpfsUrl(image);
+            nftBox += `<img src="${imgSrc}" />`;
+          }
+          if (nft.changes.length > 0) {
+            for (let change of nft.changes) {
+              nftBox += `
+                <ul>
+                  <li>#${change.block}: field ${change.field}, ${change.old} => ${change.new} by ${change.caller}</li>
+                </ul>
+                `;
+            }
+          }
+          nftBox += `</div><hr>`;
+        }
+        document.querySelector("#nfts").innerHTML = nftBox;
+      }
+
+      const renderCollections = async (collections) => {
+        let collBox = "";
+        for (const coll of collections) {
+          const image = await fetchIPFSImage(coll.metadata);
+
+          collBox += `
+            <div class='collection'>
+              <h3>${coll.name} (${coll.symbol}) #${coll.block}</h3>
+              <h4>${coll.id}</h4>
+              <p>Max: ${coll.max}</p>
+              <p>Issuer: ${coll.issuer}</p>
+            `;
+
+          if (image) {
+            const imgSrc = sanitizeIpfsUrl(image);
+            collBox += `<img src="${imgSrc}" />`;
+          }
+
+          if (coll.changes.length > 0) {
+            for (let change of coll.changes) {
+              collBox += `
+                <ul>
+                  <li>#${change.block}: field ${change.field}, ${change.old} => ${change.new} by ${change.caller}</li>
+                </ul>
+                `;
+            }
+          }
+          collBox += `</div><hr>`;
+        }
+        document.querySelector("#collections").innerHTML = collBox;
+      }
+
+      async function initRest() {
+        console.log("Loading dump...");
+        async function main() {
+          const version = await ipfsNode.version();
+
+          console.log("IPFS Node version:", version.version);
+
+          const data = uint8ArrayConcat(
+            await all(
+              ipfsNode.cat("QmUdu8FFHvFGUWVHzShojeYpJsTX2nsVPaGaorMqYGxZmB")
+            )
+          );
+          const dump = JSON.parse(util.u8aToString(data));
+          //console.log(dump);
+          const consolidator = new rmrkTools.Consolidator();
+          const consolidated = consolidator.consolidate(
+            rmrkTools.utils.getRemarksFromBlocks(dump)
+          );
+          console.log(consolidated);
+
+          renderCollections(consolidated.collections);
+          renderNFTs(consolidated.nfts);
+
+          let invalids = "";
+          for (const inv of consolidated.invalid) {
+            invalids += `<table>
+              <tr>
+                <td>OP_TYPE</td>
+                <td>${inv.op_type}</td>
+              </tr>
+              <tr>
+                <td>Block</td>
+                <td>${inv.block}</td>
+              </tr>
+              <tr>
+                <td>Caller</td>
+                <td>${inv.caller}</td>
+              </tr>
+              <tr>
+                <td>Message</td>
+                <td>${inv.message}</td>
+              </tr>
+              <tr>
+                <td>Object ID</td>
+                <td>${inv.object_id}</td>
+              </tr>
+              </table><hr>`;
+          }
+          document.querySelector("#bad").innerHTML = invalids;
+        }
+
+        main();
+      }
+
+      async function initWeb3Connection() {
+        try {
+          myApi = await api.ApiPromise.create({ provider: wsProvider });
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      const initListener = async () => {
+        const listener = new rmrkTools.RemarkListener({
+          providerInterface: wsProvider,
+          prefixes: [],
+        });
+        const subscriber = listener.initialiseObservable();
+        subscriber.subscribe(({nfts, collections}) => {
+          document.getElementById("collections").innerHTML = "";
+          document.getElementById("nfts").innerHTML = "";
+          renderNFTs(nfts);
+          renderCollections(collections);
+        });
+
+        const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
+        unfinilisedSubscriber.subscribe((val) =>
+          console.log("Unfinalised remarks:", val)
+        );
+      };
+
+      const fetchIPFSImage = async (metadata) => {
+        if (!metadata) return;
+        try {
+          const url = sanitizeIpfsUrl(metadata);
+          const response = await fetch(url);
+          if (response.json) {
+            const data = await response.json();
+            return data.image;
+          }
+          return null;
+        } catch (error) {
+          console.log('Could not fetch remark', error);
+          return null;
+        }
+      }
+    </script>
+  </body>
+</html>

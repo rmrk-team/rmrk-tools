@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import program from "commander";
 import * as fetch from "./fetch";
 import * as consolidate from "./consolidate";

@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.cli",
+  "compilerOptions": {
+    "outDir": "dist-cli"
+  },
+}
