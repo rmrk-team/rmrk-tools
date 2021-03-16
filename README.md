@@ -87,6 +87,21 @@ const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 ```
 
+Consolidator requires a full history of remarks, so you have to either provide an url where you store your dumps that you fetch using `fetchRemarks`:
+
+```
+const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialBlockCalls: [...] });
+```
+
+Or pass fetched remarks as an array: 
+```
+const to = await getLatestFinalizedBlock(api);
+const missingBlocks = await fetchRemarks(api, 0, to, []);
+const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://url-for-remarks-dump' });
+```
+
+Please note that fetching from block 0 like above from live chain will take a long time, so the best thing is for you to set up a cron job or listener that will be updating dumps that you can then pass to consolidator
+
 ### `Collection`
 
 ```

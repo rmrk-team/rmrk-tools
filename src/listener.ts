@@ -20,6 +20,7 @@ import defaultDump from "../dumps/remarks-4892957-6619194-0x726d726b,0x524d524b.
 interface IProps {
   providerInterface: ProviderInterface;
   prefixes?: string[];
+  initialBlockCalls?: BlockCalls[];
   initialRemarksUrl?: string;
 }
 
@@ -36,17 +37,22 @@ export class RemarkListener {
   private initialised: boolean;
   private prefixes: string[];
 
-  constructor({ providerInterface, prefixes, initialRemarksUrl }: IProps) {
-    if (!providerInterface) {
+  constructor({
+    providerInterface,
+    prefixes,
+    initialBlockCalls,
+    initialRemarksUrl,
+  }: IProps) {
+    if (!providerInterface && !initialBlockCalls) {
       throw new Error(
-        `"providerInterface" is missing. Please provide polkadot.js provider interface. for example: const wsProvider = new WsProvider("ws://127.0.0.1:9944");`
+        `"providerInterface" or "initialBlockCalls" is missing. Please provide polkadot.js provider interface or pre-fetched block calls.`
       );
     }
     this.initialRemarksUrl = initialRemarksUrl;
     this.providerInterface = providerInterface;
     this.apiPromise = ApiPromise.create({ provider: this.providerInterface });
 
-    this.initialBlockCalls = [];
+    this.initialBlockCalls = initialBlockCalls || [];
     this.missingBlockCalls = [];
     this.latestBlockCalls = [];
     this.latestBlockCallsFinalised = [];
