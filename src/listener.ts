@@ -74,8 +74,10 @@ export class RemarkListener {
       await this.initialiseListener({ finalised: false });
       // Subscribe to latest head blocks (finalised)
       await this.initialiseListener({ finalised: true });
-      // Fetch latest remark blocks from dump
-      this.initialBlockCalls = await this.fetchInitialRemarks();
+      // Fetch latest remark blocks from dump if missing
+      if (this.initialBlockCalls.length < 1) {
+        this.initialBlockCalls = await this.fetchInitialRemarks();
+      }
       // Fetch latest remark blocks since last block in the dump above
       this.missingBlockCalls = await this.fetchMissingBlockCalls(
         this.initialBlockCalls
