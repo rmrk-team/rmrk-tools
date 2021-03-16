@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "module":"commonjs",
+    "module":"commonjs"
   },
   "include": ["cli/*.ts", "src/*.ts", "src/**/*.ts"],
   "files": ["cli/index.ts"]
