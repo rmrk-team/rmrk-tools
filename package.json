@@ -99,7 +99,6 @@
   },
   "peerDependency": {
     "@polkadot/api": "^4.0.3",
-    "@polkadot/extension-dapp": "^0.37.3-5",
-    "@polkadot/util-crypt": "^6.0.5"
+    "@polkadot/util-crypto": "^6.0.5"
   }
 }
