@@ -139,6 +139,9 @@ export class RemarkListener {
     initialBlocks: Block[]
   ): Promise<Block[]> {
     try {
+      if (initialBlocks.length < 1) {
+        return [];
+      }
       const api = await this.apiPromise;
       const from = await this.getLastBlockNumber(initialBlocks);
       const to = await getLatestFinalizedBlock(api);
@@ -196,9 +199,12 @@ export class RemarkListener {
     // Only consolidate and fire event if user subscribed to UN-finalised blocks listener
     if (this.observerUnfinalised) {
       const consolidator = new Consolidator();
-      // Only extract and consolidate remarks from unfinalised block, no need to consolidate whole thing here
-      // User can then decide what to do with them
-      const remarks = getRemarksFromBlocks(this.latestBlockCalls);
+      // Consolidate remarks including unfinalised block so User can react to changes quickly
+      const remarks = getRemarksFromBlocks([
+        ...concatinatedBlockCallsBase,
+        ...this.latestBlockCalls,
+        ...this.latestBlockCallsFinalised,
+      ]);
       const consolidatedFinal = consolidator.consolidate(remarks);
       // Fire event to a subscriber
       this.observerUnfinalised.next(consolidatedFinal);
@@ -217,7 +223,11 @@ export class RemarkListener {
       : await this.getHeadSubscrber();
 
     headSubscriber(async (header) => {
-      console.log(`Chain is at block: #${header.number}`);
+      console.log(
+        `Chain is at block: #${header.number} and it is ${
+          finalised ? "Finalised" : "Unfinalised"
+        } listener`
+      );
       if (header.number.toNumber() === 0) {
         console.error(
           "Unable to retrieve finalized head - returned genesis block"
@@ -256,9 +266,15 @@ export class RemarkListener {
           /* If someone is listening to unfinalised blocks, return them here */
           if (this.observerUnfinalised) {
             const consolidator = new Consolidator();
-            // Only extract and consolidate remarks from unfinalised block, no need to consolidate whole thing here
-            // User can then decide what to do with them
-            const remarks = getRemarksFromBlocks(this.latestBlockCalls);
+            // Consolidate remarks including unfinalised block so User can react to changes quickly
+            // TODO: Consider extracting just the ids of NFTs and Collections from these unfinalised remarks, and returning them,
+            // Instead of reconsolidating whole thing again
+            const remarks = getRemarksFromBlocks([
+              ...this.initialBlockCalls,
+              ...this.missingBlockCalls,
+              ...this.latestBlockCalls,
+              ...this.latestBlockCallsFinalised,
+            ]);
             const consolidatedFinal = consolidator.consolidate(remarks);
             // Fire event to a subscriber
             this.observerUnfinalised.next(consolidatedFinal);
