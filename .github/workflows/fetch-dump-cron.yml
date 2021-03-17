@@ -19,5 +19,13 @@ jobs:
       uses: test-room-7/action-update-file@v1
       with:
         file-path: dumps/latest.json
+        branch: dumps
         commit-msg: Update remarks dump
         github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Merge dumps back to master and squash
+      run: |
+        git checkout master
+        git pull
+        git merge --squash master
+        git push origin master
