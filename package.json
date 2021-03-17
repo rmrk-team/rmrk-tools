@@ -16,10 +16,10 @@
     "browser": "./browser/rmrk-tools.js"
   },
   "files": [
-    "umd",
     "dist",
     "browser",
-    "dist-cli"
+    "dist-cli",
+    "dist-cli/*"
   ],
   "scripts": {
     "build": "tsc && yarn build:es && yarn build:cjs && yarn build:browser && yarn build:cli",
