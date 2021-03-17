@@ -1,6 +1,9 @@
 export const changeIssuerRemark =
   "RMRK::CHANGEISSUER::1.0.0::705BED5A790A0D0072-BICHITOS::EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG";
 
+export const changeIssuerRemarkInvalid =
+  "RMRK::CHANGEISSUER::1.0.0::EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG::705BED5A790A0D0072-BICHITOS";
+
 export const syntheticChangeIssuerBlock = {
   block: 9999999, // fake block id
   calls: [
@@ -9,6 +12,30 @@ export const syntheticChangeIssuerBlock = {
       value:
         "0x524d524b3a3a4348414e47454953535545523a3a312e302e303a3a3730354245443541373930413044303037322d4249434849544f533a3a4559386e3344373241586a3945597942354e68786939706876563854744a416f7679536b55694e435a4d6f51315647",
       caller: "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+    },
+  ],
+};
+
+export const syntheticChangeIssuerBlockInvalid = {
+  block: 9999999, // fake block id
+  calls: [
+    {
+      call: "system.remark",
+      value:
+        "0x524d524b3a3a4348414e47454953535545523a3a312e302e303a3a4559386e3344373241586a3945597942354e68786939706876563854744a416f7679536b55694e435a4d6f513156473a3a3730354245443541373930413044303037322d4249434849544f53",
+      caller: "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+    },
+  ],
+};
+
+export const syntheticChangeIssuerBlockInvalidCaller = {
+  block: 9999999, // fake block id
+  calls: [
+    {
+      call: "system.remark",
+      value:
+        "0x524d524b3a3a4348414e47454953535545523a3a312e302e303a3a3730354245443541373930413044303037322d4249434849544f533a3a4559386e3344373241586a3945597942354e68786939706876563854744a416f7679536b55694e435a4d6f51315647",
+      caller: "EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG",
     },
   ],
 };
