@@ -75,7 +75,7 @@ describe("tools: Consolidator", () => {
     expect(consolidator.consolidate(remarks).invalid.length).toBe(0);
   });
 
-  it("should run CHANGEISSUER with invalid remark (wrong order issues and id)", () => {
+  it("should run CHANGEISSUER with invalid remark (wrong order issuer and id)", () => {
     const remarks = getRemarksFromBlocks([
       ...validBlocks,
       syntheticChangeIssuerBlockInvalid,
