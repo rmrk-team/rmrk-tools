@@ -1,10 +1,14 @@
 import { Consolidator } from "../src";
-import { getRemarksFromBlocks } from "../src/tools/utils";
+import { getRemarkData, getRemarksFromBlocks } from "../src/tools/utils";
 import {
   blockCollectionMintedTwice,
   blockNFTMintedTwice,
+  changeIssuerRemark,
+  syntheticChangeIssuerBlock,
+  validBlocks,
 } from "./mocks/blocks";
 import { blocks647x_661x } from "./mocks/blocks-dump";
+import { stringToHex } from "@polkadot/util";
 
 /*
  [x] token is minted twice with same ID
@@ -32,9 +36,9 @@ const logRemarksHelper = () => {
     };
   });
   console.log(JSON.stringify(remarks, null, 4));
+  // console.log("remark converted", stringToHex(changeIssuerRemark));
 };
-(
- */
+*/
 
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", () => {
@@ -57,5 +61,15 @@ describe("tools: Consolidator", () => {
       consolidator.consolidate(getRemarksFromBlocks(blockNFTMintedTwice))
         .invalid[0].message
     ).toBe("[MINTNFT] Attempt to mint already existing NFT");
+  });
+
+  it("should run CHANGEISSUER", () => {
+    const remarks = getRemarksFromBlocks([
+      ...validBlocks,
+      syntheticChangeIssuerBlock,
+    ]);
+
+    const consolidator = new Consolidator();
+    expect(consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 });

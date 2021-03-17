@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`tools: Consolidator should run CHANGEISSUER 1`] = `
+Object {
+  "collections": Array [
+    Collection {
+      "block": 6432195,
+      "changes": Array [
+        Object {
+          "block": 9999999,
+          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+          "field": "issuer",
+          "new": "EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG",
+          "old": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+        },
+      ],
+      "id": "705BED5A790A0D0072-BICHITOS",
+      "issuer": "EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG",
+      "max": 1,
+      "metadata": "ipfs://ipfs/QmThvDrLeiXrusPuq7PBCrfyh2NFq2xj2P3WoRrMPMrFpd",
+      "name": "Bichitos",
+      "symbol": "BICHITOS",
+    },
+  ],
+  "invalid": Array [],
+  "nfts": Array [
+    NFT {
+      "block": 6432263,
+      "burned": "",
+      "changes": Array [],
+      "collection": "705BED5A790A0D0072-BICHITOS",
+      "data": undefined,
+      "forsale": 0n,
+      "instance": "BICHITOS",
+      "metadata": "ipfs://ipfs/QmZKf2HuTx5oavY8qb2cr1CnsKYiZEiS5dPZoxRM5o1gWG",
+      "name": "Bichitos",
+      "owner": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+      "reactions": Object {},
+      "sn": "0000000000000001",
+      "transferable": 1,
+    },
+  ],
+}
+`;
+
 exports[`tools: Consolidator should run consolidation from set of mixed valid and invalid blocks 647x_661x 1`] = `
 Object {
   "collections": Array [
