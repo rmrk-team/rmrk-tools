@@ -842,7 +842,7 @@
     "@babel/helper-validator-option" "^7.12.17"
     "@babel/plugin-transform-typescript" "^7.13.0"
 
-"@babel/runtime@^7.13.9", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.13.10", "@babel/runtime@^7.13.9", "@babel/runtime@^7.8.4":
   version "7.13.10"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
   integrity sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
@@ -1445,21 +1445,21 @@
     eventemitter3 "^4.0.7"
 
 "@polkadot/extension-dapp@^0.37.3-5":
-  version "0.37.3-5"
-  resolved "https://registry.yarnpkg.com/@polkadot/extension-dapp/-/extension-dapp-0.37.3-5.tgz#ba8588a2efd2e78d58db97ed2dd1e1710f43f7de"
-  integrity sha512-Y/G+XFfDMjMPrmxtitk4lN9Zu45PZKxQY6BPNmNc5UDgjQC+QoczqaV1oFexC9bNUlTfHCB3goEXZ3b28vNpoQ==
+  version "0.37.3-8"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-dapp/-/extension-dapp-0.37.3-8.tgz#930ca0a00f314cbcaa795463bc543ab69dc3087d"
+  integrity sha512-3KJwv151AG0WjRcypFbALbKUvIYYBXOHT/KOGY+S4Dk3dL/199uFG37oJizZ9ZqWAauX1oew8pyk0lEd1oKBcA==
   dependencies:
-    "@babel/runtime" "^7.13.9"
-    "@polkadot/extension-inject" "^0.37.3-5"
+    "@babel/runtime" "^7.13.10"
+    "@polkadot/extension-inject" "^0.37.3-8"
     "@polkadot/util" "^6.0.5"
     "@polkadot/util-crypto" "^6.0.5"
 
-"@polkadot/extension-inject@^0.37.3-5":
-  version "0.37.3-5"
-  resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.37.3-5.tgz#cbfcbb9ccab13e1d761c3ae442baf583dc9496ad"
-  integrity sha512-0TY3jWzR7jaEQ/JVnvDSCdSKoBOjCcuAQXH8Abd7tm+wWA2glZguyg80grnO0ZGQdTyIj4NEu3LK5zxNMu+Bmg==
+"@polkadot/extension-inject@^0.37.3-8":
+  version "0.37.3-8"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.37.3-8.tgz#88f6b3e3eb7b2b40c80d664aee434ab1eac7574d"
+  integrity sha512-dIeHO0Tw1pNu+vY7cY0h7J7qxfv7B9x7he0iRFhW0hjeCtVUa5BhAKT/NzyRVJCn9eHkBsB/CZPLoD9Bt8u/wQ==
   dependencies:
-    "@babel/runtime" "^7.13.9"
+    "@babel/runtime" "^7.13.10"
 
 "@polkadot/keyring@^6.0.5":
   version "6.0.5"
