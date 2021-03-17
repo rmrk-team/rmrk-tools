@@ -3,8 +3,15 @@ import { getRemarksFromBlocks } from "../src/tools/utils";
 import {
   blockCollectionMintedTwice,
   blockNFTMintedTwice,
+  // changeIssuerRemark,
+  // changeIssuerRemarkInvalid,
+  syntheticChangeIssuerBlock,
+  syntheticChangeIssuerBlockInvalid,
+  syntheticChangeIssuerBlockInvalidCaller,
+  validBlocks,
 } from "./mocks/blocks";
 import { blocks647x_661x } from "./mocks/blocks-dump";
+// import { stringToHex } from "@polkadot/util";
 
 /*
  [x] token is minted twice with same ID
@@ -32,10 +39,9 @@ const logRemarksHelper = () => {
     };
   });
   console.log(JSON.stringify(remarks, null, 4));
+  console.log("remark converted", stringToHex(changeIssuerRemarkInvalid));
 };
-(
  */
-
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", () => {
     const remarks = getRemarksFromBlocks(blocks647x_661x);
@@ -57,5 +63,39 @@ describe("tools: Consolidator", () => {
       consolidator.consolidate(getRemarksFromBlocks(blockNFTMintedTwice))
         .invalid[0].message
     ).toBe("[MINTNFT] Attempt to mint already existing NFT");
+  });
+
+  it("should run valid CHANGEISSUER", () => {
+    const remarks = getRemarksFromBlocks([
+      ...validBlocks,
+      syntheticChangeIssuerBlock,
+    ]);
+
+    const consolidator = new Consolidator();
+    expect(consolidator.consolidate(remarks).invalid.length).toBe(0);
+  });
+
+  it("should run CHANGEISSUER with invalid remark (wrong order issuer and id)", () => {
+    const remarks = getRemarksFromBlocks([
+      ...validBlocks,
+      syntheticChangeIssuerBlockInvalid,
+    ]);
+
+    const consolidator = new Consolidator();
+    expect(consolidator.consolidate(remarks).invalid[0].message).toBe(
+      "This CHANGEISSUER remark is invalid - no such collection with ID EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG found before block 9999999!"
+    );
+  });
+
+  it("should run CHANGEISSUER with invalid caller", () => {
+    const remarks = getRemarksFromBlocks([
+      ...validBlocks,
+      syntheticChangeIssuerBlockInvalidCaller,
+    ]);
+
+    const consolidator = new Consolidator();
+    expect(consolidator.consolidate(remarks).invalid[0].message).toBe(
+      "Attempting to change issuer of collection 705BED5A790A0D0072-BICHITOS when not issuer!"
+    );
   });
 });
