@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { Options } from "../src/tools/types";
 import {
   deeplog,

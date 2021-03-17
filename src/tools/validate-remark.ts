@@ -104,7 +104,6 @@ export const validateCollection = (remark: string): any => {
     const obj = getRemarkData(dataString);
     return assert(obj, CollectionStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -120,7 +119,6 @@ export const validateNFT = (remark: string): any => {
     const obj = getRemarkData(dataString);
     return assert(obj, NFTStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -135,7 +133,6 @@ export const validateList = (remark: string): any => {
     validateBase(remark, OP_TYPES.LIST);
     return assert({ id, price }, LISTStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -150,7 +147,6 @@ export const validateSend = (remark: string): any => {
     validateBase(remark, OP_TYPES.SEND);
     return assert({ id, recipient }, SENDStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -165,7 +161,6 @@ export const validateEmote = (remark: string): any => {
     validateBase(remark, OP_TYPES.EMOTE);
     return assert({ id, unicode }, EMOTEStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -180,7 +175,6 @@ export const validateChangeIssuer = (remark: string): any => {
     validateBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -195,7 +189,6 @@ export const validateBuy = (remark: string): any => {
     validateBase(remark, OP_TYPES.BUY);
     return assert({ id }, BUYStruct);
   } catch (error) {
-    console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
