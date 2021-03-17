@@ -3,4 +3,5 @@
   "compilerOptions": {
     "outDir": "dist-cli"
   },
+  "include": ["cli/*.ts", "src/*.ts", "src/**/*.ts"]
 }
