@@ -12,15 +12,16 @@
   </head>
   <body>
     <style>
-
-      #nfts, #collections {
-          display: flex;
-          flex-wrap: wrap;
+      #nfts,
+      #collections {
+        display: flex;
+        flex-wrap: wrap;
       }
 
-      #nfts > div, #collections > div {
-          width: 230px;
-          margin: 10px;
+      #nfts > div,
+      #collections > div {
+        width: 230px;
+        margin: 10px;
       }
     </style>
     <h1>Consolidator testing page</h1>
@@ -46,9 +47,9 @@
       let ipfsNode;
 
       async function start() {
+        ipfsNode = await ipfs.create();
         let myApi = await initWeb3Connection();
         await initWeb3Login();
-        ipfsNode = await ipfs.create();
         initListener();
       }
 
@@ -94,7 +95,7 @@
 
       const renderNFTs = async (nfts) => {
         let nftBox = "";
-        console.log('nfts', nfts)
+        console.log("nfts", nfts);
         for (const nft of nfts) {
           const image = await fetchIPFSImage(nft.metadata);
 
@@ -103,19 +104,19 @@
               <h3>${nft.name} (${nft.instance}) #${nft.block}</h3>
               <h4>${nft.getId()}, collection ${nft.collection}</h4>
               <p>Transferable: ${
-            nft.transferable > 0 ? nft.transferable : "No"
-          }</p>
+                nft.transferable > 0 ? nft.transferable : "No"
+              }</p>
               <p>Burned: ${
-            nft.burned == ""
-              ? "No"
-              : nft.burned
-                .replace("<consume>", "")
-                .replace("</consume>", "")
-          }</p>
+                nft.burned == ""
+                  ? "No"
+                  : nft.burned
+                      .replace("<consume>", "")
+                      .replace("</consume>", "")
+              }</p>
               <p>Owner: ${nft.owner}</p>
               <p>For sale: ${
-            nft.forsale > BigInt(0) ? nft.forsale.toString() : "Not listed"
-          }
+                nft.forsale > BigInt(0) ? nft.forsale.toString() : "Not listed"
+              }
             `;
           if (image) {
             const imgSrc = sanitizeIpfsUrl(image);
@@ -133,7 +134,7 @@
           nftBox += `</div><hr>`;
         }
         document.querySelector("#nfts").innerHTML = nftBox;
-      }
+      };
 
       const renderCollections = async (collections) => {
         let collBox = "";
@@ -165,7 +166,7 @@
           collBox += `</div><hr>`;
         }
         document.querySelector("#collections").innerHTML = collBox;
-      }
+      };
 
       async function initRest() {
         console.log("Loading dump...");
@@ -180,6 +181,9 @@
             )
           );
           const dump = JSON.parse(util.u8aToString(data));
+
+          initListener(dump);
+
           //console.log(dump);
           const consolidator = new rmrkTools.Consolidator();
           const consolidated = consolidator.consolidate(
@@ -229,13 +233,14 @@
         }
       }
 
-      const initListener = async () => {
+      const initListener = async (dump) => {
         const listener = new rmrkTools.RemarkListener({
           providerInterface: wsProvider,
           prefixes: [],
+          initialBlockCalls: dump,
         });
         const subscriber = listener.initialiseObservable();
-        subscriber.subscribe(({nfts, collections}) => {
+        subscriber.subscribe(({ nfts, collections }) => {
           document.getElementById("collections").innerHTML = "";
           document.getElementById("nfts").innerHTML = "";
           renderNFTs(nfts);
@@ -259,10 +264,10 @@
           }
           return null;
         } catch (error) {
-          console.log('Could not fetch remark', error);
+          console.log("Could not fetch remark", error);
           return null;
         }
-      }
+      };
     </script>
   </body>
 </html>
