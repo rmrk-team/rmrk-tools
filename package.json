@@ -42,12 +42,9 @@
     "prepublishOnly": "yarn build"
   },
   "bin": {
-    "rmrk-tools-fetch": "dist-cli/cli/fetch.js",
-    "rmrk-tools-consolidate": "dist-cli/cli/consolidate.js",
-    "rmrk-tools-seed": "dist-cli/cli/seed.js",
-    "rmrk-tools-getevents": "dist-cli/cli/getevents.js",
-    "rmrk-tools-validate": "dist-cli/cli/validate.js",
-    "rmrk-tools-run-listener": "dist-cli/cli/run-listener.js"
+    "rmrk-tools-fetch": "dist-cli/cli/index.js fetch",
+    "rmrk-tools-consolidate": "dist-cli/cli/index.js consolidate",
+    "rmrk-tools-seed": "dist-cli/cli/index.js seed"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",
