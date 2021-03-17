@@ -70,9 +70,11 @@ Or in bash scripts
 
 ```
 #! /usr/bin/env node
-var shell = require("shelljs");
+import shell from "shelljs";
 
-shell.exec("rmrk-tools-fetch");
+shell.exec(
+  'rmrk-tools-fetch --ws wss://node.rmrk.app --prefixes=0x726d726b,0x524d524b --append=dumps/latest.json',
+);
 ```
 
 ## API

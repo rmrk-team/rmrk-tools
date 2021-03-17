@@ -37,17 +37,14 @@
     <h2>Invalid calls</h2>
     <div id="bad"></div>
     <hr />
-    <script src="ipfs.js"></script>
     <script src="rmrk-tools.js"></script>
     <script src="polkadot-utils.js"></script>
     <script>
       const { extensionDapps, utilCrypto, util, api } = window.polkadotUtils;
       const wsProvider = new api.WsProvider("ws://127.0.0.1:9944");
       start();
-      let ipfsNode;
 
       async function start() {
-        ipfsNode = await ipfs.create();
         let myApi = await initWeb3Connection();
         await initWeb3Login();
       }
@@ -200,16 +197,8 @@
       async function initRest() {
         console.log("Loading dump...");
         async function main() {
-          const version = await ipfsNode.version();
-
-          console.log("IPFS Node version:", version.version);
-
-          const data = uint8ArrayConcat(
-            await all(
-              ipfsNode.cat("QmbUeQpyWVVPbU8BEqFqhNLfk3hCmoppCzkQ3d4n2i8agg")
-            )
-          );
-          const dump = JSON.parse(util.u8aToString(data));
+          const response = await fetch("https://raw.githubusercontent.com/Swader/rmrk-tools/master/dumps/latest.json");
+          const dump = await response.json();
           initListener(dump);
 
           const consolidator = new rmrkTools.Consolidator();
