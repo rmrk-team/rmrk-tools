@@ -63,9 +63,6 @@ You can use any of the available [Helper Tools](#helper-tools) by prepending `rm
   "fetch": "rmrk-tools-fetch",
   "consolidate": "rmrk-tools-consolidate",
   "seed": "rmrk-tools-seed",
-  "getevents": "rmrk-tools-getevents",
-  "validate": "rmrk-tools-validate",
-  "run-listener": "rmrk-tools-run-listener"
 },
 ```
 
