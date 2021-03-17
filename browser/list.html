@@ -50,7 +50,6 @@
         ipfsNode = await ipfs.create();
         let myApi = await initWeb3Connection();
         await initWeb3Login();
-        initListener();
       }
 
       const sanitizeIpfsUrl = (ipfsUrl) => {
@@ -168,35 +167,11 @@
         document.querySelector("#collections").innerHTML = collBox;
       };
 
-      async function initRest() {
-        console.log("Loading dump...");
-        async function main() {
-          const version = await ipfsNode.version();
+      const renderInvalidCalls = (invalidCalls) => {
 
-          console.log("IPFS Node version:", version.version);
-
-          const data = uint8ArrayConcat(
-            await all(
-              ipfsNode.cat("QmUdu8FFHvFGUWVHzShojeYpJsTX2nsVPaGaorMqYGxZmB")
-            )
-          );
-          const dump = JSON.parse(util.u8aToString(data));
-
-          initListener(dump);
-
-          //console.log(dump);
-          const consolidator = new rmrkTools.Consolidator();
-          const consolidated = consolidator.consolidate(
-            rmrkTools.utils.getRemarksFromBlocks(dump)
-          );
-          console.log(consolidated);
-
-          renderCollections(consolidated.collections);
-          renderNFTs(consolidated.nfts);
-
-          let invalids = "";
-          for (const inv of consolidated.invalid) {
-            invalids += `<table>
+        let invalids = "";
+        for (const inv of invalidCalls) {
+          invalids += `<table>
               <tr>
                 <td>OP_TYPE</td>
                 <td>${inv.op_type}</td>
@@ -218,8 +193,31 @@
                 <td>${inv.object_id}</td>
               </tr>
               </table><hr>`;
-          }
-          document.querySelector("#bad").innerHTML = invalids;
+        }
+        document.querySelector("#bad").innerHTML = invalids;
+      }
+
+      async function initRest() {
+        console.log("Loading dump...");
+        async function main() {
+          const version = await ipfsNode.version();
+
+          console.log("IPFS Node version:", version.version);
+
+          const data = uint8ArrayConcat(
+            await all(
+              ipfsNode.cat("QmbUeQpyWVVPbU8BEqFqhNLfk3hCmoppCzkQ3d4n2i8agg")
+            )
+          );
+          const dump = JSON.parse(util.u8aToString(data));
+          initListener(dump);
+
+          const consolidator = new rmrkTools.Consolidator();
+          const consolidated = consolidator.consolidate(
+            rmrkTools.getRemarksFromBlocks(dump)
+          );
+
+          renderInvalidCalls(consolidated.invalid)
         }
 
         main();
@@ -247,10 +245,10 @@
           renderCollections(collections);
         });
 
-        const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
-        unfinilisedSubscriber.subscribe((val) =>
-          console.log("Unfinalised remarks:", val)
-        );
+        // const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
+        // unfinilisedSubscriber.subscribe((val) =>
+        //   console.log("Unfinalised remarks:", val)
+        // );
       };
 
       const fetchIPFSImage = async (metadata) => {

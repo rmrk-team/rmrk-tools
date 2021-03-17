@@ -2,6 +2,7 @@ import babel from "@rollup/plugin-babel";
 import cjs from "@rollup/plugin-commonjs";
 import node from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
+import strip from '@rollup/plugin-strip';
 
 export default {
   input: "./dist/index.js",
@@ -37,6 +38,8 @@ export default {
     node({
       extensions: [".ts"],
     }),
+
+    strip(),
 
     json(),
   ],
