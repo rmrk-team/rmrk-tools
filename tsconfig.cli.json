@@ -3,6 +3,5 @@
   "compilerOptions": {
     "module":"commonjs"
   },
-  "include": ["cli/*.ts", "src/*.ts", "src/**/*.ts"],
-  "files": ["cli/index.ts"]
+  "include": ["cli/*.ts", "src/*.ts", "src/**/*.ts"]
 }
