@@ -49,26 +49,22 @@ const validate = (
       `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buyEntity.id}`
     );
   }
-
   if (nft.forsale <= BigInt(0)) {
     throw new Error(
       `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
     );
   }
-
   if (nft.transferable === 0 || nft.transferable >= remark.block) {
     throw new Error(
       `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
     );
   }
-
   // Check if we have extra calls in the batch
   if (remark.extra_ex?.length === 0) {
     throw new Error(
       `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buyEntity.id}.`
     );
   }
-
   // Check if the transfer is valid, i.e. matches target recipient and value.
   let transferValid = false;
   let transferValue = "";
@@ -80,7 +76,6 @@ const validate = (
       }
     }
   });
-
   if (!transferValid) {
     throw new Error(
       `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
