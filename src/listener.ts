@@ -12,7 +12,7 @@ import { Observable, Subscriber } from "rxjs";
 import { RpcPromiseResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
-import { Consolidator } from "./tools/consolidator/consolidator";
+import {Consolidator, ConsolidatorReturnType} from "./tools/consolidator/consolidator";
 
 interface IProps {
   providerInterface: ProviderInterface;
@@ -90,8 +90,8 @@ export class RemarkListener {
   };
 
   /* Rxjs observable for finalised remarks, this will return all of consolidated remarks */
-  public initialiseObservable = (): Observable<unknown> => {
-    const subscriber = new Observable((observer) => {
+  public initialiseObservable = (): Observable<ConsolidatorReturnType> => {
+    const subscriber = new Observable<ConsolidatorReturnType>((observer) => {
       this.observer = observer;
     });
     this.initialize();
@@ -102,8 +102,8 @@ export class RemarkListener {
    Rxjs observable for un-finalised remarks, this will return remarks that are only present in latest block
    This listener fires again when blocks are removed if they are present in finalised block
   */
-  public initialiseObservableUnfinalised = (): Observable<unknown> => {
-    const subscriber = new Observable((observer) => {
+  public initialiseObservableUnfinalised = (): Observable<ConsolidatorReturnType> => {
+    const subscriber = new Observable<ConsolidatorReturnType>((observer) => {
       this.observerUnfinalised = observer;
     });
     this.initialize();
