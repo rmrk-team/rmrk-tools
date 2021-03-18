@@ -14,6 +14,7 @@ import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 import { BlockCall, Interaction } from "../types";
+import { createBuyEntity, interactionBuy } from "./interactions/buy";
 // import * as fs from "fs";
 
 export class Consolidator {
@@ -394,98 +395,25 @@ export class Consolidator {
   private buy(remark: Remark): boolean {
     // An NFT was bought after having been LISTed for sale
     console.log("Instantiating buy");
-    const buy = Buy.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
 
-    if (typeof buy === "string") {
+    const buyEntity = Buy.fromRemark(remark.remark);
+    if (typeof buyEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.BUY}] Dead before instantiation: ${buy}`
+        `[${OP_TYPES.BUY}] Dead before instantiation: ${buyEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(buy);
-
-    if (!nft) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`
-      );
+    try {
+      // Find NFT in current state
+      const nft = this.findExistingNFT(buyEntity);
+      interactionBuy(remark, buyEntity, nft);
+    } catch (e) {
+      invalidate(buyEntity.id, e.message);
       return true;
     }
-
-    if (nft.burned != "") {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buy.id}`
-      );
-      return true;
-    }
-
-    if (nft.forsale <= BigInt(0)) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buy.id}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`
-      );
-      return true;
-    }
-
-    // Check if we have extra calls in the batch
-    if (remark.extra_ex?.length === 0) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buy.id}.`
-      );
-      return true;
-    } else {
-      // Check if the transfer is valid, i.e. matches target recipient and value.
-      let transferValid = false;
-      let transferValue = "";
-      remark.extra_ex?.forEach((el: BlockCall) => {
-        if (el.call === "balances.transfer") {
-          transferValue = el.value;
-          if (el.value === `${nft.owner},${nft.forsale}`) {
-            transferValid = true;
-          }
-        }
-      });
-      if (!transferValid) {
-        invalidate(
-          buy.id,
-          `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buy.id} not valid. 
-          Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
-        );
-        return true;
-      }
-    }
-
-    nft.addChange({
-      field: "owner",
-      old: nft.owner,
-      new: remark.caller,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.owner = remark.caller;
-
-    nft.addChange({
-      field: "forsale",
-      old: nft.forsale,
-      new: BigInt(0),
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.forsale = BigInt(0);
 
     return true;
   }
