@@ -2,7 +2,7 @@ name: Remarks dumps
 
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/59 * * * *"
 
 jobs:
   build:
