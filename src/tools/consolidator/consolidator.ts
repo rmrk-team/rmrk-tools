@@ -22,6 +22,7 @@ import { validateMintNFT } from "./interactions/mintNFT";
 import { listForSaleInteraction } from "./interactions/list";
 import { consumeInteraction } from "./interactions/consume";
 import { emoteInteraction } from "./interactions/emote";
+import { sendInteraction } from "./interactions/send";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -170,72 +171,27 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/send.md
    */
   private send(remark: Remark): boolean {
-    const send = Send.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.SEND, remark).bind(
       this
     );
-    if (typeof send === "string") {
+
+    const sendEntity = Send.fromRemark(remark.remark);
+
+    if (typeof sendEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.SEND}] Dead before instantiation: ${send}`
+        `[${OP_TYPES.SEND}] Dead before instantiation: ${sendEntity}`
       );
       return true;
     }
 
-    const nft = this.findExistingNFT(send);
-    if (!nft) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`
-      );
+    const nft = this.findExistingNFT(sendEntity);
+
+    try {
+      sendInteraction(remark, sendEntity, nft);
+    } catch (e) {
+      invalidate(sendEntity.id, e.message);
       return true;
-    }
-
-    if (nft.burned != "") {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send burned NFT ${send.id}`
-      );
-      return true;
-    }
-
-    // Check if allowed to issue send - if owner == caller
-    if (nft.owner != remark.caller) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`
-      );
-      return true;
-    }
-
-    nft.addChange({
-      field: "owner",
-      old: nft.owner,
-      new: send.recipient,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-
-    nft.owner = send.recipient;
-
-    // Cancel LIST, if any
-    if (nft.forsale > BigInt(0)) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: BigInt(0),
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = BigInt(0);
     }
 
     return false;
