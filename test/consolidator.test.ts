@@ -10,7 +10,7 @@ import {
   syntheticChangeIssuerBlockInvalidCaller,
   validBlocks,
 } from "./mocks/blocks";
-import { blocks647x_661x } from "./mocks/blocks-dump";
+import { blocks647x_661x, blocksDumpAll } from "./mocks/blocks-dump";
 // import { stringToHex } from "@polkadot/util";
 
 /*
@@ -45,6 +45,12 @@ const logRemarksHelper = () => {
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", () => {
     const remarks = getRemarksFromBlocks(blocks647x_661x);
+    const consolidator = new Consolidator();
+    expect(consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("should run consolidation from entire dump", () => {
+    const remarks = getRemarksFromBlocks(blocksDumpAll);
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks)).toMatchSnapshot();
   });
