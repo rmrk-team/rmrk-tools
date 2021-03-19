@@ -5,7 +5,7 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { NFT as N100 } from "../../..";
 
-export const interactionBuy = (
+export const buyInteraction = (
   remark: Remark, // Current remark
   buyEntity: Buy,
   nft?: N100 // NFT in current state

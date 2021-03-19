@@ -11,7 +11,7 @@ import { deeplog } from "../utils";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 import { Interaction } from "../types";
-import { interactionBuy } from "./interactions/buy";
+import { buyInteraction } from "./interactions/buy";
 import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
 import {
   changeIssuerInteraction,
@@ -283,7 +283,7 @@ export class Consolidator {
     try {
       // Find NFT in current state
       const nft = this.findExistingNFT(buyEntity);
-      interactionBuy(remark, buyEntity, nft);
+      buyInteraction(remark, buyEntity, nft);
     } catch (e) {
       invalidate(buyEntity.id, e.message);
       return true;
