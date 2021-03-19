@@ -9,13 +9,11 @@ import { Consume } from "../../rmrk1.0.0/classes/consume";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
-import { decodeAddress } from "@polkadot/keyring";
-import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 import { BlockCall, Interaction } from "../types";
 import { interactionBuy } from "./interactions/buy";
-// import * as fs from "fs";
+import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -77,42 +75,31 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
-    const c = C100.fromRemark(remark.remark, remark.block);
 
-    if (typeof c === "string") {
-      // console.log(
-      //   "Collection was not instantiated OK from " + remark.remark
-      // );
-      invalidate(
-        remark.remark,
-        `[${OP_TYPES.MINT}] Dead before instantiation: ${c}`
-      );
+    let collection;
+    try {
+      collection = getCollectionFromRemark(remark);
+    } catch (e) {
+      invalidate(remark.remark, e.message);
       return true;
     }
 
-    //console.log("Collection instantiated OK from " + remark.remark);
-    const pubkey = decodeAddress(remark.caller);
-    const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-
-    if (this.findExistingCollection(c.id)) {
+    if (this.findExistingCollection(collection.id)) {
       invalidate(
-        c.id,
+        collection.id,
         `[${OP_TYPES.MINT}] Attempt to mint already existing collection`
       );
       return true;
     }
 
-    if (id.toLowerCase() !== c.id.toLowerCase()) {
-      invalidate(
-        c.id,
-        `Caller's pubkey ${u8aToHex(
-          pubkey
-        )} (${id}) does not match generated ID`
-      );
+    try {
+      validateMintIds(collection, remark);
+    } catch (e) {
+      invalidate(collection.id, e.message);
       return true;
     }
 
-    this.collections.push(c);
+    this.collections.push(collection);
     return false;
   }
 
