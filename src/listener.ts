@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import "isomorphic-fetch";
 import {
   Block,
   getBlockCallsFromSignedBlock,

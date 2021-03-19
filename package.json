@@ -87,8 +87,8 @@
     "@polkadot/keyring": "^6.0.5",
     "@polkadot/util": "^6.0.5",
     "chalk": "^4.1.0",
+    "isomorphic-fetch": "^3.0.0",
     "it-all": "^1.0.5",
-    "node-fetch": "^2.6.1",
     "superstruct": "^0.14.2",
     "uint8arrays": "^2.1.3",
     "winston": "^3.3.3"
