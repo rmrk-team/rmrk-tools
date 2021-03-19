@@ -14,6 +14,10 @@ import { OP_TYPES } from "../constants";
 import { BlockCall, Interaction } from "../types";
 import { interactionBuy } from "./interactions/buy";
 import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
+import {
+  changeIssuerInteraction,
+  getChangeIssuerEntity,
+} from "./interactions/changeIssuer";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -385,9 +389,12 @@ export class Consolidator {
     return true;
   }
 
+  /**
+   * An NFT was bought after having been LISTed for sale
+   * @param remark
+   * @private
+   */
   private buy(remark: Remark): boolean {
-    // An NFT was bought after having been LISTed for sale
-    console.log("Instantiating buy");
     const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
 
     const buyEntity = Buy.fromRemark(remark.remark);
@@ -411,9 +418,10 @@ export class Consolidator {
     return true;
   }
 
+  /**
+   * An EMOTE reaction has been sent
+   */
   private emote(remark: Remark): boolean {
-    // An EMOTE reaction has been sent
-    console.log("Instantiating emote");
     const emote = Emote.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.EMOTE, remark).bind(
       this
@@ -454,47 +462,33 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The ownership of a collection has changed
+   */
   private changeIssuer(remark: Remark): boolean {
-    // The ownership of a collection has changed
-    console.log("Instantiating an issuer change");
-    const ci = ChangeIssuer.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(
       OP_TYPES.CHANGEISSUER,
       remark
     ).bind(this);
-    if (typeof ci === "string") {
-      invalidate(
-        remark.remark,
-        `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${ci}`
-      );
-      return true;
-    }
-    const coll = this.collections.find((el: C100) => el.id === ci.id);
-    if (!coll) {
-      invalidate(
-        ci.id,
-        `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`
-      );
+
+    let changeIssuerEntity: ChangeIssuer;
+    try {
+      changeIssuerEntity = getChangeIssuerEntity(remark);
+    } catch (e) {
+      invalidate(remark.remark, e.message);
       return true;
     }
 
-    if (remark.caller != coll.issuer) {
-      invalidate(
-        ci.id,
-        `Attempting to change issuer of collection ${ci.id} when not issuer!`
-      );
+    const collection = this.collections.find(
+      (el: C100) => el.id === changeIssuerEntity.id
+    );
+    try {
+      changeIssuerInteraction(remark, changeIssuerEntity, collection);
+    } catch (e) {
+      invalidate(changeIssuerEntity.id, e.message);
       return true;
     }
 
-    coll.addChange({
-      field: "issuer",
-      old: coll.issuer,
-      new: ci.issuer,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-
-    coll.issuer = ci.issuer;
     return false;
   }
 
