@@ -7,11 +7,10 @@ import { List } from "../../rmrk1.0.0/classes/list";
 import { Buy } from "../../rmrk1.0.0/classes/buy";
 import { Consume } from "../../rmrk1.0.0/classes/consume";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
-import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
-import { BlockCall, Interaction } from "../types";
+import { Interaction } from "../types";
 import { interactionBuy } from "./interactions/buy";
 import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
 import {
