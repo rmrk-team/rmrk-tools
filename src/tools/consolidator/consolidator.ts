@@ -21,6 +21,7 @@ import {
 import { validateMintNFT } from "./interactions/mintNFT";
 import { listForSaleInteraction } from "./interactions/list";
 import { consumeInteraction } from "./interactions/consume";
+import { emoteInteraction } from "./interactions/emote";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -342,43 +343,26 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/emote.md
    */
   private emote(remark: Remark): boolean {
-    const emote = Emote.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.EMOTE, remark).bind(
       this
     );
-    if (typeof emote === "string") {
+    const emoteEntity = Emote.fromRemark(remark.remark);
+    if (typeof emoteEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${emote}`
+        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${emoteEntity}`
       );
       return true;
     }
-    const target = this.nfts.find((el) => el.getId() === emote.id);
-    if (!target) {
-      invalidate(
-        emote.id,
-        `[${OP_TYPES.EMOTE}] Attempting to emote on non-existant NFT ${emote.id}`
-      );
+    const nft = this.nfts.find((el) => el.getId() === emoteEntity.id);
+
+    try {
+      emoteInteraction(remark, emoteEntity, nft);
+    } catch (e) {
+      invalidate(emoteEntity.id, e.message);
       return true;
     }
 
-    if (target.burned != "") {
-      invalidate(
-        emote.id,
-        `[${OP_TYPES.EMOTE}] Cannot emote to a burned NFT ${emote.id}`
-      );
-      return true;
-    }
-
-    if (undefined === target.reactions[emote.unicode]) {
-      target.reactions[emote.unicode] = [];
-    }
-    const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
-    if (index > -1) {
-      target.reactions[emote.unicode].splice(index, 1);
-    } else {
-      target.reactions[emote.unicode].push(remark.caller);
-    }
     return false;
   }
 
