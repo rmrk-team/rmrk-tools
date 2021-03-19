@@ -18,7 +18,8 @@ import {
   changeIssuerInteraction,
   getChangeIssuerEntity,
 } from "./interactions/changeIssuer";
-import { getNFTFromRemark, validateMintNFT } from "./interactions/mintNFT";
+import { validateMintNFT } from "./interactions/mintNFT";
+import { listForSaleInteraction } from "./interactions/list";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -245,64 +246,27 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/list.md
    */
   private list(remark: Remark): boolean {
-    const list = List.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
     );
 
-    if (typeof list === "string") {
+    const listEntity = List.fromRemark(remark.remark);
+
+    if (typeof listEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.LIST}] Dead before instantiation: ${list}`
+        `[${OP_TYPES.LIST}] Dead before instantiation: ${listEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(list);
-
-    if (!nft) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`
-      );
+    // Find the NFT in state
+    const nft = this.findExistingNFT(listEntity);
+    try {
+      listForSaleInteraction(remark, listEntity, nft);
+    } catch (e) {
+      invalidate(listEntity.id, e.message);
       return true;
-    }
-
-    if (nft.burned != "") {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list burned NFT ${list.id}`
-      );
-      return true;
-    }
-
-    // Check if allowed to issue send - if owner == caller
-    if (nft.owner != remark.caller) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${list.id}, real owner: ${nft.owner}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${list.id}.`
-      );
-      return true;
-    }
-
-    if (list.price !== nft.forsale) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: list.price,
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = list.price;
     }
 
     return true;
@@ -361,7 +325,7 @@ export class Consolidator {
 
     // Burn and note reason
 
-    let burnReasons: string[] = [];
+    const burnReasons: string[] = [];
     // Check if we have extra calls in the batch
     if (remark.extra_ex?.length) {
       // Check if the transfer is valid, i.e. matches target recipient and value.
