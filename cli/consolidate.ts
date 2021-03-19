@@ -23,7 +23,8 @@ const consolidate = async () => {
   }
   const ja = new JsonAdapter(file);
   const con = new Consolidator(ja);
-  con.consolidate();
+  const ret = con.consolidate();
+  fs.writeFileSync(`consolidated-from-${file}`, JSON.stringify(ret));
 };
 
 consolidate();

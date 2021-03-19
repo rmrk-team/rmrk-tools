@@ -117,7 +117,7 @@ export class Consolidator {
 
   private mintNFT(remark: Remark): boolean {
     // A new NFT was minted into a collection
-    console.log("Instantiating nft");
+    //console.log("Instantiating nft");
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(
       this
     );
@@ -590,8 +590,8 @@ export class Consolidator {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
-      console.log("==============================");
-      console.log("Remark is: " + remark.remark);
+      //console.log("==============================");
+      //console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
         case OP_TYPES.MINT:
           if (this.mint(remark)) {
@@ -651,8 +651,9 @@ export class Consolidator {
           );
       }
     }
-    deeplog(this.nfts);
-    deeplog(this.collections);
+    //deeplog(this.nfts);
+    //deeplog(this.collections);
+    deeplog(this.invalidCalls[1]);
 
     //console.log(this.invalidCalls);
     console.log(

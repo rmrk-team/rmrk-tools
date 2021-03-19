@@ -2,6 +2,7 @@
 import {
   deeplog,
   getApi,
+  getLatestBlock,
   getLatestFinalizedBlock,
   getRemarksFromBlocks,
   prefixToArray,
@@ -18,14 +19,16 @@ const fetch = async () => {
     "--from": Number, // The starting block
     "--to": Number, // The starting block
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
+    "--output": String, // Filename to sve data into, defaults to remarks-${from}-${to}-${args["--prefixes"] || ""}.json
   });
 
-  console.log(args)
+  console.log(args);
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
   const api = await getApi(ws);
   const append = args["--append"];
   console.log("Connecting to " + ws);
   let from = args["--from"] || 0;
+  let output = args["--output"] || "";
 
   // Grab FROM from append file
   let appendFile = [];
@@ -52,7 +55,8 @@ const fetch = async () => {
   const to =
     typeof args["--to"] === "number"
       ? args["--to"]
-      : await getLatestFinalizedBlock(api);
+      : //: await getLatestFinalizedBlock(api);
+        await getLatestBlock(api);
 
   if (from > to) {
     console.error("Starting block must be less than ending block.");
@@ -66,13 +70,19 @@ const fetch = async () => {
     to,
     prefixToArray(args["--prefixes"] || "")
   );
-  console.log(deeplog(extracted));
-  console.log(getRemarksFromBlocks(extracted));
-  let outputFileName = `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`;
+  //console.log(deeplog(extracted));
+  //console.log(getRemarksFromBlocks(extracted));
+  let outputFileName =
+    output !== ""
+      ? output
+      : `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`;
+  console.log(`Will write to file ${outputFileName}`);
   if (append) {
     extracted = appendFile.concat(extracted);
     console.log(`Appending ${appendFile.length} remarks found. Full set:`);
-    console.log(deeplog(extracted));
+    console.log(
+      appendFile.length > 1000 ? "Ommitted for length" : deeplog(extracted)
+    );
     outputFileName = append;
   }
   extracted.push({

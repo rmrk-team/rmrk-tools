@@ -1,16 +1,190 @@
 import { ApiPromise } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
+import { encodeAddress, decodeAddress } from "@polkadot/util-crypto";
 import getKeys from "./devaccs";
 import * as fs from "fs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
+import { NFT } from "../../src/rmrk1.0.0/classes/nft";
+import * as IPFS from "ipfs-core";
 
+import JsonAdapter from "../../src/tools/consolidator/adapters/json";
+import { Consolidator } from "../../src/tools/consolidator/consolidator";
 export class Seeder {
   api: ApiPromise;
   accounts: KeyringPair[];
   constructor(api: ApiPromise) {
     this.api = api;
     this.accounts = getKeys();
+  }
+
+  public async egglister(): Promise<void> {
+    let listingAccount = this.accounts[0];
+    let decoded = decodeAddress(listingAccount.address);
+    let address = encodeAddress(decoded, 0);
+
+    // Find all egg IDs
+    const ja = new JsonAdapter("dump-with-eggs.json");
+    const con = new Consolidator(ja);
+    const consolidated = con.consolidate();
+
+    const remarks = [];
+    for (const nft of consolidated.nfts) {
+      if (nft.collection.endsWith("KANARIA")) {
+        // @todo switch to real ID in production just as a safety precaution
+        if (BigInt(nft.sn) >= BigInt(100))
+          remarks.push(nft.list(1000000000000));
+      }
+    }
+
+    const txs = [];
+    let i = 0;
+    for (const remark of remarks) {
+      //if (i > 100) break; // throttler
+      txs.push(this.api.tx.system.remark(remark));
+      i++;
+    }
+    await this.api.tx.utility
+      .batch(txs)
+      .signAndSend(listingAccount, ({ status }) => {
+        if (status.isInBlock) {
+          console.log(`included in ${status.asInBlock}`);
+        }
+      });
+  }
+
+  /**
+   * Seeds the chain with a collection of egg NFTs and 10000 instances from the \\Alice account
+   */
+  public async eggmachine(): Promise<void> {
+    let mintingAccount = this.accounts[0];
+    let decoded = decodeAddress(mintingAccount.address);
+    let address = encodeAddress(decoded, 0);
+
+    const collectionMetadata = {
+      description:
+        "🥚 Kanaria RMRK eggs, collectible, hatchable canary eggs 🐣",
+      attributes: [],
+      external_url: "https://kanaria.rmrk.app",
+      image: "ipfs://ipfs/QmRjZHoSycKbYLGBbG6qJ1GKe1kVbYbpe86AyfUTvyDda7",
+    };
+
+    const nftFounderMetadata = {
+      external_url: "https://kanaria.rmrk.app",
+      image: "ipfs://ipfs/QmZu2wdvXFWMx1Fwp1NRbq3RgcFq5vJ24h1UwR6ZbmVtVG",
+      description: "Founder eggs: the first 100 eggs in the set",
+      name: "Kanaria Founder eggs",
+      background_color: "ffffff",
+    };
+
+    const nftCommonMetadata = {
+      external_url: "https://kanaria.rmrk.app",
+      image: "ipfs://ipfs/QmYeMXb8bUWSrCnSZQLmUrE5RaujkGAtpTnJY6LWYi3VcK",
+      description: "Common eggs: 9900 eggs to hatch into Kusama canaries",
+      name: "Kanaria eggs",
+      background_color: "ffffff",
+    };
+
+    // Initialize IPFS node
+    const node = await IPFS.create();
+    const version = await node.version();
+    console.log("IPFS Version:", version.version);
+    // Upload all metadata to IPFS
+    const collMdHash = (
+      await node.add({
+        path: "img.svg",
+        content: JSON.stringify(collectionMetadata),
+      })
+    ).cid;
+    console.log(`Collection metadata: ${collMdHash}`);
+    const nftMdHash = (
+      await node.add({
+        path: "img.svg",
+        content: JSON.stringify(nftCommonMetadata),
+      })
+    ).cid;
+    console.log(`Common metadata: ${nftMdHash}`);
+    const founderMdHash = (
+      await node.add({
+        path: "img.svg",
+        content: JSON.stringify(nftFounderMetadata),
+      })
+    ).cid;
+    console.log(`Founder metadata: ${founderMdHash}`);
+
+    const remarks = [];
+    // Create collection
+    const collectionSymbol = "KANARIA";
+    const collectionId = Collection.generateId(
+      u8aToHex(this.accounts[0].publicKey),
+      "KANARIA"
+    );
+    const eggCollection = new Collection(
+      0,
+      "Kanaria Eggs",
+      10000,
+      address,
+      collectionSymbol,
+      collectionId,
+      `ipfs://ipfs/${collMdHash}`
+    );
+
+    remarks.push(eggCollection.mint());
+    for (let i = 0; i < 10000; i++) {
+      if (i < 10) {
+        // Super Founder mode
+        const nft = new NFT(
+          0,
+          collectionId,
+          "Super Founder Kanaria egg",
+          "KANSUPER",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/${founderMdHash}`
+        );
+        remarks.push(nft.mintnft());
+      } else if (i < 100) {
+        // Founder
+        const nft = new NFT(
+          0,
+          collectionId,
+          "Founder Kanaria egg",
+          "KANFOUNDER",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/${founderMdHash}`
+        );
+        remarks.push(nft.mintnft());
+      } else {
+        // Common
+        const nft = new NFT(
+          0,
+          collectionId,
+          "Kanaria egg",
+          "KANCOMMON",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/${nftMdHash}`
+        );
+        remarks.push(nft.mintnft());
+      }
+    }
+
+    const txs = [];
+    let i = 0;
+    for (const remark of remarks) {
+      if (i > 100) break; // throttler
+      txs.push(this.api.tx.system.remark(remark));
+      i++;
+    }
+
+    await this.api.tx.utility
+      .batch(txs)
+      .signAndSend(this.accounts[0], ({ status }) => {
+        if (status.isInBlock) {
+          console.log(`included in ${status.asInBlock}`);
+        }
+      });
   }
 
   /**
