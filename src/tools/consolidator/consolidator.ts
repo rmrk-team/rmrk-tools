@@ -20,6 +20,7 @@ import {
 } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mintNFT";
 import { listForSaleInteraction } from "./interactions/list";
+import { consumeInteraction } from "./interactions/consume";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -279,80 +280,28 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/consume.md
    */
   private consume(remark: Remark): boolean {
-    // An NFT was consumed
-    console.log("Instantiating consume");
     const invalidate = this.updateInvalidCalls(OP_TYPES.CONSUME, remark).bind(
       this
     );
 
-    const burn = Consume.fromRemark(remark.remark);
-
+    const consumeEntity = Consume.fromRemark(remark.remark);
     // Check if consume is valid
-    if (typeof burn === "string") {
+    if (typeof consumeEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${burn}`
+        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${consumeEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(burn);
-    if (!nft) {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-existant NFT ${burn.id}`
-      );
+    // Find the NFT in state
+    const nft = this.findExistingNFT(consumeEntity);
+    try {
+      consumeInteraction(remark, consumeEntity, nft);
+    } catch (e) {
+      invalidate(consumeEntity.id, e.message);
       return true;
     }
-
-    if (nft.burned != "") {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${burn.id}`
-      );
-      return true;
-    }
-
-    // Check if burner is owner of NFT
-    if (nft.owner != remark.caller) {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-owned NFT ${burn.id}`
-      );
-      return true;
-    }
-
-    // Burn and note reason
-
-    const burnReasons: string[] = [];
-    // Check if we have extra calls in the batch
-    if (remark.extra_ex?.length) {
-      // Check if the transfer is valid, i.e. matches target recipient and value.
-      remark.extra_ex?.forEach((el: BlockCall) => {
-        burnReasons.push(`<consume>${el.value}</consume>`);
-      });
-    }
-
-    const burnReason = burnReasons.join(",");
-    nft.addChange({
-      field: "burned",
-      old: "",
-      new: burnReason,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.burned = burnReason;
-
-    // Delist if listed for sale
-    nft.addChange({
-      field: "forsale",
-      old: nft.forsale,
-      new: BigInt(0),
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.forsale = BigInt(0);
 
     return true;
   }
