@@ -146,7 +146,19 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
+  }
+
+  public emote(unicode: string): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only emote on an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `${PREFIX}::${
+      OP_TYPES.EMOTE
+    }::${VERSION}::${this.getId()}::${unicode}`;
   }
 
   /**
