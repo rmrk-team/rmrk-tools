@@ -1,6 +1,6 @@
 import JsonAdapter from "./adapters/json";
 import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
-import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
+import { NFT, NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
 import { List } from "../../rmrk1.0.0/classes/list";
@@ -18,6 +18,7 @@ import {
   changeIssuerInteraction,
   getChangeIssuerEntity,
 } from "./interactions/changeIssuer";
+import { getNFTFromRemark, validateMintNFT } from "./interactions/mintNFT";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -73,9 +74,11 @@ export class Consolidator {
       } as InvalidCall);
     };
   }
+
+  /**
+   * The MINT interaction creates an NFT collection.
+   */
   private mint(remark: Remark): boolean {
-    // A new collection was created
-    console.log("Instantiating collection");
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
@@ -107,36 +110,19 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The MINT interaction creates an NFT inside of a Collection.
+   */
   private mintNFT(remark: Remark): boolean {
-    // A new NFT was minted into a collection
-    console.log("Instantiating nft");
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(
       this
     );
-    const n = N100.fromRemark(remark.remark, remark.block);
+    const nft = NFT.fromRemark(remark.remark, remark.block);
 
-    if (typeof n === "string") {
+    if (typeof nft === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${n}`
-      );
-      return true;
-    }
-
-    const nftParent = this.findExistingCollection(n.collection);
-    if (!nftParent) {
-      invalidate(
-        n.getId(),
-        `NFT referencing non-existant parent collection ${n.collection}`
-      );
-      return true;
-    }
-
-    n.owner = nftParent.issuer;
-    if (remark.caller != n.owner) {
-      invalidate(
-        n.getId(),
-        `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`
+        `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${nft}`
       );
       return true;
     }
@@ -146,7 +132,7 @@ export class Consolidator {
       idExpand1.shift();
       const uniquePart1 = idExpand1.join("-");
 
-      const idExpand2 = n.getId().split("-");
+      const idExpand2 = nft.getId().split("-");
       idExpand2.shift();
       const uniquePart2 = idExpand2.join("-");
 
@@ -155,25 +141,29 @@ export class Consolidator {
 
     if (existsCheck) {
       invalidate(
-        n.getId(),
+        nft.getId(),
         `[${OP_TYPES.MINTNFT}] Attempt to mint already existing NFT`
       );
       return true;
     }
-    if (n.owner === "") {
-      invalidate(
-        n.getId(),
-        `[${OP_TYPES.MINTNFT}] Somehow this NFT still doesn't have an owner.`
-      );
+
+    const nftParentCollection = this.findExistingCollection(nft.collection);
+    try {
+      validateMintNFT(remark, nft, nftParentCollection);
+      this.nfts.push(nft);
+    } catch (e) {
+      invalidate(nft.getId(), e.message);
       return true;
     }
-    this.nfts.push(n);
+
     return false;
   }
 
+  /**
+   * Send an NFT to an arbitrary recipient.
+   * You can only SEND an existing NFT (one that has not been CONSUMEd yet).
+   */
   private send(remark: Remark): boolean {
-    // An NFT was sent to a new owner
-    console.log("Instantiating send");
     const send = Send.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.SEND, remark).bind(
       this
@@ -311,13 +301,19 @@ export class Consolidator {
     return true;
   }
 
+  /**
+   * The CONSUME interaction burns an NFT for a specific purpose.
+   * This is useful when NFTs are spendable like with in-game potions, one-time votes in DAOs, or concert tickets.
+   * You can only CONSUME an existing NFT (one that has not been CONSUMEd yet).
+   */
   private consume(remark: Remark): boolean {
     // An NFT was consumed
     console.log("Instantiating consume");
-    const burn = Consume.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.CONSUME, remark).bind(
       this
     );
+
+    const burn = Consume.fromRemark(remark.remark);
 
     // Check if consume is valid
     if (typeof burn === "string") {
