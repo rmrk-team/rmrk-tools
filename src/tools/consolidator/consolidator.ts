@@ -16,6 +16,12 @@ import { OP_TYPES } from "../constants";
 import { BlockCall, Interaction } from "../types";
 // import * as fs from "fs";
 
+export type ConsolidatorReturnType = {
+  nfts: N100[];
+  collections: C100[];
+  invalid: InvalidCall[];
+};
+
 export class Consolidator {
   private adapter?: JsonAdapter;
   private invalidCalls: InvalidCall[];
@@ -580,13 +586,7 @@ export class Consolidator {
     return false;
   }
 
-  public consolidate(
-    rmrks?: Remark[]
-  ): {
-    nfts: N100[];
-    collections: C100[];
-    invalid: InvalidCall[];
-  } {
+  public consolidate(rmrks?: Remark[]): ConsolidatorReturnType {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
