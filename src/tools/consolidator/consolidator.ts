@@ -77,6 +77,7 @@ export class Consolidator {
 
   /**
    * The MINT interaction creates an NFT collection.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/mint.md
    */
   private mint(remark: Remark): boolean {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
@@ -112,6 +113,7 @@ export class Consolidator {
 
   /**
    * The MINT interaction creates an NFT inside of a Collection.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/mintnft.md
    */
   private mintNFT(remark: Remark): boolean {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(
@@ -162,6 +164,7 @@ export class Consolidator {
   /**
    * Send an NFT to an arbitrary recipient.
    * You can only SEND an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/send.md
    */
   private send(remark: Remark): boolean {
     const send = Send.fromRemark(remark.remark);
@@ -235,9 +238,13 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * A LIST interaction lists an NFT as available for sale. The NFT can be instantly purchased.
+   * A listing can be canceled, and is automatically considered canceled when a BUY is executed on top of a given LIST.
+   * You can only LIST an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/list.md
+   */
   private list(remark: Remark): boolean {
-    // An NFT was listed for sale
-    console.log("Instantiating list");
     const list = List.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
@@ -305,6 +312,7 @@ export class Consolidator {
    * The CONSUME interaction burns an NFT for a specific purpose.
    * This is useful when NFTs are spendable like with in-game potions, one-time votes in DAOs, or concert tickets.
    * You can only CONSUME an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/consume.md
    */
   private consume(remark: Remark): boolean {
     // An NFT was consumed
@@ -386,9 +394,10 @@ export class Consolidator {
   }
 
   /**
-   * An NFT was bought after having been LISTed for sale
-   * @param remark
-   * @private
+   * The BUY interaction allows a user to immediately purchase an NFT listed for sale using the LIST interaction,
+   * as long as the listing hasn't been canceled.
+   * You can only BUY an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/buy.md
    */
   private buy(remark: Remark): boolean {
     const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
@@ -415,7 +424,9 @@ export class Consolidator {
   }
 
   /**
-   * An EMOTE reaction has been sent
+   * React to an NFT with an emoticon.
+   * You can only EMOTE on an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/emote.md
    */
   private emote(remark: Remark): boolean {
     const emote = Emote.fromRemark(remark.remark);
@@ -459,7 +470,11 @@ export class Consolidator {
   }
 
   /**
-   * The ownership of a collection has changed
+   * The CHANGEISSUER interaction allows a collection issuer to change the issuer field to another address.
+   * The original issuer immediately loses all rights to mint further NFTs inside that collection.
+   * This is particularly useful when selling the rights to a collection's operation
+   * or changing the issuer to a null address to relinquish control over it.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/changeissuer.md
    */
   private changeIssuer(remark: Remark): boolean {
     const invalidate = this.updateInvalidCalls(
