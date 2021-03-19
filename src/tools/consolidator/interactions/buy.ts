@@ -39,33 +39,7 @@ export const interactionBuy = (
   nft.forsale = BigInt(0);
 };
 
-const validate = (
-  remark: Remark, // Current remark
-  buyEntity: Buy,
-  nft: N100 // NFT in current state
-) => {
-  if (nft.burned != "") {
-    throw new Error(
-      `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buyEntity.id}`
-    );
-  }
-  if (nft.forsale <= BigInt(0)) {
-    throw new Error(
-      `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
-    );
-  }
-  if (nft.transferable === 0 || nft.transferable >= remark.block) {
-    throw new Error(
-      `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
-    );
-  }
-  // Check if we have extra calls in the batch
-  if (remark.extra_ex?.length === 0) {
-    throw new Error(
-      `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buyEntity.id}.`
-    );
-  }
-  // Check if the transfer is valid, i.e. matches target recipient and value.
+const isTransferValid = (remark: Remark, nft: N100) => {
   let transferValid = false;
   let transferValue = "";
   remark.extra_ex?.forEach((el: BlockCall) => {
@@ -76,9 +50,32 @@ const validate = (
       }
     }
   });
-  if (!transferValid) {
-    throw new Error(
-      `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
-    );
+  return { transferValid, transferValue };
+};
+
+const validate = (remark: Remark, buyEntity: Buy, nft: N100) => {
+  const { transferValid, transferValue } = isTransferValid(remark, nft);
+
+  switch (true) {
+    case nft.burned != "":
+      throw new Error(
+        `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buyEntity.id}`
+      );
+    case nft.forsale <= BigInt(0):
+      throw new Error(
+        `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
+      );
+    case nft.transferable === 0 || nft.transferable >= remark.block:
+      throw new Error(
+        `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
+      );
+    case remark.extra_ex?.length === 0:
+      throw new Error(
+        `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buyEntity.id}.`
+      );
+    case !transferValid:
+      throw new Error(
+        `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
+      );
   }
 };

@@ -463,9 +463,6 @@ export class Consolidator {
       remark
     ).bind(this);
     if (typeof ci === "string") {
-      // console.log(
-      //   "ChangeIssuer was not instantiated OK from " + remark.remark
-      // );
       invalidate(
         remark.remark,
         `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${ci}`
