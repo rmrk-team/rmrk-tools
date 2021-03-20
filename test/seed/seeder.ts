@@ -52,7 +52,7 @@ export class Seeder {
 
     const emotesPerUser = Math.round(n / 7);
     // we iterate through 7 unlocked keys
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
       console.log("Processing account " + i);
       const remarks: string[] = [];
       let localEmotes = emotesPerUser;
@@ -75,6 +75,18 @@ export class Seeder {
         selectedEmotes.splice(unicodeIndex, 1);
       }
       console.log(remarks);
+      // Submit these remarks by this user
+      const txs = [];
+      for (const remark of remarks) {
+        txs.push(this.api.tx.system.remark(remark));
+      }
+      await this.api.tx.utility
+        .batch(txs)
+        .signAndSend(this.accounts[i], ({ status }) => {
+          if (status.isInBlock) {
+            console.log(`included in ${status.asInBlock}`);
+          }
+        });
     }
 
     // pick a random emote per number out of the candidates
