@@ -39,18 +39,17 @@ export class Seeder {
     let n = 10000;
 
     const selectedEmotes = [];
-    while (n--) {
+    for (let i = 0; i < n; i++) {
       selectedEmotes.push(fullemoji[getRandomInt(0, fullemoji.length)]);
     }
 
     console.log("Selected emoji to apply, total of " + selectedEmotes.length);
 
-    //const rawdata = fs.readFileSync("consolidated-from-dump-with-eggs.json");
-    //const consolidated = JSON.parse(rawdata.toString());
-    const consolidated = require("consolidated-from-dump-with-eggs.json");
-    console.log(`There are ${consolidated.nft.length} NFTs`);
+    const rawdata = fs.readFileSync("consolidated-from-dump-with-eggs.json");
+    const consolidated = JSON.parse(rawdata.toString());
+    console.log(`There are ${consolidated.nfts.length} NFTs`);
 
-    const emotesPerUser = Math.ceil(n / 7);
+    const emotesPerUser = Math.round(n / 7);
     // we iterate through 7 unlocked keys
     for (let i = 0; i < 8; i++) {
       console.log("Processing account " + i);
