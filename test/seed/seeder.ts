@@ -6,6 +6,7 @@ import getKeys from "./devaccs";
 import * as fs from "fs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 import { NFT } from "../../src/rmrk1.0.0/classes/nft";
+import { Emote } from "../../src/rmrk1.0.0/classes/emote";
 import * as IPFS from "ipfs-core";
 import { getRandomInt } from "../../src/tools/utils";
 
@@ -53,14 +54,24 @@ export class Seeder {
     // we iterate through 7 unlocked keys
     for (let i = 0; i < 8; i++) {
       console.log("Processing account " + i);
-      const remarks = [];
+      const remarks: string[] = [];
       let localEmotes = emotesPerUser;
       while (localEmotes--) {
         const unicodeIndex = getRandomInt(0, selectedEmotes.length);
         const nftIndex = getRandomInt(0, consolidated.nfts.length);
-        remarks.push(
-          consolidated.nfts[nftIndex].emote(selectedEmotes[unicodeIndex])
+
+        const nft = consolidated.nfts[nftIndex];
+        const n = new NFT(
+          nft.block,
+          nft.collection,
+          nft.name,
+          nft.instance,
+          nft.transferable,
+          nft.sn,
+          nft.metadata
         );
+        const e = n.emote(selectedEmotes[unicodeIndex]);
+        remarks.push(e);
         selectedEmotes.splice(unicodeIndex, 1);
       }
       console.log(remarks);
