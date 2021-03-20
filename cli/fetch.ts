@@ -20,6 +20,7 @@ const fetch = async () => {
     "--to": Number, // The starting block
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--output": String, // Filename to sve data into, defaults to remarks-${from}-${to}-${args["--prefixes"] || ""}.json
+    "--fin": String, // "yes" by default. If omitting `from`, will default to last finalized. If this is "no", will default to last block.
   });
 
   console.log(args);
@@ -29,6 +30,7 @@ const fetch = async () => {
   console.log("Connecting to " + ws);
   let from = args["--from"] || 0;
   let output = args["--output"] || "";
+  let fin = args["--fin"] || "yes";
 
   // Grab FROM from append file
   let appendFile = [];
@@ -43,7 +45,7 @@ const fetch = async () => {
         appendFile = JSON.parse(fileContent);
         if (appendFile.length) {
           const lastBlock = appendFile.pop();
-          from = lastBlock.block;
+          from = lastBlock.block + 1;
         }
       }
     } catch (e) {
@@ -52,11 +54,13 @@ const fetch = async () => {
     }
   }
 
+  const latestProgrammatic =
+    fin === "yes"
+      ? await getLatestFinalizedBlock(api)
+      : await getLatestBlock(api);
+
   const to =
-    typeof args["--to"] === "number"
-      ? args["--to"]
-      : //: await getLatestFinalizedBlock(api);
-        await getLatestBlock(api);
+    typeof args["--to"] === "number" ? args["--to"] : latestProgrammatic;
 
   if (from > to) {
     console.error("Starting block must be less than ending block.");
@@ -80,9 +84,9 @@ const fetch = async () => {
   if (append) {
     extracted = appendFile.concat(extracted);
     console.log(`Appending ${appendFile.length} remarks found. Full set:`);
-    console.log(
-      appendFile.length > 1000 ? "Ommitted for length" : deeplog(extracted)
-    );
+    // console.log(
+    //   appendFile.length > 1000 ? "Ommitted for length" : deeplog(extracted)
+    // );
     outputFileName = append;
   }
   extracted.push({

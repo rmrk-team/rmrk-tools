@@ -71,15 +71,15 @@ export class Seeder {
 
     const nftFounderMetadata = {
       external_url: "https://kanaria.rmrk.app",
-      image: "ipfs://ipfs/QmZu2wdvXFWMx1Fwp1NRbq3RgcFq5vJ24h1UwR6ZbmVtVG",
-      description: "Founder eggs: the first 100 eggs in the set",
+      image: "ipfs://ipfs/QmfTZPef7QN4EPdUgkjio5RT5qhfBLWr7HNx1tXuKzwoXV",
+      description: "Founder eggs: the first 99 eggs in the set",
       name: "Kanaria Founder eggs",
       background_color: "ffffff",
     };
 
     const nftCommonMetadata = {
       external_url: "https://kanaria.rmrk.app",
-      image: "ipfs://ipfs/QmYeMXb8bUWSrCnSZQLmUrE5RaujkGAtpTnJY6LWYi3VcK",
+      image: "ipfs://ipfs/QmbzKmkvecTLrHQTZpFhdmJwYxRiBHEKRaWE25cAe7XWbe",
       description: "Common eggs: 9900 eggs to hatch into Kusama canaries",
       name: "Kanaria eggs",
       background_color: "ffffff",
@@ -130,7 +130,7 @@ export class Seeder {
     );
 
     remarks.push(eggCollection.mint());
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 1; i < 10000; i++) {
       if (i < 10) {
         // Super Founder mode
         const nft = new NFT(
@@ -173,7 +173,7 @@ export class Seeder {
     const txs = [];
     let i = 0;
     for (const remark of remarks) {
-      if (i > 100) break; // throttler
+      //if (i > 100) break; // throttler
       txs.push(this.api.tx.system.remark(remark));
       i++;
     }

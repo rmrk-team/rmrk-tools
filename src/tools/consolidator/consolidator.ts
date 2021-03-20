@@ -1,20 +1,27 @@
 import JsonAdapter from "./adapters/json";
 import { Collection as C100 } from "../../rmrk1.0.0/classes/collection";
-import { NFT as N100 } from "../../rmrk1.0.0/classes/nft";
+import { NFT, NFT as N100 } from "../../rmrk1.0.0/classes/nft";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { Send } from "../../rmrk1.0.0/classes/send";
 import { List } from "../../rmrk1.0.0/classes/list";
 import { Buy } from "../../rmrk1.0.0/classes/buy";
 import { Consume } from "../../rmrk1.0.0/classes/consume";
 import { Emote } from "../../rmrk1.0.0/classes/emote";
-import { Change } from "../../rmrk1.0.0/changelog";
 import { deeplog } from "../utils";
-import { decodeAddress } from "@polkadot/keyring";
-import { u8aToHex } from "@polkadot/util";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
-import { BlockCall, Interaction } from "../types";
-// import * as fs from "fs";
+import { Interaction } from "../types";
+import { buyInteraction } from "./interactions/buy";
+import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
+import {
+  changeIssuerInteraction,
+  getChangeIssuerEntity,
+} from "./interactions/changeIssuer";
+import { validateMintNFT } from "./interactions/mintNFT";
+import { listForSaleInteraction } from "./interactions/list";
+import { consumeInteraction } from "./interactions/consume";
+import { emoteInteraction } from "./interactions/emote";
+import { sendInteraction } from "./interactions/send";
 
 export type ConsolidatorReturnType = {
   nfts: N100[];
@@ -70,81 +77,57 @@ export class Consolidator {
       } as InvalidCall);
     };
   }
+
+  /**
+   * The MINT interaction creates an NFT collection.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/mint.md
+   */
   private mint(remark: Remark): boolean {
-    // A new collection was created
-    console.log("Instantiating collection");
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
-    const c = C100.fromRemark(remark.remark, remark.block);
 
-    if (typeof c === "string") {
-      // console.log(
-      //   "Collection was not instantiated OK from " + remark.remark
-      // );
-      invalidate(
-        remark.remark,
-        `[${OP_TYPES.MINT}] Dead before instantiation: ${c}`
-      );
+    let collection;
+    try {
+      collection = getCollectionFromRemark(remark);
+    } catch (e) {
+      invalidate(remark.remark, e.message);
       return true;
     }
 
-    //console.log("Collection instantiated OK from " + remark.remark);
-    const pubkey = decodeAddress(remark.caller);
-    const id = C100.generateId(u8aToHex(pubkey), c.symbol);
-
-    if (this.findExistingCollection(c.id)) {
+    if (this.findExistingCollection(collection.id)) {
       invalidate(
-        c.id,
+        collection.id,
         `[${OP_TYPES.MINT}] Attempt to mint already existing collection`
       );
       return true;
     }
 
-    if (id.toLowerCase() !== c.id.toLowerCase()) {
-      invalidate(
-        c.id,
-        `Caller's pubkey ${u8aToHex(
-          pubkey
-        )} (${id}) does not match generated ID`
-      );
+    try {
+      validateMintIds(collection, remark);
+    } catch (e) {
+      invalidate(collection.id, e.message);
       return true;
     }
 
-    this.collections.push(c);
+    this.collections.push(collection);
     return false;
   }
 
+  /**
+   * The MINT interaction creates an NFT inside of a Collection.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/mintnft.md
+   */
   private mintNFT(remark: Remark): boolean {
-    // A new NFT was minted into a collection
-    //console.log("Instantiating nft");
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(
       this
     );
-    const n = N100.fromRemark(remark.remark, remark.block);
+    const nft = NFT.fromRemark(remark.remark, remark.block);
 
-    if (typeof n === "string") {
+    if (typeof nft === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${n}`
-      );
-      return true;
-    }
-
-    const nftParent = this.findExistingCollection(n.collection);
-    if (!nftParent) {
-      invalidate(
-        n.getId(),
-        `NFT referencing non-existant parent collection ${n.collection}`
-      );
-      return true;
-    }
-
-    n.owner = nftParent.issuer;
-    if (remark.caller != n.owner) {
-      invalidate(
-        n.getId(),
-        `Attempted issue of NFT in non-owned collection. Issuer: ${nftParent.issuer}, caller: ${remark.caller}`
+        `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${nft}`
       );
       return true;
     }
@@ -154,7 +137,7 @@ export class Consolidator {
       idExpand1.shift();
       const uniquePart1 = idExpand1.join("-");
 
-      const idExpand2 = n.getId().split("-");
+      const idExpand2 = nft.getId().split("-");
       idExpand2.shift();
       const uniquePart2 = idExpand2.join("-");
 
@@ -163,426 +146,212 @@ export class Consolidator {
 
     if (existsCheck) {
       invalidate(
-        n.getId(),
+        nft.getId(),
         `[${OP_TYPES.MINTNFT}] Attempt to mint already existing NFT`
       );
       return true;
     }
-    if (n.owner === "") {
-      invalidate(
-        n.getId(),
-        `[${OP_TYPES.MINTNFT}] Somehow this NFT still doesn't have an owner.`
-      );
+
+    const nftParentCollection = this.findExistingCollection(nft.collection);
+    try {
+      validateMintNFT(remark, nft, nftParentCollection);
+      this.nfts.push(nft);
+    } catch (e) {
+      invalidate(nft.getId(), e.message);
       return true;
     }
-    this.nfts.push(n);
+
     return false;
   }
 
+  /**
+   * Send an NFT to an arbitrary recipient.
+   * You can only SEND an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/send.md
+   */
   private send(remark: Remark): boolean {
-    // An NFT was sent to a new owner
-    console.log("Instantiating send");
-    const send = Send.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.SEND, remark).bind(
       this
     );
-    if (typeof send === "string") {
+
+    const sendEntity = Send.fromRemark(remark.remark);
+
+    if (typeof sendEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.SEND}] Dead before instantiation: ${send}`
+        `[${OP_TYPES.SEND}] Dead before instantiation: ${sendEntity}`
       );
       return true;
     }
 
-    const nft = this.findExistingNFT(send);
-    if (!nft) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${send.id}`
-      );
+    const nft = this.findExistingNFT(sendEntity);
+
+    try {
+      sendInteraction(remark, sendEntity, nft);
+    } catch (e) {
+      invalidate(sendEntity.id, e.message);
       return true;
-    }
-
-    if (nft.burned != "") {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send burned NFT ${send.id}`
-      );
-      return true;
-    }
-
-    // Check if allowed to issue send - if owner == caller
-    if (nft.owner != remark.caller) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${send.id}, real owner: ${nft.owner}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        send.id,
-        `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${send.id}.`
-      );
-      return true;
-    }
-
-    nft.addChange({
-      field: "owner",
-      old: nft.owner,
-      new: send.recipient,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-
-    nft.owner = send.recipient;
-
-    // Cancel LIST, if any
-    if (nft.forsale > BigInt(0)) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: BigInt(0),
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = BigInt(0);
     }
 
     return false;
   }
 
+  /**
+   * A LIST interaction lists an NFT as available for sale. The NFT can be instantly purchased.
+   * A listing can be canceled, and is automatically considered canceled when a BUY is executed on top of a given LIST.
+   * You can only LIST an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/list.md
+   */
   private list(remark: Remark): boolean {
-    // An NFT was listed for sale
-    console.log("Instantiating list");
-    const list = List.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.LIST, remark).bind(
       this
     );
 
-    if (typeof list === "string") {
+    const listEntity = List.fromRemark(remark.remark);
+
+    if (typeof listEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.LIST}] Dead before instantiation: ${list}`
+        `[${OP_TYPES.LIST}] Dead before instantiation: ${listEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(list);
-
-    if (!nft) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${list.id}`
-      );
+    // Find the NFT in state
+    const nft = this.findExistingNFT(listEntity);
+    try {
+      listForSaleInteraction(remark, listEntity, nft);
+    } catch (e) {
+      invalidate(listEntity.id, e.message);
       return true;
-    }
-
-    if (nft.burned != "") {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list burned NFT ${list.id}`
-      );
-      return true;
-    }
-
-    // Check if allowed to issue send - if owner == caller
-    if (nft.owner != remark.caller) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${list.id}, real owner: ${nft.owner}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        list.id,
-        `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${list.id}.`
-      );
-      return true;
-    }
-
-    if (list.price !== nft.forsale) {
-      nft.addChange({
-        field: "forsale",
-        old: nft.forsale,
-        new: list.price,
-        caller: remark.caller,
-        block: remark.block,
-      } as Change);
-      nft.forsale = list.price;
     }
 
     return true;
   }
 
+  /**
+   * The CONSUME interaction burns an NFT for a specific purpose.
+   * This is useful when NFTs are spendable like with in-game potions, one-time votes in DAOs, or concert tickets.
+   * You can only CONSUME an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/consume.md
+   */
   private consume(remark: Remark): boolean {
-    // An NFT was consumed
-    console.log("Instantiating consume");
-    const burn = Consume.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.CONSUME, remark).bind(
       this
     );
 
+    const consumeEntity = Consume.fromRemark(remark.remark);
     // Check if consume is valid
-    if (typeof burn === "string") {
+    if (typeof consumeEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${burn}`
+        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${consumeEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(burn);
-    if (!nft) {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-existant NFT ${burn.id}`
-      );
+    // Find the NFT in state
+    const nft = this.findExistingNFT(consumeEntity);
+    try {
+      consumeInteraction(remark, consumeEntity, nft);
+    } catch (e) {
+      invalidate(consumeEntity.id, e.message);
       return true;
     }
-
-    if (nft.burned != "") {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${burn.id}`
-      );
-      return true;
-    }
-
-    // Check if burner is owner of NFT
-    if (nft.owner != remark.caller) {
-      invalidate(
-        burn.id,
-        `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-owned NFT ${burn.id}`
-      );
-      return true;
-    }
-
-    // Burn and note reason
-
-    let burnReasons: string[] = [];
-    // Check if we have extra calls in the batch
-    if (remark.extra_ex?.length) {
-      // Check if the transfer is valid, i.e. matches target recipient and value.
-      remark.extra_ex?.forEach((el: BlockCall) => {
-        burnReasons.push(`<consume>${el.value}</consume>`);
-      });
-    }
-
-    const burnReason = burnReasons.join(",");
-    nft.addChange({
-      field: "burned",
-      old: "",
-      new: burnReason,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.burned = burnReason;
-
-    // Delist if listed for sale
-    nft.addChange({
-      field: "forsale",
-      old: nft.forsale,
-      new: BigInt(0),
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.forsale = BigInt(0);
 
     return true;
   }
 
+  /**
+   * The BUY interaction allows a user to immediately purchase an NFT listed for sale using the LIST interaction,
+   * as long as the listing hasn't been canceled.
+   * You can only BUY an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/buy.md
+   */
   private buy(remark: Remark): boolean {
-    // An NFT was bought after having been LISTed for sale
-    console.log("Instantiating buy");
-    const buy = Buy.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.BUY, remark).bind(this);
 
-    if (typeof buy === "string") {
+    const buyEntity = Buy.fromRemark(remark.remark);
+    if (typeof buyEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.BUY}] Dead before instantiation: ${buy}`
+        `[${OP_TYPES.BUY}] Dead before instantiation: ${buyEntity}`
       );
       return true;
     }
 
-    // Find the NFT in question
-    const nft = this.findExistingNFT(buy);
-
-    if (!nft) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buy.id}`
-      );
+    try {
+      // Find NFT in current state
+      const nft = this.findExistingNFT(buyEntity);
+      buyInteraction(remark, buyEntity, nft);
+    } catch (e) {
+      invalidate(buyEntity.id, e.message);
       return true;
     }
-
-    if (nft.burned != "") {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buy.id}`
-      );
-      return true;
-    }
-
-    if (nft.forsale <= BigInt(0)) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buy.id}`
-      );
-      return true;
-    }
-
-    if (nft.transferable === 0 || nft.transferable >= remark.block) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buy.id}.`
-      );
-      return true;
-    }
-
-    // Check if we have extra calls in the batch
-    if (remark.extra_ex?.length === 0) {
-      invalidate(
-        buy.id,
-        `[${OP_TYPES.BUY}] No accompanying transfer found for purchase of NFT with ID ${buy.id}.`
-      );
-      return true;
-    } else {
-      // Check if the transfer is valid, i.e. matches target recipient and value.
-      let transferValid = false;
-      let transferValue = "";
-      remark.extra_ex?.forEach((el: BlockCall) => {
-        if (el.call === "balances.transfer") {
-          transferValue = el.value;
-          if (el.value === `${nft.owner},${nft.forsale}`) {
-            transferValid = true;
-          }
-        }
-      });
-      if (!transferValid) {
-        invalidate(
-          buy.id,
-          `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buy.id} not valid. 
-          Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
-        );
-        return true;
-      }
-    }
-
-    nft.addChange({
-      field: "owner",
-      old: nft.owner,
-      new: remark.caller,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.owner = remark.caller;
-
-    nft.addChange({
-      field: "forsale",
-      old: nft.forsale,
-      new: BigInt(0),
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-    nft.forsale = BigInt(0);
 
     return true;
   }
 
+  /**
+   * React to an NFT with an emoticon.
+   * You can only EMOTE on an existing NFT (one that has not been CONSUMEd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/emote.md
+   */
   private emote(remark: Remark): boolean {
-    // An EMOTE reaction has been sent
-    console.log("Instantiating emote");
-    const emote = Emote.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(OP_TYPES.EMOTE, remark).bind(
       this
     );
-    if (typeof emote === "string") {
+    const emoteEntity = Emote.fromRemark(remark.remark);
+    if (typeof emoteEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${emote}`
+        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${emoteEntity}`
       );
       return true;
     }
-    const target = this.nfts.find((el) => el.getId() === emote.id);
-    if (!target) {
-      invalidate(
-        emote.id,
-        `[${OP_TYPES.EMOTE}] Attempting to emote on non-existant NFT ${emote.id}`
-      );
+    const nft = this.nfts.find((el) => el.getId() === emoteEntity.id);
+
+    try {
+      emoteInteraction(remark, emoteEntity, nft);
+    } catch (e) {
+      invalidate(emoteEntity.id, e.message);
       return true;
     }
 
-    if (target.burned != "") {
-      invalidate(
-        emote.id,
-        `[${OP_TYPES.EMOTE}] Cannot emote to a burned NFT ${emote.id}`
-      );
-      return true;
-    }
-
-    if (undefined === target.reactions[emote.unicode]) {
-      target.reactions[emote.unicode] = [];
-    }
-    const index = target.reactions[emote.unicode].indexOf(remark.caller, 0);
-    if (index > -1) {
-      target.reactions[emote.unicode].splice(index, 1);
-    } else {
-      target.reactions[emote.unicode].push(remark.caller);
-    }
     return false;
   }
 
+  /**
+   * The CHANGEISSUER interaction allows a collection issuer to change the issuer field to another address.
+   * The original issuer immediately loses all rights to mint further NFTs inside that collection.
+   * This is particularly useful when selling the rights to a collection's operation
+   * or changing the issuer to a null address to relinquish control over it.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk1.0.0/interactions/changeissuer.md
+   */
   private changeIssuer(remark: Remark): boolean {
-    // The ownership of a collection has changed
-    console.log("Instantiating an issuer change");
-    const ci = ChangeIssuer.fromRemark(remark.remark);
     const invalidate = this.updateInvalidCalls(
       OP_TYPES.CHANGEISSUER,
       remark
     ).bind(this);
-    if (typeof ci === "string") {
-      // console.log(
-      //   "ChangeIssuer was not instantiated OK from " + remark.remark
-      // );
-      invalidate(
-        remark.remark,
-        `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${ci}`
-      );
-      return true;
-    }
-    const coll = this.collections.find((el: C100) => el.id === ci.id);
-    if (!coll) {
-      invalidate(
-        ci.id,
-        `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such collection with ID ${ci.id} found before block ${remark.block}!`
-      );
+
+    let changeIssuerEntity: ChangeIssuer;
+    try {
+      changeIssuerEntity = getChangeIssuerEntity(remark);
+    } catch (e) {
+      invalidate(remark.remark, e.message);
       return true;
     }
 
-    if (remark.caller != coll.issuer) {
-      invalidate(
-        ci.id,
-        `Attempting to change issuer of collection ${ci.id} when not issuer!`
-      );
+    const collection = this.collections.find(
+      (el: C100) => el.id === changeIssuerEntity.id
+    );
+    try {
+      changeIssuerInteraction(remark, changeIssuerEntity, collection);
+    } catch (e) {
+      invalidate(changeIssuerEntity.id, e.message);
       return true;
     }
 
-    coll.addChange({
-      field: "issuer",
-      old: coll.issuer,
-      new: ci.issuer,
-      caller: remark.caller,
-      block: remark.block,
-    } as Change);
-
-    coll.issuer = ci.issuer;
     return false;
   }
 
