@@ -7,6 +7,7 @@ import * as fs from "fs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 import { NFT } from "../../src/rmrk1.0.0/classes/nft";
 import * as IPFS from "ipfs-core";
+import { getRandomInt } from "../../src/tools/utils";
 
 import JsonAdapter from "../../src/tools/consolidator/adapters/json";
 import { Consolidator } from "../../src/tools/consolidator/consolidator";
@@ -16,6 +17,34 @@ export class Seeder {
   constructor(api: ApiPromise) {
     this.api = api;
     this.accounts = getKeys();
+  }
+
+  public async eggmote(): Promise<void> {
+    // get a list of emote candidates
+    const emojiRanges = [
+      [0x1f601, 0x1f64f],
+      [0x2702, 0x27b0],
+      [0x1f680, 0x1f6c0],
+      [0x1f170, 0x1f251],
+    ];
+    const fullemoji = [];
+    for (const range of emojiRanges) {
+      for (let i = range[0]; i <= range[1]; i++) {
+        fullemoji.push(i.toString(16));
+      }
+    }
+
+    let n = 10000;
+
+    const selectedEmotes = [];
+    while (n--) {
+      selectedEmotes.push(fullemoji[getRandomInt(0, fullemoji.length)]);
+    }
+
+    console.log(selectedEmotes);
+
+    // pick a random emote per number out of the candidates
+    // bulk-apply
   }
 
   public async egglister(): Promise<void> {

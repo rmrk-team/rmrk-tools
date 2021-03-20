@@ -28,6 +28,9 @@ const seed = async () => {
   } else if (command == "egglist") {
     console.log("Listing eggs");
     await s.egglister();
+  } else if (command == "eggmote") {
+    console.log("Eggmoting");
+    await s.eggmote();
   } else {
     console.error("Unknown command");
   }
