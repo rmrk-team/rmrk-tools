@@ -6,7 +6,6 @@ import getKeys from "./devaccs";
 import * as fs from "fs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 import { NFT } from "../../src/rmrk1.0.0/classes/nft";
-import { Emote } from "../../src/rmrk1.0.0/classes/emote";
 import * as IPFS from "ipfs-core";
 import { getRandomInt } from "../../src/tools/utils";
 
@@ -142,7 +141,8 @@ export class Seeder {
       attributes: [],
       external_url: "https://kanaria.rmrk.app",
       image: "ipfs://ipfs/QmRjZHoSycKbYLGBbG6qJ1GKe1kVbYbpe86AyfUTvyDda7",
-    };
+    }; // QmQsMDPAyb9EVkS81jYDDFnKh4E2xA6SkxpjVaQJMBtSrV
+    const collMdHash = "QmQsMDPAyb9EVkS81jYDDFnKh4E2xA6SkxpjVaQJMBtSrV";
 
     const nftFounderMetadata = {
       external_url: "https://kanaria.rmrk.app",
@@ -150,7 +150,8 @@ export class Seeder {
       description: "Founder eggs: the first 99 eggs in the set",
       name: "Kanaria Founder eggs",
       background_color: "ffffff",
-    };
+    }; // QmfJeL7zfMywx9LMepcHAp612WwnKzSkfzcNKsmQoCsfkk
+    const founderMdHash = "QmfJeL7zfMywx9LMepcHAp612WwnKzSkfzcNKsmQoCsfkk";
 
     const nftCommonMetadata = {
       external_url: "https://kanaria.rmrk.app",
@@ -158,34 +159,36 @@ export class Seeder {
       description: "Common eggs: 9900 eggs to hatch into Kusama canaries",
       name: "Kanaria eggs",
       background_color: "ffffff",
-    };
+    }; // QmWzQZF8mg5kCJiTg23Hmy3ZrqnnhPRLLKYRV4hmZ7FUE2
+    const nftMdHash = "QmWzQZF8mg5kCJiTg23Hmy3ZrqnnhPRLLKYRV4hmZ7FUE2";
 
-    // Initialize IPFS node
-    const node = await IPFS.create();
-    const version = await node.version();
-    console.log("IPFS Version:", version.version);
-    // Upload all metadata to IPFS
-    const collMdHash = (
-      await node.add({
-        path: "img.svg",
-        content: JSON.stringify(collectionMetadata),
-      })
-    ).cid;
-    console.log(`Collection metadata: ${collMdHash}`);
-    const nftMdHash = (
-      await node.add({
-        path: "img.svg",
-        content: JSON.stringify(nftCommonMetadata),
-      })
-    ).cid;
-    console.log(`Common metadata: ${nftMdHash}`);
-    const founderMdHash = (
-      await node.add({
-        path: "img.svg",
-        content: JSON.stringify(nftFounderMetadata),
-      })
-    ).cid;
-    console.log(`Founder metadata: ${founderMdHash}`);
+    // // Initialize IPFS node
+    // const node = await IPFS.create();
+    // const version = await node.version();
+
+    // console.log("IPFS Version:", version.version);
+    // // Upload all metadata to IPFS
+    // const collMdHash = (
+    //   await node.add({
+    //     path: "meta.json",
+    //     content: JSON.stringify(collectionMetadata),
+    //   })
+    // ).cid;
+    // console.log(`Collection metadata: ${collMdHash}`);
+    // const nftMdHash = (
+    //   await node.add({
+    //     path: "meta.json",
+    //     content: JSON.stringify(nftCommonMetadata),
+    //   })
+    // ).cid;
+    // console.log(`Common metadata: ${nftMdHash}`);
+    // const founderMdHash = (
+    //   await node.add({
+    //     path: "meta.json",
+    //     content: JSON.stringify(nftFounderMetadata),
+    //   })
+    // ).cid;
+    // console.log(`Founder metadata: ${founderMdHash}`);
 
     const remarks = [];
     // Create collection
