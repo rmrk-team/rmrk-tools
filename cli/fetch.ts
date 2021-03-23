@@ -20,7 +20,7 @@ const fetch = async () => {
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
   });
 
-  console.log(args)
+  console.log(args);
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
   const api = await getApi(ws);
   const append = args["--append"];
@@ -66,13 +66,13 @@ const fetch = async () => {
     to,
     prefixToArray(args["--prefixes"] || "")
   );
-  console.log(deeplog(extracted));
-  console.log(getRemarksFromBlocks(extracted));
+  //console.log(deeplog(extracted));
+  //console.log(getRemarksFromBlocks(extracted));
   let outputFileName = `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`;
   if (append) {
     extracted = appendFile.concat(extracted);
     console.log(`Appending ${appendFile.length} remarks found. Full set:`);
-    console.log(deeplog(extracted));
+    //console.log(deeplog(extracted));
     outputFileName = append;
   }
   extracted.push({
