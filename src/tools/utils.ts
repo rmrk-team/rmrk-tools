@@ -224,6 +224,8 @@ export const getBlockCallsFromSignedBlock = async (
         if (batchExtras.length) {
           batchRoot.extras = batchExtras;
         }
+
+        blockCalls.push(batchRoot);
       }
     }
     extrinsicIndex++;
