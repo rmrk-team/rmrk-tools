@@ -117,7 +117,7 @@ export class NFT {
   /**
    * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
    */
-  public list(price: number): string {
+  public list(price: BigInt | number): string {
     if (!this.block) {
       throw new Error(
         `You can only list an existing NFT. If you just minted this, please load a new, 
