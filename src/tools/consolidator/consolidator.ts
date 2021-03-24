@@ -43,22 +43,23 @@ export class Consolidator {
     this.collections = [];
     this.nfts = [];
   }
+
   private findExistingCollection(id: string) {
     return this.collections.find((el) => el.id === id);
   }
+
+  /**
+   * Find NFT by comparing id on the blockless part
+   * To prevent minting a token of the same id in a different block
+   */
   private findExistingNFT(interaction: Interaction): N100 | undefined {
-    return this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-
-      const idExpand2 = interaction.id.split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-
+    return this.nfts.find((nft) => {
+      const uniquePart1 = nft.getId().split("-").slice(1).join("-");
+      const uniquePart2 = interaction.id.split("-").slice(1).join("-");
       return uniquePart1 === uniquePart2;
     });
   }
+
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
     const invalidCallBase: Partial<InvalidCall> = {
       op_type,
@@ -133,14 +134,8 @@ export class Consolidator {
     }
 
     const existsCheck = this.nfts.find((el) => {
-      const idExpand1 = el.getId().split("-");
-      idExpand1.shift();
-      const uniquePart1 = idExpand1.join("-");
-
-      const idExpand2 = nft.getId().split("-");
-      idExpand2.shift();
-      const uniquePart2 = idExpand2.join("-");
-
+      const uniquePart1 = el.getId().split("-").slice(1).join("-");
+      const uniquePart2 = nft.getId().split("-").slice(1).join("-");
       return uniquePart1 === uniquePart2;
     });
 
