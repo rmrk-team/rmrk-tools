@@ -43,35 +43,29 @@ export class NFT {
     this.burned = "";
   }
 
-  public fromConsolidated(nft: NFT): NFT {
-    const {
-      block,
-      collection,
-      name,
-      instance,
-      transferable,
-      sn,
-      metadata,
-      ...rest
-    } = nft;
-    const nftClass = new NFT(
-      block,
-      collection,
-      name,
-      instance,
-      transferable,
-      sn,
-      metadata
-    );
-    const { owner, forsale, reactions, changes, loadedMetadata, burned } = rest;
-    nftClass.owner = owner;
-    nftClass.forsale = forsale;
-    nftClass.reactions = reactions;
-    nftClass.changes = changes;
-    nftClass.loadedMetadata = loadedMetadata;
-    nftClass.burned = burned;
+  public fromConsolidated(nft: Partial<NFT>): NFT {
+    const { owner, forsale, reactions, changes, loadedMetadata, burned } = nft;
 
-    return nftClass;
+    if (owner) {
+      this.owner = owner;
+    }
+    if (forsale) {
+      this.forsale = forsale;
+    }
+    if (reactions) {
+      this.reactions = reactions;
+    }
+    if (changes) {
+      this.changes = changes;
+    }
+    if (loadedMetadata) {
+      this.loadedMetadata = loadedMetadata;
+    }
+    if (burned) {
+      this.burned = burned;
+    }
+
+    return this;
   }
 
   public getId(): string {
