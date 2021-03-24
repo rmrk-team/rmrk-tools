@@ -10,6 +10,7 @@ import {
 import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
+import { NFT } from "../src";
 
 const fetch = async () => {
   const args = arg({
@@ -21,6 +22,8 @@ const fetch = async () => {
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--output": String, // Filename to sve data into, defaults to remarks-${from}-${to}-${args["--prefixes"] || ""}.json
     "--fin": String, // "yes" by default. If omitting `from`, will default to last finalized. If this is "no", will default to last block.
+    "--collection": String, // Filter by specific collection
+    "--interactions": String, // Include only specific interactions
   });
 
   console.log(args);
@@ -31,6 +34,8 @@ const fetch = async () => {
   let from = args["--from"] || 0;
   let output = args["--output"] || "";
   let fin = args["--fin"] || "yes";
+  const collectionFilter = args["--collection"] || null;
+  const includeInteractions = args["--interactions"] || null;
 
   // Grab FROM from append file
   let appendFile = [];
@@ -74,8 +79,24 @@ const fetch = async () => {
     to,
     prefixToArray(args["--prefixes"] || "")
   );
-  //console.log(deeplog(extracted));
-  //console.log(getRemarksFromBlocks(extracted));
+
+  if (collectionFilter) {
+    extracted = extracted.filter((block) =>
+      getRemarksFromBlocks([block]).some((r) =>
+        r.remark.includes(collectionFilter)
+      )
+    );
+  }
+
+  if (includeInteractions) {
+    const interactions = includeInteractions.split(",");
+    extracted = extracted.filter((block) =>
+      getRemarksFromBlocks([block]).some((r) =>
+        interactions.includes(r.interaction_type)
+      )
+    );
+  }
+
   let outputFileName =
     output !== ""
       ? output
