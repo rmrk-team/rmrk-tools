@@ -135,6 +135,8 @@ export class Seeder {
     let decoded = decodeAddress(mintingAccount.address);
     let address = encodeAddress(decoded, 0);
 
+    const superFounderMdHash = "QmQK2mhYKBjwmSFUcqXwyVo5L2dvgdx1v9n2nskfMdVT4x";
+
     const collectionMetadata = {
       description:
         "🥚 Kanaria RMRK eggs, collectible, hatchable canary eggs 🐣",
@@ -151,7 +153,8 @@ export class Seeder {
       name: "Kanaria Founder eggs",
       background_color: "ffffff",
     }; // QmfJeL7zfMywx9LMepcHAp612WwnKzSkfzcNKsmQoCsfkk
-    const founderMdHash = "QmfJeL7zfMywx9LMepcHAp612WwnKzSkfzcNKsmQoCsfkk";
+
+    const founderMdHash = "QmVUDNVnC9Q5cnN6CbE72UXUjN8WmYfGATDCmxyapioMAa";
 
     const nftCommonMetadata = {
       external_url: "https://kanaria.rmrk.app",
@@ -160,7 +163,7 @@ export class Seeder {
       name: "Kanaria eggs",
       background_color: "ffffff",
     }; // QmWzQZF8mg5kCJiTg23Hmy3ZrqnnhPRLLKYRV4hmZ7FUE2
-    const nftMdHash = "QmWzQZF8mg5kCJiTg23Hmy3ZrqnnhPRLLKYRV4hmZ7FUE2";
+    const nftMdHash = "QmVf7YX6tgwExzKsscv8aAaWWn7rxotBiUzUbvXSY6dYkq";
 
     // // Initialize IPFS node
     // const node = await IPFS.create();
@@ -218,7 +221,7 @@ export class Seeder {
           "KANSUPER",
           1,
           `${i}`.padStart(16, "0"),
-          `ipfs://ipfs/${founderMdHash}`
+          `ipfs://ipfs/${superFounderMdHash}`
         );
         remarks.push(nft.mintnft());
       } else if (i < 100) {
