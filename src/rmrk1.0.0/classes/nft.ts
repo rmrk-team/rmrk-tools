@@ -117,7 +117,7 @@ export class NFT {
   /**
    * @param price In plancks, so 10000000000 for 0.01 KSM. Set to 0 if canceling listing.
    */
-  public list(price: number): string {
+  public list(price: BigInt | number): string {
     if (!this.block) {
       throw new Error(
         `You can only list an existing NFT. If you just minted this, please load a new, 
@@ -146,7 +146,19 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `RMRK::CONSUME::${VERSION}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
+  }
+
+  public emote(unicode: string): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only emote on an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `${PREFIX}::${
+      OP_TYPES.EMOTE
+    }::${VERSION}::${this.getId()}::${unicode}`;
   }
 
   /**
