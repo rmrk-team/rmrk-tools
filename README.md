@@ -265,3 +265,8 @@ When running a local chain, you can run `yarn seed` to populate the chain with p
 You can see how the seeders are written in `test/seed/default`. `yarn seed` will by default execute all the seeds in the `default` folder. If you want to execute only your own seeders, put them into a subfolder inside `test/seed` and provide the folder name: `yarn seed myfolder`.
 
 Check that all edge cases are covered by running [Consolidate](#consolidate).
+
+## Generate Metadata
+Create seed json file with an array of metadata fields and file path (see `metadata-seed.example.json` for example). This script will first upload image to IPFS and pin it using pinata and then upload metadata JSON object to IPFS and pin it, and return array of IPFS urls with metadata JSON ready to be added to NFTs
+
+`PINATA_KEY=XXX PINATA_SECRET=XXX yarn cli:metadata --input=metadata-seed.example.json --output=metadata-seed-outpute.json`

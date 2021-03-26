@@ -1,0 +1,22 @@
+{
+  "metadata": [
+    {
+      "metadataFields": {
+        "external_url":"https://rmrk.app",
+        "description":"Limited Edition NFT",
+        "name":"Limited Edition",
+        "background_color":"#FFFFFF"
+      },
+      "imagePath": "/metadata-images/limited-edition.svg"
+    },
+    {
+      "metadataFields": {
+        "external_url":"https://rmrk.app",
+        "description":"Rare NFT",
+        "name":"Rare",
+        "background_color":"#FFFFFF"
+      },
+      "imagePath": "/metadata-images/rare.svg"
+    }
+  ]
+}

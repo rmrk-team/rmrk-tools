@@ -14,3 +14,4 @@ dist-cli
 /dump-*.json
 throwaway.js
 coverage
+metadata-images
