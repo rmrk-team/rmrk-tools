@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 import {
   deeplog,
+  filterBlocksByCollection,
   getApi,
   getLatestBlock,
   getLatestFinalizedBlock,
@@ -23,7 +24,6 @@ const fetch = async () => {
     "--output": String, // Filename to sve data into, defaults to remarks-${from}-${to}-${args["--prefixes"] || ""}.json
     "--fin": String, // "yes" by default. If omitting `from`, will default to last finalized. If this is "no", will default to last block.
     "--collection": String, // Filter by specific collection
-    "--interactions": String, // Include only specific interactions
   });
 
   console.log(args);
@@ -35,7 +35,6 @@ const fetch = async () => {
   let output = args["--output"] || "";
   let fin = args["--fin"] || "yes";
   const collectionFilter = args["--collection"] || null;
-  const includeInteractions = args["--interactions"] || null;
 
   // Grab FROM from append file
   let appendFile = [];
@@ -81,20 +80,7 @@ const fetch = async () => {
   );
 
   if (collectionFilter) {
-    extracted = extracted.filter((block) =>
-      getRemarksFromBlocks([block]).some((r) =>
-        r.remark.includes(collectionFilter)
-      )
-    );
-  }
-
-  if (includeInteractions) {
-    const interactions = includeInteractions.split(",");
-    extracted = extracted.filter((block) =>
-      getRemarksFromBlocks([block]).some((r) =>
-        interactions.includes(r.interaction_type)
-      )
-    );
+    extracted = filterBlocksByCollection(extracted, collectionFilter);
   }
 
   let outputFileName =
