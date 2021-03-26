@@ -3,9 +3,9 @@ import { Remark } from "../remark";
 import { getRemarksFromBlocks } from "../../utils";
 
 /**
- * The JSON adapter expects to find a JSON array with elements 
+ * The JSON adapter expects to find a JSON array with elements
  * adhering to the following format in the provided filepath:
- * 
+ *
 {
   block: 5437981,
   calls: [
@@ -25,6 +25,12 @@ export default class JsonAdapter {
     this.inputData = JSON.parse(rawdata.toString());
     //console.log(this.inputData);
     console.log(`Loaded ${this.inputData.length} blocks with remark calls`);
+  }
+
+  public getLastBlock(): number {
+    const blocks = this.inputData;
+    const lastBlock = blocks[blocks.length - 1];
+    return lastBlock.block || 0;
   }
 
   public getInputDataRaw(): JsonRow[] {
