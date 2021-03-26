@@ -1,5 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`utils: filterBlockByCollection should return blocks filter by collection - 900D19DC7D3C444E4C-FTF 1`] = `
+Array [
+  Object {
+    "block": 6758715,
+    "caller": "FqCJeGcPidYSsvvmT17fHVaYdE2nXMYgPsBn3CP9gugvZR5",
+    "extra_ex": undefined,
+    "interaction_type": "MINT",
+    "remark": "RMRK::MINT::1.0.0::{\\"id\\"%3A\\"900D19DC7D3C444E4C-FTF\\"%2C\\"_id\\"%3A\\"\\"%2C\\"symbol\\"%3A\\"FTF\\"%2C\\"issuer\\"%3A\\"FqCJeGcPidYSsvvmT17fHVaYdE2nXMYgPsBn3CP9gugvZR5\\"%2C\\"version\\"%3A\\"1.0.0\\"%2C\\"name\\"%3A\\"FrameToFrame\\"%2C\\"max\\"%3A1%2C\\"metadata\\"%3A\\"ipfs%3A%2F%2Fipfs%2FQmaodXLs631c3skuYCxqrRJ5DyfUE3gq6d1UyS2PcmMMks\\"}",
+    "version": "1.0.0",
+  },
+  Object {
+    "block": 6758715,
+    "caller": "FqCJeGcPidYSsvvmT17fHVaYdE2nXMYgPsBn3CP9gugvZR5",
+    "extra_ex": undefined,
+    "interaction_type": "MINTNFT",
+    "remark": "RMRK::MINTNFT::1.0.0::{\\"collection\\"%3A\\"900D19DC7D3C444E4C-FTF\\"%2C\\"sn\\"%3A\\"0000000000000001\\"%2C\\"transferable\\"%3A1%2C\\"name\\"%3A\\"FrameToFrame\\"%2C\\"metadata\\"%3A\\"ipfs%3A%2F%2Fipfs%2FQmaodXLs631c3skuYCxqrRJ5DyfUE3gq6d1UyS2PcmMMks\\"%2C\\"currentOwner\\"%3A\\"FqCJeGcPidYSsvvmT17fHVaYdE2nXMYgPsBn3CP9gugvZR5\\"%2C\\"instance\\"%3A\\"FRAMETOFRAME\\"}",
+    "version": "1.0.0",
+  },
+  Object {
+    "block": 6758766,
+    "caller": "FqCJeGcPidYSsvvmT17fHVaYdE2nXMYgPsBn3CP9gugvZR5",
+    "extra_ex": undefined,
+    "interaction_type": "LIST",
+    "remark": "RMRK::LIST::1.0.0::6758715-900D19DC7D3C444E4C-FTF-FRAMETOFRAME-0000000000000001::11111000000000",
+    "version": "1.0.0",
+  },
+]
+`;
+
 exports[`utils: getRemarkData should take a remark string and turn into json 1`] = `
 Object {
   "collection": "241B8516516F381A-OKSM",

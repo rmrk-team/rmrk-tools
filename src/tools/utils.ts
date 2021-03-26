@@ -4,7 +4,7 @@ import { URL } from "url";
 import { Remark } from "./consolidator/remark";
 import { OP_TYPES } from "./constants";
 import { SignedBlock } from "@polkadot/types/interfaces/runtime";
-import { BlockCall } from "./types";
+import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
 
@@ -244,3 +244,14 @@ export function getRandomInt(min: number, max: number): number {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
+
+export const filterBlocksByCollection = (
+  blockCalls: BlockCalls[],
+  collectionFilter: string
+): BlockCalls[] => {
+  return blockCalls.filter((block) =>
+    getRemarksFromBlocks([block]).some((r) =>
+      r.remark.includes(collectionFilter)
+    )
+  );
+};

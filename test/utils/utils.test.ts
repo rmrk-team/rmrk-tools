@@ -1,4 +1,4 @@
-import { blocks489x_630x } from "../mocks/blocks-dump";
+import { blocks489x_630x, blocksDumpAll } from "../mocks/blocks-dump";
 import {
   getRemarksFromBlocks,
   stringIsAValidUrl,
@@ -6,8 +6,10 @@ import {
   isSystemRemark,
   isUtilityBatch,
   getRemarkData,
+  filterBlocksByCollection,
 } from "../../src/tools/utils";
 import { Call as TCall } from "@polkadot/types/interfaces";
+import { recentBlocksDump } from "../mocks/blocks-dump-recent";
 
 // Test getRemarksFromBlocks
 describe("utils: getRemarksFromBlocks", () => {
@@ -125,5 +127,17 @@ describe("utils: getRemarkData", () => {
     const remark =
       '{"collection"%3A"241B8516516F381A-OKSM"%2C"name"%3A"Kusama Octahedron"%2C"transferable"%3A1%2C"sn"%3A"0000000000000004"%2C"metadata"%3A"ipfs%3A//ipfs/QmXwp5VsPmTdWvFKmc9VwnFkp9jN6ktFiKc5tSMHCuN4pW"}';
     expect(getRemarkData(remark)).toMatchSnapshot();
+  });
+});
+
+// filterBlockByCollection
+
+describe("utils: filterBlockByCollection", () => {
+  it("should return blocks filter by collection - 900D19DC7D3C444E4C-FTF", () => {
+    const blocks = filterBlocksByCollection(
+      recentBlocksDump,
+      "900D19DC7D3C444E4C-FTF"
+    );
+    expect(getRemarksFromBlocks(blocks)).toMatchSnapshot();
   });
 });
