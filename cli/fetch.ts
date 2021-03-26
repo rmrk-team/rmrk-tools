@@ -31,7 +31,7 @@ const fetch = async () => {
   let from = args["--from"] || 0;
   let output = args["--output"] || "";
   let fin = args["--fin"] || "yes";
-  const collectionFilter = args["--collection"] || null;
+  const collectionFilter = args["--collection"];
 
   // Grab FROM from append file
   let appendFile = [];
