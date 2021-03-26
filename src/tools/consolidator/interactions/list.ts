@@ -42,6 +42,7 @@ export const listForSaleInteraction = (
       caller: remark.caller,
       block: remark.block,
     } as Change);
+
     nft.forsale = listEntity.price;
   }
 };

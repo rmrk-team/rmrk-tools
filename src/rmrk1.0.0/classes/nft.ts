@@ -43,6 +43,31 @@ export class NFT {
     this.burned = "";
   }
 
+  public fromConsolidated(nft: Partial<NFT>): NFT {
+    const { owner, forsale, reactions, changes, loadedMetadata, burned } = nft;
+
+    if (owner) {
+      this.owner = owner;
+    }
+    if (forsale) {
+      this.forsale = forsale;
+    }
+    if (reactions) {
+      this.reactions = reactions;
+    }
+    if (changes) {
+      this.changes = changes;
+    }
+    if (loadedMetadata) {
+      this.loadedMetadata = loadedMetadata;
+    }
+    if (burned) {
+      this.burned = burned;
+    }
+
+    return this;
+  }
+
   public getId(): string {
     if (!this.block)
       throw new Error("This token is not minted, so it cannot have an ID.");
