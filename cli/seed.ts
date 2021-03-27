@@ -3,6 +3,8 @@ import { getApi } from "../src/tools/utils";
 import { Seeder } from "../test/seed/seeder";
 import readline from "readline";
 import arg from "arg";
+import { Keyring } from "@polkadot/api";
+import { KeyringPair } from "@polkadot/keyring/types";
 
 const seed = async () => {
   const args = arg({
@@ -10,35 +12,42 @@ const seed = async () => {
     "--folder": String, // The folder from which to read seeds
     "--command": String, // Which seed to run. If "file" looks in the `folder` location provided
     "--ws": String, // Which remote to connect to, defaults to local (ws://127.0.0.1:9944)
-    "--pk": String, // Private key of the wallet from which to seed
+    "--phrase": String, // Mnemonic phrase of the wallet from which to seed. Defaults to `//Alice` for dev chain.
   });
 
   let folder = args["--folder"] || "default";
   let command = args["--command"] || "file";
   let ws = args["--ws"] || "ws://127.0.0.1:9944";
+  let phrase = args["--phrase"] || "//Alice";
   if (!folder.startsWith("test/seed")) folder = "test/seed/" + folder;
   console.log("Connecting...");
   const api = await getApi(ws);
   console.log("Connected.");
 
-  if ((await api.rpc.system.chain()).toHuman() == "Development") {
+  if ((await api.rpc.system.chain()).toHuman() != "Development") {
     console.warn("Warning: you are seeding a non-development chain!");
     askQuestion(
       "⚠⚠⚠ Are you sure you want to proceed? This might be expensive! Enter YES to override: "
     ).then(async (answer) => {
       if (answer === "YES") {
-        await goSeed(command);
+        if (phrase == "//Alice") {
+          console.error(
+            "You cannot seed a non-development chain from the //Alice account. This account is only available in dev."
+          );
+          process.exit(1);
+        }
+        await goSeed(command, getKeyringFromUri(phrase));
       } else {
         console.log("Execution stopped");
         process.exit(1);
       }
     });
   } else {
-    await goSeed(command);
+    await goSeed(command, getKeyringFromUri(phrase));
   }
 
-  async function goSeed(command: string) {
-    const s = new Seeder(api);
+  async function goSeed(command: string, kp: KeyringPair) {
+    const s = new Seeder(api, kp);
 
     switch (command) {
       case "file":
@@ -65,6 +74,11 @@ function askQuestion(query: string) {
       resolve(ans);
     })
   );
+}
+
+function getKeyringFromUri(phrase: string): KeyringPair {
+  const keyring = new Keyring({ type: "sr25519" });
+  return keyring.addFromUri(phrase);
 }
 
 seed();
