@@ -8,9 +8,23 @@ import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 export class Seeder {
   api: ApiPromise;
   accounts: KeyringPair[];
-  constructor(api: ApiPromise) {
+  kp: KeyringPair;
+  constructor(api: ApiPromise, kp: KeyringPair) {
     this.api = api;
     this.accounts = getKeys();
+    this.kp = kp;
+  }
+
+  public async seedCollection(): Promise<number> {
+    return 0;
+  }
+
+  public async seedNfts(coll: string): Promise<number> {
+    return 0;
+  }
+
+  public async seedEmotes(coll: string, amount: number): Promise<number> {
+    return 0;
   }
 
   /**
