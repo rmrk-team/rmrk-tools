@@ -3,6 +3,7 @@ import fs from "fs";
 import JsonAdapter from "../src/tools/consolidator/adapters/json";
 import { Consolidator } from "../src/tools/consolidator/consolidator";
 import arg from "arg";
+import {deeplog} from "../src/tools/utils";
 
 const consolidate = async () => {
   const args = arg({
@@ -26,11 +27,15 @@ const consolidate = async () => {
   const ja = new JsonAdapter(file, collectionFilter);
   const con = new Consolidator(ja);
   const ret = con.consolidate();
+
+  //@ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
   fs.writeFileSync(
     `consolidated-from-${file}`,
     JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
   );
-  con.consolidate();
 };
 
 consolidate();
