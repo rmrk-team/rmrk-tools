@@ -24,6 +24,9 @@ const seed = async () => {
   const api = await getApi(ws);
   console.log("Connected.");
 
+  const kp = getKeyringFromUri(phrase);
+  console.log(`Will seed from ${kp.address}`);
+
   if ((await api.rpc.system.chain()).toHuman() != "Development") {
     console.warn("Warning: you are seeding a non-development chain!");
     askQuestion(
@@ -36,14 +39,14 @@ const seed = async () => {
           );
           process.exit(1);
         }
-        await goSeed(command, getKeyringFromUri(phrase));
+        await goSeed(command, kp);
       } else {
         console.log("Execution stopped");
         process.exit(1);
       }
     });
   } else {
-    await goSeed(command, getKeyringFromUri(phrase));
+    await goSeed(command, kp);
   }
 
   async function goSeed(command: string, kp: KeyringPair) {
