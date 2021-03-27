@@ -89,6 +89,7 @@ const { nfts, collections } = consolidator.consolidate(remarks);
 ```
 
 ### `RemarkListener`
+
 Subscribe to new Remarks
 
 ```
@@ -107,6 +108,7 @@ startListening();
 ```
 
 if you want to subscribe to remarks that are included in unfinilised blocks to react to them quickly, you can use:
+
 ```
 const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
@@ -118,7 +120,8 @@ Consolidator requires a full history of remarks, so you have to either provide a
 const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialBlockCalls: [...] });
 ```
 
-Or pass fetched remarks as an array: 
+Or pass fetched remarks as an array:
+
 ```
 const to = await getLatestFinalizedBlock(api);
 const missingBlocks = await fetchRemarks(api, 0, to, []);
@@ -134,11 +137,13 @@ import { Collection } from 'rmrk-tools';
 ```
 
 Turn a remark into a collection object
+
 ```
 Collection.fromRemark(remark)
 ```
 
 Create new collecton
+
 ```
 const collection = new Collection(
   0,
@@ -152,12 +157,15 @@ const collection = new Collection(
 ```
 
 ### `NFT`
+
 ```
 import { fetchRemarks } from 'rmrk-tools';
 ```
+
 ... TODO
 
 ### `fetchRemarks`
+
 ```
 import { fetchRemarks } from 'rmrk-tools';
 
@@ -168,7 +176,9 @@ const remarkBlocks = await fetchRemarks(api, 6431422, 6431424, ['']);
 ```
 
 ### `getLatestFinalizedBlock`
+
 Get latest block number on the provided chain using polkadot api
+
 ```
 import { getLatestFinalizedBlock } from 'rmrk-tools';
 
@@ -178,6 +188,7 @@ const to = await utils.getLatestFinalizedBlock(api);
 ```
 
 ### `getRemarksFromBlocks`
+
 Turn extrinsics into remark objects
 
 ```
@@ -204,6 +215,9 @@ Optional parameters:
 - `--to TO`: block until which to search, defaults to latest
 - `--prefixes PREFIXES`: limit return data to only remarks with these prefixes. Can be comma separated list. Prefixes can be hex or utf8. Case sensitive. Example: 0x726d726b,0x524d524b
 - `--append PATH`: special mode which takes the last block in an existing dump file + 1 as FROM (overrides FROM). Appends new blocks with remarks into that file. Convenient for running via cronjob for continuous remark list building. Performance right now is 1000 blocks per 10 seconds, so processing 5000 blocks with a `* * * * *` cronjob should be doable. Example: `yarn cli:fetch --prefixes=0x726d726b,0x524d524b --append=somefile.json`
+- `--collection`: filter by specific collection or part of collection ID (i.e. RMRK substring)
+- `--fin`: defaults to "yes" if omitted. When "yes", fetches up to last finalized block if `to` is omitted. Otherwise, last block. `no` is useful for testing.
+- `--output`: name of the file into which to save the output. Overridden if `append` is used.
 
 The return data will look like this:
 

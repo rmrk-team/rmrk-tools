@@ -12,6 +12,7 @@ dist-cli
 
 /remarks*.json
 /dump-*.json
+/consolidated-*.json
 throwaway.js
 coverage
 metadata-images

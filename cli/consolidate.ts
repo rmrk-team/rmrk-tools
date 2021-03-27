@@ -7,9 +7,11 @@ import arg from "arg";
 const consolidate = async () => {
   const args = arg({
     "--json": String, // The JSON file from which to consolidate
+    "--collection": String, // Filter by specific collection
   });
 
   const file = args["--json"];
+  const collectionFilter = args["--collection"];
   if (!file) {
     console.error("File path must be provided");
     process.exit(1);
@@ -21,8 +23,13 @@ const consolidate = async () => {
     console.error("File is not readable. Are you providing the right path?");
     process.exit(1);
   }
-  const ja = new JsonAdapter(file);
+  const ja = new JsonAdapter(file, collectionFilter);
   const con = new Consolidator(ja);
+  const ret = con.consolidate();
+  fs.writeFileSync(
+    `consolidated-from-${file}`,
+    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
+  );
   con.consolidate();
 };
 
