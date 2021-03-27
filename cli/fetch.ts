@@ -18,7 +18,7 @@ const fetch = async () => {
     "--from": Number, // The starting block
     "--to": Number, // The starting block
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
-    "--output": String, // Filename to sve data into, defaults to remarks-${from}-${to}-${args["--prefixes"] || ""}.json
+    "--output": String, // Filename to save data into, defaults to `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`
     "--fin": String, // "yes" by default. If omitting `from`, will default to last finalized. If this is "no", will default to last block.
     "--collection": String, // Filter by specific collection
   });
