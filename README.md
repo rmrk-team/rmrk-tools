@@ -281,7 +281,13 @@ You can see how the seeders are written in `test/seed/default`. `yarn seed` will
 Check that all edge cases are covered by running [Consolidate](#consolidate).
 
 ## Generate Metadata
-This scripts generates an array of objects with metadata IPFS urls ready to be added to NFTs.
-First create a seed json file with an array of metadata fields and file path (see `metadata-seed.example.json` for example). This script will first upload image to IPFS and pin it using pinata and then upload metadata JSON object to IPFS and pin it, and return array of IPFS urls with metadata JSON ready to be added to NFTs
 
-`PINATA_KEY=XXX PINATA_SECRET=XXX yarn cli:metadata --input=metadata-seed.example.json --output=metadata-seed-outpute.json`
+This script generates an array of objects with metadata IPFS URIs ready to be added to NFTs.
+
+First, create a seed JSON file with an array of metadata fields and file path (see `metadata-seed.example.json` for example) for each image. This script will first upload the image to IPFS and pin it using [Pinata](https://pinata.cloud) and then upload the metadata JSON object to IPFS and pin it, returning an array of IPFS urls ready to be added to NFTs and/or collections.
+
+```bash
+PINATA_KEY=XXX PINATA_SECRET=XXX yarn cli:metadata --input=metadata-seed.example.json --output=metadata-seed-output.json
+```
+
+> Note that it is recommended to pin the resulting hashes into multiple additional pinning services or (better) your own IPFS node to increase dissemination of the content.
