@@ -354,8 +354,8 @@ export class Consolidator {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
-      // console.log("==============================");
-      // console.log("Remark is: " + remark.remark);
+      //console.log("==============================");
+      //console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
         case OP_TYPES.MINT:
           if (this.mint(remark)) {
@@ -417,7 +417,6 @@ export class Consolidator {
     }
     // deeplog(this.nfts);
     // deeplog(this.collections);
-
     console.log(this.invalidCalls);
     console.log(
       `${this.nfts.length} NFTs across ${this.collections.length} collections.`

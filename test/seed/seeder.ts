@@ -1,6 +1,7 @@
 import { ApiPromise } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
+import { encodeAddress, decodeAddress } from "@polkadot/util-crypto";
 import getKeys from "./devaccs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 import { NFT } from "../../src/rmrk1.0.0/classes/nft";
@@ -16,6 +17,10 @@ export class Seeder {
   }
 
   public async seedAll(): Promise<string[]> {
+    const props = await this.api.rpc.system.properties();
+    const dev = (await this.api.rpc.system.chain()).toHuman() == "Development";
+    const ss58 = !dev ? parseInt(props.ss58Format.toString(), 10) : 0;
+    let address = encodeAddress(decodeAddress(this.kp.address), ss58);
     const remarks: string[] = [];
     const collectionSymbol = "KAN";
     const collectionId = Collection.generateId(
@@ -26,7 +31,7 @@ export class Seeder {
       0,
       "Limited Edition Hatchable Egg NFTs on RMRK",
       10000,
-      this.kp.address,
+      address,
       collectionSymbol,
       collectionId,
       `ipfs://ipfs/bafkreiftupazt3tmgcdkbpq62b5n5sr77qv6pspxy7cyjm35r75mfknrpm`
