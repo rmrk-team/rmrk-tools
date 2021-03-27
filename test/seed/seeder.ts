@@ -15,6 +15,18 @@ export class Seeder {
     this.kp = kp;
   }
 
+  public async seedCollection(): Promise<number> {
+    return 0;
+  }
+
+  public async seedNfts(coll: string): Promise<number> {
+    return 0;
+  }
+
+  public async seedEmotes(coll: string, amount: number): Promise<number> {
+    return 0;
+  }
+
   /**
    * @param folder Folder in which to look for seed files
    * @returns Number of imported seeds
