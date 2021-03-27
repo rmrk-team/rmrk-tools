@@ -4,7 +4,7 @@ import { URL } from "url";
 import { Remark } from "./consolidator/remark";
 import { OP_TYPES } from "./constants";
 import { SignedBlock } from "@polkadot/types/interfaces/runtime";
-import { BlockCall } from "./types";
+import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
 
@@ -238,3 +238,19 @@ export const getRemarkData = (dataString: string) => {
   const data = decodeURIComponent(dataString);
   return JSON.parse(data);
 };
+
+/**
+ * filterBlocksByCollection
+ * Return blocks that match specific collection.
+ * @param blockCalls
+ * @param collectionFilter - name of the collection to filter by
+ */
+export const filterBlocksByCollection = (
+  blockCalls: BlockCalls[],
+  collectionFilter: string
+): BlockCalls[] =>
+  blockCalls.filter((block) =>
+    getRemarksFromBlocks([block]).some((rmrk) =>
+      rmrk.remark.includes(collectionFilter)
+    )
+  );
