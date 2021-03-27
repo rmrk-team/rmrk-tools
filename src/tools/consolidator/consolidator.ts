@@ -415,10 +415,9 @@ export class Consolidator {
           );
       }
     }
-    //deeplog(this.nfts);
-    //deeplog(this.collections);
-
-    //console.log(this.invalidCalls);
+    // deeplog(this.nfts);
+    // deeplog(this.collections);
+    console.log(this.invalidCalls);
     console.log(
       `${this.nfts.length} NFTs across ${this.collections.length} collections.`
     );
