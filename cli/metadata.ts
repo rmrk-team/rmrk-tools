@@ -36,7 +36,9 @@ const validateMetadataSeedImages = async (metadataSeed: MetadataSeedItem[]) => {
       if (!metadataSeedItem.imagePath) {
         throw error;
       }
-      const imageFile = await fsPromises.readFile(metadataSeedItem.imagePath);
+      const imageFile = await fsPromises.readFile(
+        `${process.cwd()}${metadataSeedItem.imagePath}`
+      );
       if (!imageFile) {
         throw error;
       }
