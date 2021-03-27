@@ -11,7 +11,44 @@ interface MetadataSeedItem {
   imagePath?: string;
 }
 
-const metadata = async () => {
+const validateMetadataSeedFields = (metadataSeed: MetadataSeedItem[]) => {
+  metadataSeed.forEach((metadata) => {
+    const {
+      name,
+      external_url,
+      description,
+      background_color,
+    } = metadata.metadataFields;
+    if (!name || !external_url || !description || !background_color) {
+      throw new Error(
+        "provided metadata has 1 or more fields missing (!name || !external_url || !description || !background_color)"
+      );
+    }
+  });
+};
+
+const validateMetadataSeedImages = async (metadataSeed: MetadataSeedItem[]) => {
+  const promises = metadataSeed.map(async (metadataSeedItem) => {
+    const error = new Error(
+      `Cannot read Image from path: ${metadataSeedItem.imagePath}`
+    );
+    try {
+      if (!metadataSeedItem.imagePath) {
+        throw error;
+      }
+      const imageFile = await fsPromises.readFile(metadataSeedItem.imagePath);
+      if (!imageFile) {
+        throw error;
+      }
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  return await Promise.all(promises);
+};
+
+const uploadMetadata = async () => {
   const args = arg({
     "--input": String, // metadata input file
     "--output": String, // metadata output file
@@ -26,9 +63,14 @@ const metadata = async () => {
     throw new Error("Metadata json file missing 'metadata' array");
   }
 
+  // Validate seed JSON before trying to upload and pin it
+  validateMetadataSeedFields(metadataInput.metadata);
+  await validateMetadataSeedImages(metadataInput.metadata);
+
   const promises = (metadataInput.metadata as MetadataSeedItem[]).map(
     async (metadata, index) => {
-      if (!metadata.imagePath) {
+      if (!metadata.imagePath && metadata.metadataFields?.image) {
+        // This item already has valid image
         return metadata.metadataFields;
       }
       const metadataItem = await uploadRMRKMetadata(
@@ -52,4 +94,4 @@ const metadata = async () => {
   process.exit(0);
 };
 
-metadata();
+uploadMetadata();
