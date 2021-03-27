@@ -8,9 +8,11 @@ import { Collection } from "../../src/rmrk1.0.0/classes/collection";
 export class Seeder {
   api: ApiPromise;
   accounts: KeyringPair[];
-  constructor(api: ApiPromise) {
+  kp: KeyringPair;
+  constructor(api: ApiPromise, kp: KeyringPair) {
     this.api = api;
     this.accounts = getKeys();
+    this.kp = kp;
   }
 
   /**
