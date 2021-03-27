@@ -5,6 +5,7 @@ import readline from "readline";
 import arg from "arg";
 import { Keyring } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
+import Blob from "cross-blob";
 
 const seed = async () => {
   const args = arg({
@@ -56,6 +57,12 @@ const seed = async () => {
       case "file":
         console.log("Looking for seed files inside " + folder);
         await s.seedFromFolder(folder);
+        break;
+      case "eggs-remarks":
+        console.log("Minting collection");
+        const remarks = await s.seedAll();
+        console.log(new Blob(remarks).size);
+        await s.issueRemarks(remarks);
         break;
       default:
         console.error(`Unknown command ${command}`);

@@ -2,8 +2,8 @@ import { ApiPromise } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
 import getKeys from "./devaccs";
-import * as fs from "fs";
 import { Collection } from "../../src/rmrk1.0.0/classes/collection";
+import { NFT } from "../../src/rmrk1.0.0/classes/nft";
 
 export class Seeder {
   api: ApiPromise;
@@ -15,8 +15,94 @@ export class Seeder {
     this.kp = kp;
   }
 
-  public async seedCollection(): Promise<number> {
-    return 0;
+  public async seedAll(): Promise<string[]> {
+    const remarks: string[] = [];
+    const collectionSymbol = "KAN";
+    const collectionId = Collection.generateId(
+      u8aToHex(this.kp.publicKey),
+      "KAN"
+    );
+    const collection = new Collection(
+      0,
+      "Limited Edition Hatchable Egg NFTs on RMRK",
+      10000,
+      this.kp.address,
+      collectionSymbol,
+      collectionId,
+      `ipfs://ipfs/bafkreiftupazt3tmgcdkbpq62b5n5sr77qv6pspxy7cyjm35r75mfknrpm`
+    );
+    remarks.push(collection.mint());
+
+    for (let i = 1; i < 10000; i++) {
+      let nft: NFT;
+      if (i < 10) {
+        // Super Founder mode
+        nft = new NFT(
+          0,
+          collectionId,
+          "Super Founder Kanaria egg",
+          "KANS",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/bafkreigp3amcrr5urzntlyjpsvjccye4u7dvtyeatmlgzgecpy2kaczhka`
+        );
+      } else if (i < 100) {
+        // Founder mode
+        nft = new NFT(
+          0,
+          collectionId,
+          "Founder Kanaria egg",
+          "KANF",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/bafkreibsgabyifzynjqrcmdj3m4gjv2jfmohzzdq2xe7gc3lgkyp4yunpq`
+        );
+      } else if (i < 1000) {
+        // Rare
+        nft = new NFT(
+          0,
+          collectionId,
+          "Rare Kanaria egg",
+          "KANR",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/bafkreicdj3qnf2m6pwighaxuk3qaif55ud2lih6nwwvs6bdpoee4r75eva`
+        );
+      } else {
+        // Limited
+        nft = new NFT(
+          0,
+          collectionId,
+          "Limited Edition Kanaria Egg",
+          "KANL",
+          1,
+          `${i}`.padStart(16, "0"),
+          `ipfs://ipfs/bafkreigwoatvru5hntu5vx3a6njjanunrgefqnke6qosa4mkk5xu5nkw2q`
+        );
+      }
+      remarks.push(nft.mintnft());
+    }
+    return remarks;
+  }
+
+  public async issueRemarks(remarks: string[], from?: number, to?: number) {
+    if (!from) {
+      from = 0;
+    }
+    if (!to) {
+      to = remarks.length - 1;
+    }
+    let txs = [];
+    for (let i = from; i <= to; i++) {
+      if (undefined !== remarks[i]) {
+        txs.push(this.api.tx.system.remark(remarks[i]));
+      }
+    }
+    await this.api.tx.utility.batch(txs).signAndSend(this.kp, ({ status }) => {
+      if (status.isInBlock) {
+        console.log(`included in ${status.asInBlock}`);
+      }
+    });
   }
 
   public async seedNfts(coll: string): Promise<number> {

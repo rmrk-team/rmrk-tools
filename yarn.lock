@@ -2734,6 +2734,11 @@ blakejs@^1.1.0:
   resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.1.0.tgz#69df92ef953aa88ca51a32df6ab1c54a155fc7a5"
   integrity sha1-ad+S75U6qIylGjLfarHFShVfx6U=
 
+blob-polyfill@^4.0.20200601:
+  version "4.0.20200601"
+  resolved "https://registry.yarnpkg.com/blob-polyfill/-/blob-polyfill-4.0.20200601.tgz#16430e9e50d63e122c6aac18b31f5f0bc8c0bf92"
+  integrity sha512-1jB6WOIp6IDxNyng5+9A8g/f0uiphib2ELCN+XAnlssinsW8s1k4VYG9b1TxIUd3pdm9RJSLQuBh6iohYmD4hA==
+
 blob-to-it@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/blob-to-it/-/blob-to-it-1.0.2.tgz#bc76550638ca13280dbd3f202422a6a132ffcc8d"
@@ -3263,6 +3268,14 @@ create-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
+
+cross-blob@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cross-blob/-/cross-blob-2.0.0.tgz#a7cf1901c746b606ec31e0d04838d18888ea35a4"
+  integrity sha512-NWzFuyG4GTZnM9MtQvjPYVlO12lZCSBdoHIHCZl9WKShsK3CqO+bEH7nuKwlVomlByb37XvT6nVY5uQxDBmk5Q==
+  dependencies:
+    blob-polyfill "^4.0.20200601"
+    fetch-blob "^2.0.1"
 
 cross-spawn@^6.0.0:
   version "6.0.5"
@@ -4198,6 +4211,11 @@ fecha@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-4.2.0.tgz#3ffb6395453e3f3efff850404f0a59b6747f5f41"
   integrity sha512-aN3pcx/DSmtyoovUudctc8+6Hl4T+hI9GBBHLjA76jdZl7+b1sgh5g4k+u/GL3dTy1/pnYzKp69FpJ0OicE3Wg==
+
+fetch-blob@^2.0.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-2.1.1.tgz#a54ab0d5ed7ccdb0691db77b6674308b23fb2237"
+  integrity sha512-Uf+gxPCe1hTOFXwkxYyckn8iUSk6CFXGy5VENZKifovUTZC9eUODWSBhOBS7zICGrAetKzdwLMr85KhIcePMAQ==
 
 file-entry-cache@^6.0.1:
   version "6.0.1"

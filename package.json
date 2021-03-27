@@ -90,6 +90,7 @@
     "@polkadot/keyring": "^6.0.5",
     "@polkadot/util": "^6.0.5",
     "chalk": "^4.1.0",
+    "cross-blob": "^2.0.0",
     "isomorphic-fetch": "^3.0.0",
     "it-all": "^1.0.5",
     "superstruct": "^0.14.2",
