@@ -63,9 +63,9 @@ const seed = async () => {
         const remarks = await s.seedAll();
         console.log(new Blob(remarks).size);
         // You can also pass from / to to this function to throttle. Remember that [0] is Collection, so always make sure that one is minted first.
-        //await s.issueRemarks(remarks, 0, 1);
+        await s.issueRemarks(remarks, 6000, 9999);
         //await s.issueRemarks(remarks, 100, 110);
-        await s.issueRemarks(remarks);
+        //await s.issueRemarks(remarks);
         break;
       default:
         console.error(`Unknown command ${command}`);
@@ -90,7 +90,7 @@ function askQuestion(query: string) {
 }
 
 function getKeyringFromUri(phrase: string): KeyringPair {
-  const keyring = new Keyring({ type: "sr25519" });
+  const keyring = new Keyring({ type: "sr25519", ss58Format: 2 });
   return keyring.addFromUri(phrase);
 }
 

@@ -3,6 +3,7 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Send } from "../../../rmrk1.0.0/classes/send";
 import { NFT } from "../../..";
+import { isValidAddress } from "../../utils";
 
 export const sendInteraction = (
   remark: Remark,
@@ -31,6 +32,15 @@ export const sendInteraction = (
   if (nft.transferable === 0 || nft.transferable >= remark.block) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${sendEntity.id}.`
+    );
+  }
+
+  // @todo add check to make sure address is not only valid, but that format matches the chain
+  // do this by decoding, and then encoding back with SS58 prefix, and comparing original vs obtained string
+  // take into account Development chain which has null for an SS58 prefix and needs to be normalized against SS58 prefix 0
+  if (!isValidAddress(sendEntity.recipient)) {
+    throw new Error(
+      `[${OP_TYPES.SEND}] Invalid recipient: not valid address: ${sendEntity.recipient}.`
     );
   }
 

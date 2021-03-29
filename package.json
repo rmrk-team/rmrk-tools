@@ -33,7 +33,7 @@
     "cli:consolidate": "ts-node --project tsconfig.cli.json cli/consolidate",
     "cli:seed": "ts-node --project tsconfig.cli.json cli/seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/getevents",
-    "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
+    "cli:validate": "ts-node --project tsconfig.cli.json cli/validate",
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
     "test": "jest --silent",

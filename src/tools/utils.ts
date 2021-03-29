@@ -1,5 +1,5 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { hexToString, stringToHex } from "@polkadot/util";
+import { hexToString, stringToHex, hexToU8a, isHex } from "@polkadot/util";
 import { URL } from "url";
 import { Remark } from "./consolidator/remark";
 import { OP_TYPES } from "./constants";
@@ -7,6 +7,7 @@ import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
+import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -134,6 +135,16 @@ export const isBatchInterrupted = async (
   );
 
   return Boolean(events.length);
+};
+
+export const isValidAddress = (address: string): Boolean => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 export const isSystemRemark = (call: TCall, prefixes: string[]): Boolean =>
