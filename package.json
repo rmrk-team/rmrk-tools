@@ -35,7 +35,7 @@
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
-    "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
+    "cli:metadata:pin": "ts-node --project tsconfig.cli.json cli/metadata-pin.ts",
     "test": "jest --silent",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
     "prepublishOnly": "yarn build"
@@ -45,7 +45,7 @@
     "rmrk-tools-consolidate": "./dist-cli/cli/consolidate.js",
     "rmrk-tools-seed": "./dist-cli/cli/seed.js",
     "rmrk-tools-validate": "./dist-cli/cli/validate.js",
-    "rmrk-tools-metadata": "./dist-cli/cli/metadata.js"
+    "rmrk-tools-metadata": "./dist-cli/cli/metadata-pin.js"
   },
   "author": "Bruno Skvorc <swader@hey.com>",
   "license": "GPL-3.0",

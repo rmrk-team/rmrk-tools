@@ -39,3 +39,19 @@ export const uploadRMRKMetadata = async (
     return "";
   }
 };
+
+export const unpinPrevious = async (name: string) => {
+  const filters = {
+    status: "pinned",
+    metadata: {
+      name,
+    },
+  };
+  const list = await pinata.pinList(filters);
+  if (list?.count && list.count > 0) {
+    const promises = list.rows.map(async (row) => {
+
+    })
+  }
+  console.log(list)
+};

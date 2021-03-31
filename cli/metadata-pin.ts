@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { uploadRMRKMetadata } from "../src/tools/metadata-to-ipfs";
+import {unpinPrevious, uploadRMRKMetadata} from "../src/tools/metadata-to-ipfs";
 import arg from "arg";
 import fs from "fs";
 import { NFTMetadata } from "../src/rmrk1.0.0/classes/nft";
@@ -75,14 +75,17 @@ const uploadMetadata = async () => {
         // This item already has valid image
         return metadata.metadataFields;
       }
-      const metadataItem = await uploadRMRKMetadata(
-        `${process.cwd()}${metadata.imagePath}`,
-        metadata.metadataFields
-      );
+      if (metadata.metadataFields.name) {
+        await unpinPrevious(metadata.metadataFields.name);
+      }
+      // const metadataItem = await uploadRMRKMetadata(
+      //   `${process.cwd()}${metadata.imagePath}`,
+      //   metadata.metadataFields
+      // );
       return {
-        [metadata.metadataFields.name ||
-        metadata.imagePath ||
-        index]: metadataItem,
+        // [metadata.metadataFields.name ||
+        // metadata.imagePath ||
+        // index]: metadataItem,
       };
     }
   );

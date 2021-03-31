@@ -16,3 +16,5 @@ dist-cli
 throwaway.js
 coverage
 metadata-images
+
+.vercel
