@@ -104,7 +104,7 @@ export class NFT {
     }
     return `${PREFIX}::${
       OP_TYPES.SEND
-    }::${VERSION}::${this.getId()}::${recipient}`;
+    }::${VERSION}::${this.getId()}::${recipient.replace(/\\s/g, "")}`;
   }
 
   // @todo build this out, maybe data type?
