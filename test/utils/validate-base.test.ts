@@ -45,13 +45,4 @@ describe("validation: validateBase", () => {
       "This remark was issued under version 0.0.0 instead of 1.0.0"
     );
   });
-
-  it("should throw - if space is present", () => {
-    const remark =
-        'RMRK::MINT::0.0.0::{"name"%3A"Foo"%2C"max"%3A5%2C"issuer"%3A"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"%2C"symbol"%3A"FOO"%2C"id"%3A"d43593c715a56da27d-FOO"%2C"metadata"%3A"https%3A%2F%2Fsome.url"}';
-
-    expect(() => validateBase(remark, OP_TYPES.MINT)).toThrowError(
-        "This remark was issued under version 0.0.0 instead of 1.0.0"
-    );
-  });
 });
