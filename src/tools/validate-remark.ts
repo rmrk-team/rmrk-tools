@@ -145,6 +145,11 @@ export const validateSend = (remark: string): any => {
 
   try {
     validateBase(remark, OP_TYPES.SEND);
+    if (/\s/g.test(recipient)) {
+      throw new Error(
+        "Invalid remark - No whitespaces are allowed in recipient"
+      );
+    }
     return assert({ id, recipient }, SENDStruct);
   } catch (error) {
     throw new Error(
