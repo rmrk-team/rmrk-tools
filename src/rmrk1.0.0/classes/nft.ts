@@ -150,7 +150,7 @@ export class NFT {
       );
     }
     return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
-      price > 0 ? price : "cancel"
+      price > 0 ? price : 0
     }`;
   }
 
