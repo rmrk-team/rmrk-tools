@@ -26,6 +26,8 @@ export const buyInteraction = (
     new: remark.caller,
     caller: remark.caller,
     block: remark.block,
+    extrinsicHash: remark.extrinsicHash,
+    opType: OP_TYPES.BUY,
   } as Change);
   nft.owner = remark.caller;
 
@@ -35,6 +37,8 @@ export const buyInteraction = (
     new: BigInt(0),
     caller: remark.caller,
     block: remark.block,
+    extrinsicHash: remark.extrinsicHash,
+    opType: OP_TYPES.BUY,
   } as Change);
   nft.forsale = BigInt(0);
 };
