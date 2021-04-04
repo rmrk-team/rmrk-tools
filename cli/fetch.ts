@@ -30,8 +30,8 @@ const fetch = async () => {
   const append = args["--append"];
   console.log("Connecting to " + ws);
   let from = args["--from"] || 0;
-  let output = args["--output"] || "";
-  let fin = args["--fin"] || "yes";
+  const output = args["--output"] || "";
+  const fin = args["--fin"] || "yes";
   const collectionFilter = args["--collection"];
 
   const systemProperties = await api.rpc.system.properties();
