@@ -26,6 +26,7 @@ export type BlockCall = {
   call: string;
   value: string;
   caller: string;
+  extrinsicHash: string;
   extras?: BlockCall[];
 };
 

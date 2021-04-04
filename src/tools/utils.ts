@@ -75,12 +75,7 @@ type RemarkMeta = {
   version: string;
 };
 
-interface Call {
-  call: string;
-  value: string;
-  caller: string;
-  extras?: BlockCall[];
-}
+interface Call extends BlockCall {}
 
 export type Block = {
   block: number;
@@ -109,6 +104,7 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
       const r: Remark = {
         block: row.block,
         caller: call.caller,
+        extrinsicHash: call.extrinsicHash,
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
@@ -160,7 +156,8 @@ export const isUtilityBatch = (call: TCall) =>
 export const getBlockCallsFromSignedBlock = async (
   signedBlock: SignedBlock,
   prefixes: string[],
-  api: ApiPromise
+  api: ApiPromise,
+  ss58Format = 2
 ): Promise<BlockCall[] | []> => {
   const blockCalls: BlockCall[] = [];
   const extrinsics = signedBlock?.block?.extrinsics;
@@ -179,7 +176,8 @@ export const getBlockCallsFromSignedBlock = async (
       blockCalls.push({
         call: "system.remark",
         value: extrinsic.args.toString(),
-        caller: extrinsic.signer.toString(),
+        caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+        extrinsicHash: extrinsic.hash.toString(),
       });
     } else if (isUtilityBatch(extrinsic.method as TCall)) {
       // @ts-ignore
@@ -214,20 +212,23 @@ export const getBlockCallsFromSignedBlock = async (
               blockCalls.push({
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
-                caller: extrinsic.signer.toString(),
+                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+                extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall);
             } else {
               batchRoot = {
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
-                caller: extrinsic.signer.toString(),
+                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+                extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall;
             }
           } else {
             batchExtras.push({
               call: `${el.section}.${el.method}`,
               value: el.args.toString(),
-              caller: extrinsic.signer.toString(),
+              caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+              extrinsicHash: extrinsic.hash.toString(),
             } as BlockCall);
           }
         });

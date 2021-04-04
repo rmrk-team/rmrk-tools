@@ -50,6 +50,8 @@ export const sendInteraction = (
     new: sendEntity.recipient,
     caller: remark.caller,
     block: remark.block,
+    extrinsicHash: remark.extrinsicHash,
+    opType: OP_TYPES.SEND,
   } as Change);
 
   nft.owner = sendEntity.recipient;
@@ -62,6 +64,8 @@ export const sendInteraction = (
       new: BigInt(0),
       caller: remark.caller,
       block: remark.block,
+      extrinsicHash: remark.extrinsicHash,
+      opType: OP_TYPES.SEND,
     } as Change);
     nft.forsale = BigInt(0);
   }

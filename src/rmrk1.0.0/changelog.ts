@@ -1,3 +1,5 @@
+import { OP_TYPES } from "../tools/constants";
+
 export type Change = {
   field: string;
   old: any;
@@ -5,4 +7,6 @@ export type Change = {
   caller: string;
   block: number;
   valid: boolean;
+  extrinsicHash: string;
+  opType: OP_TYPES;
 };
