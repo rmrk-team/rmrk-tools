@@ -10,7 +10,7 @@ export const buyInteraction = (
   remark: Remark, // Current remark
   buyEntity: Buy,
   nft?: N100, // NFT in current state
-  ss58Format = 2
+  ss58Format?: number
 ): void => {
   // An NFT was bought after having been LISTed for sale
   console.log("Instantiating buy");
@@ -43,13 +43,13 @@ export const buyInteraction = (
   nft.forsale = BigInt(0);
 };
 
-const isTransferValid = (remark: Remark, nft: N100, ss58Format = 2) => {
+const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
   let transferValid = false;
   let transferValue = "";
   remark.extra_ex?.forEach((el: BlockCall) => {
     if (el.call === "balances.transfer") {
       const [owner, forsale] = el.value.split(",");
-      const ownerEncoded = encodeAddress(owner, ss58Format);
+      const ownerEncoded = ss58Format ? encodeAddress(owner, ss58Format) : owner;
       transferValue = [ownerEncoded, forsale].join(",");
       if (transferValue === `${nft.owner},${nft.forsale}`) {
         transferValid = true;
@@ -63,7 +63,7 @@ const validate = (
   remark: Remark,
   buyEntity: Buy,
   nft: N100,
-  ss58Format = 2
+  ss58Format?: number
 ) => {
   const { transferValid, transferValue } = isTransferValid(
     remark,

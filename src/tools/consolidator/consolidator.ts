@@ -34,8 +34,8 @@ export class Consolidator {
   private invalidCalls: InvalidCall[];
   private collections: C100[];
   private nfts: N100[];
-  private ss58Format = 2;
-  constructor(initializedAdapter?: JsonAdapter, ss58Format = 2) {
+  private ss58Format?: number;
+  constructor(initializedAdapter?: JsonAdapter, ss58Format?: number) {
     if (initializedAdapter) {
       this.adapter = initializedAdapter;
     }
