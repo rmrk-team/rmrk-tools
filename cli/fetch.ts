@@ -21,6 +21,7 @@ const fetch = async () => {
     "--output": String, // Filename to save data into, defaults to `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`
     "--fin": String, // "yes" by default. If omitting `from`, will default to last finalized. If this is "no", will default to last block.
     "--collection": String, // Filter by specific collection
+    "--ss58Format": Number,
   });
 
   console.log(args);
@@ -29,9 +30,14 @@ const fetch = async () => {
   const append = args["--append"];
   console.log("Connecting to " + ws);
   let from = args["--from"] || 0;
-  let output = args["--output"] || "";
-  let fin = args["--fin"] || "yes";
+  const output = args["--output"] || "";
+  const fin = args["--fin"] || "yes";
   const collectionFilter = args["--collection"];
+
+  const systemProperties = await api.rpc.system.properties();
+  const { ss58Format: chainSs58Format } = systemProperties.toHuman();
+
+  const ss58Format = args["--ss58Format"] || (chainSs58Format as number) || 2;
 
   // Grab FROM from append file
   let appendFile = [];
@@ -73,7 +79,8 @@ const fetch = async () => {
     api,
     from,
     to,
-    prefixToArray(args["--prefixes"] || "")
+    prefixToArray(args["--prefixes"] || ""),
+    ss58Format
   );
 
   if (collectionFilter) {

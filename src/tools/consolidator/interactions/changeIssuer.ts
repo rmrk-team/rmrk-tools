@@ -38,6 +38,8 @@ export const changeIssuerInteraction = (
     new: changeIssuerEntity.issuer,
     caller: remark.caller,
     block: remark.block,
+    extrinsicHash: remark.extrinsicHash,
+    opType: OP_TYPES.CHANGEISSUER,
   } as Change);
 
   collection.issuer = changeIssuerEntity.issuer;

@@ -6,7 +6,8 @@ export default async (
   api: ApiPromise,
   from: number,
   to: number,
-  prefixes: string[]
+  prefixes: string[],
+  ss58Format = 2
 ): Promise<BlockCalls[]> => {
   const bcs: BlockCalls[] = [];
   for (let i = from; i <= to; i++) {
@@ -27,7 +28,12 @@ export default async (
       continue;
     }
 
-    const blockCalls = await getBlockCallsFromSignedBlock(block, prefixes, api);
+    const blockCalls = await getBlockCallsFromSignedBlock(
+      block,
+      prefixes,
+      api,
+      ss58Format
+    );
 
     if (blockCalls.length) {
       bcs.push({

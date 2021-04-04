@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
 import { filterBlocksByCollection, getRemarksFromBlocks } from "../../utils";
+import {BlockCall} from "../../types";
 
 /**
  * The JSON adapter expects to find a JSON array with elements
@@ -49,13 +50,7 @@ export default class JsonAdapter {
   }
 }
 
-type Call = {
-  call: string;
-  value: string;
-  caller: string;
-};
-
 type JsonRow = {
   block: number;
-  calls: Call[];
+  calls: BlockCall[];
 };
