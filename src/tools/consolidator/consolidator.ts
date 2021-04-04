@@ -34,9 +34,14 @@ export class Consolidator {
   private invalidCalls: InvalidCall[];
   private collections: C100[];
   private nfts: N100[];
-  constructor(initializedAdapter?: JsonAdapter) {
+  private ss58Format?: number;
+  constructor(initializedAdapter?: JsonAdapter, ss58Format?: number) {
     if (initializedAdapter) {
       this.adapter = initializedAdapter;
+    }
+
+    if (ss58Format) {
+      this.ss58Format = ss58Format;
     }
 
     this.invalidCalls = [];
@@ -278,7 +283,7 @@ export class Consolidator {
     try {
       // Find NFT in current state
       const nft = this.findExistingNFT(buyEntity);
-      buyInteraction(remark, buyEntity, nft);
+      buyInteraction(remark, buyEntity, nft, this.ss58Format);
     } catch (e) {
       invalidate(buyEntity.id, e.message);
       return true;
@@ -354,8 +359,8 @@ export class Consolidator {
     const remarks = rmrks || this.adapter?.getRemarks() || [];
     //console.log(remarks);
     for (const remark of remarks) {
-      // console.log("==============================");
-      // console.log("Remark is: " + remark.remark);
+      //console.log("==============================");
+      //console.log("Remark is: " + remark.remark);
       switch (remark.interaction_type) {
         case OP_TYPES.MINT:
           if (this.mint(remark)) {
@@ -417,7 +422,6 @@ export class Consolidator {
     }
     // deeplog(this.nfts);
     // deeplog(this.collections);
-
     console.log(this.invalidCalls);
     console.log(
       `${this.nfts.length} NFTs across ${this.collections.length} collections.`
