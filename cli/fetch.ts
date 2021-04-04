@@ -37,7 +37,7 @@ const fetch = async () => {
   const systemProperties = await api.rpc.system.properties();
   const { ss58Format: chainSs58Format } = systemProperties.toHuman();
 
-  const ss58Format = args["--ss58Format"] || chainSs58Format || 2;
+  const ss58Format = args["--ss58Format"] || (chainSs58Format as number) || 2;
 
   // Grab FROM from append file
   let appendFile = [];
