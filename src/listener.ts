@@ -12,7 +12,10 @@ import { Observable, Subscriber } from "rxjs";
 import { RpcPromiseResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
-import {Consolidator, ConsolidatorReturnType} from "./tools/consolidator/consolidator";
+import {
+  Consolidator,
+  ConsolidatorReturnType,
+} from "./tools/consolidator/consolidator";
 
 interface IProps {
   providerInterface: ProviderInterface;
