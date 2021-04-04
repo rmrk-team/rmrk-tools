@@ -237,6 +237,8 @@ export class RemarkListener {
         );
       }
       const api = await this.apiPromise;
+      const systemProperties = await api.rpc.system.properties();
+      const { ss58Format: chainSs58Format } = systemProperties.toHuman();
       const blockHash = await api.rpc.chain.getBlockHash(
         header.number.toNumber()
       );
@@ -244,7 +246,8 @@ export class RemarkListener {
       const calls = await getBlockCallsFromSignedBlock(
         block,
         this.prefixes,
-        api
+        api,
+        chainSs58Format as number
       );
       if (calls.length > 0) {
         const blockCalls: BlockCalls = {

@@ -7,6 +7,5 @@ export type Change = {
   caller: string;
   block: number;
   valid: boolean;
-  extrinsicHash: string;
   opType: OP_TYPES;
 };

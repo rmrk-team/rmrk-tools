@@ -63,6 +63,7 @@ const seed = async () => {
         const remarks = await s.seedAll();
         console.log(new Blob(remarks).size);
         // You can also pass from / to to this function to throttle. Remember that [0] is Collection, so always make sure that one is minted first.
+        console.log(remarks);
         await s.issueRemarks(remarks, 6000, 9999);
         //await s.issueRemarks(remarks, 100, 110);
         //await s.issueRemarks(remarks);
