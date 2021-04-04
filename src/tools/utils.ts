@@ -7,7 +7,7 @@ import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
-import {encodeAddress} from "@polkadot/util-crypto";
+import { encodeAddress } from "@polkadot/util-crypto";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
