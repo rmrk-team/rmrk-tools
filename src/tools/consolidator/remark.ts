@@ -2,7 +2,6 @@ import { BlockCall } from "../types";
 
 export type Remark = {
   block: number;
-  extrinsicHash: string;
   interaction_type: string;
   caller: string;
   version: string;

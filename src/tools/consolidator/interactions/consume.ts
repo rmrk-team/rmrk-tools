@@ -47,7 +47,6 @@ export const consumeInteraction = (
     new: burnReason,
     caller: remark.caller,
     block: remark.block,
-    extrinsicHash: remark.extrinsicHash,
     opType: OP_TYPES.CONSUME,
   } as Change);
   nft.burned = burnReason;
@@ -59,7 +58,6 @@ export const consumeInteraction = (
     new: BigInt(0),
     caller: remark.caller,
     block: remark.block,
-    extrinsicHash: remark.extrinsicHash,
     opType: OP_TYPES.CONSUME,
   } as Change);
   nft.forsale = BigInt(0);

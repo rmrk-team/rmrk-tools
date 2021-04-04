@@ -104,7 +104,6 @@ export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
       const r: Remark = {
         block: row.block,
         caller: call.caller,
-        extrinsicHash: call.extrinsicHash,
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
@@ -167,7 +166,6 @@ export const getBlockCallsFromSignedBlock = async (
         call: "system.remark",
         value: extrinsic.args.toString(),
         caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-        extrinsicHash: extrinsic.hash.toString(),
       });
     } else if (isUtilityBatch(extrinsic.method as TCall)) {
       // @ts-ignore
@@ -203,14 +201,12 @@ export const getBlockCallsFromSignedBlock = async (
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
                 caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-                extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall);
             } else {
               batchRoot = {
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
                 caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-                extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall;
             }
           } else {
@@ -218,7 +214,6 @@ export const getBlockCallsFromSignedBlock = async (
               call: `${el.section}.${el.method}`,
               value: el.args.toString(),
               caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-              extrinsicHash: extrinsic.hash.toString(),
             } as BlockCall);
           }
         });

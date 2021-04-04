@@ -41,7 +41,6 @@ export const listForSaleInteraction = (
       new: listEntity.price,
       caller: remark.caller,
       block: remark.block,
-      extrinsicHash: remark.extrinsicHash,
       opType: OP_TYPES.LIST,
     } as Change);
 
