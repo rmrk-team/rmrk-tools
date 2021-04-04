@@ -45,6 +45,7 @@ const consolidate = async () => {
     `consolidated-from-${file}`,
     JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
   );
+  process.exit(0);
 };
 
 consolidate();
