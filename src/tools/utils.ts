@@ -7,6 +7,7 @@ import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
+import {encodeAddress} from "@polkadot/util-crypto";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -145,7 +146,8 @@ export const isUtilityBatch = (call: TCall) =>
 export const getBlockCallsFromSignedBlock = async (
   signedBlock: SignedBlock,
   prefixes: string[],
-  api: ApiPromise
+  api: ApiPromise,
+  ss58Format = 2
 ): Promise<BlockCall[] | []> => {
   const blockCalls: BlockCall[] = [];
   const extrinsics = signedBlock?.block?.extrinsics;
@@ -164,7 +166,7 @@ export const getBlockCallsFromSignedBlock = async (
       blockCalls.push({
         call: "system.remark",
         value: extrinsic.args.toString(),
-        caller: extrinsic.signer.toString(),
+        caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
         extrinsicHash: extrinsic.hash.toString(),
       });
     } else if (isUtilityBatch(extrinsic.method as TCall)) {
@@ -200,14 +202,14 @@ export const getBlockCallsFromSignedBlock = async (
               blockCalls.push({
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
-                caller: extrinsic.signer.toString(),
+                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
                 extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall);
             } else {
               batchRoot = {
                 call: `${el.section}.${el.method}`,
                 value: el.args.toString(),
-                caller: extrinsic.signer.toString(),
+                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
                 extrinsicHash: extrinsic.hash.toString(),
               } as BlockCall;
             }
@@ -215,7 +217,7 @@ export const getBlockCallsFromSignedBlock = async (
             batchExtras.push({
               call: `${el.section}.${el.method}`,
               value: el.args.toString(),
-              caller: extrinsic.signer.toString(),
+              caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
               extrinsicHash: extrinsic.hash.toString(),
             } as BlockCall);
           }
