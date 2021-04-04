@@ -17,9 +17,10 @@ export class Seeder {
   }
 
   public async seedAll(): Promise<string[]> {
-    const props = await this.api.rpc.system.properties();
+    const systemProperties = await this.api.rpc.system.properties();
+    const { ss58Format: chainSs58Format } = systemProperties.toHuman();
     const dev = (await this.api.rpc.system.chain()).toHuman() == "Development";
-    const ss58 = !dev ? parseInt(props.ss58Format.toString(), 10) : 0;
+    const ss58 = !dev ? chainSs58Format : 0;
     let address = encodeAddress(decodeAddress(this.kp.address), ss58);
     const remarks: string[] = [];
     const collectionSymbol = "KAN";
