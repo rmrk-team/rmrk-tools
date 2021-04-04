@@ -19,7 +19,8 @@ export class Seeder {
   public async seedAll(): Promise<string[]> {
     const systemProperties = await this.api.rpc.system.properties();
     const { ss58Format: chainSs58Format } = systemProperties.toHuman();
-    const dev = (await this.api.rpc.system.chain()).toHuman() == "Development";
+    const chainInfo = await this.api.rpc.system.chain();
+    const dev = (await chainInfo.toHuman()) == "Development";
     const ss58 = !dev ? chainSs58Format : 0;
     let address = encodeAddress(decodeAddress(this.kp.address), ss58);
     const remarks: string[] = [];
