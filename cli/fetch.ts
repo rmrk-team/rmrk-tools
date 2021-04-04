@@ -33,7 +33,11 @@ const fetch = async () => {
   let output = args["--output"] || "";
   let fin = args["--fin"] || "yes";
   const collectionFilter = args["--collection"];
-  const ss58Format = args["--ss58Format"] || 2;
+
+  const systemProperties = await api.rpc.system.properties();
+  const { ss58Format: chainSs58Format } = systemProperties.toHuman();
+
+  const ss58Format = args["--ss58Format"] || chainSs58Format || 2;
 
   // Grab FROM from append file
   let appendFile = [];
