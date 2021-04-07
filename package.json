@@ -98,7 +98,7 @@
     "winston": "^3.3.3"
   },
   "peerDependency": {
-    "@polkadot/api": "^4.0.3",
+    "@polkadot/api": "^4.4.1",
     "@polkadot/util-crypto": "^6.0.5"
   }
 }
