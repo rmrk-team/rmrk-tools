@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
@@ -59,8 +59,8 @@
     "@polkadot/api": "^4.x",
     "@polkadot/extension-dapp": "^0.37.x",
     "@polkadot/keyring": "^6.x",
-    "@polkadot/util-crypto": "^6.x",
     "@polkadot/util": "^6.x",
+    "@polkadot/util-crypto": "^6.x",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
