@@ -1,4 +1,7 @@
-import { blocks489x_630x } from "../mocks/blocks-dump";
+import {
+  blocks489x_630x,
+  blockWithMultipleRemarks,
+} from "../mocks/blocks-dump";
 import {
   getRemarksFromBlocks,
   stringIsAValidUrl,
@@ -7,6 +10,8 @@ import {
   isUtilityBatch,
   getRemarkData,
   filterBlocksByCollection,
+  getBlockCallsFromSignedBlock,
+  getApi,
 } from "../../src/tools/utils";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { recentBlocksDump } from "../mocks/blocks-dump-recent";
@@ -152,6 +157,21 @@ describe("utils: filterBlockByCollection", () => {
     );
     expect(
       getRemarksFromBlocks(blocks, ["0x726d726b", "0x524d524b"])
+    ).toMatchSnapshot();
+  });
+});
+
+// Test getRemarksFromBlocks
+describe("utils: getBlockCallsFromSignedBlock",  async () => {
+  expect.assertions(1);
+  const api = await getApi("wss://node.rmrk.app");
+  it("should Block calls from remarks with correct nested extras", async () => {
+    await expect(
+      getBlockCallsFromSignedBlock(
+        blockWithMultipleRemarks[0],
+        ["0x726d726b", "0x524d524b"],
+        api
+      )
     ).toMatchSnapshot();
   });
 });

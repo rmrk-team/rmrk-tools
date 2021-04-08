@@ -148,8 +148,7 @@ export const isValidAddress = (address: string): Boolean => {
     return false;
   }
 };
-
-export const isSystemRemark = (call: TCall, prefixes: string[]): Boolean =>
+export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
   call.section === "system" &&
   call.method === "remark" &&
   (prefixes.length < 1 ||
@@ -212,7 +211,7 @@ export const getBlockCallsFromSignedBlock = async (
         let batchRoot = {} as BlockCall;
         const batchExtras: BlockCall[] = [];
         batchArgs.forEach((el, i) => {
-          if (el.section === "system" && el.method === "remark") {
+          if (isSystemRemark(el, prefixes)) {
             if (i < remarkExists - 1) {
               blockCalls.push({
                 call: `${el.section}.${el.method}`,

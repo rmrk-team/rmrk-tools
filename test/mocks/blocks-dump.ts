@@ -7000,3 +7000,40 @@ export const blocksDumpAll = [
   },
   { block: 6664004, calls: [] },
 ];
+
+export const blockWithMultipleRemarks = [
+  {
+    block: {
+      header: {
+        parentHash:
+          "0x595b9802971234aa93db305e0ae00482536595bda3ee648738489b7e2bc35c34",
+        number: 56150,
+        stateRoot:
+          "0x54145dd5f43c350fa46779f35eb07748bd2b91b315ca2866e76ff0aaaa2cfc69",
+        extrinsicsRoot:
+          "0x23f877f4f5a8034fb42bc67f2d511ac396a2c69bf54e1734f0b713153109c982",
+        digest: {
+          logs: [
+            {
+              preRuntime: [
+                1161969986,
+                "0x03000000009d7a1210000000005830af1b8ac4e42680067d4f70822437b61d13c8089925510f37ec968a40587a04d639c78e34faf0ae6f50b930142d76d312f7ca893b4994f711199ef752060dec78bb105294980bf26292ad902f3c628a9721feb25e2c3c2d7520293a95970a",
+              ],
+            },
+            {
+              seal: [
+                1161969986,
+                "0x40ceff193b876cd47a8aa96febf98284e6b5ff7991f1df8b85e1ddaacee04e659db2f3988eb1bf07a1545817a26416ed346276da50fd2422a802f5f283b11d81",
+              ],
+            },
+          ],
+        },
+      },
+      extrinsics: [
+        "0x280403000bb0bf19b17801",
+        "0xad038400b6dd45ba18e564b4aa812a9974ce45e71d51355d2d93335d22f6804d782cf43b01b0f1ea4c50aa117fc0b08775f9e4ac5a8b25a26d66337880e5b785f6f64f3e2e7be8ea4b914583275c34d2ef8b84a4cc7993bc993cb8349d4d149ece96a2968825013101001a020c00010501524d524b3a3a4255593a3a312e302e303a3a38392d6434333539336337313561353664613237642d4b414e2d4b414e4c2d30303030303030303030303031303334050000d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d070010a5d4e800013c6b616e617269617265663d74727565",
+      ],
+    },
+    justifications: null,
+  },
+];
