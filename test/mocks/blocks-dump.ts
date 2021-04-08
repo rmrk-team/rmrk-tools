@@ -109,6 +109,25 @@ export const blocks489x_630x = [
       },
     ],
   },
+  {
+    block: 55661,
+    calls: [
+      {
+        call: "system.remark",
+        value:
+          "0x524d524b3a3a4255593a3a312e302e303a3a38392d6434333539336337313561353664613237642d4b414e2d4b414e4c2d30303030303030303030303031303235",
+        caller: "Gi5xtagP3JSTT7XWCta69JbuSpMv3EPKo4opVRcY76rNnh2",
+        extras: [
+          {
+            call: "balances.transfer",
+            value:
+              "15oF4uVJwmo4TdGW7VfQxNLavjCXviqxT9S1MgbjMNHr6Sp5,1000000000000",
+            caller: "Gi5xtagP3JSTT7XWCta69JbuSpMv3EPKo4opVRcY76rNnh2",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const blocks647x_661x = [

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
 import { filterBlocksByCollection, getRemarksFromBlocks } from "../../utils";
-import {BlockCall} from "../../types";
+import { BlockCall } from "../../types";
 
 /**
  * The JSON adapter expects to find a JSON array with elements
@@ -21,12 +21,14 @@ import {BlockCall} from "../../types";
 export default class JsonAdapter {
   private inputData: JsonRow[];
   private collectionFilter?: string;
+  private prefixes: string[];
 
-  constructor(filePath: string, collectionFilter?: string) {
+  constructor(filePath: string, prefixes: string[], collectionFilter?: string) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const rawdata = fs.readFileSync(filePath);
     this.inputData = JSON.parse(rawdata.toString());
     this.collectionFilter = collectionFilter;
+    this.prefixes = prefixes;
     //console.log(this.inputData);
     console.log(`Loaded ${this.inputData.length} blocks with remark calls`);
   }
@@ -38,9 +40,13 @@ export default class JsonAdapter {
   public getRemarks(): Remark[] {
     let blocks = this.inputData;
     if (this.collectionFilter) {
-      blocks = filterBlocksByCollection(blocks, this.collectionFilter);
+      blocks = filterBlocksByCollection(
+        blocks,
+        this.collectionFilter,
+        this.prefixes
+      );
     }
-    return getRemarksFromBlocks(blocks);
+    return getRemarksFromBlocks(blocks, this.prefixes);
   }
 
   public getLastBlock(): number {

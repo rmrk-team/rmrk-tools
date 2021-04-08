@@ -468,5 +468,19 @@ Array [
     "remark": "RMRK::MINT::RMRK1.0.0::{\\"name\\"%3A\\"Future%232\\"%2C\\"max\\"%3A3%2C\\"symbol\\"%3A\\"FUT\\"%2C\\"version\\"%3A\\"RMRK1.0.0\\"%2C\\"issuer\\"%3A\\"DUyAjx5KwFrv7JbdUtvTzvHJFsTaEzzgyeVTUp9TjatS8Lx\\"%2C\\"metadata\\"%3A\\"ipfs%3A%2F%2Fipfs%2FQmNMgKU9GnSam44k8xzif21f91S2GSWR5ATZbPQFsji8aD\\"%2C\\"id\\"%3A\\"282781680602E07B32-FUT\\"}",
     "version": "0.1",
   },
+  Object {
+    "block": 55661,
+    "caller": "Gi5xtagP3JSTT7XWCta69JbuSpMv3EPKo4opVRcY76rNnh2",
+    "extra_ex": Array [
+      Object {
+        "call": "balances.transfer",
+        "caller": "Gi5xtagP3JSTT7XWCta69JbuSpMv3EPKo4opVRcY76rNnh2",
+        "value": "15oF4uVJwmo4TdGW7VfQxNLavjCXviqxT9S1MgbjMNHr6Sp5,1000000000000",
+      },
+    ],
+    "interaction_type": "BUY",
+    "remark": "RMRK::BUY::1.0.0::89-d43593c715a56da27d-KAN-KANL-0000000000001025",
+    "version": "1.0.0",
+  },
 ]
 `;

@@ -190,10 +190,10 @@ export class RemarkListener {
     if (this.observer) {
       const consolidator = new Consolidator();
       // Consolidate all historical blocks and new blocks received from polkadot api
-      const remarks = getRemarksFromBlocks([
-        ...concatinatedBlockCallsBase,
-        ...this.latestBlockCallsFinalised,
-      ]);
+      const remarks = getRemarksFromBlocks(
+        [...concatinatedBlockCallsBase, ...this.latestBlockCallsFinalised],
+        this.prefixes
+      );
       const consolidatedFinal = consolidator.consolidate(remarks);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
@@ -203,11 +203,14 @@ export class RemarkListener {
     if (this.observerUnfinalised) {
       const consolidator = new Consolidator();
       // Consolidate remarks including unfinalised block so User can react to changes quickly
-      const remarks = getRemarksFromBlocks([
-        ...concatinatedBlockCallsBase,
-        ...this.latestBlockCalls,
-        ...this.latestBlockCallsFinalised,
-      ]);
+      const remarks = getRemarksFromBlocks(
+        [
+          ...concatinatedBlockCallsBase,
+          ...this.latestBlockCalls,
+          ...this.latestBlockCallsFinalised,
+        ],
+        this.prefixes
+      );
       const consolidatedFinal = consolidator.consolidate(remarks);
       // Fire event to a subscriber
       this.observerUnfinalised.next(consolidatedFinal);
@@ -275,12 +278,15 @@ export class RemarkListener {
             // Consolidate remarks including unfinalised block so User can react to changes quickly
             // TODO: Consider extracting just the ids of NFTs and Collections from these unfinalised remarks, and returning them,
             // Instead of reconsolidating whole thing again
-            const remarks = getRemarksFromBlocks([
-              ...this.initialBlockCalls,
-              ...this.missingBlockCalls,
-              ...this.latestBlockCalls,
-              ...this.latestBlockCallsFinalised,
-            ]);
+            const remarks = getRemarksFromBlocks(
+              [
+                ...this.initialBlockCalls,
+                ...this.missingBlockCalls,
+                ...this.latestBlockCalls,
+                ...this.latestBlockCallsFinalised,
+              ],
+              this.prefixes
+            );
             const consolidatedFinal = consolidator.consolidate(remarks);
             // Fire event to a subscriber
             this.observerUnfinalised.next(consolidatedFinal);
