@@ -139,7 +139,7 @@ export const isBatchInterrupted = async (
   return Boolean(events.length);
 };
 
-export const isSystemRemark = (call: TCall, prefixes: string[]): Boolean =>
+export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
   call.section === "system" &&
   call.method === "remark" &&
   (prefixes.length < 1 ||
