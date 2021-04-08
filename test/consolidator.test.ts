@@ -44,13 +44,19 @@ const logRemarksHelper = () => {
  */
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", () => {
-    const remarks = getRemarksFromBlocks(blocks647x_661x);
+    const remarks = getRemarksFromBlocks(blocks647x_661x, [
+      "0x726d726b",
+      "0x524d524b",
+    ]);
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
   it("should run consolidation from entire dump", () => {
-    const remarks = getRemarksFromBlocks(blocksDumpAll);
+    const remarks = getRemarksFromBlocks(blocksDumpAll, [
+      "0x726d726b",
+      "0x524d524b",
+    ]);
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks)).toMatchSnapshot();
   });
@@ -58,34 +64,39 @@ describe("tools: Consolidator", () => {
   it("should be invalid: Collection token is minted twice with same ID", () => {
     const consolidator = new Consolidator();
     expect(
-      consolidator.consolidate(getRemarksFromBlocks(blockCollectionMintedTwice))
-        .invalid[0].message
+      consolidator.consolidate(
+        getRemarksFromBlocks(blockCollectionMintedTwice, [
+          "0x726d726b",
+          "0x524d524b",
+        ])
+      ).invalid[0].message
     ).toBe("[MINT] Attempt to mint already existing collection");
   });
 
   it("should be invalid: NFT token is minted twice with same ID", () => {
     const consolidator = new Consolidator();
     expect(
-      consolidator.consolidate(getRemarksFromBlocks(blockNFTMintedTwice))
-        .invalid[0].message
+      consolidator.consolidate(
+        getRemarksFromBlocks(blockNFTMintedTwice, ["0x726d726b", "0x524d524b"])
+      ).invalid[0].message
     ).toBe("[MINTNFT] Attempt to mint already existing NFT");
   });
 
   it("should run valid CHANGEISSUER", () => {
-    const remarks = getRemarksFromBlocks([
-      ...validBlocks,
-      syntheticChangeIssuerBlock,
-    ]);
+    const remarks = getRemarksFromBlocks(
+      [...validBlocks, syntheticChangeIssuerBlock],
+      ["0x726d726b", "0x524d524b"]
+    );
 
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks).invalid.length).toBe(0);
   });
 
   it("should run CHANGEISSUER with invalid remark (wrong order issuer and id)", () => {
-    const remarks = getRemarksFromBlocks([
-      ...validBlocks,
-      syntheticChangeIssuerBlockInvalid,
-    ]);
+    const remarks = getRemarksFromBlocks(
+      [...validBlocks, syntheticChangeIssuerBlockInvalid],
+      ["0x726d726b", "0x524d524b"]
+    );
 
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks).invalid[0].message).toBe(
@@ -94,10 +105,10 @@ describe("tools: Consolidator", () => {
   });
 
   it("should run CHANGEISSUER with invalid caller", () => {
-    const remarks = getRemarksFromBlocks([
-      ...validBlocks,
-      syntheticChangeIssuerBlockInvalidCaller,
-    ]);
+    const remarks = getRemarksFromBlocks(
+      [...validBlocks, syntheticChangeIssuerBlockInvalidCaller],
+      ["0x726d726b", "0x524d524b"]
+    );
 
     const consolidator = new Consolidator();
     expect(consolidator.consolidate(remarks).invalid[0].message).toBe(

@@ -75,18 +75,25 @@ type RemarkMeta = {
   version: string;
 };
 
-interface Call extends BlockCall {}
+type Call = BlockCall;
 
 export type Block = {
   block: number;
   calls: Call[];
 };
 
-export const getRemarksFromBlocks = (blocks: Block[]): Remark[] => {
+export const getRemarksFromBlocks = (
+  blocks: Block[],
+  prefixes: string[]
+): Remark[] => {
   const remarks: Remark[] = [];
   for (const row of blocks) {
     for (const call of row.calls) {
       if (call.call !== "system.remark") continue;
+      const str = hexToString(call.value);
+      if (!prefixes.some((word) => str.startsWith(hexToString(word)))) {
+        continue;
+      }
       const meta = getMeta(call, row.block);
       if (!meta) continue;
       let remark;
@@ -254,10 +261,11 @@ export const getRemarkData = (dataString: string) => {
  */
 export const filterBlocksByCollection = (
   blockCalls: BlockCalls[],
-  collectionFilter: string
+  collectionFilter: string,
+  prefixes: string[]
 ): BlockCalls[] =>
   blockCalls.filter((block) =>
-    getRemarksFromBlocks([block]).some((rmrk) =>
+    getRemarksFromBlocks([block], prefixes).some((rmrk) =>
       rmrk.remark.includes(collectionFilter)
     )
   );

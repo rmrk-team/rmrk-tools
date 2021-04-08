@@ -14,7 +14,9 @@ import { recentBlocksDump } from "../mocks/blocks-dump-recent";
 // Test getRemarksFromBlocks
 describe("utils: getRemarksFromBlocks", () => {
   it("should return remarks from blocks", () => {
-    expect(getRemarksFromBlocks(blocks489x_630x)).toMatchSnapshot();
+    expect(
+      getRemarksFromBlocks(blocks489x_630x, ["0x726d726b", "0x524d524b"])
+    ).toMatchSnapshot();
   });
 });
 
@@ -134,16 +136,22 @@ describe("utils: filterBlockByCollection", () => {
   it("should return blocks filter by collection - 900D19DC7D3C444E4C-FTF", () => {
     const blocks = filterBlocksByCollection(
       recentBlocksDump,
-      "900D19DC7D3C444E4C-FTF"
+      "900D19DC7D3C444E4C-FTF",
+      ["0x726d726b", "0x524d524b"]
     );
-    expect(getRemarksFromBlocks(blocks)).toMatchSnapshot();
+    expect(
+      getRemarksFromBlocks(blocks, ["0x726d726b", "0x524d524b"])
+    ).toMatchSnapshot();
   });
 
   it("should return blocks filter by collection - 900D19DC7D3C444E4C", () => {
     const blocks = filterBlocksByCollection(
       recentBlocksDump,
-      "900D19DC7D3C444E4C"
+      "900D19DC7D3C444E4C",
+      ["0x726d726b", "0x524d524b"]
     );
-    expect(getRemarksFromBlocks(blocks)).toMatchSnapshot();
+    expect(
+      getRemarksFromBlocks(blocks, ["0x726d726b", "0x524d524b"])
+    ).toMatchSnapshot();
   });
 });

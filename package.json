@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "0.0.30",
+  "version": "0.1.1",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
@@ -56,9 +56,11 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-typescript": "^7.13.0",
     "@pinata/sdk": "^1.1.13",
-    "@polkadot/api": "^4.0.3",
-    "@polkadot/extension-dapp": "^0.37.3-5",
-    "@polkadot/util-crypto": "^6.0.5",
+    "@polkadot/api": "^4.x",
+    "@polkadot/extension-dapp": "^0.37.x",
+    "@polkadot/keyring": "^6.x",
+    "@polkadot/util": "^6.x",
+    "@polkadot/util-crypto": "^6.x",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -88,8 +90,6 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
-    "@polkadot/keyring": "^6.0.5",
-    "@polkadot/util": "^6.0.5",
     "chalk": "^4.1.0",
     "cross-blob": "^2.0.0",
     "isomorphic-fetch": "^3.0.0",
@@ -99,7 +99,10 @@
     "winston": "^3.3.3"
   },
   "peerDependency": {
-    "@polkadot/api": "^4.0.3",
-    "@polkadot/util-crypto": "^6.0.5"
+    "@polkadot/api": "^4.x",
+    "@polkadot/extension-dapp": "^0.37.x",
+    "@polkadot/keyring": "^6.x",
+    "@polkadot/util-crypto": "^6.x",
+    "@polkadot/util": "^6.x"
   }
 }
