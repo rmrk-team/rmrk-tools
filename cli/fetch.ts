@@ -84,7 +84,7 @@ const fetch = async () => {
   );
 
   if (collectionFilter) {
-    extracted = filterBlocksByCollection(extracted, collectionFilter);
+    extracted = filterBlocksByCollection(extracted, collectionFilter, prefixToArray(args["--prefixes"] || ""));
   }
 
   let outputFileName =
