@@ -16,7 +16,7 @@ const consolidate = async () => {
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
   const api = await getApi(ws);
 
-  const prefixes = prefixToArray(args["--prefixes"] || "");
+  const prefixes = prefixToArray(args["--prefixes"] || "0x726d726b,0x524d524b");
 
   const systemProperties = await api.rpc.system.properties();
   const { ss58Format: chainSs58Format } = systemProperties.toHuman();
