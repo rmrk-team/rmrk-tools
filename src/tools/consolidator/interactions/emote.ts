@@ -20,11 +20,14 @@ export const emoteInteraction = (
     );
   }
 
+  nft.updatedAtBlock = remark.block;
   if (!nft.reactions[emoteEntity.unicode]) {
     nft.reactions[emoteEntity.unicode] = [];
   }
   const index = nft.reactions[emoteEntity.unicode].indexOf(remark.caller, 0);
-  if (index > -1) {
+
+  const removing = index > -1;
+  if (removing) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
