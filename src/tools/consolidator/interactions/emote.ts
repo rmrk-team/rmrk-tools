@@ -25,12 +25,8 @@ export const emoteInteraction = (
   }
   const index = nft.reactions[emoteEntity.unicode].indexOf(remark.caller, 0);
 
-  // Clone nft to make it "immutable"
-  const oldReactions = {
-    [emoteEntity.unicode]: [...nft.reactions[emoteEntity.unicode]],
-  };
-
-  if (index > -1) {
+  const removing = index > -1;
+  if (removing) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
@@ -38,8 +34,8 @@ export const emoteInteraction = (
 
   nft.addChange({
     field: "reactions",
-    old: oldReactions,
-    new: { [emoteEntity.unicode]: nft.reactions[emoteEntity.unicode] },
+    old: removing,
+    new: !removing,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.EMOTE,
