@@ -13,7 +13,6 @@ export const buyInteraction = (
   ss58Format?: number
 ): void => {
   // An NFT was bought after having been LISTed for sale
-  console.log("Instantiating buy");
   if (!nft) {
     throw new Error(
       `[${OP_TYPES.BUY}] Attempting to buy non-existant NFT ${buyEntity.id}`

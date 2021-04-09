@@ -24,9 +24,24 @@ export const emoteInteraction = (
     nft.reactions[emoteEntity.unicode] = [];
   }
   const index = nft.reactions[emoteEntity.unicode].indexOf(remark.caller, 0);
+
+  // Clone nft to make it "immutable"
+  const oldReactions = {
+    [emoteEntity.unicode]: [...nft.reactions[emoteEntity.unicode]],
+  };
+
   if (index > -1) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
   }
+
+  nft.addChange({
+    field: "reactions",
+    old: oldReactions,
+    new: { [emoteEntity.unicode]: nft.reactions[emoteEntity.unicode] },
+    caller: remark.caller,
+    block: remark.block,
+    opType: OP_TYPES.EMOTE,
+  });
 };
