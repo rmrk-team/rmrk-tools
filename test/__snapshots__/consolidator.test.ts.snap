@@ -3423,7 +3423,22 @@ Object {
     NFT {
       "block": 6431478,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6433187,
+          "caller": "Fksmad33PFxhrQXNYPPJozgWrv82zuFLvXK7Rh8m1xQhe98",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "Fksmad33PFxhrQXNYPPJozgWrv82zuFLvXK7Rh8m1xQhe98",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "10D77F8B699437BB50-TXT",
       "data": undefined,
       "forsale": 0n,
@@ -3588,6 +3603,20 @@ Object {
       "burned": "",
       "changes": Array [
         Object {
+          "block": 6435876,
+          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+        Object {
           "block": 6448271,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
           "field": "forsale",
@@ -3661,6 +3690,20 @@ Object {
           "new": 1000000000000n,
           "old": 0n,
           "opType": "LIST",
+        },
+        Object {
+          "block": 6435868,
+          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
         },
       ],
       "collection": "D4E195CCE7ADB3F876-LUCAYAANDME",
@@ -3866,6 +3909,20 @@ Object {
       "burned": "",
       "changes": Array [
         Object {
+          "block": 6435863,
+          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+        Object {
           "block": 6448260,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
           "field": "forsale",
@@ -3893,6 +3950,20 @@ Object {
       "block": 6435603,
       "burned": "",
       "changes": Array [
+        Object {
+          "block": 6435858,
+          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+          "field": "reactions",
+          "new": Object {
+            "1F44F": Array [
+              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
+            ],
+          },
+          "old": Object {
+            "1F44F": Array [],
+          },
+          "opType": "EMOTE",
+        },
         Object {
           "block": 6448251,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
@@ -4064,7 +4135,22 @@ Object {
     NFT {
       "block": 6475453,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6479450,
+          "caller": "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
@@ -4152,7 +4238,22 @@ Object {
     NFT {
       "block": 6504199,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6561067,
+          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "3CD8C53D036D48B952-SGO",
       "data": undefined,
       "forsale": 0n,
@@ -4957,7 +5058,40 @@ Object {
     NFT {
       "block": 6642939,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6644394,
+          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+              "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+        Object {
+          "block": 6646214,
+          "caller": "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+              "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [
+              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+            ],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
       "forsale": 0n,
@@ -5037,7 +5171,22 @@ Object {
     NFT {
       "block": 6650640,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6663790,
+          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
@@ -5561,7 +5710,22 @@ Object {
     NFT {
       "block": 6475453,
       "burned": "",
-      "changes": Array [],
+      "changes": Array [
+        Object {
+          "block": 6479450,
+          "caller": "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
+          "field": "reactions",
+          "new": Object {
+            "1F496": Array [
+              "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
+            ],
+          },
+          "old": Object {
+            "1F496": Array [],
+          },
+          "opType": "EMOTE",
+        },
+      ],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
