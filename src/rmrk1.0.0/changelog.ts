@@ -6,6 +6,5 @@ export type Change = {
   new: any;
   caller: string;
   block: number;
-  valid: boolean;
   opType: OP_TYPES;
 };

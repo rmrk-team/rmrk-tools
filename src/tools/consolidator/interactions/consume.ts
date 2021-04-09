@@ -40,6 +40,7 @@ export const consumeInteraction = (
     });
   }
 
+  nft.updatedAtBlock = remark.block;
   const burnReason = burnReasons.join(",");
   nft.addChange({
     field: "burned",

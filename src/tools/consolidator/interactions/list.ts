@@ -35,6 +35,7 @@ export const listForSaleInteraction = (
   }
 
   if (listEntity.price !== nft.forsale) {
+    nft.updatedAtBlock = remark.block;
     nft.addChange({
       field: "forsale",
       old: nft.forsale,

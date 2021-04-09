@@ -13,6 +13,7 @@ export class NFT {
   readonly data?: string;
   readonly sn: string;
   readonly metadata?: string;
+  updatedAtBlock?: number;
   forsale: BigInt;
   reactions: Reactionmap;
   changes: Change[] = [];
@@ -27,7 +28,8 @@ export class NFT {
     transferable: number,
     sn: string,
     metadata?: string,
-    data?: string
+    data?: string,
+    updatedAtBlock?: number
   ) {
     this.block = block;
     this.collection = collection;
@@ -41,31 +43,7 @@ export class NFT {
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
-  }
-
-  public fromConsolidated(nft: Partial<NFT>): NFT {
-    const { owner, forsale, reactions, changes, loadedMetadata, burned } = nft;
-
-    if (owner) {
-      this.owner = owner;
-    }
-    if (forsale) {
-      this.forsale = forsale;
-    }
-    if (reactions) {
-      this.reactions = reactions;
-    }
-    if (changes) {
-      this.changes = changes;
-    }
-    if (loadedMetadata) {
-      this.loadedMetadata = loadedMetadata;
-    }
-    if (burned) {
-      this.burned = burned;
-    }
-
-    return this;
+    this.updatedAtBlock = updatedAtBlock || block;
   }
 
   public getId(): string {
@@ -130,7 +108,8 @@ export class NFT {
           : parseInt(obj.transferable, 10),
         obj.sn,
         obj.metadata,
-        obj.data
+        obj.data,
+        block // Set initial updatedAtBlock
       );
     } catch (e) {
       console.error(e.message);
