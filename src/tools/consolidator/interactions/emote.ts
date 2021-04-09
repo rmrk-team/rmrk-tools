@@ -20,6 +20,7 @@ export const emoteInteraction = (
     );
   }
 
+  nft.updatedAtBlock = remark.block;
   if (!nft.reactions[emoteEntity.unicode]) {
     nft.reactions[emoteEntity.unicode] = [];
   }
@@ -31,13 +32,4 @@ export const emoteInteraction = (
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
   }
-
-  nft.addChange({
-    field: "reactions",
-    old: removing,
-    new: !removing,
-    caller: remark.caller,
-    block: remark.block,
-    opType: OP_TYPES.EMOTE,
-  });
 };

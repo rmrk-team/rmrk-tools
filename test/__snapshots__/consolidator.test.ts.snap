@@ -3404,6 +3404,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6431407,
     },
     NFT {
       "block": 6431423,
@@ -3419,26 +3420,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6431423,
     },
     NFT {
       "block": 6431478,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6433187,
-          "caller": "Fksmad33PFxhrQXNYPPJozgWrv82zuFLvXK7Rh8m1xQhe98",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "Fksmad33PFxhrQXNYPPJozgWrv82zuFLvXK7Rh8m1xQhe98",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "10D77F8B699437BB50-TXT",
       "data": undefined,
       "forsale": 0n,
@@ -3453,6 +3440,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433187,
     },
     NFT {
       "block": 6432263,
@@ -3477,6 +3465,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433258,
     },
     NFT {
       "block": 6432347,
@@ -3501,6 +3490,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433242,
     },
     NFT {
       "block": 6432671,
@@ -3525,6 +3515,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448278,
     },
     NFT {
       "block": 6432773,
@@ -3549,6 +3540,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433232,
     },
     NFT {
       "block": 6432854,
@@ -3573,6 +3565,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433217,
     },
     NFT {
       "block": 6432926,
@@ -3597,25 +3590,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433116,
     },
     NFT {
       "block": 6433004,
       "burned": "",
       "changes": Array [
-        Object {
-          "block": 6435876,
-          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
         Object {
           "block": 6448271,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
@@ -3639,6 +3619,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448271,
     },
     NFT {
       "block": 6433196,
@@ -3663,6 +3644,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433208,
     },
     NFT {
       "block": 6433383,
@@ -3678,6 +3660,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6433383,
     },
     NFT {
       "block": 6434060,
@@ -3690,20 +3673,6 @@ Object {
           "new": 1000000000000n,
           "old": 0n,
           "opType": "LIST",
-        },
-        Object {
-          "block": 6435868,
-          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
         },
       ],
       "collection": "D4E195CCE7ADB3F876-LUCAYAANDME",
@@ -3720,6 +3689,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6435868,
     },
     NFT {
       "block": 6434253,
@@ -3744,6 +3714,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434267,
     },
     NFT {
       "block": 6434397,
@@ -3768,6 +3739,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434413,
     },
     NFT {
       "block": 6434517,
@@ -3792,6 +3764,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434530,
     },
     NFT {
       "block": 6434624,
@@ -3807,6 +3780,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434624,
     },
     NFT {
       "block": 6434628,
@@ -3831,6 +3805,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434641,
     },
     NFT {
       "block": 6434741,
@@ -3855,6 +3830,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434752,
     },
     NFT {
       "block": 6434826,
@@ -3879,6 +3855,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434839,
     },
     NFT {
       "block": 6434966,
@@ -3903,25 +3880,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6434979,
     },
     NFT {
       "block": 6435409,
       "burned": "",
       "changes": Array [
-        Object {
-          "block": 6435863,
-          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
         Object {
           "block": 6448260,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
@@ -3945,25 +3909,12 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448260,
     },
     NFT {
       "block": 6435603,
       "burned": "",
       "changes": Array [
-        Object {
-          "block": 6435858,
-          "caller": "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-          "field": "reactions",
-          "new": Object {
-            "1F44F": Array [
-              "F7eBurndkrAUt8yZj5E6bgKsh3kLggziSSooZa2f8SkDTDy",
-            ],
-          },
-          "old": Object {
-            "1F44F": Array [],
-          },
-          "opType": "EMOTE",
-        },
         Object {
           "block": 6448251,
           "caller": "HPSgWwpjnMe9oyBq4t2dA3dRTU8PwDAU32q6E76xjFDDrEX",
@@ -3987,6 +3938,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448251,
     },
     NFT {
       "block": 6435925,
@@ -4011,6 +3963,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448227,
     },
     NFT {
       "block": 6448277,
@@ -4026,6 +3979,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448277,
     },
     NFT {
       "block": 6448586,
@@ -4041,6 +3995,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448586,
     },
     NFT {
       "block": 6448826,
@@ -4056,6 +4011,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6448826,
     },
     NFT {
       "block": 6463071,
@@ -4071,6 +4027,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6463071,
     },
     NFT {
       "block": 6474741,
@@ -4086,6 +4043,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6474741,
     },
     NFT {
       "block": 6474741,
@@ -4101,6 +4059,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6474741,
     },
     NFT {
       "block": 6474741,
@@ -4116,6 +4075,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6474741,
     },
     NFT {
       "block": 6474741,
@@ -4131,26 +4091,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000004",
       "transferable": 1,
+      "updatedAtBlock": 6474741,
     },
     NFT {
       "block": 6475453,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6479450,
-          "caller": "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
@@ -4165,6 +4111,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6479450,
     },
     NFT {
       "block": 6476709,
@@ -4180,6 +4127,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6476709,
     },
     NFT {
       "block": 6477659,
@@ -4204,6 +4152,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6487145,
     },
     NFT {
       "block": 6479223,
@@ -4219,6 +4168,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6479223,
     },
     NFT {
       "block": 6490677,
@@ -4234,26 +4184,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6490677,
     },
     NFT {
       "block": 6504199,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6561067,
-          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "3CD8C53D036D48B952-SGO",
       "data": undefined,
       "forsale": 0n,
@@ -4268,6 +4204,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6561067,
     },
     NFT {
       "block": 6506080,
@@ -4300,6 +4237,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6647895,
     },
     NFT {
       "block": 6517602,
@@ -4315,6 +4253,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6517602,
     },
     NFT {
       "block": 6519420,
@@ -4330,6 +4269,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6519420,
     },
     NFT {
       "block": 6532359,
@@ -4345,6 +4285,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6532359,
     },
     NFT {
       "block": 6538112,
@@ -4360,6 +4301,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6538112,
     },
     NFT {
       "block": 6545072,
@@ -4408,6 +4350,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546038,
     },
     NFT {
       "block": 6546204,
@@ -4423,6 +4366,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546204,
     },
     NFT {
       "block": 6546568,
@@ -4438,6 +4382,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546568,
     },
     NFT {
       "block": 6546909,
@@ -4453,6 +4398,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546909,
     },
     NFT {
       "block": 6550358,
@@ -4477,6 +4423,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6550437,
     },
     NFT {
       "block": 6560444,
@@ -4501,6 +4448,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6560556,
     },
     NFT {
       "block": 6562186,
@@ -4516,6 +4464,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6562186,
     },
     NFT {
       "block": 6572370,
@@ -4531,6 +4480,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6572370,
     },
     NFT {
       "block": 6572635,
@@ -4571,6 +4521,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6586888,
     },
     NFT {
       "block": 6573606,
@@ -4586,6 +4537,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6573606,
     },
     NFT {
       "block": 6576473,
@@ -4601,6 +4553,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6576473,
     },
     NFT {
       "block": 6587824,
@@ -4625,6 +4578,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6590194,
     },
     NFT {
       "block": 6589760,
@@ -4640,6 +4594,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6589760,
     },
     NFT {
       "block": 6603764,
@@ -4655,6 +4610,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6603764,
     },
     NFT {
       "block": 6608259,
@@ -4679,6 +4635,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6608275,
     },
     NFT {
       "block": 6608382,
@@ -4703,6 +4660,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6608433,
     },
     NFT {
       "block": 6608418,
@@ -4727,6 +4685,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6608439,
     },
     NFT {
       "block": 6608454,
@@ -4751,6 +4710,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6608470,
     },
     NFT {
       "block": 6616268,
@@ -4775,6 +4735,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6616336,
     },
     NFT {
       "block": 6616739,
@@ -4790,6 +4751,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6616739,
     },
     NFT {
       "block": 6618527,
@@ -4805,6 +4767,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6618527,
     },
     NFT {
       "block": 6621802,
@@ -4820,6 +4783,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6621802,
     },
     NFT {
       "block": 6621892,
@@ -4844,6 +4808,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6621925,
     },
     NFT {
       "block": 6621892,
@@ -4859,6 +4824,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6621892,
     },
     NFT {
       "block": 6621892,
@@ -4874,6 +4840,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6621892,
     },
     NFT {
       "block": 6621894,
@@ -4889,6 +4856,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6621894,
     },
     NFT {
       "block": 6629619,
@@ -4904,6 +4872,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6629619,
     },
     NFT {
       "block": 6637819,
@@ -4919,6 +4888,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6637819,
     },
     NFT {
       "block": 6637819,
@@ -4934,6 +4904,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6637819,
     },
     NFT {
       "block": 6637819,
@@ -4949,6 +4920,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6637819,
     },
     NFT {
       "block": 6637819,
@@ -4964,6 +4936,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000004",
       "transferable": 1,
+      "updatedAtBlock": 6637819,
     },
     NFT {
       "block": 6642745,
@@ -4979,6 +4952,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6642745,
     },
     NFT {
       "block": 6642745,
@@ -4994,6 +4968,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6642745,
     },
     NFT {
       "block": 6642826,
@@ -5009,6 +4984,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6642826,
     },
     NFT {
       "block": 6642826,
@@ -5024,6 +5000,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6642826,
     },
     NFT {
       "block": 6642826,
@@ -5039,6 +5016,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6642826,
     },
     NFT {
       "block": 6642826,
@@ -5054,44 +5032,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000004",
       "transferable": 1,
+      "updatedAtBlock": 6642826,
     },
     NFT {
       "block": 6642939,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6644394,
-          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-              "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-        Object {
-          "block": 6646214,
-          "caller": "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-              "CuHWHNcBt3ASMVSJmcJyiBWGxxiWLyjYoYbGjfhL4ovoeSd",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [
-              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-            ],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
       "forsale": 0n,
@@ -5107,6 +5053,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6646214,
     },
     NFT {
       "block": 6642939,
@@ -5122,6 +5069,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6642939,
     },
     NFT {
       "block": 6642939,
@@ -5137,6 +5085,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6642939,
     },
     NFT {
       "block": 6650640,
@@ -5152,6 +5101,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6650640,
     },
     NFT {
       "block": 6650640,
@@ -5167,26 +5117,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000002",
       "transferable": 1,
+      "updatedAtBlock": 6650640,
     },
     NFT {
       "block": 6650640,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6663790,
-          "caller": "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "DAttPpMwQYz4neRnC3kskVfv9h26ivdKxELjP2LPdCYx4R4",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
@@ -5201,6 +5137,7 @@ Object {
       },
       "sn": "0000000000000003",
       "transferable": 1,
+      "updatedAtBlock": 6663790,
     },
     NFT {
       "block": 6650640,
@@ -5216,6 +5153,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000004",
       "transferable": 1,
+      "updatedAtBlock": 6650640,
     },
   ],
 }
@@ -5706,26 +5644,12 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000004",
       "transferable": 1,
+      "updatedAtBlock": 6474741,
     },
     NFT {
       "block": 6475453,
       "burned": "",
-      "changes": Array [
-        Object {
-          "block": 6479450,
-          "caller": "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
-          "field": "reactions",
-          "new": Object {
-            "1F496": Array [
-              "Gkt9UMTYLQo493UTa9UkXxgo4sAVQLVxobkn4CVSaDaQesp",
-            ],
-          },
-          "old": Object {
-            "1F496": Array [],
-          },
-          "opType": "EMOTE",
-        },
-      ],
+      "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
@@ -5740,6 +5664,7 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6479450,
     },
     NFT {
       "block": 6506080,
@@ -5764,6 +5689,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6506108,
     },
     NFT {
       "block": 6545072,
@@ -5812,6 +5738,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546038,
     },
     NFT {
       "block": 6546909,
@@ -5827,6 +5754,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6546909,
     },
     NFT {
       "block": 6572370,
@@ -5842,6 +5770,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6572370,
     },
     NFT {
       "block": 6573606,
@@ -5857,6 +5786,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6573606,
     },
     NFT {
       "block": 6608454,
@@ -5881,6 +5811,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6608470,
     },
     NFT {
       "block": 6616268,
@@ -5905,6 +5836,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6616336,
     },
     NFT {
       "block": 6616739,
@@ -5920,6 +5852,7 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
+      "updatedAtBlock": 6616739,
     },
   ],
 }

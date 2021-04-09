@@ -20,6 +20,7 @@ export const buyInteraction = (
   }
 
   validate(remark, buyEntity, nft, ss58Format);
+  nft.updatedAtBlock = remark.block;
 
   nft.addChange({
     field: "owner",

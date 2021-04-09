@@ -34,6 +34,7 @@ export const sendInteraction = (
     );
   }
 
+  nft.updatedAtBlock = remark.block;
   nft.addChange({
     field: "owner",
     old: nft.owner,
