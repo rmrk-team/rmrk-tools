@@ -25,7 +25,7 @@ interface IProps {
   storageKey?: string;
 }
 
-interface IStorageProvider {
+export interface IStorageProvider {
   readonly storageKey: string;
   set(latestBlock: number): Promise<void>;
   get(): Promise<string | null>;
