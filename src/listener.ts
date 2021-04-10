@@ -91,8 +91,9 @@ export class RemarkListener {
       storageProvider || new LocalStorageProvider(storageKey);
   }
 
-  private initialize = async (latestBlock: number) => {
+  private initialize = async () => {
     if (!this.initialised) {
+      const latestBlock = await this.strageProvider.get();
       this.initialised = true;
       // Subscribe to latest head blocks (unfinalised)
       await this.initialiseListener({ finalised: false });
@@ -106,13 +107,11 @@ export class RemarkListener {
   };
 
   /* Rxjs observable for finalised remarks, this will return all of consolidated remarks */
-  public initialiseObservable = (
-    latestBlock = 0
-  ): Observable<ConsolidatorReturnType> => {
+  public initialiseObservable = (): Observable<ConsolidatorReturnType> => {
     const subscriber = new Observable<ConsolidatorReturnType>((observer) => {
       this.observer = observer;
     });
-    this.initialize(latestBlock);
+    this.initialize();
     return subscriber;
   };
 
@@ -120,13 +119,11 @@ export class RemarkListener {
    Rxjs observable for un-finalised remarks, this will return remarks that are only present in latest block
    This listener fires again when blocks are removed if they are present in finalised block
   */
-  public initialiseObservableUnfinalised = (
-    latestBlock = 0
-  ): Observable<Remark[]> => {
+  public initialiseObservableUnfinalised = (): Observable<Remark[]> => {
     const subscriber = new Observable<Remark[]>((observer) => {
       this.observerUnfinalised = observer;
     });
-    this.initialize(latestBlock);
+    this.initialize();
     return subscriber;
   };
 
