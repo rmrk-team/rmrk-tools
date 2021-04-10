@@ -28,7 +28,7 @@ interface IProps {
 export interface IStorageProvider {
   readonly storageKey: string;
   set(latestBlock: number): Promise<void>;
-  get(): Promise<string | null>;
+  get(): Promise<number>;
 }
 
 class LocalStorageProvider implements IStorageProvider {
@@ -43,7 +43,8 @@ class LocalStorageProvider implements IStorageProvider {
   };
 
   public get = async () => {
-    return localStorage.getItem(this.storageKey);
+    const latestBlockString = localStorage.getItem(this.storageKey);
+    return latestBlockString ? parseInt(latestBlockString) : 0;
   };
 }
 
