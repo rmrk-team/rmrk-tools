@@ -1,16 +1,19 @@
 #! /usr/bin/env node
 import { RemarkListener } from "../src/listener";
-import { WsProvider } from "@polkadot/api";
-import defaultDump from "../dumps/latest.json";
-import { BlockCalls } from "../src/tools/types";
-
-const wsProvider = new WsProvider("wss://node.rmrk.app");
+import { getApi } from "../src/tools/utils";
+import { Remark } from "../src/tools/consolidator/remark";
+import { Consolidator } from "../src";
 
 const runListener = async () => {
+  const api = await getApi("wss://node.rmrk.app");
+  const consolidateFunction = async (remarks: Remark[]) => {
+    const consolidator = new Consolidator();
+    return consolidator.consolidate(remarks);
+  };
   const listener = new RemarkListener({
-    providerInterface: wsProvider,
+    polkadotApi: api,
     prefixes: [],
-    initialBlockCalls: defaultDump as BlockCalls[],
+    consolidateFunction,
   });
   const subscriber = listener.initialiseObservable();
   subscriber.subscribe((val) => console.log(val));
