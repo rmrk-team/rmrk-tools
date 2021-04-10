@@ -120,6 +120,17 @@ const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 ```
 
+By default Listener uses localstorage to save latest block number and default key it uses is `latestBlock`
+
+You can pass `storageKey` to listener initialisation to change localstorage key or you can pass your own implementation of `storageProvider` as long as it adhers to following interface
+```
+interface IStorageProvider {
+  readonly storageKey: string;
+  set(latestBlock: number): Promise<void>;
+  get(): Promise<string | null>;
+}
+```
+
 ### `Collection`
 
 ```

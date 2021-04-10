@@ -21,6 +21,30 @@ interface IProps {
   initialBlockCalls?: BlockCalls[];
   initialRemarksUrl?: string;
   consolidateFunction: (remarks: Remark[]) => Promise<ConsolidatorReturnType>;
+  storageProvider?: IStorageProvider;
+  storageKey?: string;
+}
+
+interface IStorageProvider {
+  readonly storageKey: string;
+  set(latestBlock: number): Promise<void>;
+  get(): Promise<string | null>;
+}
+
+class LocalStorageProvider implements IStorageProvider {
+  readonly storageKey: string;
+
+  constructor(storageKey?: string) {
+    this.storageKey = storageKey || "latestBlock";
+  }
+
+  public set = async (latestBlock: number) => {
+    localStorage.setItem(this.storageKey, String(latestBlock));
+  };
+
+  public get = async () => {
+    return localStorage.getItem(this.storageKey);
+  };
 }
 
 export class RemarkListener {
@@ -34,11 +58,18 @@ export class RemarkListener {
   private missingBlockCallsFetched: boolean;
   private prefixes: string[];
   private currentBlockNum: number;
+  public strageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
   ) => Promise<ConsolidatorReturnType>;
 
-  constructor({ polkadotApi, prefixes, consolidateFunction }: IProps) {
+  constructor({
+    polkadotApi,
+    prefixes,
+    consolidateFunction,
+    storageProvider,
+    storageKey,
+  }: IProps) {
     if (!polkadotApi) {
       throw new Error(
         `"providerInterface" is missing. Please provide polkadot.js provider interface (i.e. websocket)`
@@ -55,6 +86,8 @@ export class RemarkListener {
     this.missingBlockCallsFetched = false;
     this.prefixes = prefixes || [];
     this.consolidateFunction = consolidateFunction;
+    this.strageProvider =
+      storageProvider || new LocalStorageProvider(storageKey);
   }
 
   private initialize = async (latestBlock: number) => {
@@ -148,8 +181,7 @@ export class RemarkListener {
       const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
-
-      localStorage.setItem("latestBlock", String(this.currentBlockNum));
+      await this.strageProvider.set(this.currentBlockNum);
       const consolidatedFinal = await this.consolidateFunction(remarks);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
@@ -198,7 +230,7 @@ export class RemarkListener {
       // Update local db latestBlock
       if (this.missingBlockCallsFetched && finalised && calls.length === 0) {
         try {
-          localStorage.setItem("latestBlock", String(header.number.toNumber()));
+          await this.strageProvider.set(header.number.toNumber());
         } catch (e) {
           console.error(e);
         }
