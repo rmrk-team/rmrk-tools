@@ -59,7 +59,7 @@ export class RemarkListener {
   private missingBlockCallsFetched: boolean;
   private prefixes: string[];
   private currentBlockNum: number;
-  public strageProvider: IStorageProvider;
+  public storageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
   ) => Promise<ConsolidatorReturnType>;
@@ -87,13 +87,13 @@ export class RemarkListener {
     this.missingBlockCallsFetched = false;
     this.prefixes = prefixes || [];
     this.consolidateFunction = consolidateFunction;
-    this.strageProvider =
+    this.storageProvider =
       storageProvider || new LocalStorageProvider(storageKey);
   }
 
   private initialize = async () => {
     if (!this.initialised) {
-      const latestBlock = await this.strageProvider.get();
+      const latestBlock = await this.storageProvider.get();
       this.initialised = true;
       // Subscribe to latest head blocks (unfinalised)
       await this.initialiseListener({ finalised: false });
@@ -179,7 +179,7 @@ export class RemarkListener {
       const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
-      await this.strageProvider.set(this.currentBlockNum);
+      await this.storageProvider.set(this.currentBlockNum);
       const consolidatedFinal = await this.consolidateFunction(remarks);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
@@ -228,7 +228,7 @@ export class RemarkListener {
       // Update local db latestBlock
       if (this.missingBlockCallsFetched && finalised && calls.length === 0) {
         try {
-          await this.strageProvider.set(header.number.toNumber());
+          await this.storageProvider.set(header.number.toNumber());
         } catch (e) {
           console.error(e);
         }
