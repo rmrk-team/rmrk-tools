@@ -376,6 +376,8 @@ Array [
 ]
 `;
 
+exports[`utils: getBlockCallsFromSignedBlock should Block calls from remarks with correct nested extras 1`] = `Array []`;
+
 exports[`utils: getRemarkData should take a remark string and turn into json 1`] = `
 Object {
   "collection": "241B8516516F381A-OKSM",

@@ -8,7 +8,7 @@ const runListener = async () => {
   const api = await getApi("wss://node.rmrk.app");
   const consolidateFunction = async (remarks: Remark[]) => {
     const consolidator = new Consolidator();
-    return consolidator.consolidate(remarks);
+    return await consolidator.consolidate(remarks);
   };
   const listener = new RemarkListener({
     polkadotApi: api,
