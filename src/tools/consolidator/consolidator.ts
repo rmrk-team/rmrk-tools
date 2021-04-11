@@ -503,8 +503,10 @@ export class Consolidator {
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     return {
-      nfts: await this.dbAdapter.getAllNFTs(),
-      collections: await this.dbAdapter.getAllCollections(),
+      nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
+      collections: this.dbAdapter.getAllCollections
+        ? await this.dbAdapter.getAllCollections()
+        : [],
       invalid: this.invalidCalls,
     };
   }
