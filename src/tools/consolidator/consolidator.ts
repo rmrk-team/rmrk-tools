@@ -25,52 +25,13 @@ import {
 } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mintNFT";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
+import {IConsolidatorAdapter} from "./adapters/types";
 
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
   collections: CollectionConsolidated[];
   invalid: InvalidCall[];
 };
-
-export interface IConsolidatorAdapter {
-  updateNFTEmote(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTList(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTBuy(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTSend(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTConsume(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTMint(nft: NFT, updatedAtBlock: number): Promise<any>;
-  updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
-  updateCollectionIssuer(
-    collection: Collection,
-    consolidatedCollection: CollectionConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  getNFTById(id: string): Promise<NFTConsolidated | undefined>;
-  getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;
-  getNFTByIdUnique(id: string): Promise<NFTConsolidated | undefined>;
-  getAllNFTs(): Promise<NFTConsolidated[]>;
-  getAllCollections(): Promise<CollectionConsolidated[]>;
-}
 
 export interface NFTConsolidated {
   id: string;

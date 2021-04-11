@@ -1,10 +1,7 @@
-import {
-  CollectionConsolidated,
-  IConsolidatorAdapter,
-  NFTConsolidated,
-} from "../consolidator";
+import { CollectionConsolidated, NFTConsolidated } from "../consolidator";
 import { Collection } from "../../../rmrk1.0.0/classes/collection";
 import { NFT } from "../../../rmrk1.0.0/classes/nft";
+import { IConsolidatorAdapter } from "./types";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
