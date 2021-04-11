@@ -12,7 +12,7 @@ export class Collection {
   readonly symbol: string;
   readonly id: string;
   readonly metadata: string;
-  private changes: Change[] = [];
+  changes: Change[] = [];
   loadedMetadata?: CollectionMetadata;
 
   constructor(
