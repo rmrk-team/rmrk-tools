@@ -162,10 +162,11 @@ describe("utils: filterBlockByCollection", () => {
 });
 
 // Test getRemarksFromBlocks
-describe("utils: getBlockCallsFromSignedBlock",  async () => {
+describe("utils: getBlockCallsFromSignedBlock",  () => {
   expect.assertions(1);
-  const api = await getApi("wss://node.rmrk.app");
+
   it("should Block calls from remarks with correct nested extras", async () => {
+    const api = await getApi("wss://node.rmrk.app");
     await expect(
       getBlockCallsFromSignedBlock(
         blockWithMultipleRemarks[0],

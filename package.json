@@ -36,8 +36,8 @@
     "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
-    "test": "jest --silent",
-    "test:watch": "jest --watch --silent",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
     "prepublishOnly": "yarn build"
   },
