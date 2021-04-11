@@ -23,8 +23,13 @@ import {
   changeIssuerInteraction,
   getChangeIssuerEntity,
 } from "./interactions/changeIssuer";
-import { ConsolidatorReturnType } from "../../../dist-cli/src/tools/consolidator/consolidator";
 import { validateMintNFT } from "./interactions/mintNFT";
+
+export type ConsolidatorReturnType = {
+  nfts: NFTConsolidated[];
+  collections: CollectionConsolidated[];
+  invalid: InvalidCall[];
+};
 
 export interface IConsolidatorAdapter {
   updateNFTEmote(
