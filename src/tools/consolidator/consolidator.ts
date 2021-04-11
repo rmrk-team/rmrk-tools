@@ -104,7 +104,7 @@ export interface CollectionConsolidated {
   updatedAtBlock?: number;
 }
 
-export const localNFTtoNFTInstance = (
+export const consolidatedNFTtoInstance = (
   nft?: NFTConsolidated
 ): NFT | undefined => {
   if (!nft) {
@@ -145,7 +145,7 @@ export const localNFTtoNFTInstance = (
   return nftClass;
 };
 
-export const localCollectiontoCollectionInstance = (
+export const consolidatedCollectionToInstance = (
   collection?: CollectionConsolidated
 ): Collection | undefined => {
   if (!collection) {
@@ -280,7 +280,7 @@ export class Consolidator {
     );
 
     const collection = nftParentCollection
-      ? localCollectiontoCollectionInstance(nftParentCollection)
+      ? consolidatedCollectionToInstance(nftParentCollection)
       : undefined;
 
     try {
@@ -319,7 +319,7 @@ export class Consolidator {
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
       sendEntity.id
     );
-    const nft = localNFTtoNFTInstance(consolidatedNFT);
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
       sendInteraction(remark, sendEntity, nft);
@@ -357,7 +357,7 @@ export class Consolidator {
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
       listEntity.id
     );
-    const nft = localNFTtoNFTInstance(consolidatedNFT);
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
       listForSaleInteraction(remark, listEntity, nft);
@@ -397,7 +397,7 @@ export class Consolidator {
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
       consumeEntity.id
     );
-    const nft = localNFTtoNFTInstance(consolidatedNFT);
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
     try {
       consumeInteraction(remark, consumeEntity, nft);
       if (nft && consolidatedNFT) {
@@ -434,7 +434,7 @@ export class Consolidator {
     }
 
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(buyEntity.id);
-    const nft = localNFTtoNFTInstance(consolidatedNFT);
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
       buyInteraction(remark, buyEntity, nft, this.ss58Format);
@@ -467,7 +467,7 @@ export class Consolidator {
       return true;
     }
     const consolidatedNFT = await this.dbAdapter.getNFTById(emoteEntity.id);
-    const nft = localNFTtoNFTInstance(consolidatedNFT);
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
       emoteInteraction(remark, emoteEntity, nft);
@@ -511,7 +511,7 @@ export class Consolidator {
       changeIssuerEntity.id
     );
 
-    const collection = localCollectiontoCollectionInstance(
+    const collection = consolidatedCollectionToInstance(
       consolidatedCollection
     );
 
