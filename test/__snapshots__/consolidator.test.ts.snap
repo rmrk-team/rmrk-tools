@@ -3284,6 +3284,13 @@ Object {
       "op_type": "LIST",
     },
     Object {
+      "block": 6586888,
+      "caller": "EacNR1G8kKAapJqaq3NqkSGBPaLTHdgneG565Ra6ozEEasM",
+      "message": "[BUY] Attempting to buy not-for-sale NFT 6572635-3A9B1D934EB8D5A712-WIV-LA_DAME_DE_MONTROSE_2017-0000000000000001",
+      "object_id": "6572635-3A9B1D934EB8D5A712-WIV-LA_DAME_DE_MONTROSE_2017-0000000000000001",
+      "op_type": "BUY",
+    },
+    Object {
       "block": 6608333,
       "caller": "EY8n3D72AXj9EYyB5Nhxi9phvV8TtJAovySkUiNCZMoQ1VG",
       "message": "[MINT] Attempt to mint already existing collection",
@@ -3390,13 +3397,14 @@ Object {
     },
   ],
   "nfts": Array [
-    NFT {
+    Object {
       "block": 6431407,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-OCN",
       "data": undefined,
       "forsale": 0n,
+      "id": "6431407-10D77F8B699437BB50-OCN-MIDNIGHT_MOON-0000000000000001",
       "instance": "MIDNIGHT_MOON",
       "metadata": "ipfs://ipfs/QmVZAgeHnqusVCYMLkXx3FbGYxHCcHL6xS9KEXzfio8fwE",
       "name": "Midnight moon",
@@ -3406,13 +3414,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6431407,
     },
-    NFT {
+    Object {
       "block": 6431423,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-TX",
       "data": undefined,
       "forsale": 0n,
+      "id": "6431423-10D77F8B699437BB50-TX-PINKISH_SIDE-0000000000000001",
       "instance": "PINKISH_SIDE",
       "metadata": "ipfs://ipfs/QmVfJszdreiXLe5jEqHC8pkrVoXGCSFkhjVUExRSqU2qNZ",
       "name": "Pinkish side",
@@ -3422,13 +3431,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6431423,
     },
-    NFT {
+    Object {
       "block": 6431478,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-TXT",
       "data": undefined,
       "forsale": 0n,
+      "id": "6431478-10D77F8B699437BB50-TXT-JUNGLE_TEXTURE-0000000000000001",
       "instance": "JUNGLE_TEXTURE",
       "metadata": "ipfs://ipfs/QmPfRj8rfM7MHdCWNMydM7CqCVkohzatJuJCNQixTun6e4",
       "name": "Jungle Texture",
@@ -3440,9 +3450,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433187,
+      "updatedAtBlock": 6431478,
     },
-    NFT {
+    Object {
       "block": 6432263,
       "burned": "",
       "changes": Array [
@@ -3457,7 +3467,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-BICHITOS",
       "data": undefined,
-      "forsale": 3000000000000n,
+      "forsale": 0n,
+      "id": "6432263-705BED5A790A0D0072-BICHITOS-BICHITOS-0000000000000001",
       "instance": "BICHITOS",
       "metadata": "ipfs://ipfs/QmZKf2HuTx5oavY8qb2cr1CnsKYiZEiS5dPZoxRM5o1gWG",
       "name": "Bichitos",
@@ -3465,9 +3476,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433258,
+      "updatedAtBlock": 6432263,
     },
-    NFT {
+    Object {
       "block": 6432347,
       "burned": "",
       "changes": Array [
@@ -3482,7 +3493,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-BOLADENIEVE",
       "data": undefined,
-      "forsale": 2500000000000n,
+      "forsale": 0n,
+      "id": "6432347-705BED5A790A0D0072-BOLADENIEVE-BOLA_DE_NIEVE-0000000000000001",
       "instance": "BOLA_DE_NIEVE",
       "metadata": "ipfs://ipfs/QmUoWUb5AwYCThSnVkKaVAoXz1GNPere6afdVYX4czzqto",
       "name": "Bola de Nieve",
@@ -3490,9 +3502,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433242,
+      "updatedAtBlock": 6432347,
     },
-    NFT {
+    Object {
       "block": 6432671,
       "burned": "",
       "changes": Array [
@@ -3507,7 +3519,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-SHENEVERLEFT",
       "data": undefined,
-      "forsale": 2000000000000n,
+      "forsale": 0n,
+      "id": "6432671-D4E195CCE7ADB3F876-SHENEVERLEFT-SHE_NEVER_LEFT-0000000000000001",
       "instance": "SHE_NEVER_LEFT",
       "metadata": "ipfs://ipfs/Qmb8unPPvUp54r8Vz2ovodFf7HJtDpttMawRGGumze6GfU",
       "name": "She Never Left",
@@ -3515,9 +3528,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6448278,
+      "updatedAtBlock": 6432671,
     },
-    NFT {
+    Object {
       "block": 6432773,
       "burned": "",
       "changes": Array [
@@ -3532,7 +3545,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-CAFE",
       "data": undefined,
-      "forsale": 1500000000000n,
+      "forsale": 0n,
+      "id": "6432773-705BED5A790A0D0072-CAFE-CAFE-0000000000000001",
       "instance": "CAFE",
       "metadata": "ipfs://ipfs/QmdaoNgon1FaHKUj5m1FMdscWjDW1GvuMBgx4o8hMXQJyo",
       "name": "Café",
@@ -3540,9 +3554,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433232,
+      "updatedAtBlock": 6432773,
     },
-    NFT {
+    Object {
       "block": 6432854,
       "burned": "",
       "changes": Array [
@@ -3557,7 +3571,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-CAJA",
       "data": undefined,
-      "forsale": 1200000000000n,
+      "forsale": 0n,
+      "id": "6432854-705BED5A790A0D0072-CAJA-CAJA-0000000000000001",
       "instance": "CAJA",
       "metadata": "ipfs://ipfs/QmS1KgbjNnHyVdgirYXR9H4nRxDv2U5QyHx7kuQ3JckkGH",
       "name": "Caja",
@@ -3565,9 +3580,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433217,
+      "updatedAtBlock": 6432854,
     },
-    NFT {
+    Object {
       "block": 6432926,
       "burned": "",
       "changes": Array [
@@ -3582,7 +3597,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-CUMULO",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6432926-705BED5A790A0D0072-CUMULO-CUMULO-0000000000000001",
       "instance": "CUMULO",
       "metadata": "ipfs://ipfs/Qmcmz4sBJEnCYHLvH1cAfSJGseQpnqC1J2rrq4puUFCyCg",
       "name": "Cúmulo",
@@ -3590,9 +3606,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433116,
+      "updatedAtBlock": 6432926,
     },
-    NFT {
+    Object {
       "block": 6433004,
       "burned": "",
       "changes": Array [
@@ -3607,7 +3623,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-THEEYEOFTIME",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6433004-D4E195CCE7ADB3F876-THEEYEOFTIME-THE_EYE_OF_TIME-0000000000000001",
       "instance": "THE_EYE_OF_TIME",
       "metadata": "ipfs://ipfs/QmU83Wt4HcvaBKC68uwtGc1Q3cD34oMSs6758kKy5CPMs7",
       "name": "The Eye of Time",
@@ -3619,9 +3636,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6448271,
+      "updatedAtBlock": 6433004,
     },
-    NFT {
+    Object {
       "block": 6433196,
       "burned": "",
       "changes": Array [
@@ -3636,7 +3653,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-DONUTCOSMICO",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6433196-705BED5A790A0D0072-DONUTCOSMICO-DONUT_COSMICO-0000000000000001",
       "instance": "DONUT_COSMICO",
       "metadata": "ipfs://ipfs/QmT4Mh6VaynKU8CChoyXQf3HGmenGibyM5qCQgwsxJBRsC",
       "name": "Donut Cósmico",
@@ -3644,15 +3662,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6433208,
+      "updatedAtBlock": 6433196,
     },
-    NFT {
+    Object {
       "block": 6433383,
       "burned": "",
       "changes": Array [],
       "collection": "D4E195CCE7ADB3F876-GOODBYEBULLIES",
       "data": undefined,
       "forsale": 0n,
+      "id": "6433383-D4E195CCE7ADB3F876-GOODBYEBULLIES-GOODBYE_BULLIES!-0000000000000001",
       "instance": "GOODBYE_BULLIES!",
       "metadata": "ipfs://ipfs/QmV7kj5CFZ3FdmJv3HWbKvwebHJN4wy7mBKc55rQsPcN9j",
       "name": "Goodbye Bullies!",
@@ -3662,7 +3681,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6433383,
     },
-    NFT {
+    Object {
       "block": 6434060,
       "burned": "",
       "changes": Array [
@@ -3677,7 +3696,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-LUCAYAANDME",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6434060-D4E195CCE7ADB3F876-LUCAYAANDME-LUCAYA-0000000000000001",
       "instance": "LUCAYA",
       "metadata": "ipfs://ipfs/Qmf4CwsEYSpckJ8kH47dRkw2tokvpQzyHhYwA9xKBFr2Sg",
       "name": "Lucaya",
@@ -3689,9 +3709,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6435868,
+      "updatedAtBlock": 6434060,
     },
-    NFT {
+    Object {
       "block": 6434253,
       "burned": "",
       "changes": Array [
@@ -3706,7 +3726,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-DADOS",
       "data": undefined,
-      "forsale": 1100000000000n,
+      "forsale": 0n,
+      "id": "6434253-705BED5A790A0D0072-DADOS-DADOS-0000000000000001",
       "instance": "DADOS",
       "metadata": "ipfs://ipfs/QmPW9FTxY2NWDWQQ7K3dHMcEGfVoRUvLDLYGJ6DcM5HbFx",
       "name": "Dados",
@@ -3714,9 +3735,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434267,
+      "updatedAtBlock": 6434253,
     },
-    NFT {
+    Object {
       "block": 6434397,
       "burned": "",
       "changes": Array [
@@ -3731,7 +3752,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-FLOR",
       "data": undefined,
-      "forsale": 1200000000000n,
+      "forsale": 0n,
+      "id": "6434397-705BED5A790A0D0072-FLOR-FLOR-0000000000000001",
       "instance": "FLOR",
       "metadata": "ipfs://ipfs/QmYgfLHBPmXojEiMPbadpriWNXk3TW2x4dfapo3NdjpYVw",
       "name": "Flor",
@@ -3739,9 +3761,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434413,
+      "updatedAtBlock": 6434397,
     },
-    NFT {
+    Object {
       "block": 6434517,
       "burned": "",
       "changes": Array [
@@ -3756,7 +3778,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-GELATINA",
       "data": undefined,
-      "forsale": 2300000000000n,
+      "forsale": 0n,
+      "id": "6434517-705BED5A790A0D0072-GELATINA-GELATINA-0000000000000001",
       "instance": "GELATINA",
       "metadata": "ipfs://ipfs/QmVtorGTbG6CVFpJzKkgFotfWFsj7dgtwcsjEcDDJZxgyN",
       "name": "Gelatina",
@@ -3764,15 +3787,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434530,
+      "updatedAtBlock": 6434517,
     },
-    NFT {
+    Object {
       "block": 6434624,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PP",
       "data": undefined,
       "forsale": 0n,
+      "id": "6434624-3CD8C53D036D48B952-PP-PURGE_PROTOCOL-0000000000000001",
       "instance": "PURGE_PROTOCOL",
       "metadata": "ipfs://ipfs/QmSzEUGiEK1gkNgctiJGTUprzk66u5mZStyHh5pgUCM5HC",
       "name": "Purge protocol",
@@ -3782,7 +3806,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6434624,
     },
-    NFT {
+    Object {
       "block": 6434628,
       "burned": "",
       "changes": Array [
@@ -3797,7 +3821,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-ELGRUPO",
       "data": undefined,
-      "forsale": 1900000000000n,
+      "forsale": 0n,
+      "id": "6434628-705BED5A790A0D0072-ELGRUPO-EL_GRUPO-0000000000000001",
       "instance": "EL_GRUPO",
       "metadata": "ipfs://ipfs/QmaiRCd3mzacDVgCciD2Ko5ifqqR8Ru8UCC4JXfy134Yer",
       "name": "El Grupo",
@@ -3805,9 +3830,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434641,
+      "updatedAtBlock": 6434628,
     },
-    NFT {
+    Object {
       "block": 6434741,
       "burned": "",
       "changes": Array [
@@ -3822,7 +3847,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-LAFLORDELAVIDA",
       "data": undefined,
-      "forsale": 2500000000000n,
+      "forsale": 0n,
+      "id": "6434741-705BED5A790A0D0072-LAFLORDELAVIDA-LA_FLOR_DE_LA_VIDA-0000000000000001",
       "instance": "LA_FLOR_DE_LA_VIDA",
       "metadata": "ipfs://ipfs/QmPofWbsZ1NDct8h1rJ6S7sYDzA4mJ1ouwVHzQ8MXmTZag",
       "name": "La Flor de la Vida",
@@ -3830,9 +3856,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434752,
+      "updatedAtBlock": 6434741,
     },
-    NFT {
+    Object {
       "block": 6434826,
       "burned": "",
       "changes": Array [
@@ -3847,7 +3873,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-MENTA",
       "data": undefined,
-      "forsale": 1500000000000n,
+      "forsale": 0n,
+      "id": "6434826-705BED5A790A0D0072-MENTA-MENTA-0000000000000001",
       "instance": "MENTA",
       "metadata": "ipfs://ipfs/QmRu2mhLJnbULZ1ujYVz4n4w5WjnUvBhNQN7hPwHYcENdZ",
       "name": "Menta",
@@ -3855,9 +3882,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434839,
+      "updatedAtBlock": 6434826,
     },
-    NFT {
+    Object {
       "block": 6434966,
       "burned": "",
       "changes": Array [
@@ -3872,7 +3899,8 @@ Object {
       ],
       "collection": "705BED5A790A0D0072-MUSICA",
       "data": undefined,
-      "forsale": 1800000000000n,
+      "forsale": 0n,
+      "id": "6434966-705BED5A790A0D0072-MUSICA-MUSICA-0000000000000001",
       "instance": "MUSICA",
       "metadata": "ipfs://ipfs/QmbNRG1FQ5TJj5z37MpjhAx9apSZQKtys8CVYNkQMGbzyo",
       "name": "Música",
@@ -3880,9 +3908,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6434979,
+      "updatedAtBlock": 6434966,
     },
-    NFT {
+    Object {
       "block": 6435409,
       "burned": "",
       "changes": Array [
@@ -3897,7 +3925,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-KUSAMAPOEM",
       "data": undefined,
-      "forsale": 2000000000000n,
+      "forsale": 0n,
+      "id": "6435409-D4E195CCE7ADB3F876-KUSAMAPOEM-KUSAMA_POEM_1-0000000000000001",
       "instance": "KUSAMA_POEM_1",
       "metadata": "ipfs://ipfs/QmRCAYpRtZTubBvjbvL2xHdQA4LjxxjcEeeXjgqHmrqEnR",
       "name": "Kusama Poem #1",
@@ -3909,9 +3938,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6448260,
+      "updatedAtBlock": 6435409,
     },
-    NFT {
+    Object {
       "block": 6435603,
       "burned": "",
       "changes": Array [
@@ -3926,7 +3955,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-INVITATION",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6435603-D4E195CCE7ADB3F876-INVITATION-VIP_INVITATION_1-0000000000000001",
       "instance": "VIP_INVITATION_1",
       "metadata": "ipfs://ipfs/QmQ2Q57PVpaP8QvWvvH9kfn1CdCY49pcv1AaLBjDwS2p4g",
       "name": "VIP Invitation #1",
@@ -3938,9 +3968,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6448251,
+      "updatedAtBlock": 6435603,
     },
-    NFT {
+    Object {
       "block": 6435925,
       "burned": "",
       "changes": Array [
@@ -3955,7 +3985,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-WAITINGFOR",
       "data": undefined,
-      "forsale": 2000000000000n,
+      "forsale": 0n,
+      "id": "6435925-D4E195CCE7ADB3F876-WAITINGFOR-WAITING_FOR..._1-0000000000000001",
       "instance": "WAITING_FOR..._1",
       "metadata": "ipfs://ipfs/QmZnLeqXGMEPT2zyXC3h7gy7qwhuzSw8K8XqmXuuE6KL69",
       "name": "Waiting for... #1",
@@ -3963,15 +3994,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6448227,
+      "updatedAtBlock": 6435925,
     },
-    NFT {
+    Object {
       "block": 6448277,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-BRD",
       "data": undefined,
       "forsale": 0n,
+      "id": "6448277-10D77F8B699437BB50-BRD-BIRDY_EVOLUTION-0000000000000001",
       "instance": "BIRDY_EVOLUTION",
       "metadata": "ipfs://ipfs/QmTRPQ8o3wkd1adxHh6BBGmpjchzDDPjXDnXib1aBvuikk",
       "name": "Birdy evolution",
@@ -3981,13 +4013,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6448277,
     },
-    NFT {
+    Object {
       "block": 6448586,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-TWC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6448586-3CD8C53D036D48B952-TWC-TWISTED_CISTERNS-0000000000000001",
       "instance": "TWISTED_CISTERNS",
       "metadata": "ipfs://ipfs/QmcGdMA3EBryyBddBG6K8NXstSBpyuesAEcX55YzSyojzM",
       "name": "Twisted cisterns",
@@ -3997,13 +4030,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6448586,
     },
-    NFT {
+    Object {
       "block": 6448826,
       "burned": "",
       "changes": Array [],
       "collection": "4C476E3612F0892870-HELIANTONE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6448826-4C476E3612F0892870-HELIANTONE-YOUTH-0000000000000001",
       "instance": "YOUTH",
       "metadata": "ipfs://ipfs/QmSM8LD32bQCMDxKmogNHKepT5fKTxuwGXLT1ota3yKR5S",
       "name": "Youth ",
@@ -4013,13 +4047,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6448826,
     },
-    NFT {
+    Object {
       "block": 6463071,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-FYEO",
       "data": undefined,
       "forsale": 0n,
+      "id": "6463071-3CD8C53D036D48B952-FYEO-FOR_YOUR_EYES_ONLY-0000000000000001",
       "instance": "FOR_YOUR_EYES_ONLY",
       "metadata": "ipfs://ipfs/QmTBoGMaQfdSdTJdH47FqQKLZcf6NYwpyfsWiAod6YmbZG",
       "name": "For your eyes only",
@@ -4029,13 +4064,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6463071,
     },
-    NFT {
+    Object {
       "block": 6474741,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6474741-10D77F8B699437BB50-KODA-REQUIREMENTS_FOR_MINTING_NFTS-0000000000000001",
       "instance": "REQUIREMENTS_FOR_MINTING_NFTS",
       "metadata": "ipfs://ipfs/QmSDwp17CQp9CvYf5Ynwxv6EjFrcGmKeBqyKnjuESsAaGp",
       "name": "Requirements for minting NFTs",
@@ -4045,13 +4081,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6474741,
     },
-    NFT {
+    Object {
       "block": 6474741,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6474741-10D77F8B699437BB50-KODA-HOW_TO_CREATE_COLLECTION-0000000000000002",
       "instance": "HOW_TO_CREATE_COLLECTION",
       "metadata": "ipfs://ipfs/QmaCv4xU4QFA8YCfRqJk1UXjh8QMpC5y2nE6x2bbEy58QA",
       "name": "How to Create Collection ",
@@ -4061,13 +4098,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6474741,
     },
-    NFT {
+    Object {
       "block": 6474741,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6474741-10D77F8B699437BB50-KODA-HOW_TO_UPLOAD_SINGLE_NFT-0000000000000003",
       "instance": "HOW_TO_UPLOAD_SINGLE_NFT",
       "metadata": "ipfs://ipfs/QmUktiVJod1auBHUXbxyUW7zRmqmwsbsnCk8s4Kr9BzFqr",
       "name": "How to Upload Single NFT",
@@ -4077,13 +4115,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6474741,
     },
-    NFT {
+    Object {
       "block": 6474741,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6474741-10D77F8B699437BB50-KODA-HOW_TO_UPLOAD_COLLECTION_OF_NFTS-0000000000000004",
       "instance": "HOW_TO_UPLOAD_COLLECTION_OF_NFTS",
       "metadata": "ipfs://ipfs/QmdQeQMXuCS6TVBrFF7xhKf6cXzrcDzK9Ht36ZoqWBoYHS",
       "name": "How to Upload Collection of NFTs",
@@ -4093,13 +4132,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6474741,
     },
-    NFT {
+    Object {
       "block": 6475453,
       "burned": "",
       "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
+      "id": "6475453-26769B0B8E5FBE4D11-KSM-KANARA-0000000000000001",
       "instance": "KANARA",
       "metadata": "ipfs://ipfs/QmdMw8QhZS4dezvcixHYVhtPFSErc98LEx3Hf6HXvgMknF",
       "name": "Kanara",
@@ -4111,15 +4151,16 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6479450,
+      "updatedAtBlock": 6475453,
     },
-    NFT {
+    Object {
       "block": 6476709,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-BSY",
       "data": undefined,
       "forsale": 0n,
+      "id": "6476709-3CD8C53D036D48B952-BSY-BEACON_SYMPHONY-0000000000000001",
       "instance": "BEACON_SYMPHONY",
       "metadata": "ipfs://ipfs/QmPwFjgXwtk85TeUwr9YGUPVNgSg6CDTBtS9gR7jyruAwa",
       "name": "Beacon symphony",
@@ -4129,7 +4170,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6476709,
     },
-    NFT {
+    Object {
       "block": 6477659,
       "burned": "",
       "changes": Array [
@@ -4144,7 +4185,8 @@ Object {
       ],
       "collection": "D4E195CCE7ADB3F876-THEHOLYGHOST",
       "data": undefined,
-      "forsale": 2000000000000n,
+      "forsale": 0n,
+      "id": "6477659-D4E195CCE7ADB3F876-THEHOLYGHOST-THE_HOLY_GHOST-0000000000000001",
       "instance": "THE_HOLY_GHOST",
       "metadata": "ipfs://ipfs/QmRP64aH5rTmCpu3Kpi9ts6RJJDz81HJy61EcCgbF1kQaZ",
       "name": "The Holy Ghost ",
@@ -4152,15 +4194,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6487145,
+      "updatedAtBlock": 6477659,
     },
-    NFT {
+    Object {
       "block": 6479223,
       "burned": "",
       "changes": Array [],
       "collection": "B8FF3A281F03B12E30-MAX",
       "data": undefined,
       "forsale": 0n,
+      "id": "6479223-B8FF3A281F03B12E30-MAX-MAX-0000000000000001",
       "instance": "MAX",
       "metadata": "ipfs://ipfs/Qmeeh9ux1AUzJPvs9NREhxjaZxwX7wH5uW6bm7hBeVw8LG",
       "name": "MAX",
@@ -4170,13 +4213,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6479223,
     },
-    NFT {
+    Object {
       "block": 6490677,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-EAM",
       "data": undefined,
       "forsale": 0n,
+      "id": "6490677-3CD8C53D036D48B952-EAM-EVOLUTION_AMENDED-0000000000000001",
       "instance": "EVOLUTION_AMENDED",
       "metadata": "ipfs://ipfs/Qmaa6Gpu9uBNAXK7wA6mUDduQzW6nseC6Tx7Qkex98iB7V",
       "name": "Evolution amended",
@@ -4186,13 +4230,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6490677,
     },
-    NFT {
+    Object {
       "block": 6504199,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-SGO",
       "data": undefined,
       "forsale": 0n,
+      "id": "6504199-3CD8C53D036D48B952-SGO-STRATEGIEN_GEGEN_OBSKURITAT-0000000000000001",
       "instance": "STRATEGIEN_GEGEN_OBSKURITAT",
       "metadata": "ipfs://ipfs/QmXgRBcBFRE3h9vUsi7KCauW7PEoq9bvh2eiY5FY5uMatR",
       "name": "Strategien gegen Obskurität",
@@ -4204,9 +4249,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6561067,
+      "updatedAtBlock": 6504199,
     },
-    NFT {
+    Object {
       "block": 6506080,
       "burned": "",
       "changes": Array [
@@ -4223,13 +4268,14 @@ Object {
           "caller": "Cu7QaEnRGPE91WvLduzUii2ZNa3jhMWtmB8SYwumycNRmoN",
           "field": "forsale",
           "new": 10000000000000n,
-          "old": 5000000000000n,
+          "old": 0n,
           "opType": "LIST",
         },
       ],
       "collection": "0E54E51D92AECA5749-KSM",
       "data": undefined,
-      "forsale": 10000000000000n,
+      "forsale": 0n,
+      "id": "6506080-0E54E51D92AECA5749-KSM-SHAPES_01_-_UNIQUE-0000000000000001",
       "instance": "SHAPES_01_-_UNIQUE",
       "metadata": "ipfs://ipfs/QmVkeTFykLayAPXCozku411bVkjSS2xAyiuqznkkPy73yN",
       "name": "Shapes 01 - Unique",
@@ -4237,15 +4283,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6647895,
+      "updatedAtBlock": 6506080,
     },
-    NFT {
+    Object {
       "block": 6517602,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-GLT",
       "data": undefined,
       "forsale": 0n,
+      "id": "6517602-10D77F8B699437BB50-GLT-ORANGE_SMOFS-0000000000000001",
       "instance": "ORANGE_SMOFS",
       "metadata": "ipfs://ipfs/QmXK9eUtw7KTFpzkp9VNRYpsPpAteh4qkejbT82YwemdAA",
       "name": "Orange Smofs",
@@ -4255,13 +4302,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6517602,
     },
-    NFT {
+    Object {
       "block": 6519420,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-ZZZ",
       "data": undefined,
       "forsale": 0n,
+      "id": "6519420-3CD8C53D036D48B952-ZZZ-Z_IS_AN_ACRONYM_FOR_ZIP-0000000000000001",
       "instance": "Z_IS_AN_ACRONYM_FOR_ZIP",
       "metadata": "ipfs://ipfs/QmUTQLanny9gZBm31JVnKVw8KjdXLs7kBvLdnkQAmork6q",
       "name": "Z is an Acronym for Zip",
@@ -4271,13 +4319,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6519420,
     },
-    NFT {
+    Object {
       "block": 6532359,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-TBC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6532359-3CD8C53D036D48B952-TBC-TRANSMIGRATION_BOOTH_SITUATION-0000000000000001",
       "instance": "TRANSMIGRATION_BOOTH_SITUATION",
       "metadata": "ipfs://ipfs/Qmf7YM3zk8umJ5vwdMwcfKJ3ovx6VdHi3mGorbQz2TDePQ",
       "name": "Transmigration booth situation",
@@ -4287,13 +4336,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6532359,
     },
-    NFT {
+    Object {
       "block": 6538112,
       "burned": "",
       "changes": Array [],
       "collection": "34BE282B68C3F03135-BIGP",
       "data": undefined,
       "forsale": 0n,
+      "id": "6538112-34BE282B68C3F03135-BIGP-KOPOS-0000000000000001",
       "instance": "KOPOS",
       "metadata": "ipfs://ipfs/QmS5jPGMFB71yTMt5ZTrpdEpUGWC9wZB7Ar81jvFqocnXQ",
       "name": "KOPOS",
@@ -4303,7 +4353,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6538112,
     },
-    NFT {
+    Object {
       "block": 6545072,
       "burned": "",
       "changes": Array [
@@ -4320,7 +4370,7 @@ Object {
           "caller": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
           "field": "forsale",
           "new": 20000000000n,
-          "old": 1000000000000n,
+          "old": 0n,
           "opType": "LIST",
         },
         Object {
@@ -4331,34 +4381,28 @@ Object {
           "old": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
           "opType": "SEND",
         },
-        Object {
-          "block": 6546038,
-          "caller": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
-          "field": "forsale",
-          "new": 0n,
-          "old": 20000000000n,
-          "opType": "SEND",
-        },
       ],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
       "forsale": 0n,
+      "id": "6545072-26D6484336C010812D-NFTORIGIN-NFT_ORIGINAL_ART_001_BROWN_LIMITED_EDITION-0000000000000001",
       "instance": "NFT_ORIGINAL_ART_001_BROWN_LIMITED_EDITION",
       "metadata": "ipfs://ipfs/QmYBJgr1xN3vozcByHxaz16TdsQR3n1XwXWpioetXTyDmw",
       "name": "NFT original Art #001 Brown Limited Edition",
-      "owner": "EzDPZK9taNcSNipFFkStk8RvF3ai4fiY1do9aPM5VmGQDC9",
+      "owner": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6546038,
+      "updatedAtBlock": 6545072,
     },
-    NFT {
+    Object {
       "block": 6546204,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-HEV",
       "data": undefined,
       "forsale": 0n,
+      "id": "6546204-3CD8C53D036D48B952-HEV-HASTY_EVACUATION-0000000000000001",
       "instance": "HASTY_EVACUATION",
       "metadata": "ipfs://ipfs/QmWJwSzAYBnTNgH1Xfv4qr2fZyP1ig7KN4fq1XYctNAJbz",
       "name": "Hasty evacuation",
@@ -4368,13 +4412,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6546204,
     },
-    NFT {
+    Object {
       "block": 6546568,
       "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFT-ORIGIN-SPECIAL",
       "data": undefined,
       "forsale": 0n,
+      "id": "6546568-26D6484336C010812D-NFT-ORIGIN-SPECIAL-NFT_ORIGINAL_ART_PALE_BLUE_LIMITED_EDITION-0000000000000001",
       "instance": "NFT_ORIGINAL_ART_PALE_BLUE_LIMITED_EDITION",
       "metadata": "ipfs://ipfs/Qmb8q86hZhB5gV64VjSifHv9njEj7Yrp9wEfkXtQZrQSYc",
       "name": "NFT original Art #??? __ _ Pale Blue Limited Edition",
@@ -4384,13 +4429,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6546568,
     },
-    NFT {
+    Object {
       "block": 6546909,
       "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
       "forsale": 0n,
+      "id": "6546909-26D6484336C010812D-NFTORIGIN-NFT_ORIGINAL_ART_PALE_GREEN_LIMITED_EDITION-0000000000000001",
       "instance": "NFT_ORIGINAL_ART_PALE_GREEN_LIMITED_EDITION",
       "metadata": "ipfs://ipfs/QmT8dsByp3vsNZkhrCHJhFMqKa9FHBALZtzLqRuAW2sgiu",
       "name": "NFT original Art #??? Pale Green Limited Edition",
@@ -4400,7 +4446,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6546909,
     },
-    NFT {
+    Object {
       "block": 6550358,
       "burned": "",
       "changes": Array [
@@ -4415,7 +4461,8 @@ Object {
       ],
       "collection": "A415A980467FC07C05-ANS",
       "data": undefined,
-      "forsale": 10000000000000n,
+      "forsale": 0n,
+      "id": "6550358-A415A980467FC07C05-ANS-3DLANDSCAPE-0000000000000001",
       "instance": "3DLANDSCAPE",
       "metadata": "ipfs://ipfs/QmXvBFYLC1PjKHQDMpWiPwg4kSMm91T8S1WyKjXrxNsX91",
       "name": "3dLANDSCAPE",
@@ -4423,9 +4470,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6550437,
+      "updatedAtBlock": 6550358,
     },
-    NFT {
+    Object {
       "block": 6560444,
       "burned": "",
       "changes": Array [
@@ -4440,7 +4487,8 @@ Object {
       ],
       "collection": "4E31EC10CBAA050738-ETHERDOG",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6560444-4E31EC10CBAA050738-ETHERDOG-ETHER_DOG-0000000000000001",
       "instance": "ETHER_DOG",
       "metadata": "ipfs://ipfs/QmcA17wPUAU6aK6aAPqb3d1AxSnoSBCjBDJbe1v4nU8fRq",
       "name": "Ether Dog",
@@ -4448,15 +4496,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6560556,
+      "updatedAtBlock": 6560444,
     },
-    NFT {
+    Object {
       "block": 6562186,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-ASC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6562186-3CD8C53D036D48B952-ASC-AB_AQUA_SILENTE_CAVE-0000000000000001",
       "instance": "AB_AQUA_SILENTE_CAVE",
       "metadata": "ipfs://ipfs/QmVnpMRDakP7KpjWQzCszViTU1TLWdbzVqPL4Ftn998HJr",
       "name": "Ab aqua silente cave",
@@ -4466,13 +4515,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6562186,
     },
-    NFT {
+    Object {
       "block": 6572370,
       "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-MACROCOSM",
       "data": undefined,
       "forsale": 0n,
+      "id": "6572370-0E76E3AC15B4C1FA1E-MACROCOSM-SOUND_OF_NATURE-0000000000000001",
       "instance": "SOUND_OF_NATURE",
       "metadata": "ipfs://ipfs/Qmai5bpB2GMjtxpiKnEdpgjADTm5V7Puis8Wom2KFQJbwD",
       "name": "Sound of nature",
@@ -4482,7 +4532,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6572370,
     },
-    NFT {
+    Object {
       "block": 6572635,
       "burned": "",
       "changes": Array [
@@ -4494,42 +4544,28 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
-          "block": 6586888,
-          "caller": "EacNR1G8kKAapJqaq3NqkSGBPaLTHdgneG565Ra6ozEEasM",
-          "field": "owner",
-          "new": "EacNR1G8kKAapJqaq3NqkSGBPaLTHdgneG565Ra6ozEEasM",
-          "old": "DuANeWRbgoSQ5Fq3KtEu4LL3HS49Mmoqkk3EmAqBvLPeYKj",
-          "opType": "BUY",
-        },
-        Object {
-          "block": 6586888,
-          "caller": "EacNR1G8kKAapJqaq3NqkSGBPaLTHdgneG565Ra6ozEEasM",
-          "field": "forsale",
-          "new": 0n,
-          "old": 1000000000000n,
-          "opType": "BUY",
-        },
       ],
       "collection": "3A9B1D934EB8D5A712-WIV",
       "data": undefined,
       "forsale": 0n,
+      "id": "6572635-3A9B1D934EB8D5A712-WIV-LA_DAME_DE_MONTROSE_2017-0000000000000001",
       "instance": "LA_DAME_DE_MONTROSE_2017",
       "metadata": "ipfs://ipfs/QmaBTcFAUNzpAcXvzipt9Lpzz9kA7GdjJ3dxLfVqXLdvSe",
       "name": "La Dame de Montrose 2017",
-      "owner": "EacNR1G8kKAapJqaq3NqkSGBPaLTHdgneG565Ra6ozEEasM",
+      "owner": "DuANeWRbgoSQ5Fq3KtEu4LL3HS49Mmoqkk3EmAqBvLPeYKj",
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6586888,
+      "updatedAtBlock": 6572635,
     },
-    NFT {
+    Object {
       "block": 6573606,
       "burned": "",
       "changes": Array [],
       "collection": "C81C02FED1334A5F2D-IVT",
       "data": undefined,
       "forsale": 0n,
+      "id": "6573606-C81C02FED1334A5F2D-IVT-EAGLE-0000000000000001",
       "instance": "EAGLE",
       "metadata": "ipfs://ipfs/QmUFapvAh5nM7Qut8CZSowHH2ReqrbCYCG4ffk3z3viTzg",
       "name": "Eagle",
@@ -4539,13 +4575,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6573606,
     },
-    NFT {
+    Object {
       "block": 6576473,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6576473-3CD8C53D036D48B952-PC-PARASITIC_CYCLE-0000000000000001",
       "instance": "PARASITIC_CYCLE",
       "metadata": "ipfs://ipfs/QmdZj1JhsRyDbEET3pZuHVSknZXyZDyfGfHpgLLDBnssFR",
       "name": "Parasitic cycle",
@@ -4555,7 +4592,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6576473,
     },
-    NFT {
+    Object {
       "block": 6587824,
       "burned": "",
       "changes": Array [
@@ -4570,7 +4607,8 @@ Object {
       ],
       "collection": "5C8C6D9B15906923D9-SUB",
       "data": undefined,
-      "forsale": 3000000000000n,
+      "forsale": 0n,
+      "id": "6587824-5C8C6D9B15906923D9-SUB-SUBSTRAWARRIOR_1393-0000000000000001",
       "instance": "SUBSTRAWARRIOR_1393",
       "metadata": "ipfs://ipfs/QmSgCeyqJk13Xd947UNc9MugqLGqrAM6MxUffJWFSSZWtv",
       "name": "SubstraWarrior #1393",
@@ -4578,15 +4616,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6590194,
+      "updatedAtBlock": 6587824,
     },
-    NFT {
+    Object {
       "block": 6589760,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-FTS",
       "data": undefined,
       "forsale": 0n,
+      "id": "6589760-3CD8C53D036D48B952-FTS-FORCED_TO_STOP-0000000000000001",
       "instance": "FORCED_TO_STOP",
       "metadata": "ipfs://ipfs/QmPyuvJ26Jv5z39nNfifCXgzkY72MgsYbNBFCQupnGZrUv",
       "name": "Forced to stop",
@@ -4596,13 +4635,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6589760,
     },
-    NFT {
+    Object {
       "block": 6603764,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PRA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6603764-3CD8C53D036D48B952-PRA-PARTIAL_REASSEMBLY-0000000000000001",
       "instance": "PARTIAL_REASSEMBLY",
       "metadata": "ipfs://ipfs/QmaBzhqjWDkeVjb3cAGk5Lxj92Z9q6y7YXQMMuhESGg53r",
       "name": "Partial reassembly",
@@ -4612,7 +4652,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6603764,
     },
-    NFT {
+    Object {
       "block": 6608259,
       "burned": "",
       "changes": Array [
@@ -4627,7 +4667,8 @@ Object {
       ],
       "collection": "56CDD20D8C52C1D075-ALEX",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6608259-56CDD20D8C52C1D075-ALEX-ALEX-0000000000000001",
       "instance": "ALEX",
       "metadata": "ipfs://ipfs/QmdEqcCX8YPZJHYSa75ziFEq6rGoRGNNYkNj5dHY6YEgX8",
       "name": "Alex",
@@ -4635,9 +4676,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6608275,
+      "updatedAtBlock": 6608259,
     },
-    NFT {
+    Object {
       "block": 6608382,
       "burned": "",
       "changes": Array [
@@ -4652,7 +4693,8 @@ Object {
       ],
       "collection": "56CDD20D8C52C1D075-BEEPLE",
       "data": undefined,
-      "forsale": 1000000000000000n,
+      "forsale": 0n,
+      "id": "6608382-56CDD20D8C52C1D075-BEEPLE-EVERYDAYS_THE_FIRST_5000_DAYS-0000000000000001",
       "instance": "EVERYDAYS_THE_FIRST_5000_DAYS",
       "metadata": "ipfs://ipfs/QmbAAQYNFHV9eD1U7Qrr1tPiyTjGUiM6Ad9d5tkpR2jprT",
       "name": "Everydays — The First 5000 Days",
@@ -4660,9 +4702,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6608433,
+      "updatedAtBlock": 6608382,
     },
-    NFT {
+    Object {
       "block": 6608418,
       "burned": "",
       "changes": Array [
@@ -4677,7 +4719,8 @@ Object {
       ],
       "collection": "56CDD20D8C52C1D075-GORILLA",
       "data": undefined,
-      "forsale": 1000000000000n,
+      "forsale": 0n,
+      "id": "6608418-56CDD20D8C52C1D075-GORILLA-CRYPTOGORILLA-0000000000000001",
       "instance": "CRYPTOGORILLA",
       "metadata": "ipfs://ipfs/QmRtmC87MLBz2yu6qkACYe3ciXTsMW5461at7KMw8AisAs",
       "name": "CryptoGorilla",
@@ -4685,9 +4728,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6608439,
+      "updatedAtBlock": 6608418,
     },
-    NFT {
+    Object {
       "block": 6608454,
       "burned": "",
       "changes": Array [
@@ -4702,7 +4745,8 @@ Object {
       ],
       "collection": "56CDD20D8C52C1D075-KISS",
       "data": undefined,
-      "forsale": 10000000000000n,
+      "forsale": 0n,
+      "id": "6608454-56CDD20D8C52C1D075-KISS-KISS-0000000000000001",
       "instance": "KISS",
       "metadata": "ipfs://ipfs/QmUXbDrVhu9qxu1mSLQnWZ1vBg7PjGNsh91TDXkWj1gsBL",
       "name": "Kiss",
@@ -4710,9 +4754,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6608470,
+      "updatedAtBlock": 6608454,
     },
-    NFT {
+    Object {
       "block": 6616268,
       "burned": "",
       "changes": Array [
@@ -4727,7 +4771,8 @@ Object {
       ],
       "collection": "B45FFFBEFBE527E025-NFT",
       "data": undefined,
-      "forsale": 8000000000000n,
+      "forsale": 0n,
+      "id": "6616268-B45FFFBEFBE527E025-NFT-NFT_-_LONELY_ARTIST-0000000000000001",
       "instance": "NFT_-_LONELY_ARTIST",
       "metadata": "ipfs://ipfs/QmU9Aitc6mQg8fWLfy77tJcPwmmDbhe7vDzQ6BL1r5HkdD",
       "name": "NFT - Lonely Artist ",
@@ -4735,15 +4780,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6616336,
+      "updatedAtBlock": 6616268,
     },
-    NFT {
+    Object {
       "block": 6616739,
       "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-GLITCH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6616739-0E76E3AC15B4C1FA1E-GLITCH-CAN'T_BE_OPENED_-609-0000000000000001",
       "instance": "CAN'T_BE_OPENED_-609",
       "metadata": "ipfs://ipfs/Qmd5BZT6sZ2D37rCSmwiRVy67Cgx1Jirn4ghqnqPJV9BHJ",
       "name": "can't be opened -609",
@@ -4753,13 +4799,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6616739,
     },
-    NFT {
+    Object {
       "block": 6618527,
       "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-YKD",
       "data": undefined,
       "forsale": 0n,
+      "id": "6618527-3CD8C53D036D48B952-YKD-YOU_KEEP_ON_DROWNING_WE_KEEP_ON_HAVING_FUN-0000000000000001",
       "instance": "YOU_KEEP_ON_DROWNING_WE_KEEP_ON_HAVING_FUN",
       "metadata": "ipfs://ipfs/QmeZ853UNhazcg1BkfpmGWiAfsgJCU2fXp9KWdF6Z4uTeV",
       "name": "You keep on drowning, we keep on having fun",
@@ -4769,13 +4816,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6618527,
     },
-    NFT {
+    Object {
       "block": 6621802,
       "burned": "",
       "changes": Array [],
       "collection": "56CDD20D8C52C1D075-BTC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6621802-56CDD20D8C52C1D075-BTC-BTC-0000000000000001",
       "instance": "BTC",
       "metadata": "ipfs://ipfs/QmTPCK66suczKRJ5vBYBSi2P1cB5V4wnEp46C3qyKTCLDm",
       "name": "BTC",
@@ -4785,7 +4833,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6621802,
     },
-    NFT {
+    Object {
       "block": 6621892,
       "burned": "",
       "changes": Array [
@@ -4800,7 +4848,8 @@ Object {
       ],
       "collection": "56423C6415A5620713-FCK2020",
       "data": undefined,
-      "forsale": 4200000000000n,
+      "forsale": 0n,
+      "id": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000001",
       "instance": "FCK2020",
       "metadata": "ipfs://ipfs/QmXaDCnoA73iBdZgHd2kqwh1j666suVfLiDPJ9KfkudCLu",
       "name": "fck2020",
@@ -4808,15 +4857,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6621925,
+      "updatedAtBlock": 6621892,
     },
-    NFT {
+    Object {
       "block": 6621892,
       "burned": "",
       "changes": Array [],
       "collection": "56423C6415A5620713-FCK2020",
       "data": undefined,
       "forsale": 0n,
+      "id": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000002",
       "instance": "FCK2020",
       "metadata": "ipfs://ipfs/QmbhYsvtxeZkPgw7hiefwwM6pv6QDwdg8xt79dvryom6tY",
       "name": "fck2020",
@@ -4826,13 +4876,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6621892,
     },
-    NFT {
+    Object {
       "block": 6621892,
       "burned": "",
       "changes": Array [],
       "collection": "56423C6415A5620713-FCK2020",
       "data": undefined,
       "forsale": 0n,
+      "id": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000003",
       "instance": "FCK2020",
       "metadata": "ipfs://ipfs/QmZy2toaFnW8VLP455YmQYk8CwFCmUi4EUuqwQUr2gg8zx",
       "name": "fck2020",
@@ -4842,13 +4893,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6621892,
     },
-    NFT {
+    Object {
       "block": 6621894,
       "burned": "",
       "changes": Array [],
       "collection": "56CDD20D8C52C1D075-BTC",
       "data": undefined,
       "forsale": 0n,
+      "id": "6621894-56CDD20D8C52C1D075-BTC-BTCANTIPUT-0000000000000001",
       "instance": "BTCANTIPUT",
       "metadata": "ipfs://ipfs/QmbEVnayGakSS8GRPLhrFzT5xiiHGmHYizk56gMihHhH2d",
       "name": "BTCantiPUT",
@@ -4858,13 +4910,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6621894,
     },
-    NFT {
+    Object {
       "block": 6629619,
       "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-BIRDWATCHING",
       "data": undefined,
       "forsale": 0n,
+      "id": "6629619-0E76E3AC15B4C1FA1E-BIRDWATCHING-GREAT_SPOTTED_WOODPACKER-0000000000000001",
       "instance": "GREAT_SPOTTED_WOODPACKER",
       "metadata": "ipfs://ipfs/QmVswp6PcHoj41EvuxP4nHX91tSHLR44kr7qvyi5NnMjy5",
       "name": "Great spotted woodpacker",
@@ -4874,13 +4927,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6629619,
     },
-    NFT {
+    Object {
       "block": 6637819,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000001",
       "instance": "MIYA",
       "metadata": "ipfs://ipfs/QmVeBM6VGEd4gd4q3FyN4RvNDwq9CkMFPruTbmnWo4ygvA",
       "name": "Miya",
@@ -4890,13 +4944,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6637819,
     },
-    NFT {
+    Object {
       "block": 6637819,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000002",
       "instance": "MIYA",
       "metadata": "ipfs://ipfs/QmVeBM6VGEd4gd4q3FyN4RvNDwq9CkMFPruTbmnWo4ygvA",
       "name": "Miya",
@@ -4906,13 +4961,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6637819,
     },
-    NFT {
+    Object {
       "block": 6637819,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000003",
       "instance": "MIYA",
       "metadata": "ipfs://ipfs/QmVeBM6VGEd4gd4q3FyN4RvNDwq9CkMFPruTbmnWo4ygvA",
       "name": "Miya",
@@ -4922,13 +4978,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6637819,
     },
-    NFT {
+    Object {
       "block": 6637819,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000004",
       "instance": "MIYA",
       "metadata": "ipfs://ipfs/QmVeBM6VGEd4gd4q3FyN4RvNDwq9CkMFPruTbmnWo4ygvA",
       "name": "Miya",
@@ -4938,13 +4995,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6637819,
     },
-    NFT {
+    Object {
       "block": 6642745,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-LIL-PARISIENNE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642745-B0060DBE7B69FB7A12-LIL-PARISIENNE-LIL-PARISIENNE-0000000000000001",
       "instance": "LIL-PARISIENNE",
       "metadata": "ipfs://ipfs/QmTySyzhcu6eadgC8dpDo68hY2duYXNR5vLTruCLUDjRoK",
       "name": "Lil-Parisienne",
@@ -4954,13 +5012,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642745,
     },
-    NFT {
+    Object {
       "block": 6642745,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-LIL-PARISIENNE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642745-B0060DBE7B69FB7A12-LIL-PARISIENNE-LIL-PARISIENNE-0000000000000002",
       "instance": "LIL-PARISIENNE",
       "metadata": "ipfs://ipfs/QmTySyzhcu6eadgC8dpDo68hY2duYXNR5vLTruCLUDjRoK",
       "name": "Lil-Parisienne",
@@ -4970,13 +5029,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642745,
     },
-    NFT {
+    Object {
       "block": 6642826,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000001",
       "instance": "NIGHTMARE",
       "metadata": "ipfs://ipfs/QmbYzWyeP9YBjx5FCkYTVrUpQUadPHH4tBpyYVPQGz4hAu",
       "name": "Nightmare",
@@ -4986,13 +5046,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642826,
     },
-    NFT {
+    Object {
       "block": 6642826,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000002",
       "instance": "NIGHTMARE",
       "metadata": "ipfs://ipfs/QmbYzWyeP9YBjx5FCkYTVrUpQUadPHH4tBpyYVPQGz4hAu",
       "name": "Nightmare",
@@ -5002,13 +5063,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642826,
     },
-    NFT {
+    Object {
       "block": 6642826,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000003",
       "instance": "NIGHTMARE",
       "metadata": "ipfs://ipfs/QmbYzWyeP9YBjx5FCkYTVrUpQUadPHH4tBpyYVPQGz4hAu",
       "name": "Nightmare",
@@ -5018,13 +5080,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642826,
     },
-    NFT {
+    Object {
       "block": 6642826,
       "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000004",
       "instance": "NIGHTMARE",
       "metadata": "ipfs://ipfs/QmbYzWyeP9YBjx5FCkYTVrUpQUadPHH4tBpyYVPQGz4hAu",
       "name": "Nightmare",
@@ -5034,13 +5097,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642826,
     },
-    NFT {
+    Object {
       "block": 6642939,
       "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642939-F4677F38191256A73F-LDDJRS-SHINO_LIDDED_JAR-0000000000000001",
       "instance": "SHINO_LIDDED_JAR",
       "metadata": "ipfs://ipfs/QmX1XJRWqSPpbN8cFKRdXiMWQe5uHH9F6JwDQMG5kyYiaj",
       "name": "Shino lidded jar",
@@ -5053,15 +5117,16 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6646214,
+      "updatedAtBlock": 6642939,
     },
-    NFT {
+    Object {
       "block": 6642939,
       "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642939-F4677F38191256A73F-LDDJRS-WOODASH_LIDDED_JAR-0000000000000002",
       "instance": "WOODASH_LIDDED_JAR",
       "metadata": "ipfs://ipfs/QmesdwEK5B5LfRVQVkCwZFrQoY9CMiJgjVBA69PgYS5mET",
       "name": "Woodash lidded jar",
@@ -5071,13 +5136,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642939,
     },
-    NFT {
+    Object {
       "block": 6642939,
       "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
       "forsale": 0n,
+      "id": "6642939-F4677F38191256A73F-LDDJRS-TOMATO_RED_LIDDED_JAR-0000000000000003",
       "instance": "TOMATO_RED_LIDDED_JAR",
       "metadata": "ipfs://ipfs/QmYS4a6ek2NMVwJfm17rd82nRi76RqHJsx6nzH7v6e4RkU",
       "name": "Tomato red lidded jar",
@@ -5087,13 +5153,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6642939,
     },
-    NFT {
+    Object {
       "block": 6650640,
       "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6650640-0E54E51D92AECA5749-FLASH CRASH-FLASH_CRASH-0000000000000002",
       "instance": "FLASH_CRASH",
       "metadata": "ipfs://ipfs/QmZrPz6QkYJ9E2YSvmVQPhN9d8Qvo9L57ph1QQmUfYfGKr",
       "name": "Flash Crash",
@@ -5103,13 +5170,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6650640,
     },
-    NFT {
+    Object {
       "block": 6650640,
       "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_03-0000000000000002",
       "instance": "ABSTRACTION_SECTION_03",
       "metadata": "ipfs://ipfs/QmSk1GmZJYTWdR71PFiPTn4R83qMSXA33EcKcgt5JWK4zm",
       "name": "Abstraction Section 03",
@@ -5119,13 +5187,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6650640,
     },
-    NFT {
+    Object {
       "block": 6650640,
       "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_02-0000000000000003",
       "instance": "ABSTRACTION_SECTION_02",
       "metadata": "ipfs://ipfs/QmTc72fHYPHiUFznoNF4YvzPNx4rnjiq9utAHV1N5ZSHo5",
       "name": "Abstraction Section 02",
@@ -5137,15 +5206,16 @@ Object {
       },
       "sn": "0000000000000003",
       "transferable": 1,
-      "updatedAtBlock": 6663790,
+      "updatedAtBlock": 6650640,
     },
-    NFT {
+    Object {
       "block": 6650640,
       "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_01-0000000000000004",
       "instance": "ABSTRACTION_SECTION_01",
       "metadata": "ipfs://ipfs/Qmf1RVTP3DJPt51z4gTSggEDNqd58NYXeNwx1jUYVUzbsi",
       "name": "Abstraction Section 01",
@@ -5630,13 +5700,14 @@ Object {
     },
   ],
   "nfts": Array [
-    NFT {
+    Object {
       "block": 6474741,
       "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
       "forsale": 0n,
+      "id": "6474741-10D77F8B699437BB50-KODA-HOW_TO_UPLOAD_COLLECTION_OF_NFTS-0000000000000004",
       "instance": "HOW_TO_UPLOAD_COLLECTION_OF_NFTS",
       "metadata": "ipfs://ipfs/QmdQeQMXuCS6TVBrFF7xhKf6cXzrcDzK9Ht36ZoqWBoYHS",
       "name": "How to Upload Collection of NFTs",
@@ -5646,13 +5717,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6474741,
     },
-    NFT {
+    Object {
       "block": 6475453,
       "burned": "",
       "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
       "forsale": 0n,
+      "id": "6475453-26769B0B8E5FBE4D11-KSM-KANARA-0000000000000001",
       "instance": "KANARA",
       "metadata": "ipfs://ipfs/QmdMw8QhZS4dezvcixHYVhtPFSErc98LEx3Hf6HXvgMknF",
       "name": "Kanara",
@@ -5664,9 +5736,9 @@ Object {
       },
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6479450,
+      "updatedAtBlock": 6475453,
     },
-    NFT {
+    Object {
       "block": 6506080,
       "burned": "",
       "changes": Array [
@@ -5681,7 +5753,8 @@ Object {
       ],
       "collection": "0E54E51D92AECA5749-KSM",
       "data": undefined,
-      "forsale": 5000000000000n,
+      "forsale": 0n,
+      "id": "6506080-0E54E51D92AECA5749-KSM-SHAPES_01_-_UNIQUE-0000000000000001",
       "instance": "SHAPES_01_-_UNIQUE",
       "metadata": "ipfs://ipfs/QmVkeTFykLayAPXCozku411bVkjSS2xAyiuqznkkPy73yN",
       "name": "Shapes 01 - Unique",
@@ -5689,9 +5762,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6506108,
+      "updatedAtBlock": 6506080,
     },
-    NFT {
+    Object {
       "block": 6545072,
       "burned": "",
       "changes": Array [
@@ -5708,7 +5781,7 @@ Object {
           "caller": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
           "field": "forsale",
           "new": 20000000000n,
-          "old": 1000000000000n,
+          "old": 0n,
           "opType": "LIST",
         },
         Object {
@@ -5719,34 +5792,28 @@ Object {
           "old": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
           "opType": "SEND",
         },
-        Object {
-          "block": 6546038,
-          "caller": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
-          "field": "forsale",
-          "new": 0n,
-          "old": 20000000000n,
-          "opType": "SEND",
-        },
       ],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
       "forsale": 0n,
+      "id": "6545072-26D6484336C010812D-NFTORIGIN-NFT_ORIGINAL_ART_001_BROWN_LIMITED_EDITION-0000000000000001",
       "instance": "NFT_ORIGINAL_ART_001_BROWN_LIMITED_EDITION",
       "metadata": "ipfs://ipfs/QmYBJgr1xN3vozcByHxaz16TdsQR3n1XwXWpioetXTyDmw",
       "name": "NFT original Art #001 Brown Limited Edition",
-      "owner": "EzDPZK9taNcSNipFFkStk8RvF3ai4fiY1do9aPM5VmGQDC9",
+      "owner": "DTEzX9Njj4GTSmTMfg2oc32bE5g7U8eNrecK3BffBk9yu6X",
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6546038,
+      "updatedAtBlock": 6545072,
     },
-    NFT {
+    Object {
       "block": 6546909,
       "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
       "forsale": 0n,
+      "id": "6546909-26D6484336C010812D-NFTORIGIN-NFT_ORIGINAL_ART_PALE_GREEN_LIMITED_EDITION-0000000000000001",
       "instance": "NFT_ORIGINAL_ART_PALE_GREEN_LIMITED_EDITION",
       "metadata": "ipfs://ipfs/QmT8dsByp3vsNZkhrCHJhFMqKa9FHBALZtzLqRuAW2sgiu",
       "name": "NFT original Art #??? Pale Green Limited Edition",
@@ -5756,13 +5823,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6546909,
     },
-    NFT {
+    Object {
       "block": 6572370,
       "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-MACROCOSM",
       "data": undefined,
       "forsale": 0n,
+      "id": "6572370-0E76E3AC15B4C1FA1E-MACROCOSM-SOUND_OF_NATURE-0000000000000001",
       "instance": "SOUND_OF_NATURE",
       "metadata": "ipfs://ipfs/Qmai5bpB2GMjtxpiKnEdpgjADTm5V7Puis8Wom2KFQJbwD",
       "name": "Sound of nature",
@@ -5772,13 +5840,14 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6572370,
     },
-    NFT {
+    Object {
       "block": 6573606,
       "burned": "",
       "changes": Array [],
       "collection": "C81C02FED1334A5F2D-IVT",
       "data": undefined,
       "forsale": 0n,
+      "id": "6573606-C81C02FED1334A5F2D-IVT-EAGLE-0000000000000001",
       "instance": "EAGLE",
       "metadata": "ipfs://ipfs/QmUFapvAh5nM7Qut8CZSowHH2ReqrbCYCG4ffk3z3viTzg",
       "name": "Eagle",
@@ -5788,7 +5857,7 @@ Object {
       "transferable": 1,
       "updatedAtBlock": 6573606,
     },
-    NFT {
+    Object {
       "block": 6608454,
       "burned": "",
       "changes": Array [
@@ -5803,7 +5872,8 @@ Object {
       ],
       "collection": "56CDD20D8C52C1D075-KISS",
       "data": undefined,
-      "forsale": 10000000000000n,
+      "forsale": 0n,
+      "id": "6608454-56CDD20D8C52C1D075-KISS-KISS-0000000000000001",
       "instance": "KISS",
       "metadata": "ipfs://ipfs/QmUXbDrVhu9qxu1mSLQnWZ1vBg7PjGNsh91TDXkWj1gsBL",
       "name": "Kiss",
@@ -5811,9 +5881,9 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6608470,
+      "updatedAtBlock": 6608454,
     },
-    NFT {
+    Object {
       "block": 6616268,
       "burned": "",
       "changes": Array [
@@ -5828,7 +5898,8 @@ Object {
       ],
       "collection": "B45FFFBEFBE527E025-NFT",
       "data": undefined,
-      "forsale": 8000000000000n,
+      "forsale": 0n,
+      "id": "6616268-B45FFFBEFBE527E025-NFT-NFT_-_LONELY_ARTIST-0000000000000001",
       "instance": "NFT_-_LONELY_ARTIST",
       "metadata": "ipfs://ipfs/QmU9Aitc6mQg8fWLfy77tJcPwmmDbhe7vDzQ6BL1r5HkdD",
       "name": "NFT - Lonely Artist ",
@@ -5836,15 +5907,16 @@ Object {
       "reactions": Object {},
       "sn": "0000000000000001",
       "transferable": 1,
-      "updatedAtBlock": 6616336,
+      "updatedAtBlock": 6616268,
     },
-    NFT {
+    Object {
       "block": 6616739,
       "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-GLITCH",
       "data": undefined,
       "forsale": 0n,
+      "id": "6616739-0E76E3AC15B4C1FA1E-GLITCH-CAN'T_BE_OPENED_-609-0000000000000001",
       "instance": "CAN'T_BE_OPENED_-609",
       "metadata": "ipfs://ipfs/Qmd5BZT6sZ2D37rCSmwiRVy67Cgx1Jirn4ghqnqPJV9BHJ",
       "name": "can't be opened -609",
