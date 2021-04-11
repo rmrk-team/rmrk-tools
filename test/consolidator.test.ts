@@ -49,7 +49,7 @@ describe("tools: Consolidator", () => {
       "0x524d524b",
     ]);
     const consolidator = new Consolidator();
-    expect((await consolidator.consolidate(remarks))).toMatchSnapshot();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
   it("should run consolidation from entire dump", async () => {
@@ -58,8 +58,7 @@ describe("tools: Consolidator", () => {
       "0x524d524b",
     ]);
     const consolidator = new Consolidator();
-    const consolidated = await consolidator.consolidate(remarks);
-    expect(consolidated).toMatchSnapshot();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
   it("should be invalid: Collection token is minted twice with same ID", async () => {
