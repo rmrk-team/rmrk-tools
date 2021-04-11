@@ -24,6 +24,7 @@ import {
   getChangeIssuerEntity,
 } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mintNFT";
+import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
@@ -36,37 +37,39 @@ export interface IConsolidatorAdapter {
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
+  ): Promise<any>;
   updateNFTList(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
+  ): Promise<any>;
   updateNFTBuy(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
+  ): Promise<any>;
   updateNFTSend(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
+  ): Promise<any>;
   updateNFTConsume(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
-  updateNFTMint(nft: NFT, updatedAtBlock: number): Promise<number>;
-  updateCollectionMint(collection: CollectionConsolidated): Promise<string>;
+  ): Promise<any>;
+  updateNFTMint(nft: NFT, updatedAtBlock: number): Promise<any>;
+  updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
   updateCollectionIssuer(
     collection: Collection,
     consolidatedCollection: CollectionConsolidated,
     updatedAtBlock: number
-  ): Promise<number>;
+  ): Promise<any>;
   getNFTById(id: string): Promise<NFTConsolidated | undefined>;
   getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;
   getNFTByIdUnique(id: string): Promise<NFTConsolidated | undefined>;
+  getAllNFTs(): Promise<NFTConsolidated[]>;
+  getAllCollections(): Promise<CollectionConsolidated[]>;
 }
 
 export interface NFTConsolidated {
@@ -98,6 +101,7 @@ export interface CollectionConsolidated {
   metadata: string;
   changes: Change[];
   loadedMetadata?: CollectionMetadata;
+  updatedAtBlock?: number;
 }
 
 export const localNFTtoNFTInstance = (
@@ -168,52 +172,20 @@ export const localCollectiontoCollectionInstance = (
 
 export class Consolidator {
   readonly invalidCalls: InvalidCall[];
-  readonly collections: CollectionConsolidated[];
-  readonly nfts: NFTConsolidated[];
-  readonly dbAdapter?: IConsolidatorAdapter;
+  readonly collections: Collection[];
+  readonly nfts: NFT[];
+  readonly dbAdapter: IConsolidatorAdapter;
   readonly ss58Format?: number;
   constructor(ss58Format?: number, dbAdapter?: IConsolidatorAdapter) {
     if (ss58Format) {
       this.ss58Format = ss58Format;
     }
 
-    if (dbAdapter) {
-      this.dbAdapter = dbAdapter;
-    }
+    this.dbAdapter = dbAdapter || new InMemoryAdapter();
 
     this.invalidCalls = [];
     this.collections = [];
     this.nfts = [];
-  }
-
-  private async getCollectionById(
-    id: string
-  ): Promise<CollectionConsolidated | undefined> {
-    return this.dbAdapter
-      ? await this.dbAdapter.getCollectionById(id)
-      : this.collections.find((el) => el.id === id);
-  }
-
-  /**
-   * Find NFT by compare id on the blockless part
-   * To prevent minting a token of the same id in a different block
-   */
-  private async getNFTByIdUnique(
-    id: string
-  ): Promise<NFTConsolidated | undefined> {
-    return this.dbAdapter
-      ? await this.dbAdapter.getNFTByIdUnique(id)
-      : this.nfts.find((nft) => {
-          const uniquePart1 = nft.id.split("-").slice(1).join("-");
-          const uniquePart2 = id.split("-").slice(1).join("-");
-          return uniquePart1 === uniquePart2;
-        });
-  }
-
-  private async getNFTById(id: string) {
-    return this.dbAdapter
-      ? await this.dbAdapter.getNFTById(id)
-      : this.nfts.find((el) => el.id === id);
   }
 
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
@@ -252,7 +224,9 @@ export class Consolidator {
       return true;
     }
 
-    const existingCollection = await this.getCollectionById(collection.id);
+    const existingCollection = await this.dbAdapter.getCollectionById(
+      collection.id
+    );
     if (existingCollection) {
       invalidate(
         collection.id,
@@ -263,9 +237,7 @@ export class Consolidator {
 
     try {
       validateMintIds(collection, remark);
-      if (this.dbAdapter) {
-        await this.dbAdapter.updateCollectionMint(collection);
-      }
+      await this.dbAdapter.updateCollectionMint(collection);
       this.collections.push(collection);
     } catch (e) {
       invalidate(collection.id, e.message);
@@ -293,7 +265,7 @@ export class Consolidator {
       return true;
     }
 
-    const exists = await this.getNFTByIdUnique(nft.getId());
+    const exists = await this.dbAdapter.getNFTByIdUnique(nft.getId());
 
     if (exists) {
       invalidate(
@@ -303,7 +275,9 @@ export class Consolidator {
       return true;
     }
 
-    const nftParentCollection = await this.getCollectionById(nft.collection);
+    const nftParentCollection = await this.dbAdapter.getCollectionById(
+      nft.collection
+    );
 
     const collection = nftParentCollection
       ? localCollectiontoCollectionInstance(nftParentCollection)
@@ -311,14 +285,9 @@ export class Consolidator {
 
     try {
       validateMintNFT(remark, nft, collection);
-      if (this.dbAdapter) {
-        await this.dbAdapter.updateNFTMint(nft, remark.block);
-      }
+      await this.dbAdapter.updateNFTMint(nft, remark.block);
 
-      this.nfts.push({
-        ...nft,
-        id: nft.getId(),
-      });
+      this.nfts.push(nft);
     } catch (e) {
       invalidate(nft.getId(), e.message);
       return true;
@@ -347,12 +316,14 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedNFT = await this.getNFTByIdUnique(sendEntity.id);
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      sendEntity.id
+    );
     const nft = localNFTtoNFTInstance(consolidatedNFT);
 
     try {
       sendInteraction(remark, sendEntity, nft);
-      if (this.dbAdapter && nft && consolidatedNFT) {
+      if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT, remark.block);
       }
     } catch (e) {
@@ -383,12 +354,14 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedNFT = await this.getNFTByIdUnique(listEntity.id);
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      listEntity.id
+    );
     const nft = localNFTtoNFTInstance(consolidatedNFT);
 
     try {
       listForSaleInteraction(remark, listEntity, nft);
-      if (this.dbAdapter && nft && consolidatedNFT) {
+      if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT, remark.block);
       }
     } catch (e) {
@@ -421,11 +394,13 @@ export class Consolidator {
     }
 
     // Find the NFT in state
-    const consolidatedNFT = await this.getNFTByIdUnique(consumeEntity.id);
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      consumeEntity.id
+    );
     const nft = localNFTtoNFTInstance(consolidatedNFT);
     try {
       consumeInteraction(remark, consumeEntity, nft);
-      if (this.dbAdapter && nft && consolidatedNFT) {
+      if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTConsume(
           nft,
           consolidatedNFT,
@@ -458,12 +433,12 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedNFT = await this.getNFTByIdUnique(buyEntity.id);
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(buyEntity.id);
     const nft = localNFTtoNFTInstance(consolidatedNFT);
 
     try {
       buyInteraction(remark, buyEntity, nft, this.ss58Format);
-      if (this.dbAdapter && nft && consolidatedNFT) {
+      if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT, remark.block);
       }
     } catch (e) {
@@ -491,13 +466,12 @@ export class Consolidator {
       );
       return true;
     }
-    const consolidatedNFT = await this.getNFTById(emoteEntity.id);
+    const consolidatedNFT = await this.dbAdapter.getNFTById(emoteEntity.id);
     const nft = localNFTtoNFTInstance(consolidatedNFT);
 
     try {
       emoteInteraction(remark, emoteEntity, nft);
       if (
-        this.dbAdapter &&
         nft &&
         consolidatedNFT &&
         remark.block !== consolidatedNFT.updatedAtBlock
@@ -533,7 +507,7 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedCollection = await this.getCollectionById(
+    const consolidatedCollection = await this.dbAdapter.getCollectionById(
       changeIssuerEntity.id
     );
 
@@ -543,7 +517,7 @@ export class Consolidator {
 
     try {
       changeIssuerInteraction(remark, changeIssuerEntity, collection);
-      if (this.dbAdapter && collection && consolidatedCollection) {
+      if (collection && consolidatedCollection) {
         await this.dbAdapter.updateCollectionIssuer(
           collection,
           consolidatedCollection,
@@ -560,7 +534,7 @@ export class Consolidator {
 
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
-    //console.log(remarks);
+    // console.log(remarks);
     for (const remark of remarks) {
       // console.log('==============================');
       // console.log('Remark is: ' + remark.remark);
@@ -632,8 +606,8 @@ export class Consolidator {
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     return {
-      nfts: this.nfts,
-      collections: this.collections,
+      nfts: await this.dbAdapter.getAllNFTs(),
+      collections: await this.dbAdapter.getAllCollections(),
       invalid: this.invalidCalls,
     };
   }
