@@ -47,7 +47,7 @@ export interface NFTConsolidated {
   sn: string;
   metadata?: string;
   data?: string;
-  forsale: BigInt;
+  forsale: bigint;
   reactions: Reactionmap;
   changes: Change[];
   owner: string;
