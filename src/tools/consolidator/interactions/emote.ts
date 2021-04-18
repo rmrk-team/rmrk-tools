@@ -2,11 +2,29 @@ import { OP_TYPES } from "../../constants";
 import { Remark } from "../remark";
 import { Emote } from "../../../rmrk1.0.0/classes/emote";
 import { NFT } from "../../..";
+import { Change } from "../../../rmrk1.0.0/changelog";
+
+const addEmoteChange = (
+  remark: Remark,
+  emoteEntity: Emote,
+  nft: NFT,
+  addAction = true
+) => {
+  nft.addChange({
+    field: "reactions",
+    old: "",
+    new: `${addAction ? "+" : "-"}${emoteEntity.unicode}`,
+    caller: remark.caller,
+    block: remark.block,
+    opType: OP_TYPES.EMOTE,
+  } as Change);
+};
 
 export const emoteInteraction = (
   remark: Remark,
   emoteEntity: Emote,
-  nft?: NFT
+  nft?: NFT,
+  emoteChanges?: boolean
 ): void => {
   if (!nft) {
     throw new Error(
@@ -29,7 +47,15 @@ export const emoteInteraction = (
   const removing = index > -1;
   if (removing) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
+
+    if (emoteChanges) {
+      addEmoteChange(remark, emoteEntity, nft, false);
+    }
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
+
+    if (emoteChanges) {
+      addEmoteChange(remark, emoteEntity, nft, true);
+    }
   }
 };
