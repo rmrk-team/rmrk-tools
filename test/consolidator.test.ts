@@ -3,45 +3,13 @@ import { getRemarksFromBlocks } from "../src/tools/utils";
 import {
   blockCollectionMintedTwice,
   blockNFTMintedTwice,
-  // changeIssuerRemark,
-  // changeIssuerRemarkInvalid,
   syntheticChangeIssuerBlock,
   syntheticChangeIssuerBlockInvalid,
   syntheticChangeIssuerBlockInvalidCaller,
   validBlocks,
 } from "./mocks/blocks";
 import { blocks647x_661x, blocksDumpAll } from "./mocks/blocks-dump";
-// import { stringToHex } from "@polkadot/util";
 
-/*
- [x] token is minted twice with same ID
- [ ] token is minted into collection which is at its limit
- [ ] token has any interaction more than once in a block (the rule is ONE interaction per unique token per block)
- [ ] token is double spent
- [ ] token is double set for sale (by owner okay, update price, by anyone else, discard)
- [ ] token is sent from address who is not the owner
- [ ] token is sold from address who is not the owner
- [ ] token is minted from address not in charge of collection
- [ ] collection reassigned twice
- [ ] collection reassigned by someone not owner
- */
-
-/*
-const logRemarksHelper = () => {
-  const remarks = getRemarksFromBlocks(validBlocks).map((rmk) => {
-    const [_prefix, _op_type, _version, dataString] = rmk.remark.split("::");
-    return {
-      ...rmk,
-      _prefix,
-      _op_type,
-      _version,
-      expanded: getRemarkData(dataString),
-    };
-  });
-  console.log(JSON.stringify(remarks, null, 4));
-  console.log("remark converted", stringToHex(changeIssuerRemarkInvalid));
-};
- */
 describe("tools: Consolidator", () => {
   it("should run consolidation from set of mixed valid and invalid blocks 647x_661x", async () => {
     const remarks = getRemarksFromBlocks(blocks647x_661x, [
@@ -59,6 +27,19 @@ describe("tools: Consolidator", () => {
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("should run consolidation from dump with emote changes", async () => {
+    const remarks = getRemarksFromBlocks(blocksDumpAll, [
+      "0x726d726b",
+      "0x524d524b",
+    ]);
+    const consolidator = new Consolidator(undefined, undefined, true);
+    const consolidated = await consolidator.consolidate(remarks);
+    const withEmotes = consolidated.nfts.filter((nft) =>
+      nft.changes.some((c) => c.field === "reactions")
+    );
+    expect(withEmotes).toMatchSnapshot();
   });
 
   it("should be invalid: Collection token is minted twice with same ID", async () => {
