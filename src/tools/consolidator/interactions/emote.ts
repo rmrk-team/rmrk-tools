@@ -8,12 +8,12 @@ const addEmoteChange = (
   remark: Remark,
   emoteEntity: Emote,
   nft: NFT,
-  addAction = true
+  removing = false
 ) => {
   nft.addChange({
     field: "reactions",
     old: "",
-    new: `${addAction ? "+" : "-"}${emoteEntity.unicode}`,
+    new: `${removing ? "-" : "+"}${emoteEntity.unicode}`,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.EMOTE,
@@ -47,15 +47,11 @@ export const emoteInteraction = (
   const removing = index > -1;
   if (removing) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
-
-    if (emitEmoteChanges) {
-      addEmoteChange(remark, emoteEntity, nft, false);
-    }
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
+  }
 
-    if (emitEmoteChanges) {
-      addEmoteChange(remark, emoteEntity, nft, true);
-    }
+  if (emitEmoteChanges) {
+    addEmoteChange(remark, emoteEntity, nft, removing);
   }
 };
