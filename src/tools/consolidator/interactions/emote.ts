@@ -24,7 +24,7 @@ export const emoteInteraction = (
   remark: Remark,
   emoteEntity: Emote,
   nft?: NFT,
-  emoteChanges?: boolean
+  emitEmoteChanges?: boolean
 ): void => {
   if (!nft) {
     throw new Error(
@@ -48,13 +48,13 @@ export const emoteInteraction = (
   if (removing) {
     nft.reactions[emoteEntity.unicode].splice(index, 1);
 
-    if (emoteChanges) {
+    if (emitEmoteChanges) {
       addEmoteChange(remark, emoteEntity, nft, false);
     }
   } else {
     nft.reactions[emoteEntity.unicode].push(remark.caller);
 
-    if (emoteChanges) {
+    if (emitEmoteChanges) {
       addEmoteChange(remark, emoteEntity, nft, true);
     }
   }

@@ -75,23 +75,23 @@ export class Consolidator {
   readonly nfts: NFT[];
   readonly dbAdapter: IConsolidatorAdapter;
   readonly ss58Format?: number;
-  readonly emoteChanges?: boolean;
+  readonly emitEmoteChanges?: boolean;
 
   /**
-   * If true emoteChanges records full log of EMOTE events in nft 'changes' prop
+   * If true emitEmoteChanges records full log of EMOTE events in nft 'changes' prop
    * @param ss58Format
    * @param dbAdapter
-   * @param emoteChanges
+   * @param emitEmoteChanges
    */
   constructor(
     ss58Format?: number,
     dbAdapter?: IConsolidatorAdapter,
-    emoteChanges?: boolean
+    emitEmoteChanges?: boolean
   ) {
     if (ss58Format) {
       this.ss58Format = ss58Format;
     }
-    this.emoteChanges = emoteChanges || false;
+    this.emitEmoteChanges = emitEmoteChanges || false;
 
     this.dbAdapter = dbAdapter || new InMemoryAdapter();
 
@@ -382,7 +382,7 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      emoteInteraction(remark, emoteEntity, nft, this.emoteChanges);
+      emoteInteraction(remark, emoteEntity, nft, this.emitEmoteChanges);
       if (
         nft &&
         consolidatedNFT &&
