@@ -35,6 +35,7 @@ export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
   collections: CollectionConsolidated[];
   invalid: InvalidCall[];
+  lastBlock?: number;
 };
 
 export interface NFTConsolidated {
