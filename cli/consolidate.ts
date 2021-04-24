@@ -38,7 +38,7 @@ const consolidate = async () => {
   }
   const ja = new JsonAdapter(file, prefixes, collectionFilter);
   const remarks = ja.getRemarks();
-  const con = new Consolidator(ss58Format);
+  const con = new Consolidator(ss58Format, undefined, true);
   const ret = await con.consolidate(remarks);
 
   //@ts-ignore
