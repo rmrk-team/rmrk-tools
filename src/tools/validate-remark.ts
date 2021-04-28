@@ -102,6 +102,9 @@ export const validateCollection = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
+    if (!obj.metadata && !obj.data) {
+      throw new Error("NFT is missing metadata");
+    }
     return assert(obj, CollectionStruct);
   } catch (error) {
     throw new Error(
@@ -117,6 +120,9 @@ export const validateNFT = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.MINTNFT);
     const obj = getRemarkData(dataString);
+    if (!obj.metadata && !obj.data) {
+      throw new Error("NFT is missing metadata");
+    }
     return assert(obj, NFTStruct);
   } catch (error) {
     throw new Error(
