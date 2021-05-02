@@ -12,6 +12,7 @@ const consolidate = async () => {
     "--ws": String, // Optional websocket url
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--out": String, // optional output name
+    "--noinvalid": Boolean, // don't include invalid calls
   });
 
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
@@ -26,6 +27,7 @@ const consolidate = async () => {
 
   const file = args["--json"];
   const out = args["--out"];
+  const noInvalid = args["--noinvalid"] || false;
 
   const collectionFilter = args["--collection"];
   if (!file) {
@@ -49,7 +51,11 @@ const consolidate = async () => {
   };
   fs.writeFileSync(
     out ? `consolidated-from-${out}` : `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
+    JSON.stringify({
+      ...ret,
+      invalid: noInvalid ? [] : ret.invalid,
+      lastBlock: ja.getLastBlock(),
+    })
   );
   process.exit(0);
 };
