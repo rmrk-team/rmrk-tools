@@ -5,6 +5,7 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { NFT as N100 } from "../../..";
 import { encodeAddress } from "@polkadot/keyring";
+import { isBurnedNFT } from "../../utils";
 
 export const buyInteraction = (
   remark: Remark, // Current remark
@@ -49,7 +50,9 @@ const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
   remark.extra_ex?.forEach((el: BlockCall) => {
     if (el.call === "balances.transfer") {
       const [owner, forsale] = el.value.split(",");
-      const ownerEncoded = ss58Format ? encodeAddress(owner, ss58Format) : owner;
+      const ownerEncoded = ss58Format
+        ? encodeAddress(owner, ss58Format)
+        : owner;
       transferValue = [ownerEncoded, forsale].join(",");
       if (transferValue === `${nft.owner},${nft.forsale}`) {
         transferValid = true;
@@ -72,7 +75,7 @@ const validate = (
   );
 
   switch (true) {
-    case nft.burned != "":
+    case isBurnedNFT(nft):
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buyEntity.id}`
       );

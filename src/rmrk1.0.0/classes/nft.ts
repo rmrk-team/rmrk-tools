@@ -19,7 +19,7 @@ export class NFT {
   changes: Change[] = [];
   owner: string;
   loadedMetadata?: NFTMetadata;
-  burned: string;
+  burned: string[] | boolean;
   constructor(
     block: number,
     collection: string,
@@ -42,7 +42,7 @@ export class NFT {
     this.owner = "";
     this.reactions = {};
     this.forsale = BigInt(0);
-    this.burned = "";
+    this.burned = false;
     this.updatedAtBlock = updatedAtBlock || block;
   }
 
