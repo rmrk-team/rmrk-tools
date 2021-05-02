@@ -97,9 +97,15 @@ import { RemarkListener } from 'rmrk-tools';
 import { WsProvider } from "@polkadot/api";
 
 const wsProvider = new WsProvider("wss://node.rmrk.app");
+const api = ApiPromise.create({ provider: wsProvider });
 
+const consolidateFunction = async (remarks: Remark[]) => {
+    const consolidator = new Consolidator();
+    return consolidator.consolidate(remarks);
+};
+  
 const startListening = async () => {
-  const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://url-for-remarks-dump' });
+  const listener = new RemarkListener({ polkadotApi: api, prefixes: [], consolidateFunction });
   const subscriber = listener.initialiseObservable();
   subscriber.subscribe((val) => console.log(val));
 };
@@ -114,21 +120,16 @@ const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 ```
 
-Consolidator requires a full history of remarks, so you have to either provide an url where you store your dumps that you fetch using `fetchRemarks`:
+By default Listener uses localstorage to save latest block number and default key it uses is `latestBlock`
 
+You can pass `storageKey` to listener initialisation to change localstorage key or you can pass your own implementation of `storageProvider` as long as it adhers to following interface
 ```
-const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialBlockCalls: [...] });
+interface IStorageProvider {
+  readonly storageKey: string;
+  set(latestBlock: number): Promise<void>;
+  get(): Promise<string | null>;
+}
 ```
-
-Or pass fetched remarks as an array:
-
-```
-const to = await getLatestFinalizedBlock(api);
-const missingBlocks = await fetchRemarks(api, 0, to, []);
-const listener = new RemarkListener({ providerInterface: wsProvider, prefixes: [], initialRemarksUrl: 'ipfs://url-for-remarks-dump' });
-```
-
-Please note that fetching from block 0 like above from live chain will take a long time, so the best thing is for you to set up a cron job or listener that will be updating dumps that you can then pass to consolidator
 
 ### `Collection`
 

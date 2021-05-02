@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "0.1.2",
+  "version": "0.1.13",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
     "test": "jest --silent",
-    "test:watch": "jest --watch --silent",
+    "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
     "prepublishOnly": "yarn build"
   },

@@ -1,10 +1,10 @@
 import { validateList } from "../../tools/validate-remark";
 
 export class List {
-  price: BigInt;
+  price: bigint;
   id: string;
 
-  constructor(id: string, price: BigInt) {
+  constructor(id: string, price: bigint) {
     this.price = price;
     this.id = id;
   }

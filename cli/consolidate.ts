@@ -42,8 +42,9 @@ const consolidate = async () => {
     process.exit(1);
   }
   const ja = new JsonAdapter(file, prefixes, collectionFilter);
-  const con = new Consolidator(ja, ss58Format);
-  const ret = con.consolidate();
+  const remarks = ja.getRemarks();
+  const con = new Consolidator(ss58Format);
+  const ret = await con.consolidate(remarks);
 
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
