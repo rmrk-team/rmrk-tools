@@ -8,6 +8,7 @@ import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
 import { encodeAddress } from "@polkadot/util-crypto";
+import { NFT } from "../rmrk1.0.0/classes/nft";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -259,3 +260,10 @@ export const filterBlocksByCollection = (
       rmrk.remark.includes(collectionFilter)
     )
   );
+
+/**
+ * Burned NFT has burned field set as true or has atleast one burned reason string in array
+ * @param nft
+ */
+export const isBurnedNFT = (nft: NFT) =>
+  nft.burned || (Array.isArray(nft.burned) && nft.burned.length > 0);

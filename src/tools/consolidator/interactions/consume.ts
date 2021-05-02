@@ -4,6 +4,7 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Consume } from "../../../rmrk1.0.0/classes/consume";
 import { NFT } from "../../..";
+import { isBurnedNFT } from "../../utils";
 
 export const consumeInteraction = (
   remark: Remark,
@@ -16,7 +17,7 @@ export const consumeInteraction = (
     );
   }
 
-  if (nft.burned != "") {
+  if (isBurnedNFT(nft)) {
     throw new Error(
       `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${consumeEntity.id}`
     );
@@ -36,18 +37,12 @@ export const consumeInteraction = (
   if (remark.extra_ex?.length) {
     // Check if the transfer is valid, i.e. matches target recipient and value.
     remark.extra_ex?.forEach((el: BlockCall) => {
-      burnReasons.push(`<consume>${el.value}</consume>`);
+      burnReasons.push(el.value);
     });
   }
 
-  if (burnReasons.length < 1) {
-    throw new Error(
-      `[${OP_TYPES.CONSUME}] Attempting to CONSUME NFT ${consumeEntity.id} without a reason`
-    );
-  }
-
   nft.updatedAtBlock = remark.block;
-  const burnReason = burnReasons.join(",");
+  const burnReason = burnReasons.length < 1 ? true : burnReasons;
   nft.addChange({
     field: "burned",
     old: "",
