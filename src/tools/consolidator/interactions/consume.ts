@@ -40,6 +40,12 @@ export const consumeInteraction = (
     });
   }
 
+  if (burnReasons.length < 1) {
+    throw new Error(
+      `[${OP_TYPES.CONSUME}] Attempting to CONSUME NFT ${consumeEntity.id} without a reason`
+    );
+  }
+
   nft.updatedAtBlock = remark.block;
   const burnReason = burnReasons.join(",");
   nft.addChange({
