@@ -36,6 +36,8 @@
     "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
+    "cli:processrefs": "ts-node --project tsconfig.cli.json cli/processrefs.ts",
+    "cli:processrefs-latest": "wget https://gateway.pinata.cloud/ipns/latestdump.rmrk.app/ -O latestdump.json && yarn cli:processrefs --json=latestdump.json",
     "test": "jest --silent",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
