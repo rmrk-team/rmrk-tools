@@ -31,8 +31,6 @@ export interface IStorageProvider {
   get(): Promise<number>;
 }
 
-const PROBLEMATIC_BLCOKS = [7491223, 7487667];
-
 class LocalStorageProvider implements IStorageProvider {
   readonly storageKey: string;
 
@@ -213,9 +211,6 @@ export class RemarkListener {
         console.error(
           "Unable to retrieve finalized head - returned genesis block"
         );
-      }
-      if (PROBLEMATIC_BLCOKS.includes(header.number.toNumber())) {
-        return;
       }
       const blockHash = await this.apiPromise.rpc.chain.getBlockHash(
         header.number.toNumber()
