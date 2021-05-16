@@ -41,10 +41,19 @@ const consolidate = async () => {
     console.error("File is not readable. Are you providing the right path?");
     process.exit(1);
   }
-  const ja = new JsonAdapter(file, prefixes, collectionFilter);
+  const ja = new JsonAdapter(file, prefixes);
   const remarks = ja.getRemarks();
   const con = new Consolidator(ss58Format);
-  const ret = await con.consolidate(remarks);
+  let result = await con.consolidate(remarks);
+  if (collectionFilter) {
+    result = {
+      ...result,
+      nfts: result.nfts.filter((nft) => nft.collection === collectionFilter),
+      collections: result.collections.filter(
+        (col) => col.id === collectionFilter
+      ),
+    };
+  }
 
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
@@ -53,8 +62,8 @@ const consolidate = async () => {
   fs.writeFileSync(
     out ? `consolidated-from-${out}` : `consolidated-from-${file}`,
     JSON.stringify({
-      ...ret,
-      invalid: noInvalid ? [] : ret.invalid,
+      ...result,
+      invalid: noInvalid ? [] : result.invalid,
       lastBlock: ja.getLastBlock(),
     })
   );
