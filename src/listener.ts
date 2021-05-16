@@ -215,9 +215,6 @@ export class RemarkListener {
         );
       }
 
-      if (PROBLEMATIC_BLCOKS.includes(header.number.toNumber())) {
-        return;
-      }
       const blockHash = await this.apiPromise.rpc.chain.getBlockHash(
         header.number.toNumber()
       );
