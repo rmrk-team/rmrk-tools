@@ -2,6 +2,8 @@ import { BlockCalls } from "./types";
 import { deeplog, getBlockCallsFromSignedBlock } from "../tools/utils";
 import { ApiPromise } from "@polkadot/api";
 
+const PROBLEMATIC_BLCOKS = [7491223, 7487667];
+
 export default async (
   api: ApiPromise,
   from: number,
@@ -10,7 +12,7 @@ export default async (
   ss58Format = 2
 ): Promise<BlockCalls[]> => {
   const bcs: BlockCalls[] = [];
-  console.log(from, to)
+  console.log(from, to);
   for (let i = from; i <= to; i++) {
     if (i % 1000 === 0) {
       const event = new Date();
@@ -20,6 +22,9 @@ export default async (
       }
     }
 
+    if (PROBLEMATIC_BLCOKS.includes(i)) {
+      continue;
+    }
     const blockHash = await api.rpc.chain.getBlockHash(i);
     const block = await api.rpc.chain.getBlock(blockHash);
 
