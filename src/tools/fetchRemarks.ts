@@ -2,6 +2,8 @@ import { BlockCalls } from "./types";
 import { deeplog, getBlockCallsFromSignedBlock } from "../tools/utils";
 import { ApiPromise } from "@polkadot/api";
 
+const PROBLEMATIC_BLCOKS = [7491223, 7487667];
+
 export default async (
   api: ApiPromise,
   from: number,
@@ -17,6 +19,10 @@ export default async (
       if (i % 5000 === 0) {
         console.log(`Currently at ${bcs.length} remarks.`);
       }
+    }
+
+    if (PROBLEMATIC_BLCOKS.includes(i)) {
+      continue;
     }
 
     const blockHash = await api.rpc.chain.getBlockHash(i);
