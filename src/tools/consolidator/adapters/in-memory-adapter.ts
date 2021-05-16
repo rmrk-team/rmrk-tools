@@ -144,7 +144,9 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
    */
   public async getNFTByIdUnique(id: string) {
     return this.nfts.find((nft) => {
-      return nft.id === id;
+      const uniquePart1 = nft.id.split("-").slice(1).join("-");
+      const uniquePart2 = id.split("-").slice(1).join("-");
+      return uniquePart1 === uniquePart2;
     });
   }
 }
