@@ -214,7 +214,7 @@ export class RemarkListener {
           "Unable to retrieve finalized head - returned genesis block"
         );
       }
-
+      
       const blockHash = await this.apiPromise.rpc.chain.getBlockHash(
         header.number.toNumber()
       );
