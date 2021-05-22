@@ -4,7 +4,6 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Consume } from "../../../rmrk1.0.0/classes/consume";
 import { NFT } from "../../..";
-import { isBurnedNFT } from "../../utils";
 
 export const consumeInteraction = (
   remark: Remark,
@@ -17,7 +16,7 @@ export const consumeInteraction = (
     );
   }
 
-  if (isBurnedNFT(nft)) {
+  if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${consumeEntity.id}`
     );
@@ -42,7 +41,7 @@ export const consumeInteraction = (
   }
 
   nft.updatedAtBlock = remark.block;
-  const burnReason = burnReasons.length < 1 ? true : burnReasons;
+  const burnReason = burnReasons.length < 1 ? 'true' : burnReasons.join('~~~');
   nft.addChange({
     field: "burned",
     old: "",

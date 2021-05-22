@@ -4,7 +4,7 @@ exports[`tools: Consolidator should run consolidation from dump with emote chang
 Array [
   Object {
     "block": 6431478,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6433187,
@@ -34,7 +34,7 @@ Array [
   },
   Object {
     "block": 6433004,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6435876,
@@ -72,7 +72,7 @@ Array [
   },
   Object {
     "block": 6434060,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6434133,
@@ -110,7 +110,7 @@ Array [
   },
   Object {
     "block": 6435409,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6435863,
@@ -148,7 +148,7 @@ Array [
   },
   Object {
     "block": 6435603,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6435858,
@@ -186,7 +186,7 @@ Array [
   },
   Object {
     "block": 6475453,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6479450,
@@ -216,7 +216,7 @@ Array [
   },
   Object {
     "block": 6504199,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6561067,
@@ -246,7 +246,7 @@ Array [
   },
   Object {
     "block": 6642939,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6644394,
@@ -285,7 +285,7 @@ Array [
   },
   Object {
     "block": 6650640,
-    "burned": false,
+    "burned": "",
     "changes": Array [
       Object {
         "block": 6663790,
@@ -312,6 +312,161 @@ Array [
     "sn": "0000000000000003",
     "transferable": 1,
     "updatedAtBlock": 6663790,
+  },
+]
+`;
+
+exports[`tools: Consolidator should run consolidation from dump with interaction changes 1`] = `
+Array [
+  Object {
+    "MINTNFT": "6616268-B45FFFBEFBE527E025-NFT-NFT_-_LONELY_ARTIST-0000000000000001",
+  },
+  Object {
+    "LIST": "6616268-B45FFFBEFBE527E025-NFT-NFT_-_LONELY_ARTIST-0000000000000001",
+  },
+  Object {
+    "MINT": "0E76E3AC15B4C1FA1E-GLITCH",
+  },
+  Object {
+    "MINTNFT": "6616739-0E76E3AC15B4C1FA1E-GLITCH-CAN'T_BE_OPENED_-609-0000000000000001",
+  },
+  Object {
+    "MINT": "3CD8C53D036D48B952-YKD",
+  },
+  Object {
+    "MINTNFT": "6618527-3CD8C53D036D48B952-YKD-YOU_KEEP_ON_DROWNING_WE_KEEP_ON_HAVING_FUN-0000000000000001",
+  },
+  Object {
+    "MINT": "56CDD20D8C52C1D075-BTC",
+  },
+  Object {
+    "MINTNFT": "6621802-56CDD20D8C52C1D075-BTC-BTC-0000000000000001",
+  },
+  Object {
+    "MINT": "56423C6415A5620713-FCK2020",
+  },
+  Object {
+    "MINTNFT": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000001",
+  },
+  Object {
+    "MINTNFT": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000003",
+  },
+  Object {
+    "MINTNFT": "6621894-56CDD20D8C52C1D075-BTC-BTCANTIPUT-0000000000000001",
+  },
+  Object {
+    "LIST": "6621892-56423C6415A5620713-FCK2020-FCK2020-0000000000000001",
+  },
+  Object {
+    "MINT": "52DDF7617CDF0FFD34-MUSASHI ",
+  },
+  Object {
+    "MINT": "0E76E3AC15B4C1FA1E-BIRDWATCHING",
+  },
+  Object {
+    "MINTNFT": "6629619-0E76E3AC15B4C1FA1E-BIRDWATCHING-GREAT_SPOTTED_WOODPACKER-0000000000000001",
+  },
+  Object {
+    "MINT": "10D77F8B699437BB50-CRC",
+  },
+  Object {
+    "MINT": "3CD8C53D036D48B952-MP",
+  },
+  Object {
+    "MINT": "F0589E52A4401BD243-OCC",
+  },
+  Object {
+    "MINT": "B0060DBE7B69FB7A12-MIYA",
+  },
+  Object {
+    "MINTNFT": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000001",
+  },
+  Object {
+    "MINTNFT": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000003",
+  },
+  Object {
+    "MINTNFT": "6637819-B0060DBE7B69FB7A12-MIYA-MIYA-0000000000000004",
+  },
+  Object {
+    "MINT": "52DDF7617CDF0FFD34-1STPOLKAINDEX",
+  },
+  Object {
+    "MINT": "B0060DBE7B69FB7A12-LIL-PARISIENNE",
+  },
+  Object {
+    "MINTNFT": "6642745-B0060DBE7B69FB7A12-LIL-PARISIENNE-LIL-PARISIENNE-0000000000000001",
+  },
+  Object {
+    "MINTNFT": "6642745-B0060DBE7B69FB7A12-LIL-PARISIENNE-LIL-PARISIENNE-0000000000000002",
+  },
+  Object {
+    "MINT": "B0060DBE7B69FB7A12-NIGHTMARE",
+  },
+  Object {
+    "MINTNFT": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000001",
+  },
+  Object {
+    "MINTNFT": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000003",
+  },
+  Object {
+    "MINTNFT": "6642826-B0060DBE7B69FB7A12-NIGHTMARE-NIGHTMARE-0000000000000004",
+  },
+  Object {
+    "MINT": "F4677F38191256A73F-LDDJRS",
+  },
+  Object {
+    "MINTNFT": "6642939-F4677F38191256A73F-LDDJRS-SHINO_LIDDED_JAR-0000000000000001",
+  },
+  Object {
+    "MINTNFT": "6642939-F4677F38191256A73F-LDDJRS-WOODASH_LIDDED_JAR-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6642939-F4677F38191256A73F-LDDJRS-TOMATO_RED_LIDDED_JAR-0000000000000003",
+  },
+  Object {
+    "EMOTE": "6642939-F4677F38191256A73F-LDDJRS-SHINO_LIDDED_JAR-0000000000000001",
+  },
+  Object {
+    "MINT": "3CD8C53D036D48B952-WDBD",
+  },
+  Object {
+    "EMOTE": "6642939-F4677F38191256A73F-LDDJRS-SHINO_LIDDED_JAR-0000000000000001",
+  },
+  Object {
+    "LIST": "6506080-0E54E51D92AECA5749-KSM-SHAPES_01_-_UNIQUE-0000000000000001",
+  },
+  Object {
+    "MINT": "0E54E51D92AECA5749-FLASH CRASH",
+  },
+  Object {
+    "MINTNFT": "6650640-0E54E51D92AECA5749-FLASH CRASH-FLASH_CRASH-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_03-0000000000000002",
+  },
+  Object {
+    "MINTNFT": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_02-0000000000000003",
+  },
+  Object {
+    "MINTNFT": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_01-0000000000000004",
+  },
+  Object {
+    "MINT": "3CD8C53D036D48B952-BH",
+  },
+  Object {
+    "MINT": "EAFB9AFD0964293B1A-VOID",
+  },
+  Object {
+    "EMOTE": "6650640-0E54E51D92AECA5749-FLASH CRASH-ABSTRACTION_SECTION_02-0000000000000003",
   },
 ]
 `;
@@ -3708,7 +3863,7 @@ Object {
   "nfts": Array [
     Object {
       "block": 6431407,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-OCN",
       "data": undefined,
@@ -3725,7 +3880,7 @@ Object {
     },
     Object {
       "block": 6431423,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-TX",
       "data": undefined,
@@ -3742,7 +3897,7 @@ Object {
     },
     Object {
       "block": 6431478,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-TXT",
       "data": undefined,
@@ -3763,7 +3918,7 @@ Object {
     },
     Object {
       "block": 6432263,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433258,
@@ -3789,7 +3944,7 @@ Object {
     },
     Object {
       "block": 6432347,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433242,
@@ -3815,7 +3970,7 @@ Object {
     },
     Object {
       "block": 6432671,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6448278,
@@ -3841,7 +3996,7 @@ Object {
     },
     Object {
       "block": 6432773,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433232,
@@ -3867,7 +4022,7 @@ Object {
     },
     Object {
       "block": 6432854,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433217,
@@ -3893,7 +4048,7 @@ Object {
     },
     Object {
       "block": 6432926,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433116,
@@ -3919,7 +4074,7 @@ Object {
     },
     Object {
       "block": 6433004,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6448271,
@@ -3949,7 +4104,7 @@ Object {
     },
     Object {
       "block": 6433196,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6433208,
@@ -3975,7 +4130,7 @@ Object {
     },
     Object {
       "block": 6433383,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "D4E195CCE7ADB3F876-GOODBYEBULLIES",
       "data": undefined,
@@ -3992,7 +4147,7 @@ Object {
     },
     Object {
       "block": 6434060,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434133,
@@ -4022,7 +4177,7 @@ Object {
     },
     Object {
       "block": 6434253,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434267,
@@ -4048,7 +4203,7 @@ Object {
     },
     Object {
       "block": 6434397,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434413,
@@ -4074,7 +4229,7 @@ Object {
     },
     Object {
       "block": 6434517,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434530,
@@ -4100,7 +4255,7 @@ Object {
     },
     Object {
       "block": 6434624,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PP",
       "data": undefined,
@@ -4117,7 +4272,7 @@ Object {
     },
     Object {
       "block": 6434628,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434641,
@@ -4143,7 +4298,7 @@ Object {
     },
     Object {
       "block": 6434741,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434752,
@@ -4169,7 +4324,7 @@ Object {
     },
     Object {
       "block": 6434826,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434839,
@@ -4195,7 +4350,7 @@ Object {
     },
     Object {
       "block": 6434966,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6434979,
@@ -4221,7 +4376,7 @@ Object {
     },
     Object {
       "block": 6435409,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6448260,
@@ -4251,7 +4406,7 @@ Object {
     },
     Object {
       "block": 6435603,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6448251,
@@ -4281,7 +4436,7 @@ Object {
     },
     Object {
       "block": 6435925,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6448227,
@@ -4307,7 +4462,7 @@ Object {
     },
     Object {
       "block": 6448277,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-BRD",
       "data": undefined,
@@ -4324,7 +4479,7 @@ Object {
     },
     Object {
       "block": 6448586,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-TWC",
       "data": undefined,
@@ -4341,7 +4496,7 @@ Object {
     },
     Object {
       "block": 6448826,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "4C476E3612F0892870-HELIANTONE",
       "data": undefined,
@@ -4358,7 +4513,7 @@ Object {
     },
     Object {
       "block": 6463071,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-FYEO",
       "data": undefined,
@@ -4375,7 +4530,7 @@ Object {
     },
     Object {
       "block": 6474741,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
@@ -4392,7 +4547,7 @@ Object {
     },
     Object {
       "block": 6474741,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
@@ -4409,7 +4564,7 @@ Object {
     },
     Object {
       "block": 6474741,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
@@ -4426,7 +4581,7 @@ Object {
     },
     Object {
       "block": 6474741,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
@@ -4443,7 +4598,7 @@ Object {
     },
     Object {
       "block": 6475453,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
@@ -4464,7 +4619,7 @@ Object {
     },
     Object {
       "block": 6476709,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-BSY",
       "data": undefined,
@@ -4481,7 +4636,7 @@ Object {
     },
     Object {
       "block": 6477659,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6487145,
@@ -4507,7 +4662,7 @@ Object {
     },
     Object {
       "block": 6479223,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B8FF3A281F03B12E30-MAX",
       "data": undefined,
@@ -4524,7 +4679,7 @@ Object {
     },
     Object {
       "block": 6490677,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-EAM",
       "data": undefined,
@@ -4541,7 +4696,7 @@ Object {
     },
     Object {
       "block": 6504199,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-SGO",
       "data": undefined,
@@ -4562,7 +4717,7 @@ Object {
     },
     Object {
       "block": 6506080,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6506108,
@@ -4596,7 +4751,7 @@ Object {
     },
     Object {
       "block": 6517602,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-GLT",
       "data": undefined,
@@ -4613,7 +4768,7 @@ Object {
     },
     Object {
       "block": 6519420,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-ZZZ",
       "data": undefined,
@@ -4630,7 +4785,7 @@ Object {
     },
     Object {
       "block": 6532359,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-TBC",
       "data": undefined,
@@ -4647,7 +4802,7 @@ Object {
     },
     Object {
       "block": 6538112,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "34BE282B68C3F03135-BIGP",
       "data": undefined,
@@ -4664,7 +4819,7 @@ Object {
     },
     Object {
       "block": 6545072,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6545871,
@@ -4714,7 +4869,7 @@ Object {
     },
     Object {
       "block": 6546204,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-HEV",
       "data": undefined,
@@ -4731,7 +4886,7 @@ Object {
     },
     Object {
       "block": 6546568,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFT-ORIGIN-SPECIAL",
       "data": undefined,
@@ -4748,7 +4903,7 @@ Object {
     },
     Object {
       "block": 6546909,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
@@ -4765,7 +4920,7 @@ Object {
     },
     Object {
       "block": 6550358,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6550437,
@@ -4791,7 +4946,7 @@ Object {
     },
     Object {
       "block": 6560444,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6560556,
@@ -4817,7 +4972,7 @@ Object {
     },
     Object {
       "block": 6562186,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-ASC",
       "data": undefined,
@@ -4834,7 +4989,7 @@ Object {
     },
     Object {
       "block": 6572370,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-MACROCOSM",
       "data": undefined,
@@ -4851,7 +5006,7 @@ Object {
     },
     Object {
       "block": 6572635,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6572680,
@@ -4893,7 +5048,7 @@ Object {
     },
     Object {
       "block": 6573606,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "C81C02FED1334A5F2D-IVT",
       "data": undefined,
@@ -4910,7 +5065,7 @@ Object {
     },
     Object {
       "block": 6576473,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PC",
       "data": undefined,
@@ -4927,7 +5082,7 @@ Object {
     },
     Object {
       "block": 6587824,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6590194,
@@ -4953,7 +5108,7 @@ Object {
     },
     Object {
       "block": 6589760,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-FTS",
       "data": undefined,
@@ -4970,7 +5125,7 @@ Object {
     },
     Object {
       "block": 6603764,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-PRA",
       "data": undefined,
@@ -4987,7 +5142,7 @@ Object {
     },
     Object {
       "block": 6608259,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6608275,
@@ -5013,7 +5168,7 @@ Object {
     },
     Object {
       "block": 6608382,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6608433,
@@ -5039,7 +5194,7 @@ Object {
     },
     Object {
       "block": 6608418,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6608439,
@@ -5065,7 +5220,7 @@ Object {
     },
     Object {
       "block": 6608454,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6608470,
@@ -5091,7 +5246,7 @@ Object {
     },
     Object {
       "block": 6616268,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6616336,
@@ -5117,7 +5272,7 @@ Object {
     },
     Object {
       "block": 6616739,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-GLITCH",
       "data": undefined,
@@ -5134,7 +5289,7 @@ Object {
     },
     Object {
       "block": 6618527,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "3CD8C53D036D48B952-YKD",
       "data": undefined,
@@ -5151,7 +5306,7 @@ Object {
     },
     Object {
       "block": 6621802,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "56CDD20D8C52C1D075-BTC",
       "data": undefined,
@@ -5168,7 +5323,7 @@ Object {
     },
     Object {
       "block": 6621892,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6621925,
@@ -5194,7 +5349,7 @@ Object {
     },
     Object {
       "block": 6621892,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "56423C6415A5620713-FCK2020",
       "data": undefined,
@@ -5211,7 +5366,7 @@ Object {
     },
     Object {
       "block": 6621892,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "56423C6415A5620713-FCK2020",
       "data": undefined,
@@ -5228,7 +5383,7 @@ Object {
     },
     Object {
       "block": 6621894,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "56CDD20D8C52C1D075-BTC",
       "data": undefined,
@@ -5245,7 +5400,7 @@ Object {
     },
     Object {
       "block": 6629619,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-BIRDWATCHING",
       "data": undefined,
@@ -5262,7 +5417,7 @@ Object {
     },
     Object {
       "block": 6637819,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
@@ -5279,7 +5434,7 @@ Object {
     },
     Object {
       "block": 6637819,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
@@ -5296,7 +5451,7 @@ Object {
     },
     Object {
       "block": 6637819,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
@@ -5313,7 +5468,7 @@ Object {
     },
     Object {
       "block": 6637819,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-MIYA",
       "data": undefined,
@@ -5330,7 +5485,7 @@ Object {
     },
     Object {
       "block": 6642745,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-LIL-PARISIENNE",
       "data": undefined,
@@ -5347,7 +5502,7 @@ Object {
     },
     Object {
       "block": 6642745,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-LIL-PARISIENNE",
       "data": undefined,
@@ -5364,7 +5519,7 @@ Object {
     },
     Object {
       "block": 6642826,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
@@ -5381,7 +5536,7 @@ Object {
     },
     Object {
       "block": 6642826,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
@@ -5398,7 +5553,7 @@ Object {
     },
     Object {
       "block": 6642826,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
@@ -5415,7 +5570,7 @@ Object {
     },
     Object {
       "block": 6642826,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "B0060DBE7B69FB7A12-NIGHTMARE",
       "data": undefined,
@@ -5432,7 +5587,7 @@ Object {
     },
     Object {
       "block": 6642939,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
@@ -5454,7 +5609,7 @@ Object {
     },
     Object {
       "block": 6642939,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
@@ -5471,7 +5626,7 @@ Object {
     },
     Object {
       "block": 6642939,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "F4677F38191256A73F-LDDJRS",
       "data": undefined,
@@ -5488,7 +5643,7 @@ Object {
     },
     Object {
       "block": 6650640,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
@@ -5505,7 +5660,7 @@ Object {
     },
     Object {
       "block": 6650640,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
@@ -5522,7 +5677,7 @@ Object {
     },
     Object {
       "block": 6650640,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
@@ -5543,7 +5698,7 @@ Object {
     },
     Object {
       "block": 6650640,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E54E51D92AECA5749-FLASH CRASH",
       "data": undefined,
@@ -6035,7 +6190,7 @@ Object {
   "nfts": Array [
     Object {
       "block": 6474741,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "10D77F8B699437BB50-KODA",
       "data": undefined,
@@ -6052,7 +6207,7 @@ Object {
     },
     Object {
       "block": 6475453,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "26769B0B8E5FBE4D11-KSM",
       "data": undefined,
@@ -6073,7 +6228,7 @@ Object {
     },
     Object {
       "block": 6506080,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6506108,
@@ -6099,7 +6254,7 @@ Object {
     },
     Object {
       "block": 6545072,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6545871,
@@ -6149,7 +6304,7 @@ Object {
     },
     Object {
       "block": 6546909,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "26D6484336C010812D-NFTORIGIN",
       "data": undefined,
@@ -6166,7 +6321,7 @@ Object {
     },
     Object {
       "block": 6572370,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-MACROCOSM",
       "data": undefined,
@@ -6183,7 +6338,7 @@ Object {
     },
     Object {
       "block": 6573606,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "C81C02FED1334A5F2D-IVT",
       "data": undefined,
@@ -6200,7 +6355,7 @@ Object {
     },
     Object {
       "block": 6608454,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6608470,
@@ -6226,7 +6381,7 @@ Object {
     },
     Object {
       "block": 6616268,
-      "burned": false,
+      "burned": "",
       "changes": Array [
         Object {
           "block": 6616336,
@@ -6252,7 +6407,7 @@ Object {
     },
     Object {
       "block": 6616739,
-      "burned": false,
+      "burned": "",
       "changes": Array [],
       "collection": "0E76E3AC15B4C1FA1E-GLITCH",
       "data": undefined,
