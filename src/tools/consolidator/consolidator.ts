@@ -56,7 +56,7 @@ export interface NFTConsolidated {
   changes: Change[];
   owner: string;
   loadedMetadata?: NFTMetadata;
-  burned: string[] | boolean;
+  burned: string;
   updatedAtBlock?: number;
 }
 

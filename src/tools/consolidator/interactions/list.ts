@@ -3,7 +3,6 @@ import { List } from "../../../rmrk1.0.0/classes/list";
 import { NFT } from "../../..";
 import { OP_TYPES } from "../../constants";
 import { Change } from "../../../rmrk1.0.0/changelog";
-import { isBurnedNFT } from "../../utils";
 
 export const listForSaleInteraction = (
   remark: Remark,
@@ -16,7 +15,7 @@ export const listForSaleInteraction = (
     );
   }
 
-  if (isBurnedNFT(nft)) {
+  if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list burned NFT ${listEntity.id}`
     );
