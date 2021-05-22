@@ -31,10 +31,13 @@ import {
   consolidatedNFTtoInstance,
 } from "./utils";
 
+type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
+
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
   collections: CollectionConsolidated[];
   invalid: InvalidCall[];
+  changes?: InteractionChanges;
   lastBlock?: number;
 };
 
@@ -53,7 +56,7 @@ export interface NFTConsolidated {
   changes: Change[];
   owner: string;
   loadedMetadata?: NFTMetadata;
-  burned: string[] | boolean;
+  burned: string;
   updatedAtBlock?: number;
 }
 
@@ -77,22 +80,26 @@ export class Consolidator {
   readonly dbAdapter: IConsolidatorAdapter;
   readonly ss58Format?: number;
   readonly emitEmoteChanges?: boolean;
+  readonly emitInteractionChanges?: boolean;
+  private interactionChanges: InteractionChanges = [];
 
   /**
-   * If true emitEmoteChanges records full log of EMOTE events in nft 'changes' prop
    * @param ss58Format
    * @param dbAdapter
-   * @param emitEmoteChanges
+   * @param emitEmoteChanges log EMOTE events in nft 'changes' prop
+   * @param emitInteractionChanges return interactions changes ( OP_TYPE: id )
    */
   constructor(
     ss58Format?: number,
     dbAdapter?: IConsolidatorAdapter,
-    emitEmoteChanges?: boolean
+    emitEmoteChanges?: boolean,
+    emitInteractionChanges?: boolean
   ) {
     if (ss58Format) {
       this.ss58Format = ss58Format;
     }
     this.emitEmoteChanges = emitEmoteChanges || false;
+    this.emitInteractionChanges = emitInteractionChanges || false;
 
     this.dbAdapter = dbAdapter || new InMemoryAdapter();
 
@@ -152,6 +159,9 @@ export class Consolidator {
       validateMintIds(collection, remark);
       await this.dbAdapter.updateCollectionMint(collection);
       this.collections.push(collection);
+      if (this.emitInteractionChanges) {
+        this.interactionChanges.push({ [OP_TYPES.MINT]: collection.id });
+      }
     } catch (e) {
       invalidate(collection.id, e.message);
       return true;
@@ -201,6 +211,9 @@ export class Consolidator {
       await this.dbAdapter.updateNFTMint(nft, remark.block);
 
       this.nfts.push(nft);
+      if (this.emitInteractionChanges) {
+        this.interactionChanges.push({ [OP_TYPES.MINTNFT]: nft.getId() });
+      }
     } catch (e) {
       invalidate(nft.getId(), e.message);
       return true;
@@ -238,6 +251,9 @@ export class Consolidator {
       sendInteraction(remark, sendEntity, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT, remark.block);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
+        }
       }
     } catch (e) {
       invalidate(sendEntity.id, e.message);
@@ -276,6 +292,9 @@ export class Consolidator {
       listForSaleInteraction(remark, listEntity, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT, remark.block);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.LIST]: nft.getId() });
+        }
       }
     } catch (e) {
       invalidate(listEntity.id, e.message);
@@ -319,6 +338,9 @@ export class Consolidator {
           consolidatedNFT,
           remark.block
         );
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.CONSUME]: nft.getId() });
+        }
       }
     } catch (e) {
       invalidate(consumeEntity.id, e.message);
@@ -353,6 +375,9 @@ export class Consolidator {
       buyInteraction(remark, buyEntity, nft, this.ss58Format);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT, remark.block);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.BUY]: nft.getId() });
+        }
       }
     } catch (e) {
       invalidate(buyEntity.id, e.message);
@@ -390,6 +415,9 @@ export class Consolidator {
         remark.block !== consolidatedNFT.updatedAtBlock
       ) {
         await this.dbAdapter.updateNFTEmote(nft, consolidatedNFT, remark.block);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.EMOTE]: nft.getId() });
+        }
       }
     } catch (e) {
       invalidate(emoteEntity.id, e.message);
@@ -434,6 +462,11 @@ export class Consolidator {
           consolidatedCollection,
           remark.block
         );
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({
+            [OP_TYPES.CHANGEISSUER]: collection.id,
+          });
+        }
       }
     } catch (e) {
       invalidate(changeIssuerEntity.id, e.message);
@@ -516,13 +549,17 @@ export class Consolidator {
     //   `${this.nfts.length} NFTs across ${this.collections.length} collections.`
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
-    return {
+    const result: ConsolidatorReturnType = {
       nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
       collections: this.dbAdapter.getAllCollections
         ? await this.dbAdapter.getAllCollections()
         : [],
       invalid: this.invalidCalls,
     };
+    if (this.emitInteractionChanges) {
+      result.changes = this.interactionChanges;
+    }
+    return result;
   }
 }
 

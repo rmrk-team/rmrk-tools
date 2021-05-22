@@ -103,4 +103,17 @@ describe("tools: Consolidator", () => {
       "Attempting to change issuer of collection 705BED5A790A0D0072-BICHITOS when not issuer!"
     );
   });
+
+  it("should run consolidation from dump with interaction changes", async () => {
+    const remarks = getRemarksFromBlocks(blocksDumpAll, [
+      "0x726d726b",
+      "0x524d524b",
+    ]);
+    const consolidator = new Consolidator(undefined, undefined, false, true);
+    const consolidated = await consolidator.consolidate(remarks);
+    const last50Changes = consolidated.changes!.slice(
+      consolidated.changes!.length - 50
+    );
+    expect(last50Changes).toMatchSnapshot();
+  });
 });

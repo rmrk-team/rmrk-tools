@@ -3,7 +3,6 @@ import { Remark } from "../remark";
 import { Emote } from "../../../rmrk1.0.0/classes/emote";
 import { NFT } from "../../..";
 import { Change } from "../../../rmrk1.0.0/changelog";
-import { isBurnedNFT } from "../../utils";
 
 const addEmoteChange = (
   remark: Remark,
@@ -33,7 +32,7 @@ export const emoteInteraction = (
     );
   }
 
-  if (isBurnedNFT(nft)) {
+  if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.EMOTE}] Cannot emote to a burned NFT ${emoteEntity.id}`
     );
