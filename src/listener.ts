@@ -15,6 +15,8 @@ import { Remark } from "./tools/consolidator/remark";
 import { ConsolidatorReturnType } from "./tools/consolidator/consolidator";
 import fetchRemarks from "./tools/fetchRemarks";
 
+const PROBLEMATIC_BLCOKS = [7491223, 7487667];
+
 interface IProps {
   polkadotApi: ApiPromise | null;
   prefixes?: string[];
@@ -212,6 +214,7 @@ export class RemarkListener {
           "Unable to retrieve finalized head - returned genesis block"
         );
       }
+
       const blockHash = await this.apiPromise.rpc.chain.getBlockHash(
         header.number.toNumber()
       );

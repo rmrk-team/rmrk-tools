@@ -139,8 +139,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   /**
-   * Take interaction id, omit block number and split to individual parts
-   * To prevent minting a token of the same id in a different block
+   * Find existing NFT by id
    */
   public async getNFTByIdUnique(id: string) {
     return this.nfts.find((nft) => {

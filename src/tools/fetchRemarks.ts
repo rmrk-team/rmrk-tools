@@ -10,7 +10,7 @@ export default async (
   ss58Format = 2
 ): Promise<BlockCalls[]> => {
   const bcs: BlockCalls[] = [];
-  console.log(from, to)
+  console.log(from, to);
   for (let i = from; i <= to; i++) {
     if (i % 1000 === 0) {
       const event = new Date();
