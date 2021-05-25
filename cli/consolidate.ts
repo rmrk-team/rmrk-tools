@@ -13,6 +13,7 @@ const consolidate = async () => {
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--out": String, // optional output name
     "--noinvalid": Boolean, // don't include invalid calls
+    "--emotechanges": Boolean, // includes emotes in changes
   });
 
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
@@ -28,6 +29,7 @@ const consolidate = async () => {
   const file = args["--json"];
   const out = args["--out"];
   const noInvalid = args["--noinvalid"] || false;
+  const emitEmotes = args["--emotechanges"] || false;
 
   const collectionFilter = args["--collection"];
   if (!file) {
@@ -43,7 +45,7 @@ const consolidate = async () => {
   }
   const ja = new JsonAdapter(file, prefixes);
   const remarks = ja.getRemarks();
-  const con = new Consolidator(ss58Format);
+  const con = new Consolidator(ss58Format, undefined, emitEmotes);
   let result = await con.consolidate(remarks);
   if (collectionFilter) {
     result = {
