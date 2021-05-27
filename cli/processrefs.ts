@@ -45,7 +45,20 @@ const processRefs = async () => {
     } as Referral);
   }
 
-  console.log(referrals);
+  let csv = "block,ref,sale value,rmrk earned\n";
+  for (const ref of referrals) {
+    // Build a CSV
+    let commission = BigInt(0);
+    if (
+      ["2000000000000", "20000000000000", "100000000000000"].includes(ref.val)
+    ) {
+      commission = BigInt(ref.val);
+    } else {
+      commission = BigInt(ref.val) / BigInt(100);
+    }
+    csv += `${ref.block},${ref.ref},${ref.val},${commission.toString()}` + "\n";
+  }
+  fs.writeFileSync("./list.csv", csv);
 
   process.exit(0);
 };
