@@ -165,7 +165,7 @@ export const getBlockCallsFromSignedBlock = async (
   api: ApiPromise,
   ss58Format = 2
 ): Promise<BlockCall[] | []> => {
-  const blockCalls: BlockCall[] = [];
+  let blockCalls: BlockCall[] = [];
   const extrinsics = signedBlock?.block?.extrinsics;
   if (!Array.isArray(extrinsics)) {
     return blockCalls;
@@ -209,23 +209,15 @@ export const getBlockCallsFromSignedBlock = async (
           continue;
         }
 
-        let batchRoot = {} as BlockCall;
+        const batchRoot = [] as BlockCall[];
         const batchExtras: BlockCall[] = [];
         batchArgs.forEach((el, i) => {
           if (isSystemRemark(el, prefixes)) {
-            if (i < remarkExists - 1) {
-              blockCalls.push({
-                call: `${el.section}.${el.method}`,
-                value: el.args.toString(),
-                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-              } as BlockCall);
-            } else {
-              batchRoot = {
-                call: `${el.section}.${el.method}`,
-                value: el.args.toString(),
-                caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-              } as BlockCall;
-            }
+            batchRoot.push({
+              call: `${el.section}.${el.method}`,
+              value: el.args.toString(),
+              caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+            } as BlockCall);
           } else {
             batchExtras.push({
               call: `${el.section}.${el.method}`,
@@ -236,10 +228,12 @@ export const getBlockCallsFromSignedBlock = async (
         });
 
         if (batchExtras.length) {
-          batchRoot.extras = batchExtras;
+          batchRoot.forEach((el, i) => {
+            batchRoot[i].extras = batchExtras;
+          });
         }
 
-        blockCalls.push(batchRoot);
+        blockCalls = blockCalls.concat(batchRoot);
       }
     }
     extrinsicIndex++;
