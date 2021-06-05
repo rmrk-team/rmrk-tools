@@ -156,7 +156,7 @@ export const getBlockCallsFromSignedBlock = async (
   api: ApiPromise,
   ss58Format = 2
 ): Promise<BlockCall[] | []> => {
-  const blockCalls: BlockCall[] = [];
+  let blockCalls: BlockCall[] = [];
   const extrinsics = signedBlock?.block?.extrinsics;
   if (!Array.isArray(extrinsics)) {
     return blockCalls;
@@ -224,7 +224,7 @@ export const getBlockCallsFromSignedBlock = async (
           });
         }
 
-        blockCalls.concat(batchRoot);
+        blockCalls = blockCalls.concat(batchRoot);
       }
     }
     extrinsicIndex++;
