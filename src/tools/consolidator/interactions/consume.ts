@@ -1,9 +1,10 @@
-import { OP_TYPES } from "../../constants";
+import { OP_TYPES, PREFIX } from "../../constants";
 import { BlockCall } from "../../types";
 import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Consume } from "../../../rmrk1.0.0/classes/consume";
 import { NFT } from "../../..";
+import { hexToString } from "@polkadot/util";
 
 export const consumeInteraction = (
   remark: Remark,
@@ -36,12 +37,18 @@ export const consumeInteraction = (
   if (remark.extra_ex?.length) {
     // Check if the transfer is valid, i.e. matches target recipient and value.
     remark.extra_ex?.forEach((el: BlockCall) => {
-      burnReasons.push(el.value);
+      const str = hexToString(el.value);
+      // Grab a reason in same batchAll array that is not another remark
+      if (!str.toUpperCase().startsWith(PREFIX)) {
+        burnReasons.push(el.value);
+      }
     });
   }
 
+  // const [prefix, op_type, version] = remark.split("::");
+
   nft.updatedAtBlock = remark.block;
-  const burnReason = burnReasons.length < 1 ? 'true' : burnReasons.join('~~~');
+  const burnReason = burnReasons.length < 1 ? "true" : burnReasons.join("~~~");
   nft.addChange({
     field: "burned",
     old: "",
