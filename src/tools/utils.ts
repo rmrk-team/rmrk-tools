@@ -7,7 +7,7 @@ import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
-import { encodeAddress } from "@polkadot/util-crypto";
+import { encodeAddress, encodeDerivedAddress } from "@polkadot/util-crypto";
 import { NFT } from "../rmrk1.0.0/classes/nft";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
@@ -150,6 +150,22 @@ export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
   (call.method === "batch" || call.method === "batchAll");
 
+export const hasInnerCall = (call: TCall): boolean =>
+  call.section === "utility" && call.method === "asDerivative";
+
+export const getInnerCall = (call: TCall) => {
+  const sectionMethod = `${call.section}.${call.method}`;
+  switch (sectionMethod) {
+    case ("utility.asDerivative"): {
+      return { call: call.args[1], derivedAcct: parseInt(call.args[0].toString()) };
+    }
+
+    default: {
+      throw new Error(`Cannot get inner call from ${sectionMethod}.`);
+    }
+  }
+};
+
 export const getBlockCallsFromSignedBlock = async (
   signedBlock: SignedBlock,
   prefixes: string[],
@@ -225,6 +241,34 @@ export const getBlockCallsFromSignedBlock = async (
         }
 
         blockCalls = blockCalls.concat(batchRoot);
+      }
+    } else if (hasInnerCall(extrinsic.method as TCall)) {
+      const innerCall = getInnerCall(extrinsic.method as TCall);
+      const derivedAccts: number[] = [];
+      if (innerCall.derivedAcct !== undefined) {
+        derivedAccts.push(innerCall.derivedAcct);
+      }
+
+      let method = api.createType("Call", innerCall.call);
+      while (hasInnerCall(method)) {
+        const innerCall = getInnerCall(method);
+        method = api.createType("Call", innerCall.call);
+        if (innerCall.derivedAcct !== undefined) {
+          derivedAccts.push(innerCall.derivedAcct);
+        }
+      }
+
+      if (isSystemRemark(method, prefixes)) {
+        let address = encodeAddress(extrinsic.signer.toString(), ss58Format);
+        derivedAccts.forEach((acctIdx) => {
+          address = encodeDerivedAddress(address, acctIdx, ss58Format);
+        })
+
+        blockCalls.push({
+          call: "system.remark",
+          value: method.args.toString(),
+          caller: address,
+        });
       }
     }
     extrinsicIndex++;
