@@ -179,8 +179,8 @@ export class RemarkListener {
       const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
-      await this.storageProvider.set(this.currentBlockNum);
       const consolidatedFinal = await this.consolidateFunction(remarks);
+      await this.storageProvider.set(this.currentBlockNum);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
     }
