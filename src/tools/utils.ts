@@ -159,6 +159,9 @@ export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
   (call.method === "batch" || call.method === "batchAll");
 
+export const isMultiSig = (call: TCall) =>
+  call.section === "multisig" && call.method === "asMulti";
+
 export const getBlockCallsFromSignedBlock = async (
   signedBlock: SignedBlock,
   prefixes: string[],
@@ -184,7 +187,10 @@ export const getBlockCallsFromSignedBlock = async (
         value: extrinsic.args.toString(),
         caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
       });
-    } else if (isUtilityBatch(extrinsic.method as TCall)) {
+    } else if (
+      isUtilityBatch(extrinsic.method as TCall) ||
+      isMultiSig(extrinsic.method as TCall)
+    ) {
       // @ts-ignore
       const batchArgs: TCall[] = extrinsic.method.args[0];
       let remarkExists = 0;
