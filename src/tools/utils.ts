@@ -189,7 +189,7 @@ export const getBlockCallsFromSignedBlock = async (
       });
     } else if (isMultiSig(extrinsic.method as TCall)) {
       /*
-      First argument is number of signers, second is array of signer addresses and 3rd is system.remark extrinsic call
+      First argument is number of signers, second is array of signer addresses and 3rd can be a system.remark extrinsic call if one is sent
        */
       const multisigRemarkHex = extrinsic.method?.args?.[3];
       if (multisigRemarkHex) {
