@@ -187,10 +187,35 @@ export const getBlockCallsFromSignedBlock = async (
         value: extrinsic.args.toString(),
         caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
       });
-    } else if (
-      isUtilityBatch(extrinsic.method as TCall) ||
-      isMultiSig(extrinsic.method as TCall)
-    ) {
+    } else if (isMultiSig(extrinsic.method as TCall)) {
+      /*
+      First argument is number of signers, second is array of signer addresses and 3rd is system.remark extrinsic call
+       */
+      const multisigRemarkHex = extrinsic.method?.args?.[3];
+      if (multisigRemarkHex) {
+        try {
+          const multiSignRemarkCall = api.registry.createType(
+            "Call",
+            multisigRemarkHex.toU8a(true)
+          );
+
+          if (isSystemRemark(multiSignRemarkCall, prefixes)) {
+            blockCalls.push({
+              call: "system.remark",
+              value: multiSignRemarkCall.args.toString(),
+              caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+            });
+          }
+        } catch (error) {
+          console.log(
+            `Skipping multisig call ${signedBlock.block?.header?.number}-${extrinsicIndex} due to the fact that we cannot decode 3rd argument which is supposed to be system.remark`,
+            error
+          );
+          extrinsicIndex++;
+          continue;
+        }
+      }
+    } else if (isUtilityBatch(extrinsic.method as TCall)) {
       // @ts-ignore
       const batchArgs: TCall[] = extrinsic.method.args[0];
       let remarkExists = 0;
