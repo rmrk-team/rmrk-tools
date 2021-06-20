@@ -8,7 +8,7 @@ import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { NFT } from "../rmrk1.0.0/classes/nft";
+import { deriveMultisigAddress } from "./deriveMultisigAddress";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -189,11 +189,23 @@ export const getBlockCallsFromSignedBlock = async (
       });
     } else if (isMultiSig(extrinsic.method as TCall)) {
       /*
-      First argument is number of signers, second is array of signer addresses and 3rd can be a system.remark extrinsic call if one is sent
+      First argument is multisig signers treshold, second is array of signer addresses,
+      4rd some metadata and 4th can be a system.remark extrinsic call if one is sent
        */
-      const multisigRemarkHex = extrinsic.method?.args?.[3];
+
+      const [threshold, addresses, _, multisigRemarkHex] =
+        extrinsic.method?.args || [];
       if (multisigRemarkHex) {
         try {
+          const addressesString = [
+            ...(addresses.toJSON() as []),
+            extrinsic.signer.toString(),
+          ].join();
+          const derivedMultisigAccount = deriveMultisigAddress({
+            addresses: addressesString,
+            threshold: threshold.toString(),
+            ss58Prefix: ss58Format.toString(),
+          });
           const multiSignRemarkCall = api.registry.createType(
             "Call",
             multisigRemarkHex.toU8a(true)
@@ -203,7 +215,7 @@ export const getBlockCallsFromSignedBlock = async (
             blockCalls.push({
               call: "system.remark",
               value: multiSignRemarkCall.args.toString(),
-              caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
+              caller: derivedMultisigAccount,
             });
           }
         } catch (error) {
