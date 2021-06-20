@@ -3,9 +3,9 @@ import { u8aSorted } from "@polkadot/util";
 import { blake2AsU8a } from "@polkadot/util-crypto";
 
 type Options = {
-  addresses: string; // CSV of the addresses.
-  ss58Prefix: string; // Prefix for the network encoding to use.
-  threshold: string; // Number of addresses that are needed to approve an action.
+  addresses: string[]; // array of the addresses.
+  ss58Prefix: number; // Prefix for the network encoding to use.
+  threshold: number; // Number of addresses that are needed to approve an action.
 };
 
 const derivePubkey = (addresses: string[], threshold = 1): Uint8Array => {
@@ -30,10 +30,10 @@ export const deriveMultisigAddress = (opts: Options): string => {
 
   if (!addresses) throw new Error("Please provide the addresses option.");
 
-  const addrs = addresses.split(",").filter((x) => !!x);
+  const addrs = addresses.filter((x) => !!x);
 
-  const pubkey = derivePubkey(addrs, Number(threshold));
-  const msig = encodeAddress(pubkey, Number(ss58Prefix));
+  const pubkey = derivePubkey(addrs, threshold);
+  const msig = encodeAddress(pubkey, ss58Prefix));
 
   return msig;
 };

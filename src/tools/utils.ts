@@ -200,11 +200,11 @@ export const getBlockCallsFromSignedBlock = async (
           const addressesString = [
             ...(addresses.toJSON() as []),
             extrinsic.signer.toString(),
-          ].join();
+          ];
           const derivedMultisigAccount = deriveMultisigAddress({
             addresses: addressesString,
-            threshold: threshold.toString(),
-            ss58Prefix: ss58Format.toString(),
+            threshold: Number(threshold.toString()),
+            ss58Prefix: ss58Format,
           });
           const multiSignRemarkCall = api.registry.createType(
             "Call",
