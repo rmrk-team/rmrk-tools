@@ -33,7 +33,7 @@ export const deriveMultisigAddress = (opts: Options): string => {
   const addrs = addresses.filter((x) => !!x);
 
   const pubkey = derivePubkey(addrs, threshold);
-  const msig = encodeAddress(pubkey, ss58Prefix));
+  const msig = encodeAddress(pubkey, ss58Prefix);
 
   return msig;
 };
