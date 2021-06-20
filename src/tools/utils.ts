@@ -197,15 +197,15 @@ export const getBlockCallsFromSignedBlock = async (
             threshold: Number(threshold.toString()),
             ss58Prefix: ss58Format,
           });
-          const multiSignRemarkCall = api.registry.createType(
+          const multiSigRemarkCall = api.registry.createType(
             "Call",
             multisigRemarkHex.toU8a(true)
           );
 
-          if (isSystemRemark(multiSignRemarkCall, prefixes)) {
+          if (isSystemRemark(multiSigRemarkCall, prefixes)) {
             blockCalls.push({
               call: "system.remark",
-              value: multiSignRemarkCall.args.toString(),
+              value: multiSigRemarkCall.args.toString(),
               caller: derivedMultisigAccount,
             });
           }
