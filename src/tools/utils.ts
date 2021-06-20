@@ -140,15 +140,6 @@ export const isBatchInterrupted = async (
   return Boolean(events.length);
 };
 
-export const isValidAddress = (address: string): Boolean => {
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
 export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
   call.section === "system" &&
   call.method === "remark" &&
