@@ -181,7 +181,7 @@ export const getBlockCallsFromSignedBlock = async (
     } else if (isMultiSig(extrinsic.method as TCall)) {
       /*
       First argument is multisig signers treshold, second is array of signer addresses,
-      4rd some metadata and 4th can be a system.remark extrinsic call if one is sent
+      3rd some metadata and 4th can be a system.remark extrinsic call if one is sent
        */
 
       const [threshold, addresses, _, multisigRemarkHex] =
