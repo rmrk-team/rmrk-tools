@@ -188,12 +188,12 @@ export const getBlockCallsFromSignedBlock = async (
         extrinsic.method?.args || [];
       if (multisigRemarkHex) {
         try {
-          const addressesString = [
+          const allMultisigAddresses = [
             ...(addresses.toJSON() as []),
             extrinsic.signer.toString(),
           ];
           const derivedMultisigAccount = deriveMultisigAddress({
-            addresses: addressesString,
+            addresses: allMultisigAddresses,
             threshold: Number(threshold.toString()),
             ss58Prefix: ss58Format,
           });
