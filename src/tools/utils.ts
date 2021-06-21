@@ -190,31 +190,31 @@ export const getBlockCallsFromSignedBlock = async (
     } else if (isMultiSig(extrinsic.method as TCall)) {
       /*
       First argument is multisig signers treshold, second is array of signer addresses,
-      4rd some metadata and 4th can be a system.remark extrinsic call if one is sent
+      3rd some metadata and 4th can be a system.remark extrinsic call if one is sent
        */
 
       const [threshold, addresses, _, multisigRemarkHex] =
         extrinsic.method?.args || [];
       if (multisigRemarkHex) {
         try {
-          const addressesString = [
+          const allMultisigAddresses = [
             ...(addresses.toJSON() as []),
             extrinsic.signer.toString(),
-          ].join();
+          ];
           const derivedMultisigAccount = deriveMultisigAddress({
-            addresses: addressesString,
-            threshold: threshold.toString(),
-            ss58Prefix: ss58Format.toString(),
+            addresses: allMultisigAddresses,
+            threshold: Number(threshold.toString()),
+            ss58Prefix: ss58Format,
           });
-          const multiSignRemarkCall = api.registry.createType(
+          const multiSigRemarkCall = api.registry.createType(
             "Call",
             multisigRemarkHex.toU8a(true)
           );
 
-          if (isSystemRemark(multiSignRemarkCall, prefixes)) {
+          if (isSystemRemark(multiSigRemarkCall, prefixes)) {
             blockCalls.push({
               call: "system.remark",
-              value: multiSignRemarkCall.args.toString(),
+              value: multiSigRemarkCall.args.toString(),
               caller: derivedMultisigAccount,
             });
           }
