@@ -7,8 +7,8 @@ import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
-import { encodeAddress } from "@polkadot/util-crypto";
-import { NFT } from "../rmrk1.0.0/classes/nft";
+import { encodeAddress } from "@polkadot/keyring";
+import { deriveMultisigAddress } from "./deriveMultisigAddress";
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -150,6 +150,9 @@ export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
   (call.method === "batch" || call.method === "batchAll");
 
+export const isMultiSig = (call: TCall) =>
+  call.section === "multisig" && call.method === "asMulti";
+
 export const getBlockCallsFromSignedBlock = async (
   signedBlock: SignedBlock,
   prefixes: string[],
@@ -175,6 +178,46 @@ export const getBlockCallsFromSignedBlock = async (
         value: extrinsic.args.toString(),
         caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
       });
+    } else if (isMultiSig(extrinsic.method as TCall)) {
+      /*
+      First argument is multisig signers treshold, second is array of signer addresses,
+      3rd some metadata and 4th can be a system.remark extrinsic call if one is sent
+       */
+
+      const [threshold, addresses, _, multisigRemarkHex] =
+        extrinsic.method?.args || [];
+      if (multisigRemarkHex) {
+        try {
+          const allMultisigAddresses = [
+            ...(addresses.toJSON() as []),
+            extrinsic.signer.toString(),
+          ];
+          const derivedMultisigAccount = deriveMultisigAddress({
+            addresses: allMultisigAddresses,
+            threshold: Number(threshold.toString()),
+            ss58Prefix: ss58Format,
+          });
+          const multiSigRemarkCall = api.registry.createType(
+            "Call",
+            multisigRemarkHex.toU8a(true)
+          );
+
+          if (isSystemRemark(multiSigRemarkCall, prefixes)) {
+            blockCalls.push({
+              call: "system.remark",
+              value: multiSigRemarkCall.args.toString(),
+              caller: derivedMultisigAccount,
+            });
+          }
+        } catch (error) {
+          console.log(
+            `Skipping multisig call ${signedBlock.block?.header?.number}-${extrinsicIndex} due to the fact that we cannot decode 3rd argument which is supposed to be system.remark`,
+            error
+          );
+          extrinsicIndex++;
+          continue;
+        }
+      }
     } else if (isUtilityBatch(extrinsic.method as TCall)) {
       // @ts-ignore
       const batchArgs: TCall[] = extrinsic.method.args[0];
