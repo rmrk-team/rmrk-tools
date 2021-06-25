@@ -1,9 +1,9 @@
 import { OP_TYPES, PREFIX } from "../../constants";
 import { BlockCall } from "../../types";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Change } from "../../../changelog";
 import { Remark } from "../remark";
-import { Consume } from "../../../rmrk1.0.0/classes/consume";
-import { NFT } from "../../..";
+import { Consume } from "../../../classes/consume";
+import { NFT } from "../../../classes/nft";
 import { hexToString } from "@polkadot/util";
 
 export const consumeInteraction = (
@@ -47,7 +47,6 @@ export const consumeInteraction = (
 
   // const [prefix, op_type, version] = remark.split("::");
 
-  nft.updatedAtBlock = remark.block;
   const burnReason = burnReasons.length < 1 ? "true" : burnReasons.join("~~~");
   nft.addChange({
     field: "burned",

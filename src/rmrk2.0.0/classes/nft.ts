@@ -3,38 +3,45 @@ import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 
+interface nftInstancerProps {
+  block: number;
+  nftclass: string;
+  name: string;
+  instance: string;
+  transferable: number;
+  sn: string;
+  metadata?: string;
+  resources?: Resource[];
+  priority?: number[];
+}
+
 export class NFT {
   readonly block: number;
-  readonly collection: string;
+  readonly nftclass: string;
   readonly name: string;
   readonly instance: string;
   readonly transferable: number;
-  readonly data?: string;
+  readonly resources?: Resource[];
   readonly sn: string;
   readonly metadata?: string;
   forsale: bigint;
   reactions: Reactionmap;
+  priority?: number[];
   changes: Change[] = [];
   owner: string;
+  children: NftChild[];
   burned: string;
-  constructor(
-    block: number,
-    collection: string,
-    name: string,
-    instance: string,
-    transferable: number,
-    sn: string,
-    metadata?: string,
-    data?: string,
-  ) {
-    this.block = block;
-    this.collection = collection;
-    this.name = name;
-    this.instance = instance;
-    this.transferable = transferable;
-    this.sn = sn;
-    this.data = data;
-    this.metadata = metadata;
+  constructor(nftInstance: nftInstancerProps) {
+    this.block = nftInstance.block;
+    this.nftclass = nftInstance.nftclass;
+    this.name = nftInstance.name;
+    this.instance = nftInstance.instance;
+    this.transferable = nftInstance.transferable;
+    this.sn = nftInstance.sn;
+    this.resources = nftInstance.resources;
+    this.metadata = nftInstance.metadata;
+    this.priority = nftInstance.priority;
+    this.children = [];
     this.owner = "";
     this.reactions = {};
     this.forsale = BigInt(0);
@@ -44,7 +51,7 @@ export class NFT {
   public getId(): string {
     if (!this.block)
       throw new Error("This token is not minted, so it cannot have an ID.");
-    return `${this.block}-${this.collection}-${this.instance}-${this.sn}`;
+    return `${this.block}-${this.nftclass}-${this.instance}-${this.sn}`;
   }
 
   public addChange(c: Change): NFT {
@@ -56,9 +63,9 @@ export class NFT {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
-    return `${PREFIX}::${OP_TYPES.MINTNFT}::${VERSION}::${encodeURIComponent(
+    return `${PREFIX}::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        collection: this.collection,
+        nftclass: this.nftclass,
         name: this.name,
         instance: this.instance,
         transferable: this.transferable,
@@ -88,21 +95,23 @@ export class NFT {
       validateNFT(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
-      return new this(
+      return new this({
         block,
-        obj.collection,
-        obj.name,
-        obj.instance,
-        typeof obj.transferable === "number"
-          ? obj.transferable
-          : parseInt(obj.transferable, 10),
-        obj.sn,
-        obj.metadata,
-        obj.data,
-      );
+        nftclass: obj.nftclass,
+        name: obj.name,
+        instance: obj.instance,
+        transferable:
+          typeof obj.transferable === "number"
+            ? obj.transferable
+            : parseInt(obj.transferable, 10),
+        sn: obj.sn,
+        metadata: obj.metadata,
+        resources: obj.resources,
+        priority: obj.priority
+      });
     } catch (e) {
       console.error(e.message);
-      console.log(`MINTNFT error: full input was ${remark}`);
+      console.log(`MINT error: full input was ${remark}`);
       return e.message;
     }
   }
@@ -182,4 +191,13 @@ export enum DisplayType {
 
 export interface Reactionmap {
   [unicode: string]: string[];
+}
+
+export interface Resource {
+  id: string;
+  src: string;
+}
+
+export interface NftChild {
+  id: string;
 }

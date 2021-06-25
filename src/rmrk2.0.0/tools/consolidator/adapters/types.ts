@@ -1,39 +1,18 @@
-import { NFT } from "../../../rmrk1.0.0/classes/nft";
-import { Collection } from "../../../rmrk1.0.0/classes/collection";
+import { NFT } from "../../../classes/nft";
+import { NftClass } from "../../../classes/nft-class";
 import { CollectionConsolidated, NFTConsolidated } from "../consolidator";
 
 export interface IConsolidatorAdapter {
-  updateNFTEmote(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTList(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTBuy(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTSend(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTConsume(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ): Promise<any>;
-  updateNFTMint(nft: NFT, updatedAtBlock: number): Promise<any>;
+  updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTList(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTMint(nft: NFT): Promise<any>;
   updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
   updateCollectionIssuer(
-    collection: Collection,
-    consolidatedCollection: CollectionConsolidated,
-    updatedAtBlock: number
+    collection: NftClass,
+    consolidatedCollection: CollectionConsolidated
   ): Promise<any>;
   getNFTById(id: string): Promise<NFTConsolidated | undefined>;
   getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;

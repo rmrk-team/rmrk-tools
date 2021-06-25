@@ -1,6 +1,6 @@
 import { NFT } from "../../classes/nft";
 import { CollectionConsolidated, NFTConsolidated } from "./consolidator";
-import { Collection } from "../../classes/collection";
+import { NftClass } from "../../classes/nft-class";
 
 export const consolidatedNFTtoInstance = (
   nft?: NFTConsolidated
@@ -42,13 +42,13 @@ export const consolidatedNFTtoInstance = (
 
 export const consolidatedCollectionToInstance = (
   collection?: CollectionConsolidated
-): Collection | undefined => {
+): NftClass | undefined => {
   if (!collection) {
     return undefined;
   }
   const { block, name, metadata, id, issuer, max, symbol, ...rest } =
     collection || {};
-  const colleactionClass = new Collection(
+  const colleactionClass = new NftClass(
     block,
     name,
     max,

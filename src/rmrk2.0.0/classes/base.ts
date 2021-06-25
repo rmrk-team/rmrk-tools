@@ -5,25 +5,17 @@ import { BaseType } from "../tools/types";
 
 export class BASE {
   readonly block: number;
-  readonly name: string;
   readonly id: string;
   readonly type: BaseType;
-  owner: string;
-  parts: Record<string, IBasePart> | null;
+  issuer: string;
+  parts?: IBasePart[];
 
-  constructor(
-    block: number,
-    name: string,
-    id: string,
-    type: BaseType,
-    parts?: Record<string, IBasePart>
-  ) {
+  constructor(block: number, id: string, issuer: string, type: BaseType, parts?: IBasePart[]) {
     this.block = block;
-    this.name = name;
     this.id = id;
     this.type = type;
-    this.owner = "";
-    this.parts = parts || null;
+    this.issuer = issuer;
+    this.parts = parts || undefined;
   }
 
   public mint(): string {
@@ -32,9 +24,9 @@ export class BASE {
     }
     return `${PREFIX}::${OP_TYPES.BASE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        name: this.name,
         id: this.id,
         type: this.type,
+        issuer: this.issuer,
         parts: this.parts,
       })
     )}`;
@@ -48,7 +40,7 @@ export class BASE {
       validateNFT(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
-      return new this(block, obj.name, obj.id, obj.type, obj.parts);
+      return new this(block, obj.id, obj.issuer, obj.type, obj.parts);
     } catch (e) {
       console.error(e.message);
       console.log(`BASE error: full input was ${remark}`);
@@ -58,6 +50,7 @@ export class BASE {
 }
 
 export interface IBasePart {
+  id: string;
   type: "slot" | "fixed";
   equippable: string[] | "*";
   unequip?: "unequip" | "burn";

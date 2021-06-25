@@ -1,8 +1,8 @@
-import { Collection } from "../../..";
+import { NftClass } from "../../../classes/nft-class";
 import { OP_TYPES } from "../../constants";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Change } from "../../../changelog";
 import { Remark } from "../remark";
-import { ChangeIssuer } from "../../../rmrk1.0.0/classes/changeissuer";
+import { ChangeIssuer } from "../../../classes/changeissuer";
 
 export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
   const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark);
@@ -18,28 +18,28 @@ export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,
-  collection?: Collection // Collection in current state
+  nftClass?: NftClass // Collection in current state
 ) => {
-  if (!collection) {
+  if (!nftClass) {
     throw new Error(
       `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such collection with ID ${changeIssuerEntity.id} found before block ${remark.block}!`
     );
   }
 
-  if (remark.caller != collection.issuer) {
+  if (remark.caller != nftClass.issuer) {
     throw new Error(
       `Attempting to change issuer of collection ${changeIssuerEntity.id} when not issuer!`
     );
   }
 
-  collection.addChange({
+  nftClass.addChange({
     field: "issuer",
-    old: collection.issuer,
+    old: nftClass.issuer,
     new: changeIssuerEntity.issuer,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.CHANGEISSUER,
   } as Change);
 
-  collection.issuer = changeIssuerEntity.issuer;
+  nftClass.issuer = changeIssuerEntity.issuer;
 };

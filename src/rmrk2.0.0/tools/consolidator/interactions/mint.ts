@@ -1,30 +1,29 @@
-import { decodeAddress } from "@polkadot/keyring";
-import { Collection as C100 } from "../../..";
-import { u8aToHex } from "@polkadot/util";
 import { Remark } from "../remark";
+import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
+import { NftClass } from "../../../classes/nft-class";
 
-export const getCollectionFromRemark = (remark: Remark) => {
-  const collection = C100.fromRemark(remark.remark, remark.block);
-  if (typeof collection === "string") {
+export const validateMintNFT = (
+  remark: Remark,
+  nft: NFT,
+  nftParentClass?: NftClass
+) => {
+  if (!nftParentClass) {
     throw new Error(
-      `[${OP_TYPES.MINT}] Dead before instantiation: ${collection}`
+      `NFT referencing non-existant parent collection ${nft.collection}`
     );
   }
-  return collection;
-};
 
-export const validateMintIds = (collection: C100, remark: Remark) => {
-  const pubkey = decodeAddress(remark.caller);
-  const pubkeyString = u8aToHex(pubkey);
-  const pubkeyStart = pubkeyString.substr(2, 8);
-  const pubkeyEnd = pubkeyString.substring(pubkeyString.length - 8);
-  const id = C100.generateId(u8aToHex(pubkey), collection.symbol);
-  const idStart = id.substr(0, 8);
-  const idEnd = id.substring(pubkeyString.length - 8);
-  if (idStart === pubkeyStart && idEnd === pubkeyEnd) {
+  nft.owner = nftParentClass.issuer;
+  if (remark.caller != nft.owner) {
     throw new Error(
-      `Caller's pubkey ${u8aToHex(pubkey)} (${id}) does not match generated ID`
+      `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
+    );
+  }
+
+  if (nft.owner === "") {
+    throw new Error(
+      `[${OP_TYPES.MINT}] Somehow this NFT still doesn't have an owner.`
     );
   }
 };

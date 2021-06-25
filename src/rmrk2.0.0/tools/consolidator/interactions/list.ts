@@ -1,8 +1,8 @@
 import { Remark } from "../remark";
-import { List } from "../../../rmrk1.0.0/classes/list";
-import { NFT } from "../../..";
+import { List } from "../../../classes/list";
+import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Change } from "../../../changelog";
 
 export const listForSaleInteraction = (
   remark: Remark,
@@ -35,7 +35,6 @@ export const listForSaleInteraction = (
   }
 
   if (listEntity.price !== nft.forsale) {
-    nft.updatedAtBlock = remark.block;
     nft.addChange({
       field: "forsale",
       old: nft.forsale,

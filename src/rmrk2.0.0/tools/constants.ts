@@ -4,8 +4,8 @@ export const PREFIX = "RMRK";
 export enum OP_TYPES {
   BUY = "BUY",
   LIST = "LIST",
+  CREATE = "CREATE",
   MINT = "MINT",
-  MINTNFT = "MINTNFT",
   SEND = "SEND",
   EMOTE = "EMOTE",
   CHANGEISSUER = "CHANGEISSUER",

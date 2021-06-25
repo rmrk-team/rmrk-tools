@@ -1,8 +1,8 @@
 import { OP_TYPES } from "../../constants";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Change } from "../../../changelog";
 import { Remark } from "../remark";
-import { Send } from "../../../rmrk1.0.0/classes/send";
-import { NFT } from "../../..";
+import { Send } from "../../../classes/send";
+import { NFT } from "../../../classes/nft";
 
 export const sendInteraction = (
   remark: Remark,
@@ -34,7 +34,6 @@ export const sendInteraction = (
     );
   }
 
-  nft.updatedAtBlock = remark.block;
   nft.addChange({
     field: "owner",
     old: nft.owner,

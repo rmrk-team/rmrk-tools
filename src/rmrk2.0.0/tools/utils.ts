@@ -100,8 +100,8 @@ export const getRemarksFromBlocks = (
       let remark;
 
       switch (meta.type) {
-        case OP_TYPES.MINTNFT:
         case OP_TYPES.MINT:
+        case OP_TYPES.CREATE:
           remark = decodeURI(hexToString(call.value));
           break;
         default:

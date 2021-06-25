@@ -13,12 +13,6 @@ import {
 } from "superstruct";
 import { getRemarkData } from "./utils";
 
-const DataStruct = object({
-  protocol: string(),
-  data: any(),
-  type: string(),
-});
-
 const CollectionStruct = type({
   name: string(),
   max: number(),
@@ -26,7 +20,6 @@ const CollectionStruct = type({
   symbol: string(),
   id: string(),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
-  data: optional(DataStruct),
 });
 
 const NFTStruct = type({
@@ -35,7 +28,6 @@ const NFTStruct = type({
   instance: string(),
   transferable: number(),
   sn: string(),
-  data: optional(DataStruct),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
@@ -100,7 +92,7 @@ export const validateCollection = (remark: string): any => {
   const [_prefix, _op_type, _version, dataString] = remark.split("::");
 
   try {
-    validateBase(remark, OP_TYPES.MINT);
+    validateBase(remark, OP_TYPES.CREATE);
     const obj = getRemarkData(dataString);
     if (!obj.metadata && !obj.data) {
       throw new Error("NFT is missing metadata");
@@ -118,7 +110,7 @@ export const validateNFT = (remark: string): any => {
   const [_prefix, _op_type, _version, dataString] = remark.split("::");
 
   try {
-    validateBase(remark, OP_TYPES.MINTNFT);
+    validateBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
     if (!obj.metadata && !obj.data) {
       throw new Error("NFT is missing metadata");

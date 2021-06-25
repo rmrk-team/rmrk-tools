@@ -1,15 +1,15 @@
-import { Buy } from "../../../rmrk1.0.0/classes/buy";
+import { Buy } from "../../../classes/buy";
 import { OP_TYPES } from "../../constants";
 import { BlockCall } from "../../types";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Change } from "../../../changelog";
 import { Remark } from "../remark";
-import { NFT as N100 } from "../../..";
+import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
 
 export const buyInteraction = (
   remark: Remark, // Current remark
   buyEntity: Buy,
-  nft?: N100, // NFT in current state
+  nft?: NFT, // NFT in current state
   ss58Format?: number
 ): void => {
   // An NFT was bought after having been LISTed for sale
@@ -20,7 +20,6 @@ export const buyInteraction = (
   }
 
   validate(remark, buyEntity, nft, ss58Format);
-  nft.updatedAtBlock = remark.block;
 
   nft.addChange({
     field: "owner",
@@ -43,7 +42,7 @@ export const buyInteraction = (
   nft.forsale = BigInt(0);
 };
 
-const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
+const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
   let transferValid = false;
   let transferValue = "";
   remark.extra_ex?.forEach((el: BlockCall) => {
@@ -64,7 +63,7 @@ const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
 const validate = (
   remark: Remark,
   buyEntity: Buy,
-  nft: N100,
+  nft: NFT,
   ss58Format?: number
 ) => {
   const { transferValid, transferValue } = isTransferValid(

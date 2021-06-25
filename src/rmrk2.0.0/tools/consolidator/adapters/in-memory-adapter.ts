@@ -1,6 +1,6 @@
 import { CollectionConsolidated, NFTConsolidated } from "../consolidator";
-import { Collection } from "../../../rmrk1.0.0/classes/collection";
-import { NFT } from "../../../rmrk1.0.0/classes/nft";
+import { NftClass } from "../../../classes/nft-class";
+import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
@@ -19,26 +19,17 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return this.collections;
   }
 
-  public async updateNFTEmote(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ) {
+  public async updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
     this.nfts[nftIndex] = {
       ...this.nfts[nftIndex],
       reactions: nft?.reactions,
-      updatedAtBlock,
     };
   }
 
-  public async updateNFTList(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ) {
+  public async updateNFTList(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
@@ -46,15 +37,10 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       ...this.nfts[nftIndex],
       forsale: nft?.forsale,
       changes: nft?.changes,
-      updatedAtBlock,
     };
   }
 
-  public async updateNFTBuy(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ) {
+  public async updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
@@ -63,15 +49,10 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       owner: nft?.owner,
       changes: nft?.changes,
       forsale: nft?.forsale,
-      updatedAtBlock,
     };
   }
 
-  public async updateNFTSend(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ) {
+  public async updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
@@ -80,15 +61,10 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       changes: nft?.changes,
       owner: nft?.owner,
       forsale: BigInt(0),
-      updatedAtBlock,
     };
   }
 
-  public async updateNFTConsume(
-    nft: NFT,
-    consolidatedNFT: NFTConsolidated,
-    updatedAtBlock: number
-  ) {
+  public async updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
@@ -97,16 +73,14 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       burned: nft?.burned,
       changes: nft?.changes,
       forsale: BigInt(nft.forsale) > BigInt(0) ? BigInt(0) : nft.forsale,
-      updatedAtBlock,
     };
   }
 
-  public async updateNFTMint(nft: NFT, updatedAtBlock: number) {
+  public async updateNFTMint(nft: NFT) {
     this.nfts.push({
       ...nft,
       instance: nft.instance,
       id: nft.getId(),
-      updatedAtBlock: nft.updatedAtBlock || updatedAtBlock,
     });
   }
 
@@ -115,9 +89,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async updateCollectionIssuer(
-    collection: Collection,
-    consolidatedCollection: CollectionConsolidated,
-    updatedAtBlock: number
+    collection: NftClass,
+    consolidatedCollection: CollectionConsolidated
   ) {
     const collectionIndex = this.collections.findIndex(
       (nftItem) => nftItem.id === consolidatedCollection.id
@@ -126,7 +99,6 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       ...this.collections[collectionIndex],
       issuer: collection?.issuer,
       changes: collection?.changes,
-      updatedAtBlock,
     };
   }
 

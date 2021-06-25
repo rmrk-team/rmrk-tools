@@ -3,7 +3,7 @@ import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, VERSION } from "../tools/constants";
 
-export class Collection {
+export class NftClass {
   readonly block: number;
   readonly name: string;
   readonly max: number;
@@ -35,7 +35,7 @@ export class Collection {
     if (this.block) {
       throw new Error("An already existing collection cannot be minted!");
     }
-    return `RMRK::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
+    return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         name: this.name,
         max: this.max,
@@ -58,7 +58,7 @@ export class Collection {
     return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
   }
 
-  public addChange(c: Change): Collection {
+  public addChange(c: Change): NftClass {
     this.changes.push(c);
     return this;
   }
@@ -79,7 +79,7 @@ export class Collection {
     );
   }
 
-  static fromRemark(remark: string, block = 0): Collection | string {
+  static fromRemark(remark: string, block = 0): NftClass | string {
     try {
       validateCollection(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
@@ -95,7 +95,7 @@ export class Collection {
       );
     } catch (e) {
       console.error(e.message);
-      console.log(`${OP_TYPES.MINT} error: full input was ${remark}`);
+      console.log(`${OP_TYPES.CREATE} error: full input was ${remark}`);
       return e.message;
     }
   }

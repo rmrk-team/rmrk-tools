@@ -1,9 +1,9 @@
 import { NFT, Reactionmap } from "../../classes/nft";
 import { Change } from "../../changelog";
-import { Collection } from "../../classes/collection";
+import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
 import { Remark } from "./remark";
-import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
+import { getCollectionFromRemark, validateMintIds } from "./interactions/create";
 import { sendInteraction } from "./interactions/send";
 import { Send } from "../../classes/send";
 import { List } from "../../classes/list";
@@ -20,7 +20,7 @@ import {
   changeIssuerInteraction,
   getChangeIssuerEntity,
 } from "./interactions/changeIssuer";
-import { validateMintNFT } from "./interactions/mintNFT";
+import { validateMintNFT } from "./interactions/mint";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
@@ -68,7 +68,7 @@ export interface CollectionConsolidated {
 
 export class Consolidator {
   readonly invalidCalls: InvalidCall[];
-  readonly collections: Collection[];
+  readonly collections: NftClass[];
   readonly nfts: NFT[];
   readonly dbAdapter: IConsolidatorAdapter;
   readonly ss58Format?: number;
@@ -125,7 +125,7 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mint.md
    */
   private async mint(remark: Remark): Promise<boolean> {
-    const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
+    const invalidate = this.updateInvalidCalls(OP_TYPES.CREATE, remark).bind(
       this
     );
 
@@ -143,7 +143,7 @@ export class Consolidator {
     if (existingCollection) {
       invalidate(
         collection.id,
-        `[${OP_TYPES.MINT}] Attempt to mint already existing collection`
+        `[${OP_TYPES.CREATE}] Attempt to mint already existing collection`
       );
       return true;
     }
@@ -153,7 +153,7 @@ export class Consolidator {
       await this.dbAdapter.updateCollectionMint(collection);
       this.collections.push(collection);
       if (this.emitInteractionChanges) {
-        this.interactionChanges.push({ [OP_TYPES.MINT]: collection.id });
+        this.interactionChanges.push({ [OP_TYPES.CREATE]: collection.id });
       }
     } catch (e) {
       invalidate(collection.id, e.message);
@@ -168,7 +168,7 @@ export class Consolidator {
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mintnft.md
    */
   private async mintNFT(remark: Remark): Promise<boolean> {
-    const invalidate = this.updateInvalidCalls(OP_TYPES.MINTNFT, remark).bind(
+    const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
     const nft = NFT.fromRemark(remark.remark, remark.block);
@@ -176,7 +176,7 @@ export class Consolidator {
     if (typeof nft === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.MINTNFT}] Dead before instantiation: ${nft}`
+        `[${OP_TYPES.MINT}] Dead before instantiation: ${nft}`
       );
       return true;
     }
@@ -186,7 +186,7 @@ export class Consolidator {
     if (exists) {
       invalidate(
         nft.getId(),
-        `[${OP_TYPES.MINTNFT}] Attempt to mint already existing NFT`
+        `[${OP_TYPES.MINT}] Attempt to mint already existing NFT`
       );
       return true;
     }
@@ -205,7 +205,7 @@ export class Consolidator {
 
       this.nfts.push(nft);
       if (this.emitInteractionChanges) {
-        this.interactionChanges.push({ [OP_TYPES.MINTNFT]: nft.getId() });
+        this.interactionChanges.push({ [OP_TYPES.MINT]: nft.getId() });
       }
     } catch (e) {
       invalidate(nft.getId(), e.message);
@@ -472,13 +472,13 @@ export class Consolidator {
       // console.log('==============================');
       // console.log('Remark is: ' + remark.remark);
       switch (remark.interaction_type) {
-        case OP_TYPES.MINT:
+        case OP_TYPES.CREATE:
           if (await this.mint(remark)) {
             continue;
           }
           break;
 
-        case OP_TYPES.MINTNFT:
+        case OP_TYPES.MINT:
           if (await this.mintNFT(remark)) {
             continue;
           }

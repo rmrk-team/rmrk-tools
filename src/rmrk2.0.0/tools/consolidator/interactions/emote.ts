@@ -1,8 +1,8 @@
 import { OP_TYPES } from "../../constants";
 import { Remark } from "../remark";
-import { Emote } from "../../../rmrk1.0.0/classes/emote";
-import { NFT } from "../../..";
-import { Change } from "../../../rmrk1.0.0/changelog";
+import { Emote } from "../../../classes/emote";
+import { NFT } from "../../../classes/nft";
+import { Change } from "../../../changelog";
 
 const addEmoteChange = (
   remark: Remark,
@@ -38,7 +38,6 @@ export const emoteInteraction = (
     );
   }
 
-  nft.updatedAtBlock = remark.block;
   if (!nft.reactions[emoteEntity.unicode]) {
     nft.reactions[emoteEntity.unicode] = [];
   }
