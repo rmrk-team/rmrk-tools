@@ -6,7 +6,6 @@ import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 interface nftInstancerProps {
   block: number;
   nftclass: string;
-  name: string;
   instance: string;
   transferable: number;
   sn: string;
@@ -18,7 +17,6 @@ interface nftInstancerProps {
 export class NFT {
   readonly block: number;
   readonly nftclass: string;
-  readonly name: string;
   readonly instance: string;
   readonly transferable: number;
   readonly resources?: Resource[];
@@ -34,7 +32,6 @@ export class NFT {
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;
     this.nftclass = nftInstance.nftclass;
-    this.name = nftInstance.name;
     this.instance = nftInstance.instance;
     this.transferable = nftInstance.transferable;
     this.sn = nftInstance.sn;
@@ -59,14 +56,13 @@ export class NFT {
     return this;
   }
 
-  public mintnft(): string {
+  public mint(): string {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
     return `${PREFIX}::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         nftclass: this.nftclass,
-        name: this.name,
         instance: this.instance,
         transferable: this.transferable,
         sn: this.sn,
@@ -98,7 +94,6 @@ export class NFT {
       return new this({
         block,
         nftclass: obj.nftclass,
-        name: obj.name,
         instance: obj.instance,
         transferable:
           typeof obj.transferable === "number"
@@ -107,7 +102,7 @@ export class NFT {
         sn: obj.sn,
         metadata: obj.metadata,
         resources: obj.resources,
-        priority: obj.priority
+        priority: obj.priority,
       });
     } catch (e) {
       console.error(e.message);

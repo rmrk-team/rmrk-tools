@@ -1,11 +1,11 @@
-import {NFT, NftChild, Reactionmap, Resource} from "../../classes/nft";
+import { NFT, NftChild, Reactionmap, Resource } from "../../classes/nft";
 import { Change } from "../../changelog";
 import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
 import { Remark } from "./remark";
 import {
   getNftclassFromRemark,
-  validateMintIds,
+  validateCreateIds,
 } from "./interactions/create";
 import { sendInteraction } from "./interactions/send";
 import { Send } from "../../classes/send";
@@ -29,6 +29,7 @@ import { IConsolidatorAdapter } from "./adapters/types";
 import {
   consolidatedNftclassToInstance,
   consolidatedNFTtoInstance,
+  findRealOwner,
 } from "./utils";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
@@ -45,7 +46,6 @@ export interface NFTConsolidated {
   id: string;
   block: number;
   nftclass: string;
-  name: string;
   instance: string;
   transferable: number;
   sn: string;
@@ -62,7 +62,6 @@ export interface NFTConsolidated {
 
 export interface NftclassConsolidated {
   block: number;
-  name: string;
   max: number;
   issuer: string;
   symbol: string;
@@ -126,10 +125,10 @@ export class Consolidator {
   }
 
   /**
-   * The MINT interaction creates a NFT class.
-   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mint.md
+   * The CREATE interaction creates a NFT class.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/create.md
    */
-  private async mint(remark: Remark): Promise<boolean> {
+  private async create(remark: Remark): Promise<boolean> {
     const invalidate = this.updateInvalidCalls(OP_TYPES.CREATE, remark).bind(
       this
     );
@@ -142,19 +141,17 @@ export class Consolidator {
       return true;
     }
 
-    const existingNftclass = await this.dbAdapter.getNftclassById(
-      nftclass.id
-    );
+    const existingNftclass = await this.dbAdapter.getNftclassById(nftclass.id);
     if (existingNftclass) {
       invalidate(
         nftclass.id,
-        `[${OP_TYPES.CREATE}] Attempt to mint already existing nft class`
+        `[${OP_TYPES.CREATE}] Attempt to create already existing nft class`
       );
       return true;
     }
 
     try {
-      validateMintIds(nftclass, remark);
+      validateCreateIds(nftclass, remark);
       await this.dbAdapter.updateNftclassMint(nftclass);
       this.nftclasses.push(nftclass);
       if (this.emitInteractionChanges) {
@@ -170,9 +167,9 @@ export class Consolidator {
 
   /**
    * The MINT interaction creates an NFT inside of a Nftclass.
-   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mintnft.md
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mint.md
    */
-  private async mintNFT(remark: Remark): Promise<boolean> {
+  private async mint(remark: Remark): Promise<boolean> {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
@@ -246,7 +243,7 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      sendInteraction(remark, sendEntity, nft);
+      await sendInteraction(remark, sendEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {
@@ -473,13 +470,13 @@ export class Consolidator {
       // console.log('Remark is: ' + remark.remark);
       switch (remark.interaction_type) {
         case OP_TYPES.CREATE:
-          if (await this.mint(remark)) {
+          if (await this.create(remark)) {
             continue;
           }
           break;
 
         case OP_TYPES.MINT:
-          if (await this.mintNFT(remark)) {
+          if (await this.mint(remark)) {
             continue;
           }
           break;

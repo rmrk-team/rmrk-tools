@@ -14,7 +14,7 @@ export const getNftclassFromRemark = (remark: Remark) => {
   return nftclass;
 };
 
-export const validateMintIds = (nftclass: NftClass, remark: Remark) => {
+export const validateCreateIds = (nftclass: NftClass, remark: Remark) => {
   const pubkey = decodeAddress(remark.caller);
   const pubkeyString = u8aToHex(pubkey);
   const pubkeyStart = pubkeyString.substr(2, 8);

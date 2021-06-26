@@ -3,12 +3,31 @@ import { Change } from "../../../changelog";
 import { Remark } from "../remark";
 import { Send } from "../../../classes/send";
 import { NFT } from "../../../classes/nft";
+import { IConsolidatorAdapter } from "../adapters/types";
+import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
 
-export const sendInteraction = (
+const doesRecipientExists = async (
+  recipient: string,
+  dbAdapter: IConsolidatorAdapter
+): Promise<boolean> => {
+  try {
+    if (isValidAddressPolkadotAddress(recipient)) {
+      return true;
+    } else {
+      const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recipient);
+      return Boolean(consolidatedNFT);
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
+export const sendInteraction = async (
   remark: Remark,
   sendEntity: Send,
+  dbAdapter: IConsolidatorAdapter,
   nft?: NFT
-): void => {
+): Promise<void> => {
   if (!nft) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send non-existant NFT ${sendEntity.id}`
@@ -21,10 +40,22 @@ export const sendInteraction = (
     );
   }
 
+  const realOwner = await findRealOwner(sendEntity.id, dbAdapter);
   // Check if allowed to issue send - if owner == caller
-  if (nft.owner != remark.caller) {
+  if (realOwner != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${sendEntity.id}, real owner: ${nft.owner}`
+      `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${sendEntity.id}, real owner: ${realOwner}`
+    );
+  }
+
+  // If recipient is not a polkadot account then it must be an existing NFT
+  const recipientExists = await doesRecipientExists(
+    sendEntity.recipient,
+    dbAdapter
+  );
+  if (recipientExists) {
+    throw new Error(
+      `[${OP_TYPES.SEND}] Attempting to send NFT to a non existing NFT ${sendEntity.recipient}.`
     );
   }
 

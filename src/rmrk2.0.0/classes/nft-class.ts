@@ -5,7 +5,6 @@ import { OP_TYPES, VERSION } from "../tools/constants";
 
 export class NftClass {
   readonly block: number;
-  readonly name: string;
   readonly max: number;
   issuer: string;
   readonly symbol: string;
@@ -15,7 +14,6 @@ export class NftClass {
 
   constructor(
     block: number,
-    name: string,
     max: number,
     issuer: string,
     symbol: string,
@@ -23,7 +21,6 @@ export class NftClass {
     metadata: string
   ) {
     this.block = block;
-    this.name = name;
     this.max = max;
     this.issuer = issuer;
     this.symbol = symbol;
@@ -37,7 +34,6 @@ export class NftClass {
     }
     return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        name: this.name,
         max: this.max,
         issuer: this.issuer,
         symbol: this.symbol.toUpperCase(),
@@ -86,7 +82,6 @@ export class NftClass {
       const obj = getRemarkData(dataString);
       return new this(
         block,
-        obj.name,
         obj.max,
         obj.issuer,
         obj.symbol,

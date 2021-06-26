@@ -1,6 +1,40 @@
 import { NFT } from "../../classes/nft";
 import { NftclassConsolidated, NFTConsolidated } from "./consolidator";
 import { NftClass } from "../../classes/nft-class";
+import { decodeAddress, encodeAddress } from "@polkadot/keyring";
+import { hexToU8a, isHex } from "@polkadot/util";
+import { IConsolidatorAdapter } from "./adapters/types";
+
+/**
+ * Validate polkadot address
+ * @param address
+ */
+export const isValidAddressPolkadotAddress = (address: string) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const findRealOwner = async (
+  nftId: string,
+  dbAdapter: IConsolidatorAdapter
+): Promise<string> => {
+  const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
+  const nft = consolidatedNFTtoInstance(consolidatedNFT);
+  if (!nft) {
+    throw new Error(`Cannot find NFT with id ${nftId}`);
+  }
+  if (isValidAddressPolkadotAddress(nft.owner)) {
+    return nft.owner;
+  } else {
+    // Bubble up until owner of nft is polkadot address
+    return await findRealOwner(nft.owner, dbAdapter);
+  }
+};
 
 export const consolidatedNFTtoInstance = (
   nft?: NFTConsolidated
@@ -11,7 +45,6 @@ export const consolidatedNFTtoInstance = (
   const {
     block,
     nftclass,
-    name,
     instance,
     transferable,
     sn,
@@ -24,7 +57,6 @@ export const consolidatedNFTtoInstance = (
   const nftInstance = new NFT({
     block,
     nftclass,
-    name,
     instance,
     transferable,
     sn,
@@ -49,11 +81,9 @@ export const consolidatedNftclassToInstance = (
   if (!nftclass) {
     return undefined;
   }
-  const { block, name, metadata, id, issuer, max, symbol, ...rest } =
-    nftclass || {};
+  const { block, metadata, id, issuer, max, symbol, ...rest } = nftclass || {};
   const nftclassInstance = new NftClass(
     block,
-    name,
     max,
     issuer,
     symbol,

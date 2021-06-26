@@ -15,7 +15,6 @@ import {
 import { getRemarkData } from "./utils";
 
 const NftclassStruct = type({
-  name: string(),
   max: number(),
   issuer: string(),
   symbol: string(),
@@ -24,7 +23,6 @@ const NftclassStruct = type({
 });
 
 const NFTStruct = type({
-  name: string(),
   nftclass: string(),
   instance: string(),
   transferable: number(),
@@ -96,8 +94,8 @@ export const validateNftclass = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.CREATE);
     const obj = getRemarkData(dataString);
-    if (!obj.metadata && !obj.data) {
-      throw new Error("NFT is missing metadata");
+    if (!obj.metadata) {
+      throw new Error("NFT Class is missing metadata");
     }
     return assert(obj, NftclassStruct);
   } catch (error) {
@@ -114,7 +112,7 @@ export const validateNFT = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
-    if (!obj.metadata && !obj.data) {
+    if (!obj.metadata) {
       throw new Error("NFT is missing metadata");
     }
     return assert(obj, NFTStruct);

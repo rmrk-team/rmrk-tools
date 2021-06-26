@@ -1,4 +1,5 @@
 import { validateEmote } from "../tools/validate-remark";
+import {VERSION} from "../tools/constants";
 
 type TEmoteNamespace = "rmrk1" | "rmrk2" | "pubkey";
 
@@ -10,7 +11,7 @@ export class Emote {
   unicode: string;
   id: string;
   namespace: TEmoteNamespace;
-  static V = "2.0.0";
+  static V = VERSION;
 
   constructor(namespace: TEmoteNamespace, id: string, unicode: string) {
     this.unicode = unicode;
