@@ -283,7 +283,7 @@ export const getRemarkData = (dataString: string) => {
 
 /**
  * filterBlocksByCollection
- * Return blocks that match specific collection.
+ * Return blocks that match specific nft class.
  * @param blockCalls
  * @param collectionFilter - name of the collection to filter by
  */

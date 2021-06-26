@@ -18,28 +18,28 @@ export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,
-  nftClass?: NftClass // Collection in current state
+  nftclass?: NftClass // Collection in current state
 ) => {
-  if (!nftClass) {
+  if (!nftclass) {
     throw new Error(
-      `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such collection with ID ${changeIssuerEntity.id} found before block ${remark.block}!`
+      `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such nft class with ID ${changeIssuerEntity.id} found before block ${remark.block}!`
     );
   }
 
-  if (remark.caller != nftClass.issuer) {
+  if (remark.caller != nftclass.issuer) {
     throw new Error(
-      `Attempting to change issuer of collection ${changeIssuerEntity.id} when not issuer!`
+      `Attempting to change issuer of nft class ${changeIssuerEntity.id} when not issuer!`
     );
   }
 
-  nftClass.addChange({
+  nftclass.addChange({
     field: "issuer",
-    old: nftClass.issuer,
+    old: nftclass.issuer,
     new: changeIssuerEntity.issuer,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.CHANGEISSUER,
   } as Change);
 
-  nftClass.issuer = changeIssuerEntity.issuer;
+  nftclass.issuer = changeIssuerEntity.issuer;
 };

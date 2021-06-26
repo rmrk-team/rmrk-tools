@@ -10,6 +10,7 @@ import {
   optional,
   type,
   is,
+  enums,
 } from "superstruct";
 import { getRemarkData } from "./utils";
 
@@ -24,7 +25,7 @@ const CollectionStruct = type({
 
 const NFTStruct = type({
   name: string(),
-  collection: string(),
+  nftclass: string(),
   instance: string(),
   transferable: number(),
   sn: string(),
@@ -65,6 +66,7 @@ const SENDStruct = type({
 const EMOTEStruct = type({
   id: string(),
   unicode: string(),
+  namespace: enums(["rmrk1", "rmrk2", "pubkey"]),
 });
 
 const CHANGEISSUERStruct = type({

@@ -10,45 +10,48 @@ export const consolidatedNFTtoInstance = (
   }
   const {
     block,
-    collection,
+    nftclass,
     name,
     instance,
     transferable,
     sn,
     metadata,
     id,
-    data,
+    resources,
+    priority,
     ...rest
   } = nft || {};
-  const nftClass = new NFT(
+  const nftInstance = new NFT({
     block,
-    collection,
+    nftclass,
     name,
     instance,
     transferable,
     sn,
     metadata,
-    data
-  );
-  const { owner, forsale, reactions, changes, burned } = rest;
-  nftClass.owner = owner;
-  nftClass.forsale = forsale;
-  nftClass.reactions = reactions;
-  nftClass.changes = changes;
-  nftClass.burned = burned;
+    resources,
+    priority,
+  });
+  const { owner, forsale, reactions, changes, burned, children } = rest;
+  nftInstance.owner = owner;
+  nftInstance.forsale = forsale;
+  nftInstance.reactions = reactions;
+  nftInstance.changes = changes;
+  nftInstance.burned = burned;
+  nftInstance.children = children;
 
-  return nftClass;
+  return nftInstance;
 };
 
 export const consolidatedCollectionToInstance = (
-  collection?: CollectionConsolidated
+  nftclass?: CollectionConsolidated
 ): NftClass | undefined => {
-  if (!collection) {
+  if (!nftclass) {
     return undefined;
   }
   const { block, name, metadata, id, issuer, max, symbol, ...rest } =
-    collection || {};
-  const colleactionClass = new NftClass(
+    nftclass || {};
+  const nftclassInstance = new NftClass(
     block,
     name,
     max,
@@ -59,7 +62,7 @@ export const consolidatedCollectionToInstance = (
   );
   const { changes } = rest;
 
-  colleactionClass.changes = changes;
+  nftclassInstance.changes = changes;
 
-  return colleactionClass;
+  return nftclassInstance;
 };

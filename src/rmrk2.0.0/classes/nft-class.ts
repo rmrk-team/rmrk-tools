@@ -33,7 +33,7 @@ export class NftClass {
 
   public mint(): string {
     if (this.block) {
-      throw new Error("An already existing collection cannot be minted!");
+      throw new Error("An already existing nft class cannot be minted!");
     }
     return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
@@ -50,9 +50,9 @@ export class NftClass {
   public change_issuer(address: string): string {
     if (this.block === 0) {
       throw new Error(
-        "This collection is new, so there's no issuer to change." +
+        "This nft class is new, so there's no issuer to change." +
           " If it has been deployed on chain, load the existing " +
-          "collection as a new instance first, then change issuer."
+          "nft class as a new instance first, then change issuer."
       );
     }
     return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;

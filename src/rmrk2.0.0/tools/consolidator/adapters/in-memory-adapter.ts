@@ -5,10 +5,10 @@ import { IConsolidatorAdapter } from "./types";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
-  public collections: CollectionConsolidated[];
+  public nftclasses: CollectionConsolidated[];
   constructor() {
     this.nfts = [];
-    this.collections = [];
+    this.nftclasses = [];
   }
 
   public async getAllNFTs() {
@@ -16,7 +16,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async getAllCollections() {
-    return this.collections;
+    return this.nftclasses;
   }
 
   public async updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated) {
@@ -84,21 +84,21 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     });
   }
 
-  public async updateCollectionMint(collection: CollectionConsolidated) {
-    return this.collections.push(collection);
+  public async updateCollectionMint(nftclasse: CollectionConsolidated) {
+    return this.nftclasses.push(nftclasse);
   }
 
   public async updateCollectionIssuer(
-    collection: NftClass,
+    nftclass: NftClass,
     consolidatedCollection: CollectionConsolidated
   ) {
-    const collectionIndex = this.collections.findIndex(
+    const nftclassIndex = this.nftclasses.findIndex(
       (nftItem) => nftItem.id === consolidatedCollection.id
     );
-    this.collections[collectionIndex] = {
-      ...this.collections[collectionIndex],
-      issuer: collection?.issuer,
-      changes: collection?.changes,
+    this.nftclasses[nftclassIndex] = {
+      ...this.nftclasses[nftclassIndex],
+      issuer: nftclass?.issuer,
+      changes: nftclass?.changes,
     };
   }
 
@@ -107,7 +107,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async getCollectionById(id: string) {
-    return this.collections.find((collection) => collection.id === id);
+    return this.nftclasses.find((nftclass) => nftclass.id === id);
   }
 
   /**

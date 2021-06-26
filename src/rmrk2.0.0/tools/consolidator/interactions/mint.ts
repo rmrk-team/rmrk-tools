@@ -10,14 +10,14 @@ export const validateMintNFT = (
 ) => {
   if (!nftParentClass) {
     throw new Error(
-      `NFT referencing non-existant parent collection ${nft.collection}`
+      `NFT referencing non-existant parent nft class ${nft.nftclass}`
     );
   }
 
   nft.owner = nftParentClass.issuer;
   if (remark.caller != nft.owner) {
     throw new Error(
-      `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
+      `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
     );
   }
 

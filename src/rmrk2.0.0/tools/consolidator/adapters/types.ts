@@ -9,9 +9,9 @@ export interface IConsolidatorAdapter {
   updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTMint(nft: NFT): Promise<any>;
-  updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
+  updateCollectionMint(nftclass: CollectionConsolidated): Promise<any>;
   updateCollectionIssuer(
-    collection: NftClass,
+    nftclass: NftClass,
     consolidatedCollection: CollectionConsolidated
   ): Promise<any>;
   getNFTById(id: string): Promise<NFTConsolidated | undefined>;

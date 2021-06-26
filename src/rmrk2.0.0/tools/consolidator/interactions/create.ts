@@ -5,21 +5,21 @@ import { Remark } from "../remark";
 import { OP_TYPES } from "../../constants";
 
 export const getCollectionFromRemark = (remark: Remark) => {
-  const collection = NftClass.fromRemark(remark.remark, remark.block);
-  if (typeof collection === "string") {
+  const nftclass = NftClass.fromRemark(remark.remark, remark.block);
+  if (typeof nftclass === "string") {
     throw new Error(
-      `[${OP_TYPES.CREATE}] Dead before instantiation: ${collection}`
+      `[${OP_TYPES.CREATE}] Dead before instantiation: ${nftclass}`
     );
   }
-  return collection;
+  return nftclass;
 };
 
-export const validateMintIds = (nftClass: NftClass, remark: Remark) => {
+export const validateMintIds = (nftclass: NftClass, remark: Remark) => {
   const pubkey = decodeAddress(remark.caller);
   const pubkeyString = u8aToHex(pubkey);
   const pubkeyStart = pubkeyString.substr(2, 8);
   const pubkeyEnd = pubkeyString.substring(pubkeyString.length - 8);
-  const id = NftClass.generateId(u8aToHex(pubkey), nftClass.symbol);
+  const id = NftClass.generateId(u8aToHex(pubkey), nftclass.symbol);
   const idStart = id.substr(0, 8);
   const idEnd = id.substring(pubkeyString.length - 8);
   if (idStart === pubkeyStart && idEnd === pubkeyEnd) {
