@@ -1,4 +1,4 @@
-import { OP_TYPES } from "../tools/constants";
+import { OP_TYPES } from "./tools/constants";
 
 export type Change = {
   field: string;

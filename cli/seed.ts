@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { getApi } from "../src/tools/utils";
+import { getApi } from "../src/rmrk1.0.0/tools/utils";
 import { Seeder } from "../test/seed/seeder";
 import readline from "readline";
 import arg from "arg";

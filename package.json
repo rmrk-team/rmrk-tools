@@ -6,12 +6,12 @@
     "type": "git",
     "url": "https://github.com/Swader/rmrk-tools"
   },
-  "main": "dist/index.cjs",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/rmrk2.0.0/index.cjs",
+  "module": "./dist/rmrk2.0.0/index.es.js",
+  "types": "./dist/rmrk2.0.0/index.d.ts",
   "exports": {
-    "import": "./dist/index.es.js",
-    "require": "./dist/index.cjs"
+    "import": "./dist/rmrk2.0.0/index.es.js",
+    "require": "./dist/rmrk2.0.0/index.cjs"
   },
   "files": [
     "dist",
@@ -37,6 +37,7 @@
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
     "test": "jest --silent",
+    "test:1.0.0": "jest test/1.0.0 --silent --config=jest.config.1.0.0.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageDirectory='coverage'",
     "prepublishOnly": "yarn build"

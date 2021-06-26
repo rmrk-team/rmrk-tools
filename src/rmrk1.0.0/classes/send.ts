@@ -1,4 +1,4 @@
-import { validateSend } from "../../tools/validate-remark";
+import { validateSend } from "../tools/validate-remark";
 
 export class Send {
   recipient: string;

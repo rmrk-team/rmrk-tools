@@ -1,4 +1,4 @@
-import { validateBuy } from "../../tools/validate-remark";
+import { validateBuy } from "../tools/validate-remark";
 
 export class Buy {
   id: string;

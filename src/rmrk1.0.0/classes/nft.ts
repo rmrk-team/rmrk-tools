@@ -1,8 +1,8 @@
 // @todo add data field
 import { Change } from "../changelog";
-import { validateNFT } from "../../tools/validate-remark";
-import { getRemarkData } from "../../tools/utils";
-import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
+import { validateNFT } from "../tools/validate-remark";
+import { getRemarkData } from "../tools/utils";
+import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 
 export class NFT {
   readonly block: number;

@@ -1,4 +1,4 @@
-import { validateConsume } from "../../tools/validate-remark";
+import { validateConsume } from "../tools/validate-remark";
 
 export class Consume {
   id: string;

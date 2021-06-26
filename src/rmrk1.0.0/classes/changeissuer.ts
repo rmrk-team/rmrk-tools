@@ -1,4 +1,4 @@
-import { validateChangeIssuer } from "../../tools/validate-remark";
+import { validateChangeIssuer } from "../tools/validate-remark";
 
 export class ChangeIssuer {
   issuer: string;

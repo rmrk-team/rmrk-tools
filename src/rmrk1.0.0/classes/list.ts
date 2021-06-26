@@ -1,4 +1,4 @@
-import { validateList } from "../../tools/validate-remark";
+import { validateList } from "../tools/validate-remark";
 
 export class List {
   price: bigint;

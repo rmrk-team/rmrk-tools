@@ -5,9 +5,9 @@ import {
   getLatestBlock,
   getLatestFinalizedBlock,
   prefixToArray,
-} from "../src/tools/utils";
+} from "../src/rmrk1.0.0/tools/utils";
 import fs from "fs";
-import fetchRemarks from "../src/tools/fetchRemarks";
+import fetchRemarks from "../src/rmrk1.0.0/tools/fetchRemarks";
 import arg from "arg";
 
 const fetch = async () => {

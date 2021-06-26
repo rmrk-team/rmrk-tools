@@ -1,4 +1,4 @@
-import { validateEmote } from "../../tools/validate-remark";
+import { validateEmote } from "../tools/validate-remark";
 
 export class Emote {
   unicode: string;

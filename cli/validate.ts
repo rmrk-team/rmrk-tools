@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import { NFT as N100 } from "../src/rmrk1.0.0/classes/nft";
-import { deeplog } from "../src/tools/utils";
-import { OP_TYPES } from "../src/tools/constants";
+import { deeplog } from "../src/rmrk1.0.0/tools/utils";
+import { OP_TYPES } from "../src/rmrk1.0.0/tools/constants";
 import arg from "arg";
 
 const validate = async () => {
