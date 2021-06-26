@@ -29,7 +29,7 @@ export class NFT {
   priority?: number[];
   changes: Change[] = [];
   owner: string;
-  children: NftChild[];
+  children?: NftChild[];
   burned: string;
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;

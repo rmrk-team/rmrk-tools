@@ -55,9 +55,9 @@ export interface NFTConsolidated {
   changes: Change[];
   owner: string;
   burned: string;
-  resources: Resource[];
-  priority: number[];
-  children: NftChild[];
+  resources?: Resource[];
+  priority?: number[];
+  children?: NftChild[];
 }
 
 export interface NftclassConsolidated {
