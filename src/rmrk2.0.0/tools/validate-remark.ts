@@ -14,7 +14,7 @@ import {
 } from "superstruct";
 import { getRemarkData } from "./utils";
 
-const CollectionStruct = type({
+const NftclassStruct = type({
   name: string(),
   max: number(),
   issuer: string(),
@@ -89,7 +89,7 @@ export const validateBase = (remark: string, opType: OP_TYPES) => {
   }
 };
 
-export const validateCollection = (remark: string): any => {
+export const validateNftclass = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, dataString] = remark.split("::");
 
@@ -99,7 +99,7 @@ export const validateCollection = (remark: string): any => {
     if (!obj.metadata && !obj.data) {
       throw new Error("NFT is missing metadata");
     }
-    return assert(obj, CollectionStruct);
+    return assert(obj, NftclassStruct);
   } catch (error) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"

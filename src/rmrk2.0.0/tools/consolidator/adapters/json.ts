@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
-import { filterBlocksByCollection, getRemarksFromBlocks } from "../../utils";
+import { filterBlocksByNftclass, getRemarksFromBlocks } from "../../utils";
 import { BlockCall } from "../../types";
 
 /**
@@ -20,14 +20,14 @@ import { BlockCall } from "../../types";
  */
 export default class JsonAdapter {
   private inputData: JsonRow[];
-  private collectionFilter?: string;
+  private nftclassFilter?: string;
   private prefixes: string[];
 
-  constructor(filePath: string, prefixes: string[], collectionFilter?: string) {
+  constructor(filePath: string, prefixes: string[], nftclassFilter?: string) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const rawdata = fs.readFileSync(filePath);
     this.inputData = JSON.parse(rawdata.toString());
-    this.collectionFilter = collectionFilter;
+    this.nftclassFilter = nftclassFilter;
     this.prefixes = prefixes;
     //console.log(this.inputData);
     console.log(`Loaded ${this.inputData.length} blocks with remark calls`);
@@ -39,10 +39,10 @@ export default class JsonAdapter {
 
   public getRemarks(): Remark[] {
     let blocks = this.inputData;
-    if (this.collectionFilter) {
-      blocks = filterBlocksByCollection(
+    if (this.nftclassFilter) {
+      blocks = filterBlocksByNftclass(
         blocks,
-        this.collectionFilter,
+        this.nftclassFilter,
         this.prefixes
       );
     }

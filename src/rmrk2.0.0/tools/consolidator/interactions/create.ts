@@ -4,7 +4,7 @@ import { u8aToHex } from "@polkadot/util";
 import { Remark } from "../remark";
 import { OP_TYPES } from "../../constants";
 
-export const getCollectionFromRemark = (remark: Remark) => {
+export const getNftclassFromRemark = (remark: Remark) => {
   const nftclass = NftClass.fromRemark(remark.remark, remark.block);
   if (typeof nftclass === "string") {
     throw new Error(

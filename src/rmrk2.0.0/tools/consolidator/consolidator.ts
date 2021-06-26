@@ -4,7 +4,7 @@ import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
 import { Remark } from "./remark";
 import {
-  getCollectionFromRemark,
+  getNftclassFromRemark,
   validateMintIds,
 } from "./interactions/create";
 import { sendInteraction } from "./interactions/send";
@@ -27,7 +27,7 @@ import { validateMintNFT } from "./interactions/mint";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
-  consolidatedCollectionToInstance,
+  consolidatedNftclassToInstance,
   consolidatedNFTtoInstance,
 } from "./utils";
 
@@ -35,7 +35,7 @@ type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
-  nftclasses: CollectionConsolidated[];
+  nftclasses: NftclassConsolidated[];
   invalid: InvalidCall[];
   changes?: InteractionChanges;
   lastBlock?: number;
@@ -60,7 +60,7 @@ export interface NFTConsolidated {
   children: NftChild[];
 }
 
-export interface CollectionConsolidated {
+export interface NftclassConsolidated {
   block: number;
   name: string;
   max: number;
@@ -136,16 +136,16 @@ export class Consolidator {
 
     let nftclass;
     try {
-      nftclass = getCollectionFromRemark(remark);
+      nftclass = getNftclassFromRemark(remark);
     } catch (e) {
       invalidate(remark.remark, e.message);
       return true;
     }
 
-    const existingCollection = await this.dbAdapter.getCollectionById(
+    const existingNftclass = await this.dbAdapter.getNftclassById(
       nftclass.id
     );
-    if (existingCollection) {
+    if (existingNftclass) {
       invalidate(
         nftclass.id,
         `[${OP_TYPES.CREATE}] Attempt to mint already existing nft class`
@@ -155,7 +155,7 @@ export class Consolidator {
 
     try {
       validateMintIds(nftclass, remark);
-      await this.dbAdapter.updateCollectionMint(nftclass);
+      await this.dbAdapter.updateNftclassMint(nftclass);
       this.nftclasses.push(nftclass);
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.CREATE]: nftclass.id });
@@ -169,7 +169,7 @@ export class Consolidator {
   }
 
   /**
-   * The MINT interaction creates an NFT inside of a Collection.
+   * The MINT interaction creates an NFT inside of a Nftclass.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mintnft.md
    */
   private async mintNFT(remark: Remark): Promise<boolean> {
@@ -196,12 +196,12 @@ export class Consolidator {
       return true;
     }
 
-    const nftParentCollection = await this.dbAdapter.getCollectionById(
+    const nftParentNftclass = await this.dbAdapter.getNftclassById(
       nft.nftclass
     );
 
-    const nftclass = nftParentCollection
-      ? consolidatedCollectionToInstance(nftParentCollection)
+    const nftclass = nftParentNftclass
+      ? consolidatedNftclassToInstance(nftParentNftclass)
       : undefined;
 
     try {
@@ -438,18 +438,18 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedCollection = await this.dbAdapter.getCollectionById(
+    const consolidatedNftclass = await this.dbAdapter.getNftclassById(
       changeIssuerEntity.id
     );
 
-    const nftclass = consolidatedCollectionToInstance(consolidatedCollection);
+    const nftclass = consolidatedNftclassToInstance(consolidatedNftclass);
 
     try {
       changeIssuerInteraction(remark, changeIssuerEntity, nftclass);
-      if (nftclass && consolidatedCollection) {
-        await this.dbAdapter.updateCollectionIssuer(
+      if (nftclass && consolidatedNftclass) {
+        await this.dbAdapter.updateNftclassIssuer(
           nftclass,
-          consolidatedCollection
+          consolidatedNftclass
         );
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({
@@ -540,8 +540,8 @@ export class Consolidator {
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
       nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
-      nftclasses: this.dbAdapter.getAllCollections
-        ? await this.dbAdapter.getAllCollections()
+      nftclasses: this.dbAdapter.getAllNftclasss
+        ? await this.dbAdapter.getAllNftclasss()
         : [],
       invalid: this.invalidCalls,
     };

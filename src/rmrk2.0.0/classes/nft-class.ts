@@ -1,5 +1,5 @@
 import { Change } from "../changelog";
-import { validateCollection } from "../tools/validate-remark";
+import { validateNftclass } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, VERSION } from "../tools/constants";
 
@@ -81,7 +81,7 @@ export class NftClass {
 
   static fromRemark(remark: string, block = 0): NftClass | string {
     try {
-      validateCollection(remark);
+      validateNftclass(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
       return new this(
@@ -101,7 +101,7 @@ export class NftClass {
   }
 }
 
-export interface CollectionMetadata {
+export interface NftclassMetadata {
   description?: string;
   attributes: Attribute[];
   external_url?: string;

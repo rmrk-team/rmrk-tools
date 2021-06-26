@@ -18,7 +18,7 @@ export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,
-  nftclass?: NftClass // Collection in current state
+  nftclass?: NftClass // Nftclass in current state
 ) => {
   if (!nftclass) {
     throw new Error(

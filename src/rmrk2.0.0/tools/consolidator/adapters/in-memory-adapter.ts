@@ -1,11 +1,11 @@
-import { CollectionConsolidated, NFTConsolidated } from "../consolidator";
+import { NftclassConsolidated, NFTConsolidated } from "../consolidator";
 import { NftClass } from "../../../classes/nft-class";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
-  public nftclasses: CollectionConsolidated[];
+  public nftclasses: NftclassConsolidated[];
   constructor() {
     this.nfts = [];
     this.nftclasses = [];
@@ -15,7 +15,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return this.nfts;
   }
 
-  public async getAllCollections() {
+  public async getAllNftclasss() {
     return this.nftclasses;
   }
 
@@ -84,16 +84,16 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     });
   }
 
-  public async updateCollectionMint(nftclasse: CollectionConsolidated) {
+  public async updateNftclassMint(nftclasse: NftclassConsolidated) {
     return this.nftclasses.push(nftclasse);
   }
 
-  public async updateCollectionIssuer(
+  public async updateNftclassIssuer(
     nftclass: NftClass,
-    consolidatedCollection: CollectionConsolidated
+    consolidatedNftclass: NftclassConsolidated
   ) {
     const nftclassIndex = this.nftclasses.findIndex(
-      (nftItem) => nftItem.id === consolidatedCollection.id
+      (nftItem) => nftItem.id === consolidatedNftclass.id
     );
     this.nftclasses[nftclassIndex] = {
       ...this.nftclasses[nftclassIndex],
@@ -106,7 +106,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return this.nfts.find((nft) => nft.id === id);
   }
 
-  public async getCollectionById(id: string) {
+  public async getNftclassById(id: string) {
     return this.nftclasses.find((nftclass) => nftclass.id === id);
   }
 

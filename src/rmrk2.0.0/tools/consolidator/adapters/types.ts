@@ -1,6 +1,6 @@
 import { NFT } from "../../../classes/nft";
 import { NftClass } from "../../../classes/nft-class";
-import { CollectionConsolidated, NFTConsolidated } from "../consolidator";
+import { NftclassConsolidated, NFTConsolidated } from "../consolidator";
 
 export interface IConsolidatorAdapter {
   updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
@@ -9,14 +9,14 @@ export interface IConsolidatorAdapter {
   updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTMint(nft: NFT): Promise<any>;
-  updateCollectionMint(nftclass: CollectionConsolidated): Promise<any>;
-  updateCollectionIssuer(
+  updateNftclassMint(nftclass: NftclassConsolidated): Promise<any>;
+  updateNftclassIssuer(
     nftclass: NftClass,
-    consolidatedCollection: CollectionConsolidated
+    consolidatedNftclass: NftclassConsolidated
   ): Promise<any>;
   getNFTById(id: string): Promise<NFTConsolidated | undefined>;
-  getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;
+  getNftclassById(id: string): Promise<NftclassConsolidated | undefined>;
   getNFTByIdUnique(id: string): Promise<NFTConsolidated | undefined>;
   getAllNFTs?: () => Promise<NFTConsolidated[]>;
-  getAllCollections?: () => Promise<CollectionConsolidated[]>;
+  getAllNftclasss?: () => Promise<NftclassConsolidated[]>;
 }
