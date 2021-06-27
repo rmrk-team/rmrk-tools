@@ -14,8 +14,9 @@ export const validateMintNFT = (
     );
   }
 
-  nft.owner = nftParentClass.issuer;
-  if (remark.caller != nft.owner) {
+  // nft.owner can be alrready set if mint remark has recipient field that allows to mint directly onto another nft
+  nft.owner = nft.owner || nftParentClass.issuer;
+  if (remark.caller != nftParentClass.issuer) {
     throw new Error(
       `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
     );

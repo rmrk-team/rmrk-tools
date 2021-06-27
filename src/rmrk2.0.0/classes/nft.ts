@@ -10,6 +10,7 @@ interface nftInstancerProps {
   transferable: number;
   sn: string;
   metadata?: string;
+  owner?: string;
 }
 
 export class NFT {
@@ -37,7 +38,7 @@ export class NFT {
     this.metadata = nftInstance.metadata;
     this.priority = [];
     this.children = [];
-    this.owner = "";
+    this.owner = nftInstance.owner || "";
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
@@ -87,7 +88,9 @@ export class NFT {
     }
     try {
       validateNFT(remark);
-      const [prefix, op_type, version, dataString] = remark.split("::");
+      const [prefix, op_type, version, dataString, recipient] = remark.split(
+        "::"
+      );
       const obj = getRemarkData(dataString);
       return new this({
         block,
@@ -99,6 +102,7 @@ export class NFT {
             : parseInt(obj.transferable, 10),
         sn: obj.sn,
         metadata: obj.metadata,
+        owner: recipient,
       });
     } catch (e) {
       console.error(e.message);

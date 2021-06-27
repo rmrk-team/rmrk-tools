@@ -4,23 +4,7 @@ import { Remark } from "../remark";
 import { Send } from "../../../classes/send";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "../adapters/types";
-import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
-
-const doesRecipientExists = async (
-  recipient: string,
-  dbAdapter: IConsolidatorAdapter
-): Promise<boolean> => {
-  try {
-    if (isValidAddressPolkadotAddress(recipient)) {
-      return true;
-    } else {
-      const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recipient);
-      return Boolean(consolidatedNFT);
-    }
-  } catch (error) {
-    return false;
-  }
-};
+import { doesRecipientExists, findRealOwner } from "../utils";
 
 export const sendInteraction = async (
   remark: Remark,

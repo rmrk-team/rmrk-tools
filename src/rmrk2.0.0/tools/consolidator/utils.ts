@@ -113,3 +113,19 @@ export const consolidatedBasetoInstance = (
 
   return baseInstance;
 };
+
+export const doesRecipientExists = async (
+  recipient: string,
+  dbAdapter: IConsolidatorAdapter
+): Promise<boolean> => {
+  try {
+    if (isValidAddressPolkadotAddress(recipient)) {
+      return true;
+    } else {
+      const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recipient);
+      return Boolean(consolidatedNFT);
+    }
+  } catch (error) {
+    return false;
+  }
+};
