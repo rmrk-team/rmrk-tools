@@ -36,6 +36,12 @@ export const equippableInteraction = (
     (part) => part.id === equippableEntity.slot
   );
 
+  if (base.parts[partIndex].type !== "slot") {
+    throw new Error(
+      `[${OP_TYPES.EQUIPPABLE}] Attempting to change equippable on base part of type ${base.parts[partIndex].type}`
+    );
+  }
+
   // Change equippable to allow all nft classes
   if (equippableChange === "*") {
     base.parts[partIndex].equippable = equippableChange;
@@ -44,11 +50,6 @@ export const equippableInteraction = (
 
   const equippableArray = equippableChange.split(",");
   if (!operation) {
-    base.parts[partIndex].equippable = equippableArray;
-    return;
-  }
-
-  if (base.parts[partIndex].equippable == "*") {
     base.parts[partIndex].equippable = equippableArray;
     return;
   }
