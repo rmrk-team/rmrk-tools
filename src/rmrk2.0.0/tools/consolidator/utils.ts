@@ -1,9 +1,14 @@
 import { NFT } from "../../classes/nft";
-import { NftclassConsolidated, NFTConsolidated } from "./consolidator";
+import {
+  BaseConsolidated,
+  NftclassConsolidated,
+  NFTConsolidated,
+} from "./consolidator";
 import { NftClass } from "../../classes/nft-class";
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { IConsolidatorAdapter } from "./adapters/types";
+import { Base } from "../../classes/base";
 
 /**
  * Validate polkadot address
@@ -95,4 +100,18 @@ export const consolidatedNftclassToInstance = (
   nftclassInstance.changes = changes;
 
   return nftclassInstance;
+};
+
+export const consolidatedBasetoInstance = (
+  base?: BaseConsolidated
+): Base | undefined => {
+  if (!base) {
+    return undefined;
+  }
+  const { block, id, issuer, type, ...rest } = base || {};
+  const baseInstance = new Base(block, id, issuer, type);
+  const { parts } = rest;
+  baseInstance.parts = parts;
+
+  return baseInstance;
 };

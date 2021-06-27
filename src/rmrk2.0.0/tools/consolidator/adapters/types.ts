@@ -5,6 +5,7 @@ import {
   NftclassConsolidated,
   NFTConsolidated,
 } from "../consolidator";
+import { Base } from "../../../classes/base";
 
 export interface IConsolidatorAdapter {
   updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
@@ -15,6 +16,10 @@ export interface IConsolidatorAdapter {
   updateNFTMint(nft: NFT): Promise<any>;
   updateNftclassMint(nftclass: NftclassConsolidated): Promise<any>;
   updateBase(base: BaseConsolidated): Promise<any>;
+  updateBaseEquippable(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ): Promise<any>;
   updateNftclassIssuer(
     nftclass: NftClass,
     consolidatedNftclass: NftclassConsolidated

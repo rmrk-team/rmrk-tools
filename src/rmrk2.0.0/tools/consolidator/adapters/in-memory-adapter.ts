@@ -6,6 +6,7 @@ import {
 import { NftClass } from "../../../classes/nft-class";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
+import { Base } from "../../../classes/base";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
@@ -36,6 +37,19 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     this.nfts[nftIndex] = {
       ...this.nfts[nftIndex],
       reactions: nft?.reactions,
+    };
+  }
+
+  public async updateBaseEquippable(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ) {
+    const baseIndex = this.bases.findIndex(
+      (baseItem) => baseItem.id === consolidatedBase.id
+    );
+    this.bases[baseIndex] = {
+      ...this.bases[baseIndex],
+      parts: base?.parts,
     };
   }
 

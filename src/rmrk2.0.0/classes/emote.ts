@@ -1,5 +1,5 @@
 import { validateEmote } from "../tools/validate-remark";
-import {VERSION} from "../tools/constants";
+import { VERSION } from "../tools/constants";
 
 type TEmoteNamespace = "rmrk1" | "rmrk2" | "pubkey";
 

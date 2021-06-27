@@ -27,13 +27,15 @@ import { validateMintNFT } from "./interactions/mint";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
+  consolidatedBasetoInstance,
   consolidatedNftclassToInstance,
   consolidatedNFTtoInstance,
-  findRealOwner,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType } from "../types";
 import { Base, IBasePart } from "../../classes/base";
+import {equippableInteraction} from "./interactions/equippable";
+import {Equippable} from "../../classes/equippable";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -138,7 +140,7 @@ export class Consolidator {
   }
 
   /**
-   * The BASE interaction creates a BASE class.
+   * The BASE interaction creates a BASE entity.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/base.md
    */
   private async base(remark: Remark): Promise<boolean> {
@@ -515,6 +517,39 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The EQUIPPABLE interaction allows a Base owner to modify the list of equippable nft classes on a Base's slot.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/equippable.md
+   */
+  private async equippable(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(
+      OP_TYPES.EQUIPPABLE,
+      remark
+    ).bind(this);
+    const equippableEntity = Equippable.fromRemark(remark.remark);
+    if (typeof equippableEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${equippableEntity}`
+      );
+      return true;
+    }
+    const consolidatedBase = await this.dbAdapter.getBaseById(equippableEntity.id);
+    const base = consolidatedBasetoInstance(consolidatedBase);
+
+    try {
+      equippableInteraction(remark, equippableEntity, base);
+      if (base && consolidatedBase) {
+        await this.dbAdapter.updateBaseEquippable(base, consolidatedBase);
+      }
+    } catch (e) {
+      invalidate(equippableEntity.id, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -575,6 +610,12 @@ export class Consolidator {
 
         case OP_TYPES.BASE:
           if (await this.base(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.EQUIPPABLE:
+          if (await this.equippable(remark)) {
             continue;
           }
           break;
