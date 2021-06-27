@@ -10,8 +10,6 @@ interface nftInstancerProps {
   transferable: number;
   sn: string;
   metadata?: string;
-  resources?: Resource[];
-  priority?: number[];
 }
 
 export class NFT {
@@ -23,7 +21,7 @@ export class NFT {
   readonly metadata?: string;
   forsale: bigint;
   reactions: Reactionmap;
-  priority?: number[];
+  priority: number[];
   changes: Change[] = [];
   owner: string;
   children: NftChild[] = [];
@@ -37,7 +35,7 @@ export class NFT {
     this.sn = nftInstance.sn;
     this.resources = [];
     this.metadata = nftInstance.metadata;
-    this.priority = nftInstance.priority;
+    this.priority = [];
     this.children = [];
     this.owner = "";
     this.reactions = {};
@@ -101,7 +99,6 @@ export class NFT {
             : parseInt(obj.transferable, 10),
         sn: obj.sn,
         metadata: obj.metadata,
-        priority: obj.priority,
       });
     } catch (e) {
       console.error(e.message);

@@ -34,8 +34,8 @@ import {
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType } from "../types";
 import { Base, IBasePart } from "../../classes/base";
-import {equippableInteraction} from "./interactions/equippable";
-import {Equippable} from "../../classes/equippable";
+import { equippableInteraction } from "./interactions/equippable";
+import { Equippable } from "../../classes/equippable";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -60,9 +60,9 @@ export interface NFTConsolidated {
   changes: Change[];
   owner: string;
   burned: string;
-  resources?: Resource[];
-  priority?: number[];
-  children?: NftChild[];
+  priority: number[];
+  children: NftChild[];
+  resources: Resource[];
 }
 
 export interface NftclassConsolidated {
@@ -534,7 +534,9 @@ export class Consolidator {
       );
       return true;
     }
-    const consolidatedBase = await this.dbAdapter.getBaseById(equippableEntity.id);
+    const consolidatedBase = await this.dbAdapter.getBaseById(
+      equippableEntity.id
+    );
     const base = consolidatedBasetoInstance(consolidatedBase);
 
     try {

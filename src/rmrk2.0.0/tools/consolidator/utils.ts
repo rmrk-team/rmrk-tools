@@ -47,18 +47,8 @@ export const consolidatedNFTtoInstance = (
   if (!nft) {
     return undefined;
   }
-  const {
-    block,
-    nftclass,
-    symbol,
-    transferable,
-    sn,
-    metadata,
-    id,
-    resources,
-    priority,
-    ...rest
-  } = nft || {};
+  const { block, nftclass, symbol, transferable, sn, metadata, id, ...rest } =
+    nft || {};
   const nftInstance = new NFT({
     block,
     nftclass,
@@ -66,16 +56,25 @@ export const consolidatedNFTtoInstance = (
     transferable,
     sn,
     metadata,
+  });
+  const {
+    owner,
+    forsale,
+    reactions,
+    changes,
+    burned,
+    children,
     resources,
     priority,
-  });
-  const { owner, forsale, reactions, changes, burned, children } = rest;
+  } = rest;
   nftInstance.owner = owner;
   nftInstance.forsale = forsale;
   nftInstance.reactions = reactions;
   nftInstance.changes = changes;
   nftInstance.burned = burned;
   nftInstance.children = children;
+  nftInstance.resources = resources;
+  nftInstance.priority = priority;
 
   return nftInstance;
 };
@@ -98,7 +97,6 @@ export const consolidatedNftclassToInstance = (
   const { changes } = rest;
 
   nftclassInstance.changes = changes;
-
   return nftclassInstance;
 };
 
