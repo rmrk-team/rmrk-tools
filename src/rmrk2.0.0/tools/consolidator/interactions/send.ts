@@ -59,6 +59,7 @@ export const sendInteraction = async (
   } as Change);
 
   nft.owner = sendEntity.recipient;
+  nft.rootowner = realOwner;
 
   // Cancel LIST, if any
   if (nft.forsale > BigInt(0)) {

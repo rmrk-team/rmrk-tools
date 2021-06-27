@@ -257,7 +257,7 @@ export class Consolidator {
       : undefined;
 
     try {
-      validateMintNFT(remark, nft, nftclass);
+      await validateMintNFT(remark, nft, this.dbAdapter, nftclass);
       await this.dbAdapter.updateNFTMint(nft);
 
       this.nfts.push(nft);

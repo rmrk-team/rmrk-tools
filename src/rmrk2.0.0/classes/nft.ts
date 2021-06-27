@@ -25,6 +25,7 @@ export class NFT {
   priority: number[];
   changes: Change[] = [];
   owner: string;
+  rootowner: string;
   children: NftChild[] = [];
   resources: Resource[] = [];
   burned: string;
@@ -39,6 +40,7 @@ export class NFT {
     this.priority = [];
     this.children = [];
     this.owner = nftInstance.owner || "";
+    this.rootowner = "";
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
