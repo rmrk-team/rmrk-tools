@@ -51,7 +51,7 @@ export interface NFTConsolidated {
   id: string;
   block: number;
   nftclass: string;
-  instance: string;
+  symbol: string;
   transferable: number;
   sn: string;
   metadata?: string;

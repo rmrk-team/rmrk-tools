@@ -6,7 +6,7 @@ import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 interface nftInstancerProps {
   block: number;
   nftclass: string;
-  instance: string;
+  symbol: string;
   transferable: number;
   sn: string;
   metadata?: string;
@@ -17,7 +17,7 @@ interface nftInstancerProps {
 export class NFT {
   readonly block: number;
   readonly nftclass: string;
-  readonly instance: string;
+  readonly symbol: string;
   readonly transferable: number;
   readonly sn: string;
   readonly metadata?: string;
@@ -32,7 +32,7 @@ export class NFT {
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;
     this.nftclass = nftInstance.nftclass;
-    this.instance = nftInstance.instance;
+    this.symbol = nftInstance.symbol;
     this.transferable = nftInstance.transferable;
     this.sn = nftInstance.sn;
     this.resources = [];
@@ -48,7 +48,7 @@ export class NFT {
   public getId(): string {
     if (!this.block)
       throw new Error("This token is not minted, so it cannot have an ID.");
-    return `${this.block}-${this.nftclass}-${this.instance}-${this.sn}`;
+    return `${this.block}-${this.nftclass}-${this.symbol}-${this.sn}`;
   }
 
   public addChange(c: Change): NFT {
@@ -63,7 +63,7 @@ export class NFT {
     return `${PREFIX}::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         nftclass: this.nftclass,
-        instance: this.instance,
+        symbol: this.symbol,
         transferable: this.transferable,
         sn: this.sn,
         metadata: this.metadata,
@@ -94,7 +94,7 @@ export class NFT {
       return new this({
         block,
         nftclass: obj.nftclass,
-        instance: obj.instance,
+        symbol: obj.symbol,
         transferable:
           typeof obj.transferable === "number"
             ? obj.transferable

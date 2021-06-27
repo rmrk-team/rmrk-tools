@@ -50,7 +50,7 @@ export const consolidatedNFTtoInstance = (
   const {
     block,
     nftclass,
-    instance,
+    symbol,
     transferable,
     sn,
     metadata,
@@ -62,7 +62,7 @@ export const consolidatedNFTtoInstance = (
   const nftInstance = new NFT({
     block,
     nftclass,
-    instance,
+    symbol,
     transferable,
     sn,
     metadata,

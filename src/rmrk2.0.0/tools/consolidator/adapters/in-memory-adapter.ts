@@ -103,7 +103,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   public async updateNFTMint(nft: NFT) {
     this.nfts.push({
       ...nft,
-      instance: nft.instance,
+      symbol: nft.symbol,
       id: nft.getId(),
     });
   }

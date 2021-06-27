@@ -24,7 +24,7 @@ const NftclassStruct = type({
 
 const NFTStruct = type({
   nftclass: string(),
-  instance: string(),
+  symbol: string(),
   transferable: number(),
   sn: string(),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
