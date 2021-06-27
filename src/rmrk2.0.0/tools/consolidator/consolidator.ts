@@ -31,6 +31,9 @@ import {
   consolidatedNFTtoInstance,
   findRealOwner,
 } from "./utils";
+import { getBaseFromRemark } from "./interactions/base";
+import { BaseType } from "../types";
+import { Base, IBasePart } from "../../classes/base";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -70,9 +73,18 @@ export interface NftclassConsolidated {
   changes: Change[];
 }
 
+export interface BaseConsolidated {
+  block: number;
+  issuer: string;
+  id: string;
+  type: BaseType;
+  parts?: IBasePart[];
+}
+
 export class Consolidator {
   readonly invalidCalls: InvalidCall[];
   readonly nftclasses: NftClass[];
+  readonly bases: Base[];
   readonly nfts: NFT[];
   readonly dbAdapter: IConsolidatorAdapter;
   readonly ss58Format?: number;
@@ -103,6 +115,7 @@ export class Consolidator {
     this.invalidCalls = [];
     this.nftclasses = [];
     this.nfts = [];
+    this.bases = [];
   }
 
   private updateInvalidCalls(op_type: OP_TYPES, remark: Remark) {
@@ -122,6 +135,46 @@ export class Consolidator {
         message,
       } as InvalidCall);
     };
+  }
+
+  /**
+   * The BASE interaction creates a BASE class.
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/base.md
+   */
+  private async base(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.BASE, remark).bind(
+      this
+    );
+
+    let base;
+    try {
+      base = getBaseFromRemark(remark);
+    } catch (e) {
+      invalidate(remark.remark, e.message);
+      return true;
+    }
+
+    const existingBase = await this.dbAdapter.getBaseById(base.id);
+    if (existingBase) {
+      invalidate(
+        base.id,
+        `[${OP_TYPES.BASE}] Attempt to create already existing base`
+      );
+      return true;
+    }
+
+    try {
+      await this.dbAdapter.updateBase(base);
+      this.bases.push(base);
+      if (this.emitInteractionChanges) {
+        this.interactionChanges.push({ [OP_TYPES.BASE]: base.id });
+      }
+    } catch (e) {
+      invalidate(base.id, e.message);
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -516,6 +569,12 @@ export class Consolidator {
 
         case OP_TYPES.CHANGEISSUER:
           if (await this.changeIssuer(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.BASE:
+          if (await this.base(remark)) {
             continue;
           }
           break;

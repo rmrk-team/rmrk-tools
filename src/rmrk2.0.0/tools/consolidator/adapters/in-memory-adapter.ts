@@ -1,4 +1,8 @@
-import { NftclassConsolidated, NFTConsolidated } from "../consolidator";
+import {
+  BaseConsolidated,
+  NftclassConsolidated,
+  NFTConsolidated,
+} from "../consolidator";
 import { NftClass } from "../../../classes/nft-class";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
@@ -6,9 +10,11 @@ import { IConsolidatorAdapter } from "./types";
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
   public nftclasses: NftclassConsolidated[];
+  public bases: BaseConsolidated[];
   constructor() {
     this.nfts = [];
     this.nftclasses = [];
+    this.bases = [];
   }
 
   public async getAllNFTs() {
@@ -17,6 +23,10 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
 
   public async getAllNftclasss() {
     return this.nftclasses;
+  }
+
+  public async getAllBases() {
+    return this.bases;
   }
 
   public async updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated) {
@@ -84,8 +94,12 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     });
   }
 
-  public async updateNftclassMint(nftclasse: NftclassConsolidated) {
-    return this.nftclasses.push(nftclasse);
+  public async updateNftclassMint(nftclass: NftclassConsolidated) {
+    return this.nftclasses.push(nftclass);
+  }
+
+  public async updateBase(base: BaseConsolidated) {
+    return this.bases.push(base);
   }
 
   public async updateNftclassIssuer(
@@ -117,5 +131,9 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return this.nfts.find((nft) => {
       return nft.id === id;
     });
+  }
+
+  public async getBaseById(id: string) {
+    return this.bases.find((base) => base.id === id);
   }
 }
