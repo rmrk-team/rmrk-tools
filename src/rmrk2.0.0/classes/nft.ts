@@ -19,7 +19,6 @@ export class NFT {
   readonly nftclass: string;
   readonly instance: string;
   readonly transferable: number;
-  readonly resources?: Resource[];
   readonly sn: string;
   readonly metadata?: string;
   forsale: bigint;
@@ -27,7 +26,8 @@ export class NFT {
   priority?: number[];
   changes: Change[] = [];
   owner: string;
-  children?: NftChild[];
+  children: NftChild[] = [];
+  resources: Resource[] = [];
   burned: string;
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;
@@ -35,7 +35,7 @@ export class NFT {
     this.instance = nftInstance.instance;
     this.transferable = nftInstance.transferable;
     this.sn = nftInstance.sn;
-    this.resources = nftInstance.resources;
+    this.resources = [];
     this.metadata = nftInstance.metadata;
     this.priority = nftInstance.priority;
     this.children = [];
@@ -101,7 +101,6 @@ export class NFT {
             : parseInt(obj.transferable, 10),
         sn: obj.sn,
         metadata: obj.metadata,
-        resources: obj.resources,
         priority: obj.priority,
       });
     } catch (e) {
