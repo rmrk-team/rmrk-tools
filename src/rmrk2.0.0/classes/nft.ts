@@ -173,6 +173,12 @@ export interface NFTMetadata {
   youtube_url?: string;
 }
 
+export interface ResourceMetadata {
+  external_url?: string;
+  description?: string;
+  name?: string;
+}
+
 export interface Attribute {
   display_type: DisplayType;
   trait_type: string;
