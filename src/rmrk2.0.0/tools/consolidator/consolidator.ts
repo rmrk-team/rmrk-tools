@@ -501,7 +501,9 @@ export class Consolidator {
           });
         }
       };
-      if (changeIssuerEntity.id.startsWith("base")) {
+      // NFT Class id always starts from block number
+      // Base id always starts with base- prefix
+      if (changeIssuerEntity.id.startsWith("base-")) {
         // This is BASE change
         await changeIssuerBase(
           changeIssuerEntity,

@@ -10,7 +10,6 @@ export class ChangeIssuer {
   }
 
   static fromRemark(remark: string): ChangeIssuer | string {
-    const exploded = remark.split("::");
     try {
       validateChangeIssuer(remark);
       const [prefix, op_type, version, id, issuer] = remark.split("::");
