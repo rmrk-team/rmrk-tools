@@ -8,8 +8,8 @@ export class Base {
   readonly block: number;
   readonly id: string;
   readonly type: BaseType;
+  readonly parts?: IBasePart[];
   issuer: string;
-  parts?: IBasePart[];
   changes: Change[] = [];
 
   constructor(

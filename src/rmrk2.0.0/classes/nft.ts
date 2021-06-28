@@ -191,10 +191,10 @@ export interface Reactionmap {
 }
 
 export interface Resource {
-  id: string;
-  src: string;
+  base?: string;
+  media?: string;
+  metadata?: string;
+  slot?: string;
 }
 
-export interface NftChild {
-  id: string;
-}
+export type NftChild = Record<string, string>;
