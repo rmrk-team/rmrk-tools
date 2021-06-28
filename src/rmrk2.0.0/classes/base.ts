@@ -2,6 +2,7 @@ import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { BaseType } from "../tools/types";
+import { Change } from "../changelog";
 
 export class Base {
   readonly block: number;
@@ -9,6 +10,7 @@ export class Base {
   readonly type: BaseType;
   issuer: string;
   parts?: IBasePart[];
+  changes: Change[] = [];
 
   constructor(
     block: number,
@@ -36,6 +38,26 @@ export class Base {
         parts: this.parts,
       })
     )}`;
+  }
+
+  public change_issuer(address: string): string {
+    if (this.block === 0) {
+      throw new Error(
+        "This base is new, so there's no issuer to change." +
+          " If it has been deployed on chain, load the existing " +
+          "nft class as a new instance first, then change issuer."
+      );
+    }
+    return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
+  }
+
+  public addChange(c: Change): Base {
+    this.changes.push(c);
+    return this;
+  }
+
+  public getChanges(): Change[] {
+    return this.changes;
   }
 
   static generateId(id: string, block: string): string {

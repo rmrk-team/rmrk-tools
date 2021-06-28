@@ -17,6 +17,7 @@
     "target": "es2017"
   },
   "files": [
-    "src/rmrk1.0.0/index.ts"
+    "src/rmrk1.0.0/index.ts",
+    "src/rmrk2.0.0/index.ts"
   ]
 }

@@ -130,6 +130,20 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
+  public async updateBaseIssuer(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ) {
+    const baseIndex = this.bases.findIndex(
+      (baseItem) => baseItem.id === consolidatedBase.id
+    );
+    this.bases[baseIndex] = {
+      ...this.bases[baseIndex],
+      issuer: base?.issuer,
+      changes: base?.changes,
+    };
+  }
+
   public async getNFTById(id: string) {
     return this.nfts.find((nft) => nft.id === id);
   }

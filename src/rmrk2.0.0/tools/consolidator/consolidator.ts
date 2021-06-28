@@ -27,6 +27,8 @@ import { validateMintNFT } from "./interactions/mint";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
+  changeIssuerBase,
+  changeIssuerNftClass,
   consolidatedBasetoInstance,
   consolidatedNftclassToInstance,
   consolidatedNFTtoInstance,
@@ -81,6 +83,7 @@ export interface BaseConsolidated {
   id: string;
   type: BaseType;
   parts?: IBasePart[];
+  changes: Change[];
 }
 
 export class Consolidator {
@@ -470,9 +473,9 @@ export class Consolidator {
   }
 
   /**
-   * The CHANGEISSUER interaction allows a nft class issuer to change the issuer field to another address.
-   * The original issuer immediately loses all rights to mint further NFTs inside that nft class.
-   * This is particularly useful when selling the rights to a nft class's operation
+   * The CHANGEISSUER interaction allows a nft class OR base issuer to change the issuer field to another address.
+   * The original issuer immediately loses all rights to mint further NFTs or base parts inside that nft class or base.
+   * This is particularly useful when selling the rights to a nft class's or base operation
    * or changing the issuer to a null address to relinquish control over it.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/changeissuer.md
    */
@@ -490,24 +493,30 @@ export class Consolidator {
       return true;
     }
 
-    const consolidatedNftclass = await this.dbAdapter.getNftclassById(
-      changeIssuerEntity.id
-    );
-
-    const nftclass = consolidatedNftclassToInstance(consolidatedNftclass);
-
     try {
-      changeIssuerInteraction(remark, changeIssuerEntity, nftclass);
-      if (nftclass && consolidatedNftclass) {
-        await this.dbAdapter.updateNftclassIssuer(
-          nftclass,
-          consolidatedNftclass
-        );
+      const onSuccess = (id: string) => {
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({
-            [OP_TYPES.CHANGEISSUER]: nftclass.id,
+            [OP_TYPES.CHANGEISSUER]: id,
           });
         }
+      };
+      if (changeIssuerEntity.id.startsWith("base")) {
+        // This is BASE change
+        await changeIssuerBase(
+          changeIssuerEntity,
+          remark,
+          onSuccess,
+          this.dbAdapter
+        );
+      } else {
+        // This is NFT Class change
+        await changeIssuerNftClass(
+          changeIssuerEntity,
+          remark,
+          onSuccess,
+          this.dbAdapter
+        );
       }
     } catch (e) {
       invalidate(changeIssuerEntity.id, e.message);

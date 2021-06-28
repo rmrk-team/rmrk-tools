@@ -24,6 +24,10 @@ export interface IConsolidatorAdapter {
     nftclass: NftClass,
     consolidatedNftclass: NftclassConsolidated
   ): Promise<any>;
+  updateBaseIssuer(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ): Promise<any>;
   getNFTById(id: string): Promise<NFTConsolidated | undefined>;
   getNftclassById(id: string): Promise<NftclassConsolidated | undefined>;
   getBaseById(id: string): Promise<BaseConsolidated | undefined>;

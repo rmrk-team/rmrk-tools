@@ -9,6 +9,10 @@ import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { IConsolidatorAdapter } from "./adapters/types";
 import { Base } from "../../classes/base";
+import { changeIssuerInteraction } from "./interactions/changeIssuer";
+import { OP_TYPES } from "../constants";
+import { ChangeIssuer } from "../../classes/changeissuer";
+import { Remark } from "./remark";
 
 /**
  * Validate polkadot address
@@ -127,5 +131,43 @@ export const doesRecipientExists = async (
     }
   } catch (error) {
     return false;
+  }
+};
+
+export const changeIssuerNftClass = async (
+  changeIssuerEntity: ChangeIssuer,
+  remark: Remark,
+  onSuccess: (id: string) => void,
+  dbAdapter: IConsolidatorAdapter
+) => {
+  const consolidatedNftclass = await dbAdapter.getNftclassById(
+    changeIssuerEntity.id
+  );
+  const nftclass = consolidatedNftclassToInstance(consolidatedNftclass);
+
+  changeIssuerInteraction(remark, changeIssuerEntity, nftclass);
+  if (nftclass && consolidatedNftclass) {
+    await dbAdapter.updateNftclassIssuer(nftclass, consolidatedNftclass);
+    if (onSuccess) {
+      onSuccess(nftclass.id);
+    }
+  }
+};
+
+export const changeIssuerBase = async (
+  changeIssuerEntity: ChangeIssuer,
+  remark: Remark,
+  onSuccess: (id: string) => void,
+  dbAdapter: IConsolidatorAdapter
+) => {
+  const consolidatedBase = await dbAdapter.getBaseById(changeIssuerEntity.id);
+  const base = consolidatedBasetoInstance(consolidatedBase);
+
+  changeIssuerInteraction(remark, changeIssuerEntity, base);
+  if (base && consolidatedBase) {
+    await dbAdapter.updateBaseIssuer(base, consolidatedBase);
+    if (onSuccess) {
+      onSuccess(base.id);
+    }
   }
 };
