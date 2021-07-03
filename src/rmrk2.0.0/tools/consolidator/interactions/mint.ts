@@ -17,8 +17,8 @@ export const validateMintNFT = async (
     );
   }
 
-  const realOwner = await findRealOwner(nft.getId(), dbAdapter);
-  nft.rootowner = realOwner;
+  const rootowner = await findRealOwner(nft.getId(), dbAdapter);
+  nft.rootowner = rootowner;
 
   if (isValidAddressPolkadotAddress(nft.owner)) {
     if (remark.caller !== nftParentClass.issuer) {

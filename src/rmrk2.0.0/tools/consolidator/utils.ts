@@ -110,10 +110,8 @@ export const consolidatedBasetoInstance = (
   if (!base) {
     return undefined;
   }
-  const { block, id, issuer, type, ...rest } = base || {};
-  const baseInstance = new Base(block, id, issuer, type);
-  const { parts } = rest;
-  baseInstance.parts = parts;
+  const { block, id, issuer, type, parts } = base || {};
+  const baseInstance = new Base(block, id, issuer, type, parts);
 
   return baseInstance;
 };

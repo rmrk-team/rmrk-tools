@@ -24,11 +24,11 @@ export const sendInteraction = async (
     );
   }
 
-  const realOwner = await findRealOwner(sendEntity.id, dbAdapter);
+  const rootowner = await findRealOwner(sendEntity.id, dbAdapter);
   // Check if allowed to issue send - if owner == caller
-  if (realOwner != remark.caller) {
+  if (rootowner != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${sendEntity.id}, real owner: ${realOwner}`
+      `[${OP_TYPES.SEND}] Attempting to send non-owned NFT ${sendEntity.id}, real owner: ${rootowner}`
     );
   }
 
@@ -59,7 +59,7 @@ export const sendInteraction = async (
   } as Change);
 
   nft.owner = sendEntity.recipient;
-  nft.rootowner = realOwner;
+  nft.rootowner = rootowner;
 
   // Cancel LIST, if any
   if (nft.forsale > BigInt(0)) {
