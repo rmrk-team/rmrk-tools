@@ -1,4 +1,4 @@
-import { NFT, NftChild, Reactionmap, Resource } from "../../classes/nft";
+import { NFT, Reactionmap, Resource } from "../../classes/nft";
 import { Change } from "../../changelog";
 import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
@@ -19,10 +19,7 @@ import { Emote } from "../../classes/emote";
 import { emoteInteraction } from "./interactions/emote";
 import { ChangeIssuer } from "../../classes/changeissuer";
 // import { deeplog } from "../utils";
-import {
-  changeIssuerInteraction,
-  getChangeIssuerEntity,
-} from "./interactions/changeIssuer";
+import { getChangeIssuerEntity } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mint";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
@@ -63,7 +60,7 @@ export interface NFTConsolidated {
   owner: string;
   burned: string;
   priority: number[];
-  children: NftChild[];
+  children: Record<string, string>;
   resources: Resource[];
 }
 

@@ -4,7 +4,11 @@ import { Remark } from "../remark";
 import { Send } from "../../../classes/send";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "../adapters/types";
-import { doesRecipientExists, findRealOwner } from "../utils";
+import {
+  doesRecipientExists,
+  findRealOwner,
+  isValidAddressPolkadotAddress,
+} from "../utils";
 
 export const sendInteraction = async (
   remark: Remark,
@@ -47,6 +51,20 @@ export const sendInteraction = async (
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${sendEntity.id}.`
     );
+  }
+
+  if (isValidAddressPolkadotAddress(sendEntity.recipient)) {
+    // Remove NFT from children of previous owner
+    const oldOwner = await dbAdapter.getNFTById(nft.owner);
+    if (oldOwner?.children && oldOwner?.children[sendEntity.id]) {
+      delete oldOwner.children[sendEntity.id];
+    }
+
+    // Add NFT as child of new owner
+    const newOwner = await dbAdapter.getNFTById(sendEntity.recipient);
+    if (newOwner && !oldOwner?.children[sendEntity.recipient]) {
+      newOwner.children[sendEntity.recipient] = "";
+    }
   }
 
   nft.addChange({

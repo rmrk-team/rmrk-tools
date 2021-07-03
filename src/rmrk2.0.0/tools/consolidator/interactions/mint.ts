@@ -26,6 +26,12 @@ export const validateMintNFT = async (
         `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
       );
     }
+  } else {
+    // Add NFT as child of new owner
+    const newOwner = await dbAdapter.getNFTById(nft.owner);
+    if (newOwner && !newOwner?.children[nft.getId()]) {
+      newOwner.children[nft.getId()] = "";
+    }
   }
 
   // nft.owner can be already set if mint remark has recipient field that allows to mint directly onto another nft
