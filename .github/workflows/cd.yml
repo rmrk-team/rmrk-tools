@@ -10,7 +10,6 @@ jobs:
 
     # Run on latest version of ubuntu
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:

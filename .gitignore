@@ -17,3 +17,4 @@ throwaway.js
 coverage
 metadata-images
 latestdump.json
+/processed-*

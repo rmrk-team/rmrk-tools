@@ -5,7 +5,6 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { NFT as N100 } from "../../..";
 import { encodeAddress } from "@polkadot/keyring";
-import { isBurnedNFT } from "../../utils";
 
 export const buyInteraction = (
   remark: Remark, // Current remark
@@ -75,7 +74,7 @@ const validate = (
   );
 
   switch (true) {
-    case isBurnedNFT(nft):
+    case Boolean(nft.burned):
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy burned NFT ${buyEntity.id}`
       );

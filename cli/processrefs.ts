@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { NFT as N100 } from "../src/rmrk1.0.0/classes/nft";
+import { NFT as N100, NFT } from "../src/rmrk1.0.0/classes/nft";
 import { Buy as Buy } from "../src/rmrk1.0.0/classes/buy";
 import fs from "fs";
 import { hexToString, stringToHex } from "@polkadot/util";
@@ -28,6 +28,7 @@ const processRefs = async () => {
   }
   const ja = new JsonAdapter(file, ["0x726d726b", "0x524d524b"]);
   const remarks = ja.getRemarks();
+  let eggnum = 0;
 
   const referrals: Referral[] = [];
   for (const remark of remarks) {
@@ -37,16 +38,25 @@ const processRefs = async () => {
     if (extrasReferral(remark) === "") {
       continue;
     }
+    if (remark.interaction_type != "BUY") {
+      continue;
+    }
     const val = getTransferValue(remark);
     referrals.push({
       block: remark.block,
       ref: extrasReferral(remark),
       val: val.toString(),
+      egg: getEggNum(remark),
     } as Referral);
   }
 
   let csv = "block,ref,sale value,rmrk earned\n";
+  //@ts-ignore
+  const eggsWithRefs: {} = {};
+  //@ts-ignore
+  const eggsPerRef: {} = {}
   for (const ref of referrals) {
+    //console.log(ref);
     // Build a CSV
     let commission = BigInt(0);
     if (
@@ -57,8 +67,29 @@ const processRefs = async () => {
       commission = BigInt(ref.val) / BigInt(100);
     }
     csv += `${ref.block},${ref.ref},${ref.val},${commission.toString()}` + "\n";
+    if (ref.egg) {
+      //@ts-ignore
+      eggsWithRefs[ref.egg] = ref.ref;
+      //@ts-ignore
+      if (eggsPerRef[ref.ref] === undefined) {
+        //@ts-ignore
+        eggsPerRef[ref.ref] = { "F": 0, "R": 0, "LE": 0 };
+      }
+      if (ref.egg < 100) {
+        //@ts-ignore
+        eggsPerRef[ref.ref]["F"] += 1;
+      } else if (ref.egg < 1000) {
+        //@ts-ignore
+        eggsPerRef[ref.ref]["R"] += 1;
+      } else {
+        //@ts-ignore
+        eggsPerRef[ref.ref]["LE"] += 1;
+      }
+    }
   }
-  fs.writeFileSync("./list.csv", csv);
+  fs.writeFileSync("./processed-amt-per-ref.csv", csv);
+  fs.writeFileSync("./processed-ref-for-egg.json", JSON.stringify(eggsWithRefs));
+  fs.writeFileSync("./processed-eggs-per-ref.json", JSON.stringify(eggsPerRef));
 
   process.exit(0);
 };
@@ -67,6 +98,7 @@ type Referral = {
   block: number;
   ref: string;
   val: string;
+  egg: number;
 };
 
 function extrasReferral(remark: Remark): string {
@@ -80,6 +112,13 @@ function extrasReferral(remark: Remark): string {
       }
     }
   return "";
+}
+
+function getEggNum(remark: Remark): number {
+  const n = Buy.fromRemark(remark.remark) as Buy;
+  const id = n.id.split("-").pop();
+  return parseInt(id ? id : "0");
+  //return 0;
 }
 
 function getTransferValue(remark: Remark): BigInt {

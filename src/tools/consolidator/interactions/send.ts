@@ -3,7 +3,6 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Send } from "../../../rmrk1.0.0/classes/send";
 import { NFT } from "../../..";
-import { isBurnedNFT } from "../../utils";
 
 export const sendInteraction = (
   remark: Remark,
@@ -16,7 +15,7 @@ export const sendInteraction = (
     );
   }
 
-  if (isBurnedNFT(nft)) {
+  if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send burned NFT ${sendEntity.id}`
     );

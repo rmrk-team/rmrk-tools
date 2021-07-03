@@ -260,10 +260,3 @@ export const filterBlocksByCollection = (
       rmrk.remark.includes(collectionFilter)
     )
   );
-
-/**
- * Burned NFT has burned field set as true or has atleast one burned reason string in array
- * @param nft
- */
-export const isBurnedNFT = (nft: NFT) =>
-  nft.burned || (Array.isArray(nft.burned) && nft.burned.length > 0);
