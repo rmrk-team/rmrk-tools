@@ -62,7 +62,10 @@ export const sendInteraction = async (
 
     // Add NFT as child of new owner
     const newOwner = await dbAdapter.getNFTById(sendEntity.recipient);
-    if (newOwner && !oldOwner?.children[sendEntity.recipient]) {
+    if (newOwner && !newOwner?.children?.[sendEntity.recipient]) {
+      if (!newOwner.children) {
+        newOwner.children = {};
+      }
       newOwner.children[sendEntity.recipient] = "";
     }
   }

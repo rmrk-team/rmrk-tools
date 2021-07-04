@@ -1,6 +1,6 @@
 #! /usr/bin/env node
-import { getApi } from "../src/rmrk1.0.0/tools/utils";
-import { Seeder } from "../test/seed/seeder";
+import { getApi } from "../src/rmrk2.0.0/tools/utils";
+import { Seeder } from "../test/seed/2.0.0/seeder";
 import readline from "readline";
 import arg from "arg";
 import { Keyring } from "@polkadot/api";

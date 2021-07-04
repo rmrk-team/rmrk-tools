@@ -17,9 +17,6 @@ export const validateMintNFT = async (
     );
   }
 
-  const rootowner = await findRealOwner(nft.getId(), dbAdapter);
-  nft.rootowner = rootowner;
-
   if (isValidAddressPolkadotAddress(nft.owner)) {
     if (remark.caller !== nftParentClass.issuer) {
       throw new Error(
@@ -27,9 +24,15 @@ export const validateMintNFT = async (
       );
     }
   } else {
+    const rootowner = await findRealOwner(nft.owner, dbAdapter);
+    nft.rootowner = rootowner;
+
     // Add NFT as child of new owner
     const newOwner = await dbAdapter.getNFTById(nft.owner);
-    if (newOwner && !newOwner?.children[nft.getId()]) {
+    if (newOwner && !newOwner?.children?.[nft.getId()]) {
+      if (!newOwner.children) {
+        newOwner.children = {};
+      }
       newOwner.children[nft.getId()] = "";
     }
   }

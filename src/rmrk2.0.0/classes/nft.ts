@@ -57,7 +57,7 @@ export class NFT {
     return this;
   }
 
-  public mint(): string {
+  public mint(recipient?: string): string {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
@@ -69,7 +69,7 @@ export class NFT {
         sn: this.sn,
         metadata: this.metadata,
       })
-    )}`;
+    )}${recipient ? "::" + recipient : ""}`;
   }
 
   public send(recipient: string): string {

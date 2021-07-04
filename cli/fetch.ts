@@ -1,13 +1,13 @@
 #! /usr/bin/env node
 import {
-  filterBlocksByCollection,
+  filterBlocksByNftclass,
   getApi,
   getLatestBlock,
   getLatestFinalizedBlock,
   prefixToArray,
-} from "../src/rmrk1.0.0/tools/utils";
+} from "../src/rmrk2.0.0/tools/utils";
 import fs from "fs";
-import fetchRemarks from "../src/rmrk1.0.0/tools/fetchRemarks";
+import fetchRemarks from "../src/rmrk2.0.0/tools/fetchRemarks";
 import arg from "arg";
 
 const fetch = async () => {
@@ -84,7 +84,7 @@ const fetch = async () => {
   );
 
   if (collectionFilter) {
-    extracted = filterBlocksByCollection(
+    extracted = filterBlocksByNftclass(
       extracted,
       collectionFilter,
       prefixToArray(args["--prefixes"] || "")

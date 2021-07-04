@@ -28,9 +28,9 @@ export class NftClass {
     this.metadata = metadata;
   }
 
-  public mint(): string {
+  public create(): string {
     if (this.block) {
-      throw new Error("An already existing nft class cannot be minted!");
+      throw new Error("An already existing nft class cannot be created!");
     }
     return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
