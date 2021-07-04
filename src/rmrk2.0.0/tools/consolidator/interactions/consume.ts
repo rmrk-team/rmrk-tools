@@ -13,7 +13,7 @@ export const consumeInteraction = async (
   consumeEntity: Consume,
   dbAdapter: IConsolidatorAdapter,
   nft?: NFT
-): void => {
+): Promise<void> => {
   if (!nft) {
     throw new Error(
       `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-existant NFT ${consumeEntity.id}`
@@ -37,8 +37,8 @@ export const consumeInteraction = async (
     //Owner is nft, remove current nft from owner's children
     const owner = await dbAdapter.getNFTById(nft.owner);
 
-    if (owner?.children && owner?.children[nft.id]) {
-      delete owner.children[nft.id];
+    if (owner?.children && owner?.children[nft.getId()]) {
+      delete owner.children[nft.getId()];
     }
   }
 
