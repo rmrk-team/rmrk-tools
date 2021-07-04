@@ -539,7 +539,7 @@ export class Consolidator {
     if (typeof equippableEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.EMOTE}] Dead before instantiation: ${equippableEntity}`
+        `[${OP_TYPES.EQUIPPABLE}] Dead before instantiation: ${equippableEntity}`
       );
       return true;
     }

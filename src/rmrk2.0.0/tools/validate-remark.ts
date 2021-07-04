@@ -15,6 +15,7 @@ import {
   array,
 } from "superstruct";
 import { getRemarkData } from "./utils";
+import { collectionRegexPattern } from "../classes/equippable";
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -88,6 +89,12 @@ const BaseStruct = type({
 const CHANGEISSUERStruct = type({
   id: string(),
   issuer: string(),
+});
+
+const EQUIPPABLEStruct = type({
+  id: string(),
+  slot: string(),
+  classes: pattern(string(), new RegExp(collectionRegexPattern)),
 });
 
 export const validateRemarkBase = (remark: string, opType: OP_TYPES) => {
@@ -199,6 +206,21 @@ export const validateEmote = (remark: string): any => {
   } catch (error) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateEquippable = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id, slot, classes] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.EQUIPPABLE);
+    return assert({ id, slot, classes }, EQUIPPABLEStruct);
+  } catch (error) {
+    throw new Error(
+      error?.message ||
+        "Something went wrong during EQUIPPABLE remark validation"
     );
   }
 };

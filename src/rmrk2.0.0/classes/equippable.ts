@@ -1,4 +1,4 @@
-import { validateEmote } from "../tools/validate-remark";
+import { validateEquippable } from "../tools/validate-remark";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 
 export const collectionRegexPattern = "^([-+])?(\\S+)$";
@@ -21,7 +21,7 @@ export class Equippable {
 
   static fromRemark(remark: string): Equippable | string {
     try {
-      validateEmote(remark);
+      validateEquippable(remark);
       const [
         _prefix,
         _op_type,
