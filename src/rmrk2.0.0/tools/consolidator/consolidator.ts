@@ -382,7 +382,7 @@ export class Consolidator {
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
     try {
-      consumeInteraction(remark, consumeEntity, nft);
+      await consumeInteraction(remark, consumeEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTConsume(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {

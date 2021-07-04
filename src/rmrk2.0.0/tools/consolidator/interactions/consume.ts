@@ -5,10 +5,13 @@ import { Remark } from "../remark";
 import { Consume } from "../../../classes/consume";
 import { NFT } from "../../../classes/nft";
 import { hexToString } from "@polkadot/util";
+import { isValidAddressPolkadotAddress } from "../utils";
+import { IConsolidatorAdapter } from "../adapters/types";
 
-export const consumeInteraction = (
+export const consumeInteraction = async (
   remark: Remark,
   consumeEntity: Consume,
+  dbAdapter: IConsolidatorAdapter,
   nft?: NFT
 ): void => {
   if (!nft) {
@@ -30,8 +33,16 @@ export const consumeInteraction = (
     );
   }
 
-  // Burn and note reason
+  if (!isValidAddressPolkadotAddress(nft.owner)) {
+    //Owner is nft, remove current nft from owner's children
+    const owner = await dbAdapter.getNFTById(nft.owner);
 
+    if (owner?.children && owner?.children[nft.id]) {
+      delete owner.children[nft.id];
+    }
+  }
+
+  // Burn and note reason
   const burnReasons: string[] = [];
   // Check if we have extra calls in the batch
   if (remark.extra_ex?.length) {
