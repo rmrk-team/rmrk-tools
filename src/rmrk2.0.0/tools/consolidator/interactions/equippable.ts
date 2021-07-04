@@ -19,7 +19,9 @@ export const equippableInteraction = (
 
   if (!base.parts || !equippableEntity.slot) {
     throw new Error(
-      `[${OP_TYPES.EQUIPPABLE}] Attempting to change equippable on base with no parts or slot is not specified ${base.id}`
+      `[${
+        OP_TYPES.EQUIPPABLE
+      }] Attempting to change equippable on base with no parts or slot is not specified ${base.getId()}`
     );
   }
 

@@ -112,8 +112,11 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return this.nftclasses.push(nftclass);
   }
 
-  public async updateBase(base: BaseConsolidated) {
-    return this.bases.push(base);
+  public async updateBase(base: Base) {
+    return this.bases.push({
+      ...base,
+      id: base.getId(),
+    });
   }
 
   public async updateNftclassIssuer(

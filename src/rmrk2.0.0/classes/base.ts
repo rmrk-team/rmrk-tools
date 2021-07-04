@@ -1,4 +1,4 @@
-import { validateNFT } from "../tools/validate-remark";
+import { validateBase } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { BaseType } from "../tools/types";
@@ -6,7 +6,7 @@ import { Change } from "../changelog";
 
 export class Base {
   readonly block: number;
-  readonly id: string;
+  readonly symbol: string;
   readonly type: BaseType;
   readonly parts?: IBasePart[];
   issuer: string;
@@ -14,13 +14,13 @@ export class Base {
 
   constructor(
     block: number,
-    id: string,
+    symbol: string,
     issuer: string,
     type: BaseType,
     parts?: IBasePart[]
   ) {
     this.block = block;
-    this.id = id;
+    this.symbol = symbol;
     this.type = type;
     this.issuer = issuer;
     this.parts = parts || undefined;
@@ -32,7 +32,7 @@ export class Base {
     }
     return `${PREFIX}::${OP_TYPES.BASE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        id: this.id,
+        id: this.getId(),
         type: this.type,
         issuer: this.issuer,
         parts: this.parts,
@@ -48,7 +48,13 @@ export class Base {
           "nft class as a new instance first, then change issuer."
       );
     }
-    return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
+    return `RMRK::CHANGEISSUER::${VERSION}::${this.getId()}::${address}`;
+  }
+
+  public getId(): string {
+    if (!this.block)
+      throw new Error("This base is not minted, so it cannot have an ID.");
+    return `base-${this.block}-${this.symbol}`;
   }
 
   public addChange(c: Change): Base {
@@ -60,19 +66,12 @@ export class Base {
     return this.changes;
   }
 
-  static generateId(id: string, block: string): string {
-    if (!id || !block) {
-      throw new Error("Need id and block to generate BASE id");
-    }
-    return `base-${block}-${id}`;
-  }
-
   static fromRemark(remark: string, block?: number): Base | string {
     if (!block) {
       block = 0;
     }
     try {
-      validateNFT(remark);
+      validateBase(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
       return new this(block, obj.id, obj.issuer, obj.type, obj.parts);

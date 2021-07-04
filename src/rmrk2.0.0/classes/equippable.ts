@@ -1,5 +1,5 @@
 import { validateEmote } from "../tools/validate-remark";
-import { VERSION } from "../tools/constants";
+import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 
 export const collectionRegexPattern = "^([-+])?(\\S+)$";
 const collectionRegex = new RegExp(collectionRegexPattern);
@@ -13,6 +13,9 @@ export class Equippable {
   constructor(id: string, slot: string, equippableChange: string) {
     this.slot = slot;
     this.id = id;
+    if (!collectionRegex.test(equippableChange)) {
+      throw new Error(`Not a valid equippable change ${equippableChange}`);
+    }
     this.equippableChange = equippableChange;
   }
 
@@ -38,5 +41,12 @@ export class Equippable {
       console.log(`EQUIPPABLE error: full input was ${remark}`);
       return e.message;
     }
+  }
+
+  public equippable(): string {
+    if (!this.slot) {
+      throw new Error(`You cannot change equippable without specifying slot`);
+    }
+    return `${PREFIX}::${OP_TYPES.EQUIPPABLE}::${VERSION}::${this.id}::${this.slot}::${this.equippableChange}`;
   }
 }

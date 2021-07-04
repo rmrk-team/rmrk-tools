@@ -166,7 +166,7 @@ export const changeIssuerBase = async (
   if (base && consolidatedBase) {
     await dbAdapter.updateBaseIssuer(base, consolidatedBase);
     if (onSuccess) {
-      onSuccess(base.id);
+      onSuccess(base.getId());
     }
   }
 };

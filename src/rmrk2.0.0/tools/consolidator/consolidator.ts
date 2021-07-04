@@ -41,6 +41,7 @@ type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
   nftclasses: NftclassConsolidated[];
+  bases: BaseConsolidated[];
   invalid: InvalidCall[];
   changes?: InteractionChanges;
   lastBlock?: number;
@@ -156,10 +157,10 @@ export class Consolidator {
       return true;
     }
 
-    const existingBase = await this.dbAdapter.getBaseById(base.id);
+    const existingBase = await this.dbAdapter.getBaseById(base.getId());
     if (existingBase) {
       invalidate(
-        base.id,
+        base.getId(),
         `[${OP_TYPES.BASE}] Attempt to create already existing base`
       );
       return true;
@@ -169,10 +170,10 @@ export class Consolidator {
       await this.dbAdapter.updateBase(base);
       this.bases.push(base);
       if (this.emitInteractionChanges) {
-        this.interactionChanges.push({ [OP_TYPES.BASE]: base.id });
+        this.interactionChanges.push({ [OP_TYPES.BASE]: base.getId() });
       }
     } catch (e) {
-      invalidate(base.id, e.message);
+      invalidate(base.getId(), e.message);
       return true;
     }
 
@@ -649,6 +650,9 @@ export class Consolidator {
       nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
       nftclasses: this.dbAdapter.getAllNftclasss
         ? await this.dbAdapter.getAllNftclasss()
+        : [],
+      bases: this.dbAdapter.getAllBases
+        ? await this.dbAdapter.getAllBases()
         : [],
       invalid: this.invalidCalls,
     };

@@ -15,7 +15,7 @@ export interface IConsolidatorAdapter {
   updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTMint(nft: NFT): Promise<any>;
   updateNftclassMint(nftclass: NftclassConsolidated): Promise<any>;
-  updateBase(base: BaseConsolidated): Promise<any>;
+  updateBase(base: Base): Promise<any>;
   updateBaseEquippable(
     base: Base,
     consolidatedBase: BaseConsolidated
