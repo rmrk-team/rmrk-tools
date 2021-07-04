@@ -25,6 +25,17 @@ export const equippableInteraction = (
     );
   }
 
+  // Check if allowed to issue equippable - if issuer == caller
+  if (base.issuer != remark.caller) {
+    throw new Error(
+      `[${
+        OP_TYPES.LIST
+      }] Attempting to change equippable on non-owned Base ${base.getId()}, real owner: ${
+        base.issuer
+      }`
+    );
+  }
+
   const equippableChangeMatch = equippableEntity.equippableChange.match(
     collectionRegexPattern
   );
