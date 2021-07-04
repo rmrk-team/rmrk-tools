@@ -41,7 +41,8 @@ export const sendInteraction = async (
     sendEntity.recipient,
     dbAdapter
   );
-  if (recipientExists) {
+
+  if (!recipientExists) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send NFT to a non existing NFT ${sendEntity.recipient}.`
     );
@@ -53,9 +54,10 @@ export const sendInteraction = async (
     );
   }
 
-  if (isValidAddressPolkadotAddress(sendEntity.recipient)) {
+  if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
     // Remove NFT from children of previous owner
     const oldOwner = await dbAdapter.getNFTById(nft.owner);
+
     if (oldOwner?.children && oldOwner?.children[sendEntity.id]) {
       delete oldOwner.children[sendEntity.id];
     }
