@@ -6,20 +6,19 @@ import { Base } from "../../../src/rmrk2.0.0/classes/base";
 const dummyRemark = {
   block: 0,
   interaction_type: OP_TYPES.EQUIPPABLE,
-  caller: "123",
+  caller: "12345",
   version: "2.0.0",
   remark: "RMRK:2.0.0:test",
 };
 
 const initBaseInstance = () => {
-  const baseInstance = new Base(0, "id-test", "12345", "svg");
-  baseInstance.parts = [
+  const baseInstance = new Base(1, "id-test", "12345", "svg", [
     {
       id: "slot-test",
       type: "slot",
       equippable: ["class1", "class2", "class3"],
     },
-  ];
+  ]);
 
   return baseInstance;
 };
