@@ -168,7 +168,7 @@ export class NFT {
       );
     }
     return `${PREFIX}::${
-      OP_TYPES.LIST
+      OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
       JSON.stringify(resource)
     )}`;

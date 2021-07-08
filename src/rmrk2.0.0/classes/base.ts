@@ -32,7 +32,7 @@ export class Base {
     }
     return `${PREFIX}::${OP_TYPES.BASE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        id: this.getId(),
+        symbol: this.symbol,
         type: this.type,
         issuer: this.issuer,
         parts: this.parts,
@@ -74,7 +74,7 @@ export class Base {
       validateBase(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
-      return new this(block, obj.id, obj.issuer, obj.type, obj.parts);
+      return new this(block, obj.symbol, obj.issuer, obj.type, obj.parts);
     } catch (e) {
       console.error(e.message);
       console.log(`BASE error: full input was ${remark}`);

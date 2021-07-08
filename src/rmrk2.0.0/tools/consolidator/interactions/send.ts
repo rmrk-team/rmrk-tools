@@ -70,7 +70,7 @@ export const sendInteraction = async (
       }
       newOwner.children[sendEntity.recipient] = {
         id: sendEntity.recipient,
-        pending: rootowner === remark.caller,
+        pending: rootowner !== remark.caller,
         equipped: "",
       };
     }

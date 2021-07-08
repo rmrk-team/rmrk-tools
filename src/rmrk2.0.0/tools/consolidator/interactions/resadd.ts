@@ -33,7 +33,7 @@ export const resAddInteraction = async (
   // If NFT owner is adding this resource then immediatly accept it
   const rootowner = await findRealOwner(nft.owner, dbAdapter);
   const accepted = rootowner === remark.caller;
-  resaddEntity.pending = accepted;
+  resaddEntity.pending = !accepted;
 
   nft.resources.push(resaddEntity);
   // If this is the first resource being added and is immediatly accepted, set default priority array

@@ -254,7 +254,7 @@ export class Seeder {
       "svg",
       getBaseParts(this.partsClassId)
     );
-    this.baseId = base.getId();
+
     remarks.push(base.base());
 
     const nft1 = new NFT({
@@ -278,6 +278,16 @@ export class Seeder {
           classBlock = block.block.header.number.toNumber();
           nftBlock = block.block.header.number.toNumber();
           baseBlock = block.block.header.number.toNumber();
+
+          const baseInBlock = new Base(
+            baseBlock,
+            "KBASE777",
+            this.accounts[0].address,
+            "svg",
+            getBaseParts(this.partsClassId)
+          );
+
+          this.baseId = baseInBlock.getId();
 
           this.sendBaseToBird();
         }
@@ -316,6 +326,12 @@ export class Seeder {
 
     remarks.push(backgroundNft.mint(nftParent.getId()));
 
+    // const equippable1 = new Equippable(
+    //   `base-${baseBlock}-base1`,
+    //   "gemslot2",
+    //   `+${this.partsClassId}`
+    // );
+
     const gem2Nft = new NFT({
       block: 0,
       nftclass: this.partsClassId,
@@ -325,19 +341,35 @@ export class Seeder {
       owner: this.accounts[0].address,
     });
 
-    // const equippable1 = new Equippable(
-    //   `base-${baseBlock}-base1`,
-    //   "gemslot2",
-    //   `+${this.partsClassId}`
-    // );
+    remarks.push(gem2Nft.mint());
 
-    remarks.push(gem2Nft.send(nftParent.getId()));
     const txs = remarks.map((remark) => this.api.tx.system.remark(remark));
-    await this.api.tx.utility.batch(txs).signAndSend(this.kp, ({ status }) => {
-      if (status.isInBlock) {
-        console.log(`included in ${status.asInBlock}`);
-      }
-    });
+    await this.api.tx.utility
+      .batch(txs)
+      .signAndSend(this.kp, async ({ status }) => {
+        if (status.isInBlock) {
+          console.log(`included in ${status.asInBlock}`);
+
+          const block = await this.api.rpc.chain.getBlock(status.asInBlock);
+
+          const gem2NftMinted = new NFT({
+            block: block.block.header.number.toNumber(),
+            nftclass: this.partsClassId,
+            symbol: "KANRGEM2",
+            transferable: 1,
+            sn: `2`.padStart(16, "0"),
+            owner: this.accounts[0].address,
+          });
+
+          await this.api.tx.utility
+            .batch([this.api.tx.system.remark(gem2NftMinted.send(nftParent.getId()))])
+            .signAndSend(this.kp, async ({ status }) => {
+              if (status.isInBlock) {
+                console.log(`included in ${status.asInBlock}`);
+              }
+            });
+        }
+      });
 
     await sleep(10000);
 

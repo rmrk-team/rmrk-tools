@@ -23,7 +23,7 @@ const PartStruct = type({
   z: optional(number()),
   src: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
   id: string(),
-  equippable: union([string(), array(string())]),
+  equippable: optional(union([string(), array(string())])),
 });
 
 const NftclassStruct = type({
@@ -89,7 +89,7 @@ const EMOTEStruct = type({
 const BaseStruct = type({
   issuer: string(),
   type: enums(["svg"]),
-  id: string(),
+  symbol: string(),
   parts: array(PartStruct),
 });
 
@@ -144,9 +144,6 @@ export const validateNFT = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
-    if (!obj.metadata) {
-      throw new Error("NFT is missing metadata");
-    }
     return assert(obj, NFTStruct);
   } catch (error) {
     throw new Error(
@@ -186,10 +183,13 @@ export const validateList = (remark: string): any => {
 
 export const validateResadd = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, resource] = remark.split("::");
+  const [_prefix, _op_type, _version, id, resource] = remark.split("::");
 
   try {
     validateRemarkBase(remark, OP_TYPES.RESADD);
+    if (!id) {
+      throw new Error("No NFT id specified for RESADD")
+    }
     const obj = getRemarkData(resource);
     return assert(obj, ResourceStruct);
   } catch (error) {
