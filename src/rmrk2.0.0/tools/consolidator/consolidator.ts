@@ -1,4 +1,4 @@
-import {NFT, NFTChild, Reactionmap, Resource} from "../../classes/nft";
+import { NFT, NFTChild, Reactionmap, Resource } from "../../classes/nft";
 import { Change } from "../../changelog";
 import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
@@ -586,7 +586,7 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      resAddInteraction(remark, resaddEntity, this.dbAdapter, nft);
+      await resAddInteraction(remark, resaddEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNftResadd(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {

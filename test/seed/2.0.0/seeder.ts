@@ -7,6 +7,7 @@ import { NftClass } from "../../../src/rmrk2.0.0/classes/nft-class";
 import { NFT } from "../../../src/rmrk2.0.0";
 import { Base, IBasePart } from "../../../src/rmrk2.0.0/classes/base";
 import { Equippable } from "../../../src/rmrk2.0.0/classes/equippable";
+import { encodeAddress } from "@polkadot/keyring";
 
 const getBaseParts = (classId: string) => {
   const BIRD_1_BASE_PARTS: IBasePart[] = [
@@ -230,7 +231,7 @@ export class Seeder {
     const collection = new NftClass(
       0,
       0,
-      this.accounts[0].address,
+      encodeAddress(this.accounts[0].address, 2),
       this.symbol,
       this.classId,
       "https://some.url"
@@ -240,7 +241,7 @@ export class Seeder {
     const kanariaPartsCollection = new NftClass(
       0,
       0,
-      this.accounts[0].address,
+      encodeAddress(this.accounts[0].address, 2),
       this.partsSymbol,
       this.partsClassId,
       "https://some.url"
@@ -250,7 +251,7 @@ export class Seeder {
     const base = new Base(
       0,
       "KBASE777",
-      this.accounts[0].address,
+      encodeAddress(this.accounts[0].address, 2),
       "svg",
       getBaseParts(this.partsClassId)
     );
@@ -263,7 +264,7 @@ export class Seeder {
       symbol: "KANR",
       transferable: 1,
       sn: "777".padStart(16, "0"),
-      owner: this.accounts[0].address,
+      owner: encodeAddress(this.accounts[0].address, 2),
     });
     remarks.push(nft1.mint());
 
@@ -282,7 +283,7 @@ export class Seeder {
           const baseInBlock = new Base(
             baseBlock,
             "KBASE777",
-            this.accounts[0].address,
+            encodeAddress(this.accounts[0].address, 2),
             "svg",
             getBaseParts(this.partsClassId)
           );
@@ -310,7 +311,7 @@ export class Seeder {
       symbol: "KANR",
       transferable: 1,
       sn: "777".padStart(16, "0"),
-      owner: this.accounts[0].address,
+      owner: encodeAddress(this.accounts[0].address, 2),
     });
 
     remarks.push(nftParent.resadd({ base: this.baseId }));
@@ -338,7 +339,7 @@ export class Seeder {
       symbol: "KANRGEM2",
       transferable: 1,
       sn: `2`.padStart(16, "0"),
-      owner: this.accounts[0].address,
+      owner: encodeAddress(this.accounts[0].address, 2),
     });
 
     remarks.push(gem2Nft.mint());
@@ -358,11 +359,13 @@ export class Seeder {
             symbol: "KANRGEM2",
             transferable: 1,
             sn: `2`.padStart(16, "0"),
-            owner: this.accounts[0].address,
+            owner: encodeAddress(this.accounts[0].address, 2),
           });
 
           await this.api.tx.utility
-            .batch([this.api.tx.system.remark(gem2NftMinted.send(nftParent.getId()))])
+            .batch([
+              this.api.tx.system.remark(gem2NftMinted.send(nftParent.getId())),
+            ])
             .signAndSend(this.kp, async ({ status }) => {
               if (status.isInBlock) {
                 console.log(`included in ${status.asInBlock}`);
