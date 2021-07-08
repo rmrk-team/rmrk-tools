@@ -26,7 +26,7 @@ export class NFT {
   changes: Change[] = [];
   owner: string;
   rootowner: string;
-  children: Record<string, string> | null = null;
+  children: Record<string, NFTChild> | null = null;
   resources: Resource[] = [];
   burned: string;
   constructor(nftInstance: nftInstancerProps) {
@@ -159,6 +159,20 @@ export class NFT {
       OP_TYPES.EMOTE
     }::${VERSION}::${this.getId()}::${unicode}`;
   }
+
+  public resadd(resource: Resource): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only add resource to an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `${PREFIX}::${
+      OP_TYPES.LIST
+    }::${VERSION}::${this.getId()}::${encodeURIComponent(
+      JSON.stringify(resource)
+    )}`;
+  }
 }
 
 export interface NFTMetadata {
@@ -201,4 +215,11 @@ export interface Resource {
   media?: string;
   metadata?: string;
   slot?: string;
+  pending?: boolean;
+}
+
+export interface NFTChild {
+  id: string;
+  equipped: string;
+  pending: boolean;
 }

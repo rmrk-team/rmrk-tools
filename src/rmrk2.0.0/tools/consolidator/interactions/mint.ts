@@ -33,7 +33,11 @@ export const validateMintNFT = async (
       if (!newOwner.children) {
         newOwner.children = {};
       }
-      newOwner.children[nft.getId()] = "";
+      newOwner.children[nft.getId()] = {
+        id: nft.getId(),
+        equipped: "",
+        pending: rootowner === remark.caller,
+      };
     }
   }
 

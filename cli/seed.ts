@@ -55,7 +55,7 @@ const seed = async () => {
     switch (command) {
       case "file":
         console.log("Looking for seed files inside " + folder);
-        await s.seedFromFolder(folder);
+        await s.seedBase();
         break;
       default:
         console.error(`Unknown command ${command}`);

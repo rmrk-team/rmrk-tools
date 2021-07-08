@@ -86,7 +86,7 @@ export class Base {
 export interface IBasePart {
   id: string;
   type: "slot" | "fixed";
-  equippable: string[] | "*";
+  equippable?: string[] | "*";
   unequip?: "unequip" | "burn";
   z?: number;
   src?: string;

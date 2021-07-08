@@ -1,4 +1,4 @@
-import { NFT, Reactionmap, Resource } from "../../classes/nft";
+import {NFT, NFTChild, Reactionmap, Resource} from "../../classes/nft";
 import { Change } from "../../changelog";
 import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
@@ -35,6 +35,8 @@ import { BaseType } from "../types";
 import { Base, IBasePart } from "../../classes/base";
 import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
+import { Resadd } from "../../classes/resadd";
+import { resAddInteraction } from "./interactions/resadd";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -61,7 +63,7 @@ export interface NFTConsolidated {
   owner: string;
   burned: string;
   priority: number[];
-  children: Record<string, string> | null;
+  children: Record<string, NFTChild> | null;
   resources: Resource[];
 }
 
@@ -561,6 +563,44 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The RESADD interaction allows anyone to send new resource to a target NFT
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/resadd.md
+   */
+  private async resadd(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.RESADD, remark).bind(
+      this
+    );
+    const resaddEntity = Resadd.fromRemark(remark.remark);
+    if (typeof resaddEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.RESADD}] Dead before instantiation: ${resaddEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      resaddEntity.id
+    );
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+
+    try {
+      resAddInteraction(remark, resaddEntity, this.dbAdapter, nft);
+      if (nft && consolidatedNFT) {
+        await this.dbAdapter.updateNftResadd(nft, consolidatedNFT);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.RESADD]: nft.getId() });
+        }
+      }
+    } catch (e) {
+      invalidate(resaddEntity.id, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -627,6 +667,12 @@ export class Consolidator {
 
         case OP_TYPES.EQUIPPABLE:
           if (await this.equippable(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.RESADD:
+          if (await this.resadd(remark)) {
             continue;
           }
           break;

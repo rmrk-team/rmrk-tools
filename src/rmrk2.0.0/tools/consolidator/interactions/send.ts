@@ -68,7 +68,11 @@ export const sendInteraction = async (
       if (!newOwner.children) {
         newOwner.children = {};
       }
-      newOwner.children[sendEntity.recipient] = "";
+      newOwner.children[sendEntity.recipient] = {
+        id: sendEntity.recipient,
+        pending: rootowner === remark.caller,
+        equipped: "",
+      };
     }
   }
 

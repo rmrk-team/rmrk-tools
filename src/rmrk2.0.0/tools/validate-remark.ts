@@ -42,6 +42,13 @@ const NFTStruct = type({
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
+const ResourceStruct = type({
+  base: optional(pattern(string(), new RegExp("^base-"))),
+  media: optional(string()),
+  slot: optional(pattern(string(), new RegExp("^base-"))),
+  metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+});
+
 const IsBigInt = define("BigInt", (value: any) => {
   try {
     if (!is(value, string())) {
@@ -173,6 +180,21 @@ export const validateList = (remark: string): any => {
   } catch (error) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateResadd = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, resource] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.RESADD);
+    const obj = getRemarkData(resource);
+    return assert(obj, ResourceStruct);
+  } catch (error) {
+    throw new Error(
+      error?.message || "Something went wrong during RESADD remark validation"
     );
   }
 };
