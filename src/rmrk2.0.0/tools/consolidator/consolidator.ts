@@ -70,7 +70,7 @@ export interface NFTConsolidated {
   changes: Change[];
   owner: string;
   burned: string;
-  priority: number[];
+  priority: string[];
   children: Record<string, NFTChild> | null;
   resources: IResourceConsolidated[];
 }
@@ -634,7 +634,11 @@ export class Consolidator {
     try {
       await acceptInteraction(remark, acceptEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
-        await this.dbAdapter.updateNftAccept(nft, consolidatedNFT, acceptEntity.entity);
+        await this.dbAdapter.updateNftAccept(
+          nft,
+          consolidatedNFT,
+          acceptEntity.entity
+        );
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({ [OP_TYPES.ACCEPT]: nft.getId() });
         }

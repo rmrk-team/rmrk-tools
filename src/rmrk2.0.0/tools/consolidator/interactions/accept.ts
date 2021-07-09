@@ -48,8 +48,8 @@ export const acceptInteraction = async (
     );
     if (resourceIndex > -1 && nft.resources?.[resourceIndex]?.pending) {
       nft.resources[resourceIndex].pending = false;
-      if (nft.resources.length === 1) {
-        nft.priority = [0];
+      if (!nft.priority.includes(acceptEntity.id)) {
+        nft.priority.push(acceptEntity.id);
       }
     }
   }

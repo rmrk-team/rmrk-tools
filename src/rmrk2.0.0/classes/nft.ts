@@ -23,7 +23,7 @@ export class NFT {
   readonly metadata?: string;
   forsale: bigint;
   reactions: Reactionmap;
-  priority: number[];
+  priority: string[];
   changes: Change[] = [];
   owner: string;
   rootowner: string;

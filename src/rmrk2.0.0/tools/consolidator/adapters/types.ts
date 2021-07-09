@@ -6,12 +6,17 @@ import {
   NFTConsolidated,
 } from "../consolidator";
 import { Base } from "../../../classes/base";
+import { Accept } from "../../../classes/accept";
 
 export interface IConsolidatorAdapter {
   updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTList(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNftResadd(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
-  updateNftAccept(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNftAccept(
+    nft: NFT,
+    consolidatedNFT: NFTConsolidated,
+    entity: Accept["entity"]
+  ): Promise<any>;
   updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTConsume(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
