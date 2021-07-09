@@ -3,6 +3,7 @@ import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import uuid from "uuid-random";
+import {Accept} from "./accept";
 
 interface nftInstancerProps {
   block: number;
@@ -173,6 +174,20 @@ export class NFT {
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
       JSON.stringify({ ...resource, id: resource.id || uuid() })
     )}`;
+  }
+
+  /**
+   *
+   * @param id - either child NFT id or resource id to accept from pending state
+   */
+  public accept(id: string, entity: Accept["entity"]): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only accept resource to an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `${PREFIX}::${OP_TYPES.ACCEPT}::${VERSION}::${this.getId()}::${entity}::${id}`;
   }
 }
 

@@ -32,7 +32,7 @@ export const acceptInteraction = async (
   }
 
   if (acceptEntity.entity === "nft") {
-    const pendingNft = await dbAdapter.getNftclassById(acceptEntity.id);
+    const pendingNft = await dbAdapter.getNFTById(acceptEntity.id);
     if (!pendingNft) {
       throw new Error(
         `[${OP_TYPES.ACCEPT}] Attempting to accept non-existant child NFT ${acceptEntity.id}`

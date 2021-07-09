@@ -95,7 +95,6 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "is-uuid": "^1.0.2",
     "isomorphic-fetch": "^3.0.0",
     "it-all": "^1.0.5",
     "superstruct": "^0.14.2",

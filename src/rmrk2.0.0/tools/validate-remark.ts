@@ -14,10 +14,6 @@ import {
 } from "superstruct";
 import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
-import isUuid from "is-uuid";
-
-// @ts-ignore
-const Uuid = define("Uuid", isUuid.v4);
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -70,8 +66,8 @@ const LISTStruct = type({
 });
 
 const ACCEPTStruct = type({
-  id: Uuid,
-  nftId: Uuid,
+  id: string(),
+  nftId: string(),
   entity: enums(["nft", "resource"]),
 });
 
