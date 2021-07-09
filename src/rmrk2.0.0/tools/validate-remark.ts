@@ -1,12 +1,10 @@
 import { OP_TYPES, PREFIX, VERSION } from "./constants";
 import {
   assert,
-  object,
   define,
   string,
   pattern,
   number,
-  any,
   optional,
   type,
   is,
@@ -16,6 +14,10 @@ import {
 } from "superstruct";
 import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
+import isUuid from "is-uuid";
+
+// @ts-ignore
+const Uuid = define("Uuid", isUuid.v4);
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -65,6 +67,12 @@ const IsBigInt = define("BigInt", (value: any) => {
 const LISTStruct = type({
   id: string(),
   price: IsBigInt,
+});
+
+const ACCEPTStruct = type({
+  id: Uuid,
+  nftId: Uuid,
+  entity: enums(["nft", "resource"]),
 });
 
 const BUYStruct = type({
@@ -188,7 +196,7 @@ export const validateResadd = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.RESADD);
     if (!id) {
-      throw new Error("No NFT id specified for RESADD")
+      throw new Error("No NFT id specified for RESADD");
     }
     const obj = getRemarkData(resource);
     return assert(obj, ResourceStruct);
@@ -286,6 +294,21 @@ export const validateConsume = (remark: string): any => {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateAccept = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, nftId, entity, id] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.ACCEPT);
+    return assert({ id, nftId, entity }, ACCEPTStruct);
+  } catch (error) {
+    console.log("StructError is:", error);
+    throw new Error(
+      error?.message || "Something went wrong during ASCCEPT remark validation"
     );
   }
 };

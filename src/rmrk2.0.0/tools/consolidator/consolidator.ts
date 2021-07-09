@@ -1,4 +1,10 @@
-import { NFT, NFTChild, Reactionmap, Resource } from "../../classes/nft";
+import {
+  IResourceConsolidated,
+  NFT,
+  NFTChild,
+  Reactionmap,
+  Resource,
+} from "../../classes/nft";
 import { Change } from "../../changelog";
 import { NftClass } from "../../classes/nft-class";
 import { OP_TYPES } from "../constants";
@@ -37,6 +43,8 @@ import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
 import { Resadd } from "../../classes/resadd";
 import { resAddInteraction } from "./interactions/resadd";
+import { Accept } from "../../classes/accept";
+import { acceptInteraction } from "./interactions/accept";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -64,7 +72,7 @@ export interface NFTConsolidated {
   burned: string;
   priority: number[];
   children: Record<string, NFTChild> | null;
-  resources: Resource[];
+  resources: IResourceConsolidated[];
 }
 
 export interface NftclassConsolidated {
@@ -581,7 +589,7 @@ export class Consolidator {
     }
 
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
-      resaddEntity.id
+      resaddEntity.nftId
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
@@ -594,7 +602,45 @@ export class Consolidator {
         }
       }
     } catch (e) {
-      invalidate(resaddEntity.id, e.message);
+      invalidate(resaddEntity.nftId, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * The ACCEPT interaction allows NFT owner to accept pending resource or child NFT new resource toon a target NFT
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/accept.md
+   */
+  private async accept(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.ACCEPT, remark).bind(
+      this
+    );
+    const acceptEntity = Accept.fromRemark(remark.remark);
+    if (typeof acceptEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.ACCEPT}] Dead before instantiation: ${acceptEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      acceptEntity.nftId
+    );
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+
+    try {
+      await acceptInteraction(remark, acceptEntity, this.dbAdapter, nft);
+      if (nft && consolidatedNFT) {
+        await this.dbAdapter.updateNftAccept(nft, consolidatedNFT, acceptEntity.entity);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.ACCEPT]: nft.getId() });
+        }
+      }
+    } catch (e) {
+      invalidate(acceptEntity.nftId, e.message);
       return true;
     }
 
@@ -673,6 +719,12 @@ export class Consolidator {
 
         case OP_TYPES.RESADD:
           if (await this.resadd(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.ACCEPT:
+          if (await this.accept(remark)) {
             continue;
           }
           break;

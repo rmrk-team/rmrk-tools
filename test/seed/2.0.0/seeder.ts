@@ -163,7 +163,7 @@ const getBaseParts = (classId: string) => {
       id: "gemslot4",
       type: "slot",
       equippable: [classId],
-      z: 92,
+      z: 93,
       src:
         "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_04_openslot.svg",
     },
@@ -171,7 +171,7 @@ const getBaseParts = (classId: string) => {
       id: "gemslot5",
       type: "slot",
       equippable: [classId],
-      z: 92,
+      z: 94,
       src:
         "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_05_openslot.svg",
     },

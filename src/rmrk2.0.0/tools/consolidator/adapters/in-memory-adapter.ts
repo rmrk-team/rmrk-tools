@@ -7,6 +7,7 @@ import { NftClass } from "../../../classes/nft-class";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
 import { Base } from "../../../classes/base";
+import { Accept } from "../../../classes/accept";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
@@ -64,13 +65,37 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
-  public async updateNftResadd(nft: NFT, consolidatedNFT: NFTConsolidated) {
+  public async updateNftAccept(
+    nft: NFT,
+    consolidatedNFT: NFTConsolidated,
+    entity: Accept["entity"]
+  ) {
+    const nftIndex = this.nfts.findIndex(
+      (nftItem) => nftItem.id === consolidatedNFT.id
+    );
+    if (entity == "nft") {
+      this.nfts[nftIndex] = {
+        ...this.nfts[nftIndex],
+        children: nft?.children,
+        priority: nft?.priority || this.nfts[nftIndex].priority,
+      };
+    } else if (entity === "resource") {
+      this.nfts[nftIndex] = {
+        ...this.nfts[nftIndex],
+        resources: nft?.resources,
+        priority: nft?.priority || this.nfts[nftIndex].priority,
+      };
+    }
+  }
+
+  public async updateNftAccept(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
     this.nfts[nftIndex] = {
       ...this.nfts[nftIndex],
       resources: nft?.resources,
+      priority: nft?.priority || this.nfts[nftIndex].priority,
     };
   }
 

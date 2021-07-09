@@ -13,13 +13,13 @@ export const resAddInteraction = async (
 ): Promise<void> => {
   if (!nft) {
     throw new Error(
-      `[${OP_TYPES.RESADD}] Attempting to add resource on a non-existant NFT ${resaddEntity.id}`
+      `[${OP_TYPES.RESADD}] Attempting to add resource on a non-existant NFT ${resaddEntity.nftId}`
     );
   }
 
   if (Boolean(nft.burned)) {
     throw new Error(
-      `[${OP_TYPES.RESADD}] Attempting to add resource on burned NFT ${resaddEntity.id}`
+      `[${OP_TYPES.RESADD}] Attempting to add resource on burned NFT ${resaddEntity.nftId}`
     );
   }
 

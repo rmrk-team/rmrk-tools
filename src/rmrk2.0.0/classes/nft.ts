@@ -2,6 +2,7 @@ import { Change } from "../changelog";
 import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
+import uuid from "uuid-random";
 
 interface nftInstancerProps {
   block: number;
@@ -27,7 +28,7 @@ export class NFT {
   owner: string;
   rootowner: string;
   children: Record<string, NFTChild> | null = null;
-  resources: Resource[] = [];
+  resources: IResourceConsolidated[] = [];
   burned: string;
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;
@@ -170,7 +171,7 @@ export class NFT {
     return `${PREFIX}::${
       OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
-      JSON.stringify(resource)
+      JSON.stringify({ ...resource, id: resource.id || uuid() })
     )}`;
   }
 }
@@ -211,11 +212,21 @@ export interface Reactionmap {
 }
 
 export interface Resource {
+  id?: string;
   base?: string;
   media?: string;
   metadata?: string;
   slot?: string;
   pending?: boolean;
+}
+
+export interface IResourceConsolidated {
+  id: string;
+  base?: string;
+  media?: string;
+  metadata?: string;
+  slot?: string;
+  pending: boolean;
 }
 
 export interface NFTChild {
