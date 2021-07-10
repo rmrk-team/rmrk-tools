@@ -1,7 +1,9 @@
 import { getRemarksFromBlocks, NftClass } from "../../src/rmrk2.0.0";
 import { stringToHex } from "@polkadot/util";
+import { Remark } from "../../src/rmrk2.0.0/tools/consolidator/remark";
+import { Block } from "../../src/rmrk2.0.0/tools/utils";
 
-export const createNftClassMock = () =>
+export const createNftClassMock = (): NftClass =>
   new NftClass(
     0,
     0,
@@ -11,7 +13,7 @@ export const createNftClassMock = () =>
     "https://some.url"
   );
 
-export const getBlockCallsMock = () => [
+export const getBlockCallsMock = (): Block[] => [
   {
     block: 0,
     calls: [
@@ -24,5 +26,5 @@ export const getBlockCallsMock = () => [
   },
 ];
 
-export const getRemarksFromBlocksMock = () =>
+export const getRemarksFromBlocksMock = (): Remark[] =>
   getRemarksFromBlocks(getBlockCallsMock(), ["0x726d726b", "0x524d524b"]);
