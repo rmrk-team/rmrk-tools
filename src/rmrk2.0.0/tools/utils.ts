@@ -102,6 +102,7 @@ export const getRemarksFromBlocks = (
       switch (meta.type) {
         case OP_TYPES.MINT:
         case OP_TYPES.CREATE:
+        case OP_TYPES.BASE:
           remark = decodeURI(hexToString(call.value));
           break;
         default:

@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { deeplog, getApi } from "../src/rmrk1.0.0/tools/utils";
+import { deeplog, getApi } from "../src/rmrk2.0.0/tools/utils";
 import arg from "arg";
 
 const getEvents = async () => {

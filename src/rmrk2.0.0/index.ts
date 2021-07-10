@@ -12,3 +12,7 @@ export { consumeInteraction } from "./tools/consolidator/interactions/consume";
 export { changeIssuerInteraction } from "./tools/consolidator/interactions/changeIssuer";
 export { buyInteraction } from "./tools/consolidator/interactions/buy";
 export { sendInteraction } from "./tools/consolidator/interactions/send";
+export { resAddInteraction } from "./tools/consolidator/interactions/resadd";
+export { acceptInteraction } from "./tools/consolidator/interactions/accept";
+export { equippableInteraction } from "./tools/consolidator/interactions/equippable";
+export { equipInteraction } from "./tools/consolidator/interactions/equip";

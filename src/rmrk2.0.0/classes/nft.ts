@@ -161,7 +161,7 @@ export class NFT {
     }
     return `${PREFIX}::${
       OP_TYPES.EMOTE
-    }::${VERSION}::${this.getId()}::${unicode}`;
+    }::${VERSION}::rmrk2::${this.getId()}::${unicode}`;
   }
 
   public resadd(resource: Resource): string {

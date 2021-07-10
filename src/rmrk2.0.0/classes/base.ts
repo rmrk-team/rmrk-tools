@@ -53,7 +53,7 @@ export class Base {
 
   /**
    *
-   * @param classId - classId to allow
+   * @param classIds - array of collection ids
    */
   public equippable(
     slot: string,
@@ -65,6 +65,9 @@ export class Base {
         `You can only change equippables on an existing Base. If you just created this, please load a new, 
         separate instance as the block number is an important part of an Base's ID.`
       );
+    }
+    if (!slot) {
+      throw new Error(`You cannot change equippable without specifying slot`);
     }
     return `${PREFIX}::${
       OP_TYPES.EQUIPPABLE
