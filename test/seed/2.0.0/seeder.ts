@@ -259,6 +259,9 @@ export class Seeder {
       getBaseParts(this.partsClassId)
     );
 
+
+
+
     remarks.push(
       base.equippable("gemslot2", ["d43593c715a56da27d-KANARIAPARTS2"], "+")
     );

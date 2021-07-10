@@ -25,6 +25,7 @@ const initBaseInstance = () => {
 
 describe("2.0.0 interactions: equippableInteraction", () => {
   it("should throw if base is missing", () => {
+
     const equippableEntity = new Equippable("id-test", "slot-test", "*");
 
     expect(() =>

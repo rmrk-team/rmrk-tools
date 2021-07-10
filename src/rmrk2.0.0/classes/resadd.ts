@@ -1,7 +1,7 @@
 import { validateResadd } from "../tools/validate-remark";
 import { Resource } from "./nft";
 import { getRemarkData } from "../../rmrk1.0.0/tools/utils";
-import uuid from 'uuid-random';
+import { nanoid } from "nanoid";
 
 export class Resadd {
   readonly base?: string;
@@ -19,7 +19,7 @@ export class Resadd {
     this.slot = resource.slot;
     this.pending = resource.pending || true;
     this.nftId = nftId;
-    this.id = resource.id || uuid();
+    this.id = resource.id || nanoid(5);
   }
 
   static fromRemark(remark: string): Resadd | string {
