@@ -24,12 +24,12 @@ export const buyInteraction = (
   nft.addChange({
     field: "owner",
     old: nft.owner,
-    new: remark.caller,
+    new: buyEntity.recipient || remark.caller,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
   } as Change);
-  nft.owner = remark.caller;
+  nft.owner = buyEntity.recipient || remark.caller;
 
   nft.addChange({
     field: "forsale",

@@ -130,14 +130,16 @@ export class NFT {
     }`;
   }
 
-  public buy(): string {
+  public buy(recipient?: string): string {
     if (!this.block) {
       throw new Error(
         `You can only buy an existing NFT. If you just minted this, please load a new, 
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}${
+      recipient ? "::" + recipient : ""
+    }`;
   }
 
   public consume(): string {
