@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 NftClass: Create should match snapshot 1`] = `"RMRK::CREATE::2.0.0::%7B%22max%22%3A0%2C%22issuer%22%3A%22D6HSL6nGXHLYWSN8jiL9MSNixH2F2o382KkHsZAtfZvBnxM%22%2C%22symbol%22%3A%22KANARIABIRDS%22%2C%22id%22%3A%22classId%22%2C%22metadata%22%3A%22https%3A%2F%2Fsome.url%22%7D"`;
