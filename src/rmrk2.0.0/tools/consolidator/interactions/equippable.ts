@@ -81,7 +81,6 @@ export const equippableInteraction = (
 
   // Add NFT classes to equippable list
   if (operation === "+") {
-    console.log(base.parts);
     const newEquippableArray = [
       ...(base.parts[partIndex].equippable as string[]),
     ];

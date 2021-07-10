@@ -73,8 +73,6 @@ export const equipInteraction = async (
       );
     }
 
-    console.log("basepart.equippable", basepart.equippable, nft.nftclass);
-
     if (!basepart.equippable?.includes(nft.nftclass)) {
       throw new Error(
         `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it's base ${base} slot ${slot} doesn't allow it's nftclass ${nft.nftclass}`
