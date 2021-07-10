@@ -2,7 +2,7 @@ import { Change } from "../changelog";
 import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
-import uuid from "uuid-random";
+import { nanoid } from "nanoid";
 import { Accept } from "./accept";
 
 interface nftInstancerProps {
@@ -172,7 +172,7 @@ export class NFT {
     return `${PREFIX}::${
       OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
-      JSON.stringify({ ...resource, id: resource.id || uuid() })
+      JSON.stringify({ ...resource, id: resource.id || nanoid(5) })
     )}`;
   }
 
