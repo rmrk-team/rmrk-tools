@@ -3,6 +3,7 @@ import { List } from "../../../classes/list";
 import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
 import { Change } from "../../../changelog";
+import { isValidAddressPolkadotAddress } from "../utils";
 
 export const listForSaleInteraction = (
   remark: Remark,
@@ -18,6 +19,12 @@ export const listForSaleInteraction = (
   if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list burned NFT ${listEntity.id}`
+    );
+  }
+
+  if (!isValidAddressPolkadotAddress(nft.owner)) {
+    throw new Error(
+      `[${OP_TYPES.LIST}] Attempting to list NFT ${listEntity.id} who's owner is another NFT ${nft.owner}.`
     );
   }
 
