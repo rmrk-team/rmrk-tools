@@ -14,4 +14,5 @@ export enum OP_TYPES {
   EQUIPPABLE = "EQUIPPABLE",
   RESADD = "RESADD",
   ACCEPT = "ACCEPT",
+  EQUIP = "EQUIP",
 }

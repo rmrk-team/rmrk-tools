@@ -35,6 +35,7 @@ import {
   consolidatedBasetoInstance,
   consolidatedNftclassToInstance,
   consolidatedNFTtoInstance,
+  isValidAddressPolkadotAddress,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType } from "../types";
@@ -45,6 +46,8 @@ import { Resadd } from "../../classes/resadd";
 import { resAddInteraction } from "./interactions/resadd";
 import { Accept } from "../../classes/accept";
 import { acceptInteraction } from "./interactions/accept";
+import { Equip } from "../../classes/equip";
+import { equipInteraction } from "./interactions/equip";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -651,6 +654,54 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The EQUIP interaction allows NFT owner to equip another NFT in it's parent's base slot
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/equip.md
+   */
+  private async equip(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.EQUIP, remark).bind(
+      this
+    );
+    const equipEntity = Equip.fromRemark(remark.remark);
+    if (typeof equipEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.EQUIP}] Dead before instantiation: ${equipEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      equipEntity.id
+    );
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+    const consolidatedParentNFT = await this.dbAdapter.getNFTByIdUnique(
+      nft?.owner || ""
+    );
+    const parentNft = consolidatedNFTtoInstance(consolidatedParentNFT);
+
+    try {
+      await equipInteraction(
+        remark,
+        equipEntity,
+        this.dbAdapter,
+        nft,
+        parentNft
+      );
+      if (parentNft && consolidatedParentNFT) {
+        await this.dbAdapter.updateEquip(parentNft, consolidatedParentNFT);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.EQUIP]: parentNft.getId() });
+        }
+      }
+    } catch (e) {
+      invalidate(equipEntity.id, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -729,6 +780,12 @@ export class Consolidator {
 
         case OP_TYPES.ACCEPT:
           if (await this.accept(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.EQUIP:
+          if (await this.equip(remark)) {
             continue;
           }
           break;

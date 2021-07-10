@@ -3,7 +3,7 @@ import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import uuid from "uuid-random";
-import {Accept} from "./accept";
+import { Accept } from "./accept";
 
 interface nftInstancerProps {
   block: number;
@@ -187,7 +187,25 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${OP_TYPES.ACCEPT}::${VERSION}::${this.getId()}::${entity}::${id}`;
+    return `${PREFIX}::${
+      OP_TYPES.ACCEPT
+    }::${VERSION}::${this.getId()}::${entity}::${id}`;
+  }
+
+  /**
+   *
+   * @param baseslot - base-namespaced slot into which the NFT is to be equipped - base_1.slot_1 or empty string for unequip
+   */
+  public equip(baseslot: string): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only equip resource to an existing NFT. If you just minted this, please load a new, 
+        separate instance as the block number is an important part of an NFT's ID.`
+      );
+    }
+    return `${PREFIX}::${
+      OP_TYPES.EQUIP
+    }::${VERSION}::${this.getId()}::${baseslot}`;
   }
 }
 

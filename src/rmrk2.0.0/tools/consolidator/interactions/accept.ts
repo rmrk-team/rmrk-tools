@@ -27,7 +27,7 @@ export const acceptInteraction = async (
   const rootowner = await findRealOwner(nft.owner, dbAdapter);
   if (rootowner !== remark.caller) {
     throw new Error(
-      `[${OP_TYPES.ACCEPT}] Attempting to accept entrity on non-owned NFT ${acceptEntity.nftId}`
+      `[${OP_TYPES.ACCEPT}] Attempting to accept entity on non-owned NFT ${acceptEntity.nftId}`
     );
   }
 

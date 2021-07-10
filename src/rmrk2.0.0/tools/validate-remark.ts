@@ -71,6 +71,11 @@ const ACCEPTStruct = type({
   entity: enums(["nft", "resource"]),
 });
 
+const EQUIPStruct = type({
+  id: string(),
+  baseslot: string(),
+});
+
 const BUYStruct = type({
   id: string(),
 });
@@ -305,6 +310,21 @@ export const validateAccept = (remark: string): any => {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during ASCCEPT remark validation"
+    );
+  }
+};
+
+export const validateEquip = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id, baseslot = ""] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.EQUIP);
+    return assert({ id, baseslot }, EQUIPStruct);
+  } catch (error) {
+    console.log("StructError is:", error);
+    throw new Error(
+      error?.message || "Something went wrong during EQUIP remark validation"
     );
   }
 };

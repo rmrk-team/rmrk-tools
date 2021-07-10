@@ -25,6 +25,7 @@ const seed = async () => {
   console.log("Connected.");
 
   const kp = getKeyringFromUri(phrase);
+  const kp2 = getKeyringFromUri("//Bob");
   console.log(`Will seed from ${kp.address}`);
 
   if ((await api.rpc.system.chain()).toHuman() != "Development") {
@@ -50,7 +51,7 @@ const seed = async () => {
   }
 
   async function goSeed(command: string, kp: KeyringPair) {
-    const s = new Seeder(api, kp);
+    const s = new Seeder(api, kp, kp2);
 
     switch (command) {
       case "file":

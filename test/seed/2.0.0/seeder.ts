@@ -8,6 +8,7 @@ import { NFT } from "../../../src/rmrk2.0.0";
 import { Base, IBasePart } from "../../../src/rmrk2.0.0/classes/base";
 import { Equippable } from "../../../src/rmrk2.0.0/classes/equippable";
 import { encodeAddress } from "@polkadot/keyring";
+import { Resadd } from "../../../src/rmrk2.0.0/classes/resadd";
 
 const getBaseParts = (classId: string) => {
   const BIRD_1_BASE_PARTS: IBasePart[] = [
@@ -188,15 +189,17 @@ export class Seeder {
   api: ApiPromise;
   accounts: KeyringPair[];
   kp: KeyringPair;
+  kp2: KeyringPair;
   baseId?: string;
   readonly symbol: string;
   readonly classId: string;
   readonly partsClassId: string;
   readonly partsSymbol: string;
-  constructor(api: ApiPromise, kp: KeyringPair) {
+  constructor(api: ApiPromise, kp: KeyringPair, kp2: KeyringPair) {
     this.api = api;
     this.accounts = getKeys();
     this.kp = kp;
+    this.kp2 = kp2;
     this.symbol = "KANARIAS";
     this.classId = NftClass.generateId(
       u8aToHex(getKeys()[0].publicKey),
@@ -228,45 +231,73 @@ export class Seeder {
   public async seedBase(): Promise<number> {
     const remarks: string[] = [];
 
-    const collection = new NftClass(
-      0,
-      0,
-      encodeAddress(this.accounts[0].address, 2),
-      this.symbol,
-      this.classId,
-      "https://some.url"
-    );
-    remarks.push(collection.create());
-
-    const kanariaPartsCollection = new NftClass(
-      0,
-      0,
-      encodeAddress(this.accounts[0].address, 2),
-      this.partsSymbol,
-      this.partsClassId,
-      "https://some.url"
-    );
-    remarks.push(kanariaPartsCollection.create());
-
+    // const collection = new NftClass(
+    //   0,
+    //   0,
+    //   encodeAddress(this.accounts[0].address, 2),
+    //   this.symbol,
+    //   this.classId,
+    //   "https://some.url"
+    // );
+    // remarks.push(collection.create());
+    //
+    // const kanariaPartsCollection = new NftClass(
+    //   0,
+    //   0,
+    //   encodeAddress(this.accounts[0].address, 2),
+    //   this.partsSymbol,
+    //   this.partsClassId,
+    //   "https://some.url"
+    // );
+    // remarks.push(kanariaPartsCollection.create());
+    //
     const base = new Base(
-      0,
+      13,
       "KBASE777",
       encodeAddress(this.accounts[0].address, 2),
       "svg",
       getBaseParts(this.partsClassId)
     );
 
-    remarks.push(base.base());
-
+    remarks.push(
+      base.equippable("gemslot2", ["d43593c715a56da27d-KANARIAPARTS2"], "+")
+    );
     const nft1 = new NFT({
-      block: 0,
-      nftclass: collection.id,
-      symbol: "KANR",
+      block: 16,
+      nftclass: "d43593c715a56da27d-KANARIAPARTS2",
+      symbol: "GEM2",
       transferable: 1,
-      sn: "777".padStart(16, "0"),
+      sn: "2".padStart(16, "0"),
       owner: encodeAddress(this.accounts[0].address, 2),
     });
-    remarks.push(nft1.mint());
+    remarks.push(nft1.equip("base-13-KBASE777.gemslot2"));
+
+    // const nft1 = new NFT({
+    //   block: 13,
+    //   nftclass: "d43593c715a56da27d-KANARIAS",
+    //   symbol: "KANR",
+    //   transferable: 1,
+    //   sn: "777".padStart(16, "0"),
+    //   owner: encodeAddress(this.accounts[0].address, 2),
+    // });
+    // remarks.push(
+    //   nft1.accept(
+    //     "16-d43593c715a56da27d-KANARIAPARTS2-GEM2-0000000000000002",
+    //     "nft"
+    //   )
+    // );
+    //
+    // const nft2 = new NFT({
+    //   block: 16,
+    //   nftclass: "d43593c715a56da27d-KANARIAPARTS2",
+    //   symbol: "GEM2",
+    //   transferable: 1,
+    //   sn: "2".padStart(16, "0"),
+    //   owner: encodeAddress(this.accounts[0].address, 2),
+    // });
+    // remarks.push(
+    //   nft2.accept("94df2d24-2b38-4a44-a86a-412b59af7dc6", "resource")
+    // );
 
     const txs = remarks.map((remark) => this.api.tx.system.remark(remark));
     await this.api.tx.utility
@@ -276,21 +307,108 @@ export class Seeder {
           const block = await this.api.rpc.chain.getBlock(status.asInBlock);
 
           console.log(`included in ${status.asInBlock}`);
-          classBlock = block.block.header.number.toNumber();
-          nftBlock = block.block.header.number.toNumber();
-          baseBlock = block.block.header.number.toNumber();
+          // classBlock = block.block.header.number.toNumber();
+          // nftBlock = block.block.header.number.toNumber();
+          // baseBlock = block.block.header.number.toNumber();
+          //
+          // const baseInBlock = new Base(
+          //   baseBlock,
+          //   "KBASE777",
+          //   encodeAddress(this.accounts[0].address, 2),
+          //   "svg",
+          //   getBaseParts(this.partsClassId)
+          // );
+          //
+          // this.baseId = baseInBlock.getId();
+          //
+          // this.sendBaseToBird();
+        }
+      });
 
-          const baseInBlock = new Base(
-            baseBlock,
-            "KBASE777",
-            encodeAddress(this.accounts[0].address, 2),
-            "svg",
-            getBaseParts(this.partsClassId)
+    await sleep(50000);
+
+    return 0;
+  }
+
+  /*
+    Testing resadd and accept interactions
+   */
+  public async seedAndAccept(): Promise<number> {
+    const remarks: string[] = [];
+
+    const kanariaPartsCollection = new NftClass(
+      0,
+      0,
+      encodeAddress(this.accounts[1].address, 2),
+      `${this.partsSymbol}2`,
+      `${this.partsClassId}2`,
+      "https://some.url"
+    );
+    remarks.push(kanariaPartsCollection.create());
+
+    const nftParent = new NFT({
+      block: nftBlock,
+      nftclass: this.classId,
+      symbol: "KANR",
+      transferable: 1,
+      sn: "777".padStart(16, "0"),
+      owner: encodeAddress(this.accounts[0].address, 2),
+    });
+
+    const nft1 = new NFT({
+      block: 0,
+      nftclass: `${this.partsClassId}2`,
+      symbol: "GEM2",
+      transferable: 1,
+      sn: "2".padStart(16, "0"),
+      owner: encodeAddress(this.accounts[2].address, 2),
+    });
+    remarks.push(nft1.mint(nftParent.getId()));
+
+    const nft2 = new NFT({
+      block: 0,
+      nftclass: `${this.partsClassId}2`,
+      symbol: "GEM3",
+      transferable: 1,
+      sn: "3".padStart(16, "0"),
+      owner: encodeAddress(this.accounts[2].address, 2),
+    });
+
+    remarks.push(nft2.mint(encodeAddress(this.accounts[1].address, 2)));
+
+    const txs = remarks.map((remark) => this.api.tx.system.remark(remark));
+    await this.api.tx.utility
+      .batch(txs)
+      .signAndSend(this.kp2, async ({ status }) => {
+        if (status.isInBlock) {
+          console.log(`included in ${status.asInBlock}`);
+
+          const block = await this.api.rpc.chain.getBlock(status.asInBlock);
+
+          console.log(`included in ${status.asInBlock}`);
+          const nftMinted = new NFT({
+            block: block.block.header.number.toNumber(),
+            nftclass: `${this.partsClassId}2`,
+            symbol: "GEM2",
+            transferable: 1,
+            sn: `2`.padStart(16, "0"),
+            owner: encodeAddress(this.accounts[2].address, 2),
+          });
+
+          const remark = this.api.tx.system.remark(
+            nftMinted.resadd({
+              media: "ipfs://ipfs/test",
+              metadata: "ipfs://ipfs/test",
+            })
           );
 
-          this.baseId = baseInBlock.getId();
-
-          this.sendBaseToBird();
+          await this.api.tx.utility
+            .batch([remark])
+            .signAndSend(this.kp2, async ({ status }) => {
+              if (status.isInBlock) {
+                console.log(`included in ${status.asInBlock}`);
+              }
+            });
         }
       });
 
@@ -369,6 +487,8 @@ export class Seeder {
             .signAndSend(this.kp, async ({ status }) => {
               if (status.isInBlock) {
                 console.log(`included in ${status.asInBlock}`);
+                console.log("I AM HERE");
+                this.seedAndAccept();
               }
             });
         }

@@ -65,6 +65,16 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
+  public async updateEquip(nft: NFT, consolidatedNFT: NFTConsolidated) {
+    const nftIndex = this.nfts.findIndex(
+      (nftItem) => nftItem.id === consolidatedNFT.id
+    );
+    this.nfts[nftIndex] = {
+      ...this.nfts[nftIndex],
+      children: nft.children,
+    };
+  }
+
   public async updateNftAccept(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,

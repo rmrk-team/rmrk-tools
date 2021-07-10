@@ -51,6 +51,26 @@ export class Base {
     return `RMRK::CHANGEISSUER::${VERSION}::${this.getId()}::${address}`;
   }
 
+  /**
+   *
+   * @param classId - classId to allow
+   */
+  public equippable(
+    slot: string,
+    classIds: string[],
+    operator: "+" | "-" | ""
+  ): string {
+    if (!this.block) {
+      throw new Error(
+        `You can only change equippables on an existing Base. If you just created this, please load a new, 
+        separate instance as the block number is an important part of an Base's ID.`
+      );
+    }
+    return `${PREFIX}::${
+      OP_TYPES.EQUIPPABLE
+    }::${VERSION}::${this.getId()}::${slot}::${operator}${classIds.join(",")}`;
+  }
+
   public getId(): string {
     if (!this.block)
       throw new Error("This base is not minted, so it cannot have an ID.");

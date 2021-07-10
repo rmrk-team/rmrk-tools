@@ -12,6 +12,7 @@ export interface IConsolidatorAdapter {
   updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTList(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNftResadd(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateEquip(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNftAccept(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
