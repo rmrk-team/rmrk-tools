@@ -6,15 +6,53 @@ Object {
   "invalid": Array [],
   "nftclasses": Array [
     NftClass {
-      "block": 0,
+      "block": 1,
       "changes": Array [],
-      "id": "classId",
-      "issuer": "D6HSL6nGXHLYWSN8jiL9MSNixH2F2o382KkHsZAtfZvBnxM",
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "max": 0,
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
   ],
   "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT should work 1`] = `
+Object {
+  "bases": Array [],
+  "invalid": Array [],
+  "nftclasses": Array [
+    NftClass {
+      "block": 1,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "nfts": Array [
+    Object {
+      "block": 1,
+      "burned": "",
+      "changes": Array [],
+      "children": null,
+      "forsale": 0n,
+      "id": "1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
+      "metadata": undefined,
+      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
+      "owner": "D6HSL6nGXHLYWSN8jiL9MSNixH2F2o382KkHsZAtfZvBnxM",
+      "priority": Array [],
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "",
+      "sn": "0000000000000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
 }
 `;
