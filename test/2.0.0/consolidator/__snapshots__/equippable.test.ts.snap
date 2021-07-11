@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Add new Class id to Base slot equippable 1`] = `
+Object {
+  "bases": Array [
+    Object {
+      "block": 3,
+      "changes": Array [],
+      "id": "base-3-KBASE777",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "parts": Array [
+        Object {
+          "equippable": Array [
+            "d43593c715a56da27d-KANARIABIRDS",
+          ],
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": Array [
+            "d43593c715a56da27d-KANARIABIRDS",
+          ],
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "type": "svg",
+    },
+  ],
+  "invalid": Array [],
+  "nftclasses": Array [
+    NftClass {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Remove new Class id to Base slot equippable 1`] = `
+Object {
+  "bases": Array [
+    Object {
+      "block": 3,
+      "changes": Array [],
+      "id": "base-3-KBASE777",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "parts": Array [
+        Object {
+          "equippable": Array [],
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": Array [],
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "type": "svg",
+    },
+  ],
+  "invalid": Array [],
+  "nftclasses": Array [
+    NftClass {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Replace a Class id to Base slot equippable 1`] = `
+Object {
+  "bases": Array [
+    Object {
+      "block": 3,
+      "changes": Array [],
+      "id": "base-3-KBASE777",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "parts": Array [
+        Object {
+          "equippable": Array [],
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": "*",
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "type": "svg",
+    },
+  ],
+  "invalid": Array [],
+  "nftclasses": Array [
+    NftClass {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "nfts": Array [],
+}
+`;

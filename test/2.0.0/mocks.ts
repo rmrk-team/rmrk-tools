@@ -2,7 +2,8 @@ import { getRemarksFromBlocks, NFT, NftClass } from "../../src/rmrk2.0.0";
 import { stringToHex, u8aToHex } from "@polkadot/util";
 import { Remark } from "../../src/rmrk2.0.0/tools/consolidator/remark";
 import { Block } from "../../src/rmrk2.0.0/tools/utils";
-import { Keyring } from "@polkadot/keyring";
+import { encodeAddress, Keyring } from "@polkadot/keyring";
+import { Base } from "../../src/rmrk2.0.0/classes/base";
 
 let block = 1;
 
@@ -55,6 +56,31 @@ export const mintNftMock3 = (block?: number): NFT =>
     transferable: 1,
     owner: getBobKey().address,
   });
+
+export const createBaseMock = (block?: number): Base =>
+  new Base(block || 0, "KBASE777", getAliceKey().address, "svg", [
+    {
+      id: "background",
+      type: "slot",
+      equippable: [],
+      z: 0,
+    },
+    {
+      id: "backpack",
+      type: "slot",
+      equippable: [
+        NftClass.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
+      ],
+      z: 1,
+    },
+    {
+      id: "tail",
+      type: "fixed",
+      src:
+        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+      z: 2,
+    },
+  ]);
 
 export const getBlockCallsMock = (
   remark: string,

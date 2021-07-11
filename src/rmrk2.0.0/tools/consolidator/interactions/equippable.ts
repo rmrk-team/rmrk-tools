@@ -49,6 +49,12 @@ export const equippableInteraction = (
     (part) => part.id === equippableEntity.slot
   );
 
+  if (partIndex < 0 || !base.parts[partIndex]) {
+    throw new Error(
+      `[${OP_TYPES.EQUIPPABLE}] Attempting to change equippable on non-existant part with a slot id ${equippableEntity.slot}`
+    );
+  }
+
   if (base.parts[partIndex].type !== "slot") {
     throw new Error(
       `[${OP_TYPES.EQUIPPABLE}] Attempting to change equippable on base part of type ${base.parts[partIndex].type}`
