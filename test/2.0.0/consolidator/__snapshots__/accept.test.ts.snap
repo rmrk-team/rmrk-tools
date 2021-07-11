@@ -82,34 +82,6 @@ Object {
       "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "op_type": "ACCEPT",
     },
-    Object {
-      "block": 2,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[CREATE] Attempt to create already existing nft class",
-      "object_id": "d43593c715a56da27d-KANARIABIRDS",
-      "op_type": "CREATE",
-    },
-    Object {
-      "block": 3,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[MINT] Attempt to mint already existing NFT",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "MINT",
-    },
-    Object {
-      "block": 4,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[SEND] Attempting to send non-owned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777, real owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "SEND",
-    },
-    Object {
-      "block": 6,
-      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "message": "[ACCEPT] Attempting to accept resource on a non-existant NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "ACCEPT",
-    },
   ],
   "nftclasses": Array [
     NftClass {
@@ -150,11 +122,6 @@ Object {
           "metadata": "ipfs://ipfs/123",
           "pending": true,
         },
-        Object {
-          "id": "jXhhR",
-          "metadata": "ipfs://ipfs/123",
-          "pending": true,
-        },
       ],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "sn": "0000000000000777",
@@ -169,48 +136,6 @@ exports[`rmrk2.0.0 Consolidator: ACCEPT Should invalidate accept if NFT is burne
 Object {
   "bases": Array [],
   "invalid": Array [
-    Object {
-      "block": 7,
-      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "message": "[ACCEPT] Attempting to accept resource on burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "ACCEPT",
-    },
-    Object {
-      "block": 2,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[CREATE] Attempt to create already existing nft class",
-      "object_id": "d43593c715a56da27d-KANARIABIRDS",
-      "op_type": "CREATE",
-    },
-    Object {
-      "block": 3,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[MINT] Attempt to mint already existing NFT",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "MINT",
-    },
-    Object {
-      "block": 4,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[SEND] Attempting to send burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "SEND",
-    },
-    Object {
-      "block": 5,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[RESADD] Attempting to add resource on burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "RESADD",
-    },
-    Object {
-      "block": 6,
-      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "message": "[CONSUME] Attempting to burn already burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
-      "op_type": "CONSUME",
-    },
     Object {
       "block": 7,
       "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
