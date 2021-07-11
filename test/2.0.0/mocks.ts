@@ -6,18 +6,23 @@ import { Keyring } from "@polkadot/keyring";
 
 let block = 1;
 
-const getKey = () => {
+const getAliceKey = () => {
   const keyringAlice = new Keyring({ type: "sr25519" });
   return keyringAlice.addFromUri("//Alice");
+};
+
+export const getBobKey = () => {
+  const keyringAlice = new Keyring({ type: "sr25519" });
+  return keyringAlice.addFromUri("//Bob");
 };
 
 export const createNftClassMock = (): NftClass =>
   new NftClass(
     0,
     0,
-    getKey().address,
+    getAliceKey().address,
     "KANARIABIRDS",
-    NftClass.generateId(u8aToHex(getKey().publicKey), "KANARIABIRDS"),
+    NftClass.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
     "https://some.url"
   );
 
@@ -28,7 +33,7 @@ export const mintNftMock = (block?: number): NFT =>
     symbol: "KANR",
     sn: "777".padStart(16, "0"),
     transferable: 1,
-    owner: getKey().address,
+    owner: getAliceKey().address,
   });
 
 export const mintNftMock2 = (block?: number): NFT =>
@@ -38,10 +43,13 @@ export const mintNftMock2 = (block?: number): NFT =>
     symbol: "KANR",
     sn: "888".padStart(16, "0"),
     transferable: 1,
-    owner: getKey().address,
+    owner: getAliceKey().address,
   });
 
-export const getBlockCallsMock = (remark: string): Block[] => {
+export const getBlockCallsMock = (
+  remark: string,
+  caller: string = getAliceKey().address
+): Block[] => {
   block = block + 1;
   return [
     {
@@ -50,12 +58,14 @@ export const getBlockCallsMock = (remark: string): Block[] => {
         {
           call: "system.remark",
           value: stringToHex(remark),
-          caller: "D6HSL6nGXHLYWSN8jiL9MSNixH2F2o382KkHsZAtfZvBnxM",
+          caller: caller,
         },
       ],
     },
   ];
 };
 
-export const getRemarksFromBlocksMock = (blockCalls: Block[]): Remark[] =>
-  getRemarksFromBlocks(blockCalls, ["0x726d726b", "0x524d524b"]);
+export const getRemarksFromBlocksMock = (blockCalls: Block[]): Remark[] => {
+  block = 1;
+  return getRemarksFromBlocks(blockCalls, ["0x726d726b", "0x524d524b"]);
+};

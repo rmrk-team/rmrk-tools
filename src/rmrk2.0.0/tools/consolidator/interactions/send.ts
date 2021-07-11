@@ -68,9 +68,10 @@ export const sendInteraction = async (
       if (!newOwner.children) {
         newOwner.children = {};
       }
+      const rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
       newOwner.children[sendEntity.id] = {
         id: sendEntity.id,
-        pending: rootowner !== remark.caller,
+        pending: rootNewOwner !== remark.caller,
         equipped: "",
       };
     }

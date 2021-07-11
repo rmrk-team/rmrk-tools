@@ -2,6 +2,7 @@ import { Consolidator } from "../../src/rmrk2.0.0";
 import {
   createNftClassMock,
   getBlockCallsMock,
+  getBobKey,
   getRemarksFromBlocksMock,
   mintNftMock,
   mintNftMock2,
@@ -23,12 +24,27 @@ describe("rmrk2.0.0 Consolidator: CREATE NFT CLASS", () => {
 });
 
 describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
-  it("should work", async () => {
+  it("Add new NFT as child of first NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createNftClassMock().create()),
       ...getBlockCallsMock(mintNftMock().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
-      ...getBlockCallsMock(mintNftMock2(5).send(mintNftMock(4).getId())),
+      ...getBlockCallsMock(mintNftMock2(4).send(mintNftMock(3).getId())),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("Should set NFT as pending if sent from non parent owner", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createNftClassMock().create()),
+      ...getBlockCallsMock(mintNftMock().mint()),
+      ...getBlockCallsMock(mintNftMock2().mint()),
+      ...getBlockCallsMock(mintNftMock2(4).send(getBobKey().address)), // Send to Bob first
+      ...getBlockCallsMock(
+        mintNftMock2(4).send(mintNftMock(3).getId()),
+        getBobKey().address
+      ),
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
