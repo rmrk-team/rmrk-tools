@@ -26,7 +26,7 @@ export const validateMintNFT = async (
       }
     } else {
       const rootowner = await findRealOwner(nft.owner, dbAdapter);
-      nft.rootowner = rootowner;
+      nft.rootowner = rootowner || remark.caller;
 
       // Add NFT as child of new owner
       const newOwner = await dbAdapter.getNFTById(nft.owner);

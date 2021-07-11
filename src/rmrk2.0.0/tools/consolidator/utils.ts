@@ -40,7 +40,7 @@ export const findRealOwner = async (
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
     if (!nft) {
       // skip
-      return nftId || "";
+      return "";
     }
 
     // Bubble up until owner of nft is polkadot address
