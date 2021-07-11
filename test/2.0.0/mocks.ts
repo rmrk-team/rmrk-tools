@@ -17,8 +17,8 @@ export const getBobKey = () => {
   return keyringAlice.addFromUri("//Bob");
 };
 
-export const createNftClassMock = (block?: number): NftClass =>
-  new NftClass(
+export const createNftClassMock = (block?: number): NftClass => {
+  return new NftClass(
     block || 0,
     0,
     getAliceKey().address,
@@ -26,6 +26,7 @@ export const createNftClassMock = (block?: number): NftClass =>
     NftClass.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
     "https://some.url"
   );
+};
 
 export const mintNftMock = (block?: number): NFT =>
   new NFT({

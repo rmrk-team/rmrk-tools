@@ -25,6 +25,26 @@ describe("rmrk2.0.0 NftClass: Create", () => {
   });
 });
 
+describe("rmrk2.0.0 NftClass: Change issuer", () => {
+  it("should match snapshot", async () => {
+    const nftClass = createNftClassMock(1);
+    expect(await nftClass.change_issuer("new_address")).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 NftClass: Create", () => {
+  it("should throw error", async () => {
+    const nftClass = createNftClassMock(0);
+    try {
+      await nftClass.change_issuer("new_address");
+    } catch (e) {
+      expect(e.message).toMatch(
+        "This nft class is new, so there's no issuer to change. If it has been deployed on chain, load the existing nft class as a new instance first, then change issuer."
+      );
+    }
+  });
+});
+
 describe("rmrk2.0.0 NftClass: Get changes", () => {
   it("should match snapshot", async () => {
     const nftClass = createNftClassMock();
