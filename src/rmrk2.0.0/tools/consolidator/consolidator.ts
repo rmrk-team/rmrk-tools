@@ -72,6 +72,7 @@ export interface NFTConsolidated {
   reactions: Reactionmap;
   changes: Change[];
   owner: string;
+  rootowner: string;
   burned: string;
   priority: string[];
   children: Record<string, NFTChild> | null;

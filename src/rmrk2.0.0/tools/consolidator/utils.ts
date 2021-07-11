@@ -32,15 +32,17 @@ export const findRealOwner = async (
   nftId: string,
   dbAdapter: IConsolidatorAdapter
 ): Promise<string> => {
-  const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
-  const nft = consolidatedNFTtoInstance(consolidatedNFT);
-  if (!nft) {
-    // skip
-    return nftId || "";
-  }
-  if (isValidAddressPolkadotAddress(nft.owner)) {
-    return nft.owner;
+  if (isValidAddressPolkadotAddress(nftId)) {
+    return nftId;
   } else {
+    const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
+
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+    if (!nft) {
+      // skip
+      return nftId || "";
+    }
+
     // Bubble up until owner of nft is polkadot address
     return await findRealOwner(nft.owner, dbAdapter);
   }

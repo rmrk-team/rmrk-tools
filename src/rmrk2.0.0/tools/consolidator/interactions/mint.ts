@@ -17,27 +17,29 @@ export const validateMintNFT = async (
     );
   }
 
-  if (isValidAddressPolkadotAddress(nft.owner)) {
-    if (remark.caller !== nftParentClass.issuer) {
-      throw new Error(
-        `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
-      );
-    }
-  } else {
-    const rootowner = await findRealOwner(nft.owner, dbAdapter);
-    nft.rootowner = rootowner;
-
-    // Add NFT as child of new owner
-    const newOwner = await dbAdapter.getNFTById(nft.owner);
-    if (newOwner && !newOwner?.children?.[nft.getId()]) {
-      if (!newOwner.children) {
-        newOwner.children = {};
+  if (nft.owner) {
+    if (isValidAddressPolkadotAddress(nft.owner)) {
+      if (remark.caller !== nftParentClass.issuer) {
+        throw new Error(
+          `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
+        );
       }
-      newOwner.children[nft.getId()] = {
-        id: nft.getId(),
-        equipped: "",
-        pending: rootowner !== remark.caller,
-      };
+    } else {
+      const rootowner = await findRealOwner(nft.owner, dbAdapter);
+      nft.rootowner = rootowner;
+
+      // Add NFT as child of new owner
+      const newOwner = await dbAdapter.getNFTById(nft.owner);
+      if (newOwner && !newOwner?.children?.[nft.getId()]) {
+        if (!newOwner.children) {
+          newOwner.children = {};
+        }
+        newOwner.children[nft.getId()] = {
+          id: nft.getId(),
+          equipped: "",
+          pending: rootowner !== remark.caller,
+        };
+      }
     }
   }
 

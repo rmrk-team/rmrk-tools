@@ -129,6 +129,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       ...this.nfts[nftIndex],
       changes: nft?.changes,
       owner: nft?.owner,
+      rootowner: nft?.rootowner,
       forsale: BigInt(0),
     };
   }

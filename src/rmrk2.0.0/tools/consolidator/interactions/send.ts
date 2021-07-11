@@ -54,9 +54,12 @@ export const sendInteraction = async (
     );
   }
 
+  let rootNewOwner = rootowner;
+
   if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
     // Remove NFT from children of previous owner
     const oldOwner = await dbAdapter.getNFTById(nft.owner);
+    rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
 
     if (oldOwner?.children && oldOwner?.children[sendEntity.id]) {
       delete oldOwner.children[sendEntity.id];
@@ -71,7 +74,6 @@ export const sendInteraction = async (
       if (!newOwner.children) {
         newOwner.children = {};
       }
-      const rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
       newOwner.children[sendEntity.id] = {
         id: sendEntity.id,
         pending: rootNewOwner !== remark.caller,
@@ -90,7 +92,7 @@ export const sendInteraction = async (
   } as Change);
 
   nft.owner = sendEntity.recipient;
-  nft.rootowner = rootowner;
+  nft.rootowner = rootNewOwner;
 
   // Cancel LIST, if any
   if (nft.forsale > BigInt(0)) {
