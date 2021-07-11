@@ -60,6 +60,9 @@ export const sendInteraction = async (
 
     if (oldOwner?.children && oldOwner?.children[sendEntity.id]) {
       delete oldOwner.children[sendEntity.id];
+      if (Object.keys(oldOwner.children).length < 1) {
+        oldOwner.children = null;
+      }
     }
 
     // Add NFT as child of new owner

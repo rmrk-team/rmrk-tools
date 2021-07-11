@@ -35,7 +35,7 @@ export const findRealOwner = async (
   const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
   const nft = consolidatedNFTtoInstance(consolidatedNFT);
   if (!nft) {
-    console.log(`Cannot find NFT with id ${nftId}`);
+    // skip
     return nftId || "";
   }
   if (isValidAddressPolkadotAddress(nft.owner)) {

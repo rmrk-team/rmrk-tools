@@ -46,6 +46,16 @@ export const mintNftMock2 = (block?: number): NFT =>
     owner: getAliceKey().address,
   });
 
+export const mintNftMock3 = (block?: number): NFT =>
+  new NFT({
+    block: block || 0,
+    nftclass: createNftClassMock().id,
+    symbol: "KANR",
+    sn: "999".padStart(16, "0"),
+    transferable: 1,
+    owner: getBobKey().address,
+  });
+
 export const getBlockCallsMock = (
   remark: string,
   caller: string = getAliceKey().address
