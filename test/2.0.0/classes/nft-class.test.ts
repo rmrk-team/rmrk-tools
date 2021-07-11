@@ -1,4 +1,4 @@
-import { createNftClassMock } from "../mocks";
+import { createNftClassMock, addChangeIssuerMock } from "../mocks";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 beforeAll(async () => {
@@ -45,9 +45,17 @@ describe("rmrk2.0.0 NftClass: Create", () => {
   });
 });
 
+describe("rmrk2.0.0 NftClass: Add change", () => {
+  it("should match snapshot", async () => {
+    const nftClass = createNftClassMock();
+    expect(await nftClass.addChange(addChangeIssuerMock)).toMatchSnapshot();
+  });
+});
+
 describe("rmrk2.0.0 NftClass: Get changes", () => {
   it("should match snapshot", async () => {
     const nftClass = createNftClassMock();
+    await nftClass.addChange(addChangeIssuerMock);
     expect(await nftClass.getChanges()).toMatchSnapshot();
   });
 });

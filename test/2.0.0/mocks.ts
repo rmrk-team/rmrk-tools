@@ -4,6 +4,7 @@ import { Remark } from "../../src/rmrk2.0.0/tools/consolidator/remark";
 import { Block } from "../../src/rmrk2.0.0/tools/utils";
 import { encodeAddress, Keyring } from "@polkadot/keyring";
 import { Base } from "../../src/rmrk2.0.0/classes/base";
+import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
 
 let block = 1;
 
@@ -105,4 +106,13 @@ export const getBlockCallsMock = (
 export const getRemarksFromBlocksMock = (blockCalls: Block[]): Remark[] => {
   block = 1;
   return getRemarksFromBlocks(blockCalls, ["0x726d726b", "0x524d524b"]);
+};
+
+export const addChangeIssuerMock = {
+  field: "",
+  old: "",
+  new: "",
+  caller: "",
+  block: 0,
+  opType: OP_TYPES.CHANGEISSUER,
 };
