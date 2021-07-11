@@ -1,7 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`rmrk2.0.0 Base: Add change should match snapshot 1`] = `
+Base {
+  "block": 0,
+  "changes": Array [
+    Object {
+      "block": 0,
+      "caller": "",
+      "field": "",
+      "new": "",
+      "old": "",
+      "opType": "CHANGEISSUER",
+    },
+  ],
+  "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+  "parts": Array [
+    Object {
+      "equippable": Array [],
+      "id": "background",
+      "type": "slot",
+      "z": 0,
+    },
+    Object {
+      "equippable": Array [
+        "d43593c715a56da27d-KANARIABIRDS",
+      ],
+      "id": "backpack",
+      "type": "slot",
+      "z": 1,
+    },
+    Object {
+      "id": "tail",
+      "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+      "type": "fixed",
+      "z": 2,
+    },
+  ],
+  "symbol": "KBASE777",
+  "type": "svg",
+}
+`;
+
 exports[`rmrk2.0.0 Base: Base should match snapshot 1`] = `"RMRK::BASE::2.0.0::%7B%22symbol%22%3A%22KBASE777%22%2C%22type%22%3A%22svg%22%2C%22issuer%22%3A%225GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY%22%2C%22parts%22%3A%5B%7B%22id%22%3A%22background%22%2C%22type%22%3A%22slot%22%2C%22equippable%22%3A%5B%5D%2C%22z%22%3A0%7D%2C%7B%22id%22%3A%22backpack%22%2C%22type%22%3A%22slot%22%2C%22equippable%22%3A%5B%22d43593c715a56da27d-KANARIABIRDS%22%5D%2C%22z%22%3A1%7D%2C%7B%22id%22%3A%22tail%22%2C%22type%22%3A%22fixed%22%2C%22src%22%3A%22ipfs%3A%2F%2Fipfs%2FQmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE%2Fvar3_tail.svg%22%2C%22z%22%3A2%7D%5D%7D"`;
 
 exports[`rmrk2.0.0 Base: Change issuer should match snapshot 1`] = `"RMRK::CHANGEISSUER::2.0.0::base-1-KBASE777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
 
 exports[`rmrk2.0.0 Base: Equippable should match snapshot 1`] = `"RMRK::EQUIPPABLE::2.0.0::base-1-KBASE777::gemslot2::+d43593c715a56da27d-KANARIAPARTS2"`;
+
+exports[`rmrk2.0.0 Base: Get changes should match snapshot 1`] = `
+Array [
+  Object {
+    "block": 0,
+    "caller": "",
+    "field": "",
+    "new": "",
+    "old": "",
+    "opType": "CHANGEISSUER",
+  },
+]
+`;
+
+exports[`rmrk2.0.0 Base: Get id should match snapshot 1`] = `"base-1-KBASE777"`;

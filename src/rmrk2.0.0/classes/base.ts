@@ -70,7 +70,7 @@ export class Base {
       );
     }
     if (!slot) {
-      throw new Error(`You cannot change equippable without specifying slot`);
+      throw new Error("You cannot change equippable without specifying slot");
     }
     return `${PREFIX}::${
       OP_TYPES.EQUIPPABLE
