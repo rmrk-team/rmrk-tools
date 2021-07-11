@@ -13,13 +13,13 @@ export const acceptInteraction = async (
 ): Promise<void> => {
   if (!nft) {
     throw new Error(
-      `[${OP_TYPES.ACCEPT}] Attempting to accept entity on a non-existant NFT ${acceptEntity.nftId}`
+      `[${OP_TYPES.ACCEPT}] Attempting to accept ${acceptEntity.entity} on a non-existant NFT ${acceptEntity.nftId}`
     );
   }
 
   if (Boolean(nft.burned)) {
     throw new Error(
-      `[${OP_TYPES.ACCEPT}] Attempting to accept entity on burned NFT ${acceptEntity.nftId}`
+      `[${OP_TYPES.ACCEPT}] Attempting to accept ${acceptEntity.entity} on burned NFT ${acceptEntity.nftId}`
     );
   }
 
@@ -27,7 +27,7 @@ export const acceptInteraction = async (
   const rootowner = await findRealOwner(nft.owner, dbAdapter);
   if (rootowner !== remark.caller) {
     throw new Error(
-      `[${OP_TYPES.ACCEPT}] Attempting to accept entity on non-owned NFT ${acceptEntity.nftId}`
+      `[${OP_TYPES.ACCEPT}] Attempting to accept ${acceptEntity.entity} on non-owned NFT ${acceptEntity.nftId}`
     );
   }
 
