@@ -36,7 +36,7 @@
     "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
     "cli:run-listener": "ts-node --project tsconfig.cli.json cli/run-listener.ts",
     "cli:metadata": "ts-node --project tsconfig.cli.json cli/metadata.ts",
-    "test": "yarn test:1.0.0",
+    "test": "yarn test:1.0.0 && yarn test:2.0.0",
     "test:1.0.0": "jest test/1.0.0 --silent --config=jest.config.1.0.0.js",
     "test:2.0.0": "jest test/2.0.0 --silent --config=jest.config.2.0.0.js",
     "test:1.0.0:watch": "jest --watch",
