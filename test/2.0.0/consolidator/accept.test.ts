@@ -64,8 +64,6 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
       ),
     ]);
     const consolidator = new Consolidator();
-    const consolidatedResult = await consolidator.consolidate(remarks);
-    console.log(consolidatedResult.invalid);
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
@@ -79,8 +77,6 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
       ),
     ]);
     const consolidator = new Consolidator();
-    const consolidatedResult = await consolidator.consolidate(remarks);
-    console.log(consolidatedResult.invalid);
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 });
