@@ -17,9 +17,9 @@ export const getBobKey = () => {
   return keyringAlice.addFromUri("//Bob");
 };
 
-export const createNftClassMock = (): NftClass =>
+export const createNftClassMock = (block?: number): NftClass =>
   new NftClass(
-    0,
+    block || 0,
     0,
     getAliceKey().address,
     "KANARIABIRDS",
