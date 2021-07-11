@@ -22,11 +22,11 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        createBaseMock(3).equippable(
-          "background",
-          [createNftClassMock().id],
-          "+"
-        )
+        createBaseMock(3).equippable({
+          slot: "background",
+          classIds: [createNftClassMock().id],
+          operator: "+",
+        })
       ),
     ]);
     const consolidator = new Consolidator();
@@ -37,7 +37,11 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        createBaseMock(3).equippable("backpack", [createNftClassMock().id], "-")
+        createBaseMock(3).equippable({
+          slot: "backpack",
+          classIds: [createNftClassMock().id],
+          operator: "-",
+        })
       ),
     ]);
     const consolidator = new Consolidator();
@@ -47,7 +51,13 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
   it("Replace a Class id to Base slot equippable", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
-      ...getBlockCallsMock(createBaseMock(3).equippable("backpack", ["*"], "")),
+      ...getBlockCallsMock(
+        createBaseMock(3).equippable({
+          slot: "backpack",
+          classIds: ["*"],
+          operator: "",
+        })
+      ),
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
@@ -57,7 +67,11 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        createBaseMock(3).equippable("test", [createNftClassMock().id], "+")
+        createBaseMock(3).equippable({
+          slot: "test",
+          classIds: [createNftClassMock().id],
+          operator: "+",
+        })
       ),
     ]);
     const consolidator = new Consolidator();
@@ -71,7 +85,11 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        createBaseMock(5).equippable("test", [createNftClassMock().id], "+")
+        createBaseMock(5).equippable({
+          slot: "test",
+          classIds: [createNftClassMock().id],
+          operator: "+",
+        })
       ),
     ]);
     const consolidator = new Consolidator();

@@ -44,3 +44,34 @@ describe("rmrk2.0.0 Base: Base", () => {
     }
   });
 });
+
+describe("rmrk2.0.0 Base: Equippable", () => {
+  it("should match snapshot", async () => {
+    const baseClass = createBaseMock(1);
+    expect(
+      await baseClass.equippable({
+        slot: "gemslot2",
+        classIds: ["d43593c715a56da27d-KANARIAPARTS2"],
+        operator: "+",
+      })
+    ).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Base: Equippable", () => {
+  it("should throw error", async () => {
+    const baseClass = createBaseMock(0);
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - skip passed param on purpose
+      await baseClass.equippable({
+        classIds: ["d43593c715a56da27d-KANARIAPARTS2"],
+        operator: "+",
+      });
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only change equippables on an existing Base. If you just created this, please load a new, separate instance as the block number is an important part of an Base's ID."
+      );
+    }
+  });
+});
