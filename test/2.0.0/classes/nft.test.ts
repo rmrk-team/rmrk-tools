@@ -69,3 +69,23 @@ describe("rmrk2.0.0 Nft: Send", () => {
     }
   });
 });
+
+describe("rmrk2.0.0 Nft: List", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(1);
+    expect(await nft.list(1000)).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: List", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(0);
+    try {
+      await nft.list(1000);
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only list an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+  });
+});
