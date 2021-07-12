@@ -71,7 +71,10 @@ export const createBaseMock = (block?: number): Base =>
       id: "backpack",
       type: "slot",
       equippable: [
-        Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
+        Collection.generateId(
+          u8aToHex(getAliceKey().publicKey),
+          "KANARIABIRDS"
+        ),
       ],
       z: 1,
     },

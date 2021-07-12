@@ -20,7 +20,7 @@ export const equipInteraction = async (
 
   if (Boolean(nft.burned)) {
     throw new Error(
-      `[${OP_TYPES.EQUIP}] Attempting to equip on burned NFT ${equipEntity.id}`
+      `[${OP_TYPES.EQUIP}] Attempting to equip burned NFT ${equipEntity.id}`
     );
   }
 
@@ -32,7 +32,7 @@ export const equipInteraction = async (
 
   if (!parentNft) {
     throw new Error(
-      `[${OP_TYPES.EQUIP}] Attempting to equip NFT ${equipEntity.id} on a non-existant parent NFT ${nft.owner}`
+      `[${OP_TYPES.EQUIP}] Attempting to equip NFT ${equipEntity.id} on a non-existent parent NFT ${nft.owner}`
     );
   }
 
@@ -62,6 +62,16 @@ export const equipInteraction = async (
 
   if (equipEntity.baseslot) {
     const [base, slot] = equipEntity.baseslot.split(".");
+
+    const nftHasSlotResource = nft.resources.find(
+      (resouce) => resouce.slot === equipEntity.baseslot
+    );
+
+    if (!nftHasSlotResource) {
+      throw new Error(
+        `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it has no compatible resource`
+      );
+    }
 
     const baseEntity = await dbAdapter.getBaseById(base);
     const basepart = (baseEntity?.parts || []).find(
