@@ -16,7 +16,7 @@ const initBaseInstance = () => {
     {
       id: "slot-test",
       type: "slot",
-      equippable: ["class1", "class2", "class3"],
+      equippable: ["collection1", "collection2", "collection3"],
     },
   ]);
 
@@ -40,18 +40,18 @@ describe("2.0.0 interactions: equippableInteraction", () => {
     expect(baseInstance.parts?.[0].equippable).toEqual("*");
 
     const baseInstance2 = initBaseInstance();
-    const equippableEntity2 = new Equippable("id-test", "slot-test", "+class4");
+    const equippableEntity2 = new Equippable("id-test", "slot-test", "+collection4");
     equippableInteraction(dummyRemark, equippableEntity2, baseInstance2);
     expect(baseInstance2.parts?.[0].equippable).toEqual([
-      "class1",
-      "class2",
-      "class3",
-      "class4",
+      "collection1",
+      "collection2",
+      "collection3",
+      "collection4",
     ]);
 
     const baseInstance3 = initBaseInstance();
-    const equippableEntity3 = new Equippable("id-test", "slot-test", "-class2");
+    const equippableEntity3 = new Equippable("id-test", "slot-test", "-collection2");
     equippableInteraction(dummyRemark, equippableEntity3, baseInstance3);
-    expect(baseInstance3.parts?.[0].equippable).toEqual(["class1", "class3"]);
+    expect(baseInstance3.parts?.[0].equippable).toEqual(["collection1", "collection3"]);
   });
 });

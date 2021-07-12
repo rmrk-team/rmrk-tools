@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Add new Class id to Base slot equippable 1`] = `
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Add new Collection id to Base slot equippable 1`] = `
 Object {
   "bases": Array [
     Object {
@@ -36,9 +36,8 @@ Object {
       "type": "svg",
     },
   ],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -48,11 +47,12 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [],
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Remove new Class id to Base slot equippable 1`] = `
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Remove new Collection id to Base slot equippable 1`] = `
 Object {
   "bases": Array [
     Object {
@@ -84,9 +84,8 @@ Object {
       "type": "svg",
     },
   ],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -96,11 +95,12 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [],
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Replace a Class id to Base slot equippable 1`] = `
+exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Replace a Collection id to Base slot equippable 1`] = `
 Object {
   "bases": Array [
     Object {
@@ -132,9 +132,8 @@ Object {
       "type": "svg",
     },
   ],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -144,6 +143,7 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [],
 }
 `;

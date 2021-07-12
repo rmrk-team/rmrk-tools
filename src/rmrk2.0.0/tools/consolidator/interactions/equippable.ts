@@ -61,7 +61,7 @@ export const equippableInteraction = (
     );
   }
 
-  // Change equippable to allow all nft classes
+  // Change equippable to allow all collectiones
   if (equippableChange === "*") {
     base.parts[partIndex].equippable = equippableChange;
     return;

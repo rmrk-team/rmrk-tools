@@ -1,6 +1,6 @@
 import { Consolidator } from "../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getRemarksFromBlocksMock,
 } from "./mocks";
@@ -11,9 +11,9 @@ beforeAll(async () => {
 });
 
 describe("rmrk2.0.0 Consolidator: CREATE NFT CLASS", () => {
-  it("should correctly create a NFT Class", async () => {
+  it("should correctly create a NFT Collection", async () => {
     const remarks = getRemarksFromBlocksMock(
-      getBlockCallsMock(createNftClassMock().create())
+      getBlockCallsMock(createCollectionMock().create())
     );
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();

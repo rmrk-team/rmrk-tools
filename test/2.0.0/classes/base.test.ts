@@ -2,7 +2,7 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import {
   getBobKey,
   createBaseMock,
-  createNftClassMock,
+  createCollectionMock,
   addChangeIssuerMock,
 } from "../mocks";
 
@@ -44,7 +44,7 @@ describe("rmrk2.0.0 Base: Base", () => {
       await baseClass.change_issuer(getBobKey().address);
     } catch (e) {
       expect(e.message).toMatch(
-        "This base is new, so there's no issuer to change. If it has been deployed on chain, load the existing nft class as a new instance first, then change issuer."
+        "This base is new, so there's no issuer to change. If it has been deployed on chain, load the existing collection as a new instance first, then change issuer."
       );
     }
   });
@@ -56,7 +56,7 @@ describe("rmrk2.0.0 Base: Equippable", () => {
     expect(
       await baseClass.equippable({
         slot: "gemslot2",
-        classIds: ["d43593c715a56da27d-KANARIAPARTS2"],
+        collections: ["d43593c715a56da27d-KANARIAPARTS2"],
         operator: "+",
       })
     ).toMatchSnapshot();
@@ -70,7 +70,7 @@ describe("rmrk2.0.0 Base: Equippable", () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - skip passed param on purpose
       await baseClass.equippable({
-        classIds: ["d43593c715a56da27d-KANARIAPARTS2"],
+        collections: ["d43593c715a56da27d-KANARIAPARTS2"],
         operator: "+",
       });
     } catch (e) {
@@ -88,7 +88,7 @@ describe("rmrk2.0.0 Base: Equippable", () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - skip passed param on purpose
       await baseClass.equippable({
-        classIds: ["d43593c715a56da27d-KANARIAPARTS2"],
+        collections: ["d43593c715a56da27d-KANARIAPARTS2"],
         operator: "+",
       });
     } catch (e) {

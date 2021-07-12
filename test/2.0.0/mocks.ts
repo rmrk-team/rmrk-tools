@@ -1,4 +1,4 @@
-import { getRemarksFromBlocks, NFT, NftClass } from "../../src/rmrk2.0.0";
+import { getRemarksFromBlocks, NFT, Collection } from "../../src/rmrk2.0.0";
 import { stringToHex, u8aToHex } from "@polkadot/util";
 import { Remark } from "../../src/rmrk2.0.0/tools/consolidator/remark";
 import { Block } from "../../src/rmrk2.0.0/tools/utils";
@@ -18,13 +18,13 @@ export const getBobKey = () => {
   return keyringAlice.addFromUri("//Bob");
 };
 
-export const createNftClassMock = (block?: number): NftClass => {
-  return new NftClass(
+export const createCollectionMock = (block?: number): Collection => {
+  return new Collection(
     block || 0,
     0,
     getAliceKey().address,
     "KANARIABIRDS",
-    NftClass.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
+    Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
     "https://some.url"
   );
 };
@@ -32,7 +32,7 @@ export const createNftClassMock = (block?: number): NftClass => {
 export const mintNftMock = (block?: number): NFT =>
   new NFT({
     block: block || 0,
-    nftclass: createNftClassMock().id,
+    collection: createCollectionMock().id,
     symbol: "KANR",
     sn: "777".padStart(16, "0"),
     transferable: 1,
@@ -42,7 +42,7 @@ export const mintNftMock = (block?: number): NFT =>
 export const mintNftMock2 = (block?: number): NFT =>
   new NFT({
     block: block || 0,
-    nftclass: createNftClassMock().id,
+    collection: createCollectionMock().id,
     symbol: "KANR",
     sn: "888".padStart(16, "0"),
     transferable: 1,
@@ -52,7 +52,7 @@ export const mintNftMock2 = (block?: number): NFT =>
 export const mintNftMock3 = (block?: number): NFT =>
   new NFT({
     block: block || 0,
-    nftclass: createNftClassMock().id,
+    collection: createCollectionMock().id,
     symbol: "KANR",
     sn: "999".padStart(16, "0"),
     transferable: 1,
@@ -71,7 +71,7 @@ export const createBaseMock = (block?: number): Base =>
       id: "backpack",
       type: "slot",
       equippable: [
-        NftClass.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
+        Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
       ],
       z: 1,
     },

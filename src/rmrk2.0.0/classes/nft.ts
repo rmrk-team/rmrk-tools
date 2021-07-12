@@ -7,7 +7,7 @@ import { Accept } from "./accept";
 
 interface nftInstancerProps {
   block: number;
-  nftclass: string;
+  collection: string;
   symbol: string;
   transferable: number;
   sn: string;
@@ -17,7 +17,7 @@ interface nftInstancerProps {
 
 export class NFT {
   readonly block: number;
-  readonly nftclass: string;
+  readonly collection: string;
   readonly symbol: string;
   readonly transferable: number;
   readonly sn: string;
@@ -33,7 +33,7 @@ export class NFT {
   burned: string;
   constructor(nftInstance: nftInstancerProps) {
     this.block = nftInstance.block;
-    this.nftclass = nftInstance.nftclass;
+    this.collection = nftInstance.collection;
     this.symbol = nftInstance.symbol;
     this.transferable = nftInstance.transferable;
     this.sn = nftInstance.sn;
@@ -51,7 +51,7 @@ export class NFT {
   public getId(): string {
     if (!this.block)
       throw new Error("This token is not minted, so it cannot have an ID.");
-    return `${this.block}-${this.nftclass}-${this.symbol}-${this.sn}`;
+    return `${this.block}-${this.collection}-${this.symbol}-${this.sn}`;
   }
 
   public addChange(c: Change): NFT {
@@ -65,7 +65,7 @@ export class NFT {
     }
     return `${PREFIX}::${OP_TYPES.MINT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
-        nftclass: this.nftclass,
+        collection: this.collection,
         symbol: this.symbol,
         transferable: this.transferable,
         sn: this.sn,
@@ -98,7 +98,7 @@ export class NFT {
       const obj = getRemarkData(dataString);
       return new this({
         block,
-        nftclass: obj.nftclass,
+        collection: obj.collection,
         symbol: obj.symbol,
         transferable:
           typeof obj.transferable === "number"

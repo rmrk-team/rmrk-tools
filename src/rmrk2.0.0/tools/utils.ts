@@ -283,18 +283,18 @@ export const getRemarkData = (dataString: string) => {
 };
 
 /**
- * filterBlocksByNftclass
- * Return blocks that match specific nft class.
+ * filterBlocksByCollection
+ * Return blocks that match specific collection.
  * @param blockCalls
- * @param nftclassFilter - name of the nft class to filter by
+ * @param collectionFilter - name of the collection to filter by
  */
-export const filterBlocksByNftclass = (
+export const filterBlocksByCollection = (
   blockCalls: BlockCalls[],
-  nftclassFilter: string,
+  collectionFilter: string,
   prefixes: string[]
 ): BlockCalls[] =>
   blockCalls.filter((block) =>
     getRemarksFromBlocks([block], prefixes).some((rmrk) =>
-      rmrk.remark.includes(nftclassFilter)
+      rmrk.remark.includes(collectionFilter)
     )
   );

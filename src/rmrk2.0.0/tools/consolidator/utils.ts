@@ -1,10 +1,10 @@
 import { NFT } from "../../classes/nft";
 import {
   BaseConsolidated,
-  NftclassConsolidated,
+  CollectionConsolidated,
   NFTConsolidated,
 } from "./consolidator";
-import { NftClass } from "../../classes/nft-class";
+import { Collection } from "../../classes/collection";
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { IConsolidatorAdapter } from "./adapters/types";
@@ -54,11 +54,11 @@ export const consolidatedNFTtoInstance = (
   if (!nft) {
     return undefined;
   }
-  const { block, nftclass, symbol, transferable, sn, metadata, id, ...rest } =
+  const { block, collection, symbol, transferable, sn, metadata, id, ...rest } =
     nft || {};
   const nftInstance = new NFT({
     block,
-    nftclass,
+    collection,
     symbol,
     transferable,
     sn,
@@ -86,14 +86,15 @@ export const consolidatedNFTtoInstance = (
   return nftInstance;
 };
 
-export const consolidatedNftclassToInstance = (
-  nftclass?: NftclassConsolidated
-): NftClass | undefined => {
-  if (!nftclass) {
+export const consolidatedCollectionToInstance = (
+  collection?: CollectionConsolidated
+): Collection | undefined => {
+  if (!collection) {
     return undefined;
   }
-  const { block, metadata, id, issuer, max, symbol, ...rest } = nftclass || {};
-  const nftclassInstance = new NftClass(
+  const { block, metadata, id, issuer, max, symbol, ...rest } =
+    collection || {};
+  const collectionInstance = new Collection(
     block,
     max,
     issuer,
@@ -103,8 +104,8 @@ export const consolidatedNftclassToInstance = (
   );
   const { changes } = rest;
 
-  nftclassInstance.changes = changes;
-  return nftclassInstance;
+  collectionInstance.changes = changes;
+  return collectionInstance;
 };
 
 export const consolidatedBasetoInstance = (
@@ -135,22 +136,22 @@ export const doesRecipientExists = async (
   }
 };
 
-export const changeIssuerNftClass = async (
+export const changeIssuerCollection = async (
   changeIssuerEntity: ChangeIssuer,
   remark: Remark,
   onSuccess: (id: string) => void,
   dbAdapter: IConsolidatorAdapter
 ) => {
-  const consolidatedNftclass = await dbAdapter.getNftclassById(
+  const consolidatedCollection = await dbAdapter.getCollectionById(
     changeIssuerEntity.id
   );
-  const nftclass = consolidatedNftclassToInstance(consolidatedNftclass);
+  const collection = consolidatedCollectionToInstance(consolidatedCollection);
 
-  changeIssuerInteraction(remark, changeIssuerEntity, nftclass);
-  if (nftclass && consolidatedNftclass) {
-    await dbAdapter.updateNftclassIssuer(nftclass, consolidatedNftclass);
+  changeIssuerInteraction(remark, changeIssuerEntity, collection);
+  if (collection && consolidatedCollection) {
+    await dbAdapter.updateCollectionIssuer(collection, consolidatedCollection);
     if (onSuccess) {
-      onSuccess(nftclass.id);
+      onSuccess(collection.id);
     }
   }
 };

@@ -1,6 +1,6 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -15,14 +15,14 @@ beforeAll(async () => {
 
 describe("rmrk2.0.0 Consolidator: MINT", () => {
   const getSetupRemarks = () => [
-    ...getBlockCallsMock(createNftClassMock().create()),
+    ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
     ...getBlockCallsMock(mintNftMock2().mint()),
   ];
 
   it("Should mint a NFT and make another account owner", async () => {
     const remarks = getRemarksFromBlocksMock([
-      ...getBlockCallsMock(createNftClassMock().create()),
+      ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock().mint(getBobKey().address)),
     ]);
     const consolidator = new Consolidator();
@@ -31,7 +31,7 @@ describe("rmrk2.0.0 Consolidator: MINT", () => {
 
   it("Should mint a NFT and make another NFT an owner", async () => {
     const remarks = getRemarksFromBlocksMock([
-      ...getBlockCallsMock(createNftClassMock().create()),
+      ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock().mint(mintNftMock2(4).getId())),
     ]);

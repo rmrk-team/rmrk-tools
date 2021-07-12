@@ -1,5 +1,5 @@
 export { Consolidator } from "./tools/consolidator/consolidator";
-export { NftClass } from "./classes/nft-class";
+export { Collection } from "./classes/collection";
 export { NFT } from "./classes/nft";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
 export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";

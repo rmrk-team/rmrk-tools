@@ -3,9 +3,8 @@
 exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT Add new NFT as child of first NFT 1`] = `
 Object {
   "bases": Array [],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -15,6 +14,7 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [
     Object {
       "block": 3,
@@ -27,10 +27,10 @@ Object {
           "pending": false,
         },
       },
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "priority": Array [],
       "reactions": Object {},
@@ -54,10 +54,10 @@ Object {
         },
       ],
       "children": null,
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "priority": Array [],
       "reactions": Object {},
@@ -74,9 +74,8 @@ Object {
 exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT Add new NFT as child of first NFT and then send it to different parent NFT 1`] = `
 Object {
   "bases": Array [],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -86,16 +85,17 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [
     Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
       "children": null,
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "priority": Array [],
       "reactions": Object {},
@@ -127,10 +127,10 @@ Object {
         },
       ],
       "children": null,
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "5-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000999",
       "priority": Array [],
       "reactions": Object {},
@@ -151,10 +151,10 @@ Object {
           "pending": false,
         },
       },
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000999",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "priority": Array [],
       "reactions": Object {},
@@ -171,9 +171,8 @@ Object {
 exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT Should set NFT as pending if sent from non parent owner 1`] = `
 Object {
   "bases": Array [],
-  "invalid": Array [],
-  "nftclasses": Array [
-    NftClass {
+  "collections": Array [
+    Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -183,6 +182,7 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   ],
+  "invalid": Array [],
   "nfts": Array [
     Object {
       "block": 3,
@@ -195,10 +195,10 @@ Object {
           "pending": true,
         },
       },
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "priority": Array [],
       "reactions": Object {},
@@ -230,10 +230,10 @@ Object {
         },
       ],
       "children": null,
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
       "metadata": undefined,
-      "nftclass": "d43593c715a56da27d-KANARIABIRDS",
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
       "priority": Array [],
       "reactions": Object {},

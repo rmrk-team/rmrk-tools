@@ -1,9 +1,9 @@
 import { Change } from "../changelog";
-import { validateNftclass } from "../tools/validate-remark";
+import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, VERSION } from "../tools/constants";
 
-export class NftClass {
+export class Collection {
   readonly block: number;
   readonly max: number;
   issuer: string;
@@ -30,7 +30,7 @@ export class NftClass {
 
   public create(): string {
     if (this.block) {
-      throw new Error("An already existing nft class cannot be created!");
+      throw new Error("An already existing collection cannot be created!");
     }
     return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
@@ -46,15 +46,15 @@ export class NftClass {
   public change_issuer(address: string): string {
     if (this.block === 0) {
       throw new Error(
-        "This nft class is new, so there's no issuer to change." +
+        "This collection is new, so there's no issuer to change." +
           " If it has been deployed on chain, load the existing " +
-          "nft class as a new instance first, then change issuer."
+          "collection as a new instance first, then change issuer."
       );
     }
     return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
   }
 
-  public addChange(c: Change): NftClass {
+  public addChange(c: Change): Collection {
     this.changes.push(c);
     return this;
   }
@@ -75,9 +75,9 @@ export class NftClass {
     );
   }
 
-  static fromRemark(remark: string, block = 0): NftClass | string {
+  static fromRemark(remark: string, block = 0): Collection | string {
     try {
-      validateNftclass(remark);
+      validateCollection(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
       return new this(
@@ -96,7 +96,7 @@ export class NftClass {
   }
 }
 
-export interface NftclassMetadata {
+export interface CollectionMetadata {
   description?: string;
   attributes: Attribute[];
   external_url?: string;

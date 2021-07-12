@@ -1,6 +1,6 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -14,7 +14,7 @@ beforeAll(async () => {
 
 describe("rmrk2.0.0 Consolidator: RESADD", () => {
   const getSetupRemarks = () => [
-    ...getBlockCallsMock(createNftClassMock().create()),
+    ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
   ];
 
@@ -36,7 +36,7 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     );
   });
 
-  it("Should not allow to add a resource to a NFT in non-owned class", async () => {
+  it("Should not allow to add a resource to a NFT in non-owned collection", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(

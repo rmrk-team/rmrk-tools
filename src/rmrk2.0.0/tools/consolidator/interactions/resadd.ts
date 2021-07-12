@@ -23,10 +23,10 @@ export const resAddInteraction = async (
     );
   }
 
-  const nftClass = await dbAdapter.getNftclassById(nft.nftclass);
-  if (!nftClass || nftClass.issuer !== remark.caller) {
+  const nftCollection = await dbAdapter.getCollectionById(nft.collection);
+  if (!nftCollection || nftCollection.issuer !== remark.caller) {
     throw new Error(
-      `[${OP_TYPES.RESADD}] Attempting to add resource to NFT in non-owned collection ${nft.nftclass}`
+      `[${OP_TYPES.RESADD}] Attempting to add resource to NFT in non-owned collection ${nft.collection}`
     );
   }
 

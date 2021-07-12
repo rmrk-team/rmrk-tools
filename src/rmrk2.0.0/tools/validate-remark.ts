@@ -24,7 +24,7 @@ const PartStruct = type({
   equippable: optional(union([string(), array(string())])),
 });
 
-const NftclassStruct = type({
+const CollectionStruct = type({
   max: number(),
   issuer: string(),
   symbol: string(),
@@ -33,7 +33,7 @@ const NftclassStruct = type({
 });
 
 const NFTStruct = type({
-  nftclass: string(),
+  collection: string(),
   symbol: string(),
   transferable: number(),
   sn: string(),
@@ -128,7 +128,7 @@ export const validateRemarkBase = (remark: string, opType: OP_TYPES) => {
   }
 };
 
-export const validateNftclass = (remark: string): any => {
+export const validateCollection = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, dataString] = remark.split("::");
 
@@ -136,9 +136,9 @@ export const validateNftclass = (remark: string): any => {
     validateRemarkBase(remark, OP_TYPES.CREATE);
     const obj = getRemarkData(dataString);
     if (!obj.metadata) {
-      throw new Error("NFT Class is missing metadata");
+      throw new Error("NFT Collection is missing metadata");
     }
-    return assert(obj, NftclassStruct);
+    return assert(obj, CollectionStruct);
   } catch (error) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"

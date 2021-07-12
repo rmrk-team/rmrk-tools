@@ -1,7 +1,7 @@
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
-import { NftClass } from "../../../classes/nft-class";
+import { Collection } from "../../../classes/collection";
 import { IConsolidatorAdapter } from "../adapters/types";
 import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
 
@@ -9,19 +9,19 @@ export const validateMintNFT = async (
   remark: Remark,
   nft: NFT,
   dbAdapter: IConsolidatorAdapter,
-  nftParentClass?: NftClass
+  nftParentCollection?: Collection
 ) => {
-  if (!nftParentClass) {
+  if (!nftParentCollection) {
     throw new Error(
-      `NFT referencing non-existant parent nft class ${nft.nftclass}`
+      `NFT referencing non-existant parent collection ${nft.collection}`
     );
   }
 
   if (nft.owner) {
     if (isValidAddressPolkadotAddress(nft.owner)) {
-      if (remark.caller !== nftParentClass.issuer) {
+      if (remark.caller !== nftParentCollection.issuer) {
         throw new Error(
-          `Attempted issue of NFT in non-owned nft class. Issuer: ${nftParentClass.issuer}, caller: ${remark.caller}`
+          `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentCollection.issuer}, caller: ${remark.caller}`
         );
       }
     } else {

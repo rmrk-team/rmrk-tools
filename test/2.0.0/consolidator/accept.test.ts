@@ -1,6 +1,6 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -16,7 +16,7 @@ beforeAll(async () => {
 describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
   const resid = "jXhhR";
   const getSetupRemarks = () => [
-    ...getBlockCallsMock(createNftClassMock().create()),
+    ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
     ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
     ...getBlockCallsMock(
@@ -39,7 +39,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
 
   it("Accept a child NFT on a NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
-      ...getBlockCallsMock(createNftClassMock().create()),
+      ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock().mint()),
       ...getBlockCallsMock(mintNftMock2().mint(getBobKey().address)),
       ...getBlockCallsMock(

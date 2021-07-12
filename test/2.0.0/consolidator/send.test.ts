@@ -1,6 +1,6 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
   const getSetupRemarks = () => [
-    ...getBlockCallsMock(createNftClassMock().create()),
+    ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
     ...getBlockCallsMock(mintNftMock2().mint()),
   ];

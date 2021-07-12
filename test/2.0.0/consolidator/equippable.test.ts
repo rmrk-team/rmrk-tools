@@ -1,6 +1,6 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
-  createNftClassMock,
+  createCollectionMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -14,17 +14,17 @@ beforeAll(async () => {
 
 describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
   const getSetupRemarks = () => [
-    ...getBlockCallsMock(createNftClassMock().create()),
+    ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(createBaseMock().base()),
   ];
 
-  it("Add new Class id to Base slot equippable", async () => {
+  it("Add new Collection id to Base slot equippable", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
         createBaseMock(3).equippable({
           slot: "background",
-          classIds: [createNftClassMock().id],
+          collections: [createCollectionMock().id],
           operator: "+",
         })
       ),
@@ -33,13 +33,13 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
-  it("Remove new Class id to Base slot equippable", async () => {
+  it("Remove new Collection id to Base slot equippable", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
         createBaseMock(3).equippable({
           slot: "backpack",
-          classIds: [createNftClassMock().id],
+          collections: [createCollectionMock().id],
           operator: "-",
         })
       ),
@@ -48,13 +48,13 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
-  it("Replace a Class id to Base slot equippable", async () => {
+  it("Replace a Collection id to Base slot equippable", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
         createBaseMock(3).equippable({
           slot: "backpack",
-          classIds: ["*"],
+          collections: ["*"],
           operator: "",
         })
       ),
@@ -69,7 +69,7 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
       ...getBlockCallsMock(
         createBaseMock(3).equippable({
           slot: "test",
-          classIds: [createNftClassMock().id],
+          collections: [createCollectionMock().id],
           operator: "+",
         })
       ),
@@ -87,7 +87,7 @@ describe("rmrk2.0.0 Consolidator: EQUIPPABLE", () => {
       ...getBlockCallsMock(
         createBaseMock(5).equippable({
           slot: "test",
-          classIds: [createNftClassMock().id],
+          collections: [createCollectionMock().id],
           operator: "+",
         })
       ),

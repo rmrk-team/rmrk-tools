@@ -6,11 +6,11 @@ import {
   Resource,
 } from "../../classes/nft";
 import { Change } from "../../changelog";
-import { NftClass } from "../../classes/nft-class";
+import { Collection } from "../../classes/collection";
 import { OP_TYPES } from "../constants";
 import { Remark } from "./remark";
 import {
-  getNftclassFromRemark,
+  getCollectionFromRemark,
   validateCreateIds,
 } from "./interactions/create";
 import { sendInteraction } from "./interactions/send";
@@ -31,9 +31,9 @@ import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
   changeIssuerBase,
-  changeIssuerNftClass,
+  changeIssuerCollection,
   consolidatedBasetoInstance,
-  consolidatedNftclassToInstance,
+  consolidatedCollectionToInstance,
   consolidatedNFTtoInstance,
   isValidAddressPolkadotAddress,
 } from "./utils";
@@ -53,7 +53,7 @@ type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
 export type ConsolidatorReturnType = {
   nfts: NFTConsolidated[];
-  nftclasses: NftclassConsolidated[];
+  collections: CollectionConsolidated[];
   bases: BaseConsolidated[];
   invalid: InvalidCall[];
   changes?: InteractionChanges;
@@ -63,7 +63,7 @@ export type ConsolidatorReturnType = {
 export interface NFTConsolidated {
   id: string;
   block: number;
-  nftclass: string;
+  collection: string;
   symbol: string;
   transferable: number;
   sn: string;
@@ -79,7 +79,7 @@ export interface NFTConsolidated {
   resources: IResourceConsolidated[];
 }
 
-export interface NftclassConsolidated {
+export interface CollectionConsolidated {
   block: number;
   max: number;
   issuer: string;
@@ -100,7 +100,7 @@ export interface BaseConsolidated {
 
 export class Consolidator {
   readonly invalidCalls: InvalidCall[];
-  readonly nftclasses: NftClass[];
+  readonly collections: Collection[];
   readonly bases: Base[];
   readonly nfts: NFT[];
   readonly dbAdapter: IConsolidatorAdapter;
@@ -130,7 +130,7 @@ export class Consolidator {
     this.dbAdapter = dbAdapter || new InMemoryAdapter();
 
     this.invalidCalls = [];
-    this.nftclasses = [];
+    this.collections = [];
     this.nfts = [];
     this.bases = [];
   }
@@ -203,32 +203,34 @@ export class Consolidator {
       this
     );
 
-    let nftclass;
+    let collection;
     try {
-      nftclass = getNftclassFromRemark(remark);
+      collection = getCollectionFromRemark(remark);
     } catch (e) {
       invalidate(remark.remark, e.message);
       return true;
     }
 
-    const existingNftclass = await this.dbAdapter.getNftclassById(nftclass.id);
-    if (existingNftclass) {
+    const existingCollection = await this.dbAdapter.getCollectionById(
+      collection.id
+    );
+    if (existingCollection) {
       invalidate(
-        nftclass.id,
-        `[${OP_TYPES.CREATE}] Attempt to create already existing nft class`
+        collection.id,
+        `[${OP_TYPES.CREATE}] Attempt to create already existing collection`
       );
       return true;
     }
 
     try {
-      validateCreateIds(nftclass, remark);
-      await this.dbAdapter.updateNftclassMint(nftclass);
-      this.nftclasses.push(nftclass);
+      validateCreateIds(collection, remark);
+      await this.dbAdapter.updateCollectionMint(collection);
+      this.collections.push(collection);
       if (this.emitInteractionChanges) {
-        this.interactionChanges.push({ [OP_TYPES.CREATE]: nftclass.id });
+        this.interactionChanges.push({ [OP_TYPES.CREATE]: collection.id });
       }
     } catch (e) {
-      invalidate(nftclass.id, e.message);
+      invalidate(collection.id, e.message);
       return true;
     }
 
@@ -236,7 +238,7 @@ export class Consolidator {
   }
 
   /**
-   * The MINT interaction creates an NFT inside of a Nftclass.
+   * The MINT interaction creates an NFT inside of a Collection.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/mint.md
    */
   private async mint(remark: Remark): Promise<boolean> {
@@ -263,16 +265,16 @@ export class Consolidator {
       return true;
     }
 
-    const nftParentNftclass = await this.dbAdapter.getNftclassById(
-      nft.nftclass
+    const nftParentCollection = await this.dbAdapter.getCollectionById(
+      nft.collection
     );
 
-    const nftclass = nftParentNftclass
-      ? consolidatedNftclassToInstance(nftParentNftclass)
+    const collection = nftParentCollection
+      ? consolidatedCollectionToInstance(nftParentCollection)
       : undefined;
 
     try {
-      await validateMintNFT(remark, nft, this.dbAdapter, nftclass);
+      await validateMintNFT(remark, nft, this.dbAdapter, collection);
       await this.dbAdapter.updateNFTMint(nft);
 
       this.nfts.push(nft);
@@ -485,9 +487,9 @@ export class Consolidator {
   }
 
   /**
-   * The CHANGEISSUER interaction allows a nft class OR base issuer to change the issuer field to another address.
-   * The original issuer immediately loses all rights to mint further NFTs or base parts inside that nft class or base.
-   * This is particularly useful when selling the rights to a nft class's or base operation
+   * The CHANGEISSUER interaction allows a collection OR base issuer to change the issuer field to another address.
+   * The original issuer immediately loses all rights to mint further NFTs or base parts inside that collection or base.
+   * This is particularly useful when selling the rights to a collection's or base operation
    * or changing the issuer to a null address to relinquish control over it.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/changeissuer.md
    */
@@ -513,7 +515,7 @@ export class Consolidator {
           });
         }
       };
-      // NFT Class id always starts from block number
+      // NFT Collection id always starts from block number
       // Base id always starts with base- prefix
       if (changeIssuerEntity.id.startsWith("base-")) {
         // This is BASE change
@@ -524,8 +526,8 @@ export class Consolidator {
           this.dbAdapter
         );
       } else {
-        // This is NFT Class change
-        await changeIssuerNftClass(
+        // This is NFT Collection change
+        await changeIssuerCollection(
           changeIssuerEntity,
           remark,
           onSuccess,
@@ -541,7 +543,7 @@ export class Consolidator {
   }
 
   /**
-   * The EQUIPPABLE interaction allows a Base owner to modify the list of equippable nft classes on a Base's slot.
+   * The EQUIPPABLE interaction allows a Base owner to modify the list of equippable collectiones on a Base's slot.
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/equippable.md
    */
   private async equippable(remark: Remark): Promise<boolean> {
@@ -808,8 +810,8 @@ export class Consolidator {
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
       nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
-      nftclasses: this.dbAdapter.getAllNftclasss
-        ? await this.dbAdapter.getAllNftclasss()
+      collections: this.dbAdapter.getAllCollections
+        ? await this.dbAdapter.getAllCollections()
         : [],
       bases: this.dbAdapter.getAllBases
         ? await this.dbAdapter.getAllBases()

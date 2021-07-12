@@ -3,7 +3,7 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
 import getKeys from "../devaccs";
 import * as fs from "fs";
-import { NftClass } from "../../../src/rmrk2.0.0/classes/nft-class";
+import { NftClass } from "../../../src/rmrk2.0.0/classes/collection";
 import { NFT } from "../../../src/rmrk2.0.0";
 import { Base, IBasePart } from "../../../src/rmrk2.0.0/classes/base";
 import { Equippable } from "../../../src/rmrk2.0.0/classes/equippable";

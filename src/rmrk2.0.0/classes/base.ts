@@ -45,7 +45,7 @@ export class Base {
       throw new Error(
         "This base is new, so there's no issuer to change." +
           " If it has been deployed on chain, load the existing " +
-          "nft class as a new instance first, then change issuer."
+          "collection as a new instance first, then change issuer."
       );
     }
     return `RMRK::CHANGEISSUER::${VERSION}::${this.getId()}::${address}`;
@@ -53,15 +53,15 @@ export class Base {
 
   /**
    *
-   * @param classIds - array of collection ids
+   * @param collections - array of collection ids
    */
   public equippable({
     slot,
-    classIds,
+    collections,
     operator,
   }: {
     slot: string;
-    classIds: string[];
+    collections: string[];
     operator: "+" | "-" | "";
   }): string {
     if (!this.block) {
@@ -74,7 +74,7 @@ export class Base {
     }
     return `${PREFIX}::${
       OP_TYPES.EQUIPPABLE
-    }::${VERSION}::${this.getId()}::${slot}::${operator}${classIds.join(",")}`;
+    }::${VERSION}::${this.getId()}::${slot}::${operator}${collections.join(",")}`;
   }
 
   public getId(): string {

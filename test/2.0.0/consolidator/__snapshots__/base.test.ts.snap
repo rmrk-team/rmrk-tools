@@ -34,8 +34,8 @@ Object {
       "type": "svg",
     },
   ],
+  "collections": Array [],
   "invalid": Array [],
-  "nftclasses": Array [],
   "nfts": Array [],
 }
 `;

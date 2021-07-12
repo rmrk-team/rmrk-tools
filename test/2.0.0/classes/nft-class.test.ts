@@ -1,61 +1,61 @@
-import { createNftClassMock, addChangeIssuerMock, getBobKey } from "../mocks";
+import { createCollectionMock, addChangeIssuerMock, getBobKey } from "../mocks";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
 beforeAll(async () => {
   return await cryptoWaitReady();
 });
 
-describe("rmrk2.0.0 NftClass: Create", () => {
+describe("rmrk2.0.0 Collection: Create", () => {
   it("should match snapshot", async () => {
-    const nftClass = createNftClassMock();
-    expect(await nftClass.create()).toMatchSnapshot();
+    const collection = createCollectionMock();
+    expect(await collection.create()).toMatchSnapshot();
   });
 });
 
-describe("rmrk2.0.0 NftClass: Create", () => {
+describe("rmrk2.0.0 Collection: Create", () => {
   it("should throw error", async () => {
-    const nftClass = createNftClassMock(1);
+    const collection = createCollectionMock(1);
     try {
-      await nftClass.create();
+      await collection.create();
     } catch (e) {
       expect(e.message).toMatch(
-        "An already existing nft class cannot be created!"
+        "An already existing collection cannot be created!"
       );
     }
   });
 });
 
-describe("rmrk2.0.0 NftClass: Change issuer", () => {
+describe("rmrk2.0.0 Collection: Change issuer", () => {
   it("should match snapshot", async () => {
-    const nftClass = createNftClassMock(1);
-    expect(await nftClass.change_issuer(getBobKey().address)).toMatchSnapshot();
+    const collection = createCollectionMock(1);
+    expect(await collection.change_issuer(getBobKey().address)).toMatchSnapshot();
   });
 });
 
-describe("rmrk2.0.0 NftClass: Create", () => {
+describe("rmrk2.0.0 Collection: Create", () => {
   it("should throw error", async () => {
-    const nftClass = createNftClassMock(0);
+    const collection = createCollectionMock(0);
     try {
-      await nftClass.change_issuer(getBobKey().address);
+      await collection.change_issuer(getBobKey().address);
     } catch (e) {
       expect(e.message).toMatch(
-        "This nft class is new, so there's no issuer to change. If it has been deployed on chain, load the existing nft class as a new instance first, then change issuer."
+        "This collection is new, so there's no issuer to change. If it has been deployed on chain, load the existing collection as a new instance first, then change issuer."
       );
     }
   });
 });
 
-describe("rmrk2.0.0 NftClass: Add change", () => {
+describe("rmrk2.0.0 Collection: Add change", () => {
   it("should match snapshot", async () => {
-    const nftClass = createNftClassMock();
-    expect(await nftClass.addChange(addChangeIssuerMock)).toMatchSnapshot();
+    const collection = createCollectionMock();
+    expect(await collection.addChange(addChangeIssuerMock)).toMatchSnapshot();
   });
 });
 
-describe("rmrk2.0.0 NftClass: Get changes", () => {
+describe("rmrk2.0.0 Collection: Get changes", () => {
   it("should match snapshot", async () => {
-    const nftClass = createNftClassMock();
-    await nftClass.addChange(addChangeIssuerMock);
-    expect(await nftClass.getChanges()).toMatchSnapshot();
+    const collection = createCollectionMock();
+    await collection.addChange(addChangeIssuerMock);
+    expect(await collection.getChanges()).toMatchSnapshot();
   });
 });

@@ -1,4 +1,4 @@
-import { NftClass } from "../../../classes/nft-class";
+import { Collection } from "../../../classes/collection";
 import { OP_TYPES } from "../../constants";
 import { Change } from "../../../changelog";
 import { Remark } from "../remark";
@@ -19,9 +19,9 @@ export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,
-  entity?: NftClass | Base
+  entity?: Collection | Base
 ) => {
-  const entityType = entity instanceof NftClass ? "nftclass" : "base";
+  const entityType = entity instanceof Collection ? "collection" : "base";
   if (!entity) {
     throw new Error(
       `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such ${entityType} with ID ${changeIssuerEntity.id} found before block ${remark.block}!`
