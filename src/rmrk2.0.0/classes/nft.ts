@@ -77,8 +77,7 @@ export class NFT {
   public send(recipient: string): string {
     if (!this.block) {
       throw new Error(
-        `You can only send an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`
+        "You can only send an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
     return `${PREFIX}::${

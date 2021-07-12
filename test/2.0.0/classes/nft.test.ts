@@ -49,3 +49,23 @@ describe("rmrk2.0.0 Nft: Mint", () => {
     }
   });
 });
+
+describe("rmrk2.0.0 Nft: Send", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(1);
+    expect(await nft.send(getBobKey().address)).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Send", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(0);
+    try {
+      await nft.send(getBobKey().address);
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only send an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+  });
+});

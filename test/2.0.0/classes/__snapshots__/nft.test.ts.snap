@@ -61,3 +61,5 @@ NFT {
 exports[`rmrk2.0.0 Nft: Get id should match snapshot 1`] = `"1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777"`;
 
 exports[`rmrk2.0.0 Nft: Mint should match snapshot 1`] = `"RMRK::MINT::2.0.0::%7B%22collection%22%3A%22d43593c715a56da27d-KANARIABIRDS%22%2C%22symbol%22%3A%22KANR%22%2C%22transferable%22%3A1%2C%22sn%22%3A%220000000000000777%22%7D::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
+
+exports[`rmrk2.0.0 Nft: Send should match snapshot 1`] = `"RMRK::SEND::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
