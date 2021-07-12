@@ -142,8 +142,7 @@ export class NFT {
   public consume(): string {
     if (!this.block) {
       throw new Error(
-        `You can only consume an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`
+        "You can only consume an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
     return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
@@ -152,8 +151,7 @@ export class NFT {
   public emote(unicode: string): string {
     if (!this.block) {
       throw new Error(
-        `You can only emote on an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`
+        "You can only emote on an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
     return `${PREFIX}::${
@@ -164,8 +162,7 @@ export class NFT {
   public resadd(resource: Resource): string {
     if (!this.block) {
       throw new Error(
-        `You can only add resource to an existing NFT. If you just minted this, please load a new, 
-        separate instance as the block number is an important part of an NFT's ID.`
+        "You can only add resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
     return `${PREFIX}::${
