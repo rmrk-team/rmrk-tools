@@ -1,5 +1,5 @@
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { addChangeIssuerMock, mintNftMock } from "../mocks";
+import { addChangeIssuerMock, mintNftMock, getBobKey } from "../mocks";
 
 beforeAll(async () => {
   return await cryptoWaitReady();
@@ -12,7 +12,7 @@ describe("rmrk2.0.0 Nft: Get id", () => {
   });
 });
 
-describe("rmrk2.0.0  Nft: Get id", () => {
+describe("rmrk2.0.0 Nft: Get id", () => {
   it("should throw error", async () => {
     const nft = mintNftMock();
     try {
@@ -25,9 +25,27 @@ describe("rmrk2.0.0  Nft: Get id", () => {
   });
 });
 
-describe("rmrk2.0.0 Collection: Add change", () => {
+describe("rmrk2.0.0 Nft: Add change", () => {
   it("should match snapshot", async () => {
     const nft = mintNftMock();
     expect(await nft.addChange(addChangeIssuerMock)).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Mint", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(0);
+    expect(await nft.mint(getBobKey().address)).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Mint", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(1);
+    try {
+      await nft.mint(getBobKey().address);
+    } catch (e) {
+      expect(e.message).toMatch("An already existing NFT cannot be minted!");
+    }
   });
 });

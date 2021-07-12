@@ -8,7 +8,7 @@ import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
 
 let block = 1;
 
-const getAliceKey = () => {
+export const getAliceKey = () => {
   const keyringAlice = new Keyring({ type: "sr25519" });
   return keyringAlice.addFromUri("//Alice");
 };
