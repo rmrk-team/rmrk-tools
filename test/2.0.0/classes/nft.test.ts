@@ -176,3 +176,23 @@ describe("rmrk2.0.0 Nft: Resadd", () => {
     }
   });
 });
+
+describe("rmrk2.0.0 Nft: Accept", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(1);
+    expect(await nft.accept("jXhhR", "resource")).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Accept", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(0);
+    try {
+      await nft.accept("jXhhR", "resource");
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only accept resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+  });
+});

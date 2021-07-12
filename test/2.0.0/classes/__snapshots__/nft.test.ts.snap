@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`rmrk2.0.0 Nft: Accept should match snapshot 1`] = `"RMRK::ACCEPT::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::resource::jXhhR"`;
+
 exports[`rmrk2.0.0 Nft: Add change should match snapshot 1`] = `
 NFT {
   "block": 0,
