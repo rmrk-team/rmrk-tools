@@ -5,6 +5,7 @@ import { Block } from "../../src/rmrk2.0.0/tools/utils";
 import { encodeAddress, Keyring } from "@polkadot/keyring";
 import { Base } from "../../src/rmrk2.0.0/classes/base";
 import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
+import { BlockCall } from "../../src/rmrk2.0.0/tools/types";
 
 let block = 1;
 
@@ -89,10 +90,11 @@ export const createBaseMock = (block?: number): Base =>
 
 export const getBlockCallsMock = (
   remark: string,
-  caller: string = getAliceKey().address
+  caller: string = getAliceKey().address,
+  extras?: BlockCall[]
 ): Block[] => {
   block = block + 1;
-  return [
+  const blockCall: Block[] = [
     {
       block: block,
       calls: [
@@ -104,6 +106,12 @@ export const getBlockCallsMock = (
       ],
     },
   ];
+
+  if (extras) {
+    blockCall[0].calls[0].extras = extras;
+  }
+
+  return blockCall;
 };
 
 export const getRemarksFromBlocksMock = (blockCalls: Block[]): Remark[] => {
