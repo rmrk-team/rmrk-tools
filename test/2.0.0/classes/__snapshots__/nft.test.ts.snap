@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Collection: Add change should match snapshot 1`] = `
+NFT {
+  "block": 0,
+  "burned": "",
+  "changes": Array [
+    Object {
+      "block": 0,
+      "caller": "",
+      "field": "",
+      "new": "",
+      "old": "",
+      "opType": "CHANGEISSUER",
+    },
+  ],
+  "children": null,
+  "collection": "d43593c715a56da27d-KANARIABIRDS",
+  "forsale": 0n,
+  "metadata": undefined,
+  "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+  "priority": Array [],
+  "reactions": Object {},
+  "resources": Array [],
+  "rootowner": "",
+  "sn": "0000000000000777",
+  "symbol": "KANR",
+  "transferable": 1,
+}
+`;
+
+exports[`rmrk2.0.0 Nft: Get id should match snapshot 1`] = `"1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777"`;

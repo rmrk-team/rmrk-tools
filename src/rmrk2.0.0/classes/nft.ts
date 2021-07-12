@@ -5,7 +5,7 @@ import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { nanoid } from "nanoid";
 import { Accept } from "./accept";
 
-interface nftInstancerProps {
+interface INftInstancerProps {
   block: number;
   collection: string;
   symbol: string;
@@ -31,7 +31,7 @@ export class NFT {
   children: Record<string, NFTChild> | null = null;
   resources: IResourceConsolidated[] = [];
   burned: string;
-  constructor(nftInstance: nftInstancerProps) {
+  constructor(nftInstance: INftInstancerProps) {
     this.block = nftInstance.block;
     this.collection = nftInstance.collection;
     this.symbol = nftInstance.symbol;
