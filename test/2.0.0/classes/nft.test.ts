@@ -1,5 +1,10 @@
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { addChangeIssuerMock, mintNftMock, getBobKey } from "../mocks";
+import {
+  addChangeIssuerMock,
+  mintNftMock,
+  getBobKey,
+  createBaseMock,
+} from "../mocks";
 
 beforeAll(async () => {
   return await cryptoWaitReady();
@@ -145,6 +150,28 @@ describe("rmrk2.0.0 Nft: Emote", () => {
     } catch (e) {
       expect(e.message).toMatch(
         "You can only emote on an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+  });
+});
+
+describe("rmrk2.0.0 Nft: Resadd", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(1);
+    expect(
+      await nft.resadd({ base: createBaseMock(4).getId(), id: "xXhhR" })
+    ).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Resadd", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(0);
+    try {
+      await nft.resadd({ base: createBaseMock(4).getId(), id: "xXhhR" });
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only add resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
   });
