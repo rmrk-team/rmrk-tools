@@ -1,5 +1,5 @@
-import { NFTMetadata } from "../rmrk1.0.0/classes/nft";
-import { CollectionMetadata } from "../rmrk1.0.0/classes/collection";
+import { NFTMetadata } from "../classes/nft";
+import { CollectionMetadata } from "../classes/collection";
 import {
   number,
   optional,
@@ -13,7 +13,7 @@ import {
   enums,
   array,
 } from "superstruct";
-import { Attribute } from "../types";
+import { Attribute } from "./types";
 
 const MetadataStruct = type({
   name: optional(string()),

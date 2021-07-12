@@ -4,6 +4,7 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { nanoid } from "nanoid";
 import { Accept } from "./accept";
+import {Attribute} from "../../types";
 
 interface INftInstanceProps {
   block: number;
@@ -219,19 +220,6 @@ export interface ResourceMetadata {
   external_url?: string;
   description?: string;
   name?: string;
-}
-
-export interface Attribute {
-  display_type: DisplayType;
-  trait_type: string;
-  value: number | string;
-}
-
-export enum DisplayType {
-  null,
-  "boost_number",
-  "number",
-  "boost_percentage",
 }
 
 export interface Reactionmap {

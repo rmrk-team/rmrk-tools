@@ -5,6 +5,19 @@ import { NFT } from "../classes/nft";
 import { Emote } from "../classes/emote";
 import { ChangeIssuer } from "../classes/changeissuer";
 
+export type DisplayType =
+  | "boost_number"
+  | "boost_percentage"
+  | "number"
+  | "date";
+
+export interface Attribute {
+  display_type?: DisplayType;
+  trait_type?: string;
+  value: number | string;
+  max_value?: number;
+}
+
 export type Options = {
   ws: string;
   from: string;

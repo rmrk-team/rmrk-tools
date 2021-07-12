@@ -1,5 +1,5 @@
-import { validateMetadata } from "../../src/tools/validate-metadata";
-import { NFTMetadata } from "../../src/rmrk1.0.0/classes/nft";
+import { validateMetadata } from "../../../src/rmrk2.0.0/tools/validate-metadata";
+import { NFTMetadata } from "../../../src/rmrk2.0.0/classes/nft";
 import {
   attributesMockBoostNumberValid,
   metadataMockAllValid,
