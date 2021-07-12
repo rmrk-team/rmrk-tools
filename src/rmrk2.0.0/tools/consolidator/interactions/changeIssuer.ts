@@ -21,14 +21,16 @@ export const changeIssuerInteraction = (
   changeIssuerEntity: ChangeIssuer,
   entity?: Collection | Base
 ) => {
-  const entityType = entity instanceof Collection ? "collection" : "base";
+  const entityType = changeIssuerEntity.id.startsWith("base-")
+    ? "base"
+    : "collection";
   if (!entity) {
     throw new Error(
       `This ${OP_TYPES.CHANGEISSUER} remark is invalid - no such ${entityType} with ID ${changeIssuerEntity.id} found before block ${remark.block}!`
     );
   }
 
-  if (remark.caller != entity.issuer) {
+  if (remark.caller !== entity.issuer) {
     throw new Error(
       `Attempting to change issuer of ${entityType} ${changeIssuerEntity.id} when not issuer!`
     );

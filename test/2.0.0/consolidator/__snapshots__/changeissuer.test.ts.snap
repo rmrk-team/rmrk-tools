@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: CHANGEISSUER Should allow to CHANGEISSUER of base 1`] = `
+Object {
+  "bases": Array [
+    Object {
+      "block": 2,
+      "changes": Array [
+        Object {
+          "block": 3,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "issuer",
+          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "opType": "CHANGEISSUER",
+        },
+      ],
+      "id": "base-2-KBASE777",
+      "issuer": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "parts": Array [
+        Object {
+          "equippable": Array [],
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": Array [
+            "d43593c715a56da27d-KANARIABIRDS",
+          ],
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "type": "svg",
+    },
+  ],
+  "collections": Array [],
+  "invalid": Array [],
+  "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: CHANGEISSUER Should allow to CHANGEISSUER of collection 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Object {
+      "block": 2,
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "issuer",
+          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "opType": "CHANGEISSUER",
+        },
+      ],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [],
+  "nfts": Array [
+    Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [],
+      "children": null,
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "priority": Array [],
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "",
+      "sn": "0000000000000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: CHANGEISSUER Should prevent from CHANGEISSUER of non-existent base or collection 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [],
+  "invalid": Array [
+    Object {
+      "block": 2,
+      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "message": "This CHANGEISSUER remark is invalid - no such base with ID base-3-KBASE777 found before block 2!",
+      "object_id": "base-3-KBASE777",
+      "op_type": "CHANGEISSUER",
+    },
+  ],
+  "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: CHANGEISSUER Should prevent from CHANGEISSUER of non-existent base or collection 2`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [],
+  "invalid": Array [
+    Object {
+      "block": 2,
+      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "message": "This CHANGEISSUER remark is invalid - no such base with ID base-3-KBASE777 found before block 2!",
+      "object_id": "base-3-KBASE777",
+      "op_type": "CHANGEISSUER",
+    },
+    Object {
+      "block": 2,
+      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "message": "This CHANGEISSUER remark is invalid - no such collection with ID d43593c715a56da27d-KANARIABIRDS found before block 2!",
+      "object_id": "d43593c715a56da27d-KANARIABIRDS",
+      "op_type": "CHANGEISSUER",
+    },
+  ],
+  "nfts": Array [],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: CHANGEISSUER Should prevent to CHANGEISSUER of non-owned collection 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [
+    Object {
+      "block": 3,
+      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "message": "Attempting to change issuer of collection d43593c715a56da27d-KANARIABIRDS when not issuer!",
+      "object_id": "d43593c715a56da27d-KANARIABIRDS",
+      "op_type": "CHANGEISSUER",
+    },
+  ],
+  "nfts": Array [],
+}
+`;
