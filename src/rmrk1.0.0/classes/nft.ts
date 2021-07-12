@@ -3,6 +3,7 @@ import { Change } from "../changelog";
 import { validateNFT } from "../../tools/validate-remark";
 import { getRemarkData } from "../../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
+import { Attribute } from "../../types";
 
 export class NFT {
   readonly block: number;
@@ -180,23 +181,10 @@ export interface NFTMetadata {
   image_data?: string;
   description?: string;
   name?: string;
-  attributes: Attribute[];
+  attributes?: Attribute[];
   background_color?: string;
   animation_url?: string;
   youtube_url?: string;
-}
-
-export interface Attribute {
-  display_type: DisplayType;
-  trait_type: string;
-  value: number | string;
-}
-
-export enum DisplayType {
-  null,
-  "boost_number",
-  "number",
-  "boost_percentage",
 }
 
 export interface Reactionmap {

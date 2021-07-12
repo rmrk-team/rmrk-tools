@@ -1,4 +1,4 @@
-import { Attribute } from "../types/attribute";
+import { Attribute } from "../../types";
 
 export interface Collection {
   readonly version: string;

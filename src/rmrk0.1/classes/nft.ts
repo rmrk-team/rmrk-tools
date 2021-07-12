@@ -1,5 +1,5 @@
 import { Collection } from "./collection";
-import { Attribute } from "../types/attribute";
+import { Attribute } from "../../types";
 
 export class NFT {
   // @todo discard because of 1.0.0
