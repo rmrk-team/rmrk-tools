@@ -129,3 +129,23 @@ describe("rmrk2.0.0 Nft: Consume", () => {
     }
   });
 });
+
+describe("rmrk2.0.0 Nft: Emote", () => {
+  it("should match snapshot", async () => {
+    const nft = mintNftMock(1);
+    expect(await nft.emote("1F600")).toMatchSnapshot();
+  });
+});
+
+describe("rmrk2.0.0 Nft: Emote", () => {
+  it("should throw error", async () => {
+    const nft = mintNftMock(0);
+    try {
+      await nft.emote("1F600");
+    } catch (e) {
+      expect(e.message).toMatch(
+        "You can only emote on an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+  });
+});
