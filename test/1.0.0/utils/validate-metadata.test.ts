@@ -1,4 +1,4 @@
-import { validateMetadata } from "../../../src/tools/validate-metadata";
+import { validateMetadata } from "../../../src/rmrk1.0.0/tools/validate-metadata";
 import { NFTMetadata } from "../../../src/rmrk1.0.0/classes/nft";
 import {
   attributesMockBoostNumberValid,
