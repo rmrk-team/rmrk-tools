@@ -1,5 +1,6 @@
 import { validateEmote } from "../tools/validate-remark";
 import { VERSION } from "../tools/constants";
+import { isValidEmoji } from "../tools/validate-emoji";
 
 type TEmoteNamespace = "rmrk1" | "rmrk2" | "pubkey";
 
@@ -32,6 +33,9 @@ export class Emote {
       ] = remark.split("::");
       if (!validateNamespace(namespace as TEmoteNamespace)) {
         throw new Error("Not a valid emote namespace");
+      }
+      if (!isValidEmoji(unicode)) {
+        throw new Error(`Invalid emoji unicode ${unicode}`);
       }
       return new Emote(namespace as TEmoteNamespace, id, unicode);
     } catch (e) {

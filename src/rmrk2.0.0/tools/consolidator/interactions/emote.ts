@@ -3,6 +3,7 @@ import { Remark } from "../remark";
 import { Emote } from "../../../classes/emote";
 import { NFT } from "../../../classes/nft";
 import { Change } from "../../../changelog";
+import { isValidEmoji } from "../../validate-emoji";
 
 const addEmoteChange = (
   remark: Remark,
@@ -35,6 +36,14 @@ export const emoteInteraction = (
   if (Boolean(nft.burned)) {
     throw new Error(
       `[${OP_TYPES.EMOTE}] Cannot emote to a burned NFT ${emoteEntity.id}`
+    );
+  }
+
+  if (!isValidEmoji(emoteEntity.unicode)) {
+    throw new Error(
+      `Cannot EMOTE on NFT ${nft.getId()} with an invalid emoji unicode ${
+        emoteEntity.unicode
+      }`
     );
   }
 

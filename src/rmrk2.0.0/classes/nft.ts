@@ -4,7 +4,8 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { nanoid } from "nanoid";
 import { Accept } from "./accept";
-import {Attribute} from "../../types";
+import { Attribute } from "../../types";
+import { isValidEmoji } from "../tools/validate-emoji";
 
 interface INftInstanceProps {
   block: number;
@@ -153,6 +154,11 @@ export class NFT {
     if (!this.block) {
       throw new Error(
         "You can only emote on an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+      );
+    }
+    if (!isValidEmoji(unicode)) {
+      throw new Error(
+        `Trying to EMOTE on NFT ${this.getId()} with an invalid emoji unicode ${unicode}`
       );
     }
     return `${PREFIX}::${
