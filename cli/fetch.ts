@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import {
-  filterBlocksByNftclass,
+  filterBlocksByCollection,
   getApi,
   getLatestBlock,
   getLatestFinalizedBlock,
@@ -84,7 +84,7 @@ const fetch = async () => {
   );
 
   if (collectionFilter) {
-    extracted = filterBlocksByNftclass(
+    extracted = filterBlocksByCollection(
       extracted,
       collectionFilter,
       prefixToArray(args["--prefixes"] || "")

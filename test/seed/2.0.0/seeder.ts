@@ -3,7 +3,7 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
 import getKeys from "../devaccs";
 import * as fs from "fs";
-import { NftClass } from "../../../src/rmrk2.0.0/classes/collection";
+import { Collection } from "../../../src/rmrk2.0.0/classes/collection";
 import { NFT } from "../../../src/rmrk2.0.0";
 import { Base, IBasePart } from "../../../src/rmrk2.0.0/classes/base";
 import { Equippable } from "../../../src/rmrk2.0.0/classes/equippable";
@@ -181,9 +181,9 @@ const getBaseParts = (classId: string) => {
   return BIRD_1_BASE_PARTS;
 };
 
-let classBlock = 0;
-let nftBlock = 0;
-let baseBlock = 0;
+const classBlock = 0;
+const nftBlock = 0;
+const baseBlock = 0;
 
 export class Seeder {
   api: ApiPromise;
@@ -201,12 +201,12 @@ export class Seeder {
     this.kp = kp;
     this.kp2 = kp2;
     this.symbol = "KANARIAS";
-    this.classId = NftClass.generateId(
+    this.classId = Collection.generateId(
       u8aToHex(getKeys()[0].publicKey),
       "KANARIAS"
     );
     this.partsSymbol = "KANARIAPARTS";
-    this.partsClassId = NftClass.generateId(
+    this.partsClassId = Collection.generateId(
       u8aToHex(getKeys()[0].publicKey),
       "KANARIAPARTS"
     );
@@ -231,7 +231,7 @@ export class Seeder {
   public async seedBase(): Promise<number> {
     const remarks: string[] = [];
 
-    // const collection = new NftClass(
+    // const collection = new Collection(
     //   0,
     //   0,
     //   encodeAddress(this.accounts[0].address, 2),
@@ -241,7 +241,7 @@ export class Seeder {
     // );
     // remarks.push(collection.create());
     //
-    // const kanariaPartsCollection = new NftClass(
+    // const kanariaPartsCollection = new Collection(
     //   0,
     //   0,
     //   encodeAddress(this.accounts[0].address, 2),
@@ -259,15 +259,16 @@ export class Seeder {
       getBaseParts(this.partsClassId)
     );
 
-
-
-
     remarks.push(
-      base.equippable("gemslot2", ["d43593c715a56da27d-KANARIAPARTS2"], "+")
+      base.equippable({
+        slot: "gemslot2",
+        operator: "+",
+        collections: ["d43593c715a56da27d-KANARIAPARTS2"],
+      })
     );
     const nft1 = new NFT({
       block: 16,
-      nftclass: "d43593c715a56da27d-KANARIAPARTS2",
+      collection: "d43593c715a56da27d-KANARIAPARTS2",
       symbol: "GEM2",
       transferable: 1,
       sn: "2".padStart(16, "0"),
@@ -277,7 +278,7 @@ export class Seeder {
 
     // const nft1 = new NFT({
     //   block: 13,
-    //   nftclass: "d43593c715a56da27d-KANARIAS",
+    //   collection: "d43593c715a56da27d-KANARIAS",
     //   symbol: "KANR",
     //   transferable: 1,
     //   sn: "777".padStart(16, "0"),
@@ -292,7 +293,7 @@ export class Seeder {
     //
     // const nft2 = new NFT({
     //   block: 16,
-    //   nftclass: "d43593c715a56da27d-KANARIAPARTS2",
+    //   collection: "d43593c715a56da27d-KANARIAPARTS2",
     //   symbol: "GEM2",
     //   transferable: 1,
     //   sn: "2".padStart(16, "0"),
@@ -339,7 +340,7 @@ export class Seeder {
   public async seedAndAccept(): Promise<number> {
     const remarks: string[] = [];
 
-    const kanariaPartsCollection = new NftClass(
+    const kanariaPartsCollection = new Collection(
       0,
       0,
       encodeAddress(this.accounts[1].address, 2),
@@ -351,7 +352,7 @@ export class Seeder {
 
     const nftParent = new NFT({
       block: nftBlock,
-      nftclass: this.classId,
+      collection: this.classId,
       symbol: "KANR",
       transferable: 1,
       sn: "777".padStart(16, "0"),
@@ -360,7 +361,7 @@ export class Seeder {
 
     const nft1 = new NFT({
       block: 0,
-      nftclass: `${this.partsClassId}2`,
+      collection: `${this.partsClassId}2`,
       symbol: "GEM2",
       transferable: 1,
       sn: "2".padStart(16, "0"),
@@ -370,7 +371,7 @@ export class Seeder {
 
     const nft2 = new NFT({
       block: 0,
-      nftclass: `${this.partsClassId}2`,
+      collection: `${this.partsClassId}2`,
       symbol: "GEM3",
       transferable: 1,
       sn: "3".padStart(16, "0"),
@@ -391,7 +392,7 @@ export class Seeder {
           console.log(`included in ${status.asInBlock}`);
           const nftMinted = new NFT({
             block: block.block.header.number.toNumber(),
-            nftclass: `${this.partsClassId}2`,
+            collection: `${this.partsClassId}2`,
             symbol: "GEM2",
             transferable: 1,
             sn: `2`.padStart(16, "0"),
@@ -428,7 +429,7 @@ export class Seeder {
 
     const nftParent = new NFT({
       block: nftBlock,
-      nftclass: this.classId,
+      collection: this.classId,
       symbol: "KANR",
       transferable: 1,
       sn: "777".padStart(16, "0"),
@@ -439,7 +440,7 @@ export class Seeder {
 
     const backgroundNft = new NFT({
       block: 0,
-      nftclass: this.partsClassId,
+      collection: this.partsClassId,
       symbol: "KANRBG",
       transferable: 1,
       sn: `1`.padStart(16, "0"),
@@ -456,7 +457,7 @@ export class Seeder {
 
     const gem2Nft = new NFT({
       block: 0,
-      nftclass: this.partsClassId,
+      collection: this.partsClassId,
       symbol: "KANRGEM2",
       transferable: 1,
       sn: `2`.padStart(16, "0"),
@@ -476,7 +477,7 @@ export class Seeder {
 
           const gem2NftMinted = new NFT({
             block: block.block.header.number.toNumber(),
-            nftclass: this.partsClassId,
+            collection: this.partsClassId,
             symbol: "KANRGEM2",
             transferable: 1,
             sn: `2`.padStart(16, "0"),
