@@ -1,7 +1,7 @@
 import config from "./rollup";
 
 config.output = {
-  file: "./dist/index.cjs",
+  file: "./dist/rmrk2.0.0/index.cjs",
   format: "cjs",
   name: "rmrkTools",
   sourcemap: true,

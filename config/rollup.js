@@ -5,9 +5,9 @@ import json from "@rollup/plugin-json";
 import strip from "@rollup/plugin-strip";
 
 export default {
-  input: "./dist/index.js",
+  input: "./dist/rmrk2.0.0/index.js",
   output: {
-    file: "./dist/index.es.js",
+    file: "./dist/rmrk2.0.0/index.es.js",
     format: "es",
     sourcemap: true,
   },
