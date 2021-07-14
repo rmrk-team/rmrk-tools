@@ -3,9 +3,9 @@ import { validateAccept } from "../tools/validate-remark";
 export class Accept {
   readonly id: string;
   readonly nftId: string;
-  readonly entity: "nft" | "resource";
+  readonly entity: "NFT" | "RES";
 
-  constructor(nftId: string, entity: "nft" | "resource", id: string) {
+  constructor(nftId: string, entity: "NFT" | "RES", id: string) {
     this.id = id;
     this.nftId = nftId;
     this.entity = entity;

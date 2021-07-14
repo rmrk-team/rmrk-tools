@@ -35,7 +35,7 @@ export const mintNftMock = (block?: number): NFT =>
     block: block || 0,
     collection: createCollectionMock().id,
     symbol: "KANR",
-    sn: "777".padStart(16, "0"),
+    sn: "777".padStart(8, "0"),
     transferable: 1,
     owner: getAliceKey().address,
   });
@@ -45,7 +45,7 @@ export const mintNftMock2 = (block?: number): NFT =>
     block: block || 0,
     collection: createCollectionMock().id,
     symbol: "KANR",
-    sn: "888".padStart(16, "0"),
+    sn: "888".padStart(8, "0"),
     transferable: 1,
     owner: getAliceKey().address,
   });
@@ -55,7 +55,7 @@ export const mintNftMock3 = (block?: number): NFT =>
     block: block || 0,
     collection: createCollectionMock().id,
     symbol: "KANR",
-    sn: "999".padStart(16, "0"),
+    sn: "999".padStart(8, "0"),
     transferable: 1,
     owner: getBobKey().address,
   });

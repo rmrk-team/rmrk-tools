@@ -31,7 +31,7 @@ export const acceptInteraction = async (
     );
   }
 
-  if (acceptEntity.entity === "nft") {
+  if (acceptEntity.entity === "NFT") {
     const pendingNft = await dbAdapter.getNFTById(acceptEntity.id);
     if (!pendingNft) {
       throw new Error(
@@ -43,7 +43,7 @@ export const acceptInteraction = async (
     if (child) {
       child.pending = false;
     }
-  } else if (acceptEntity.entity === "resource") {
+  } else if (acceptEntity.entity === "RES") {
     const resourceIndex = nft.resources.findIndex(
       (resource) => resource.id === acceptEntity.id
     );

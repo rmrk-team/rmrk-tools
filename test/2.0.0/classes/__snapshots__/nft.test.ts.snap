@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`rmrk2.0.0 Nft: Accept should match snapshot 1`] = `"RMRK::ACCEPT::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::resource::jXhhR"`;
+exports[`rmrk2.0.0 Nft: Accept should match snapshot 1`] = `"RMRK::ACCEPT::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::RES::jXhhR"`;
 
 exports[`rmrk2.0.0 Nft: Add change should match snapshot 1`] = `
 NFT {
@@ -25,26 +25,26 @@ NFT {
   "reactions": Object {},
   "resources": Array [],
   "rootowner": "",
-  "sn": "0000000000000777",
+  "sn": "00000777",
   "symbol": "KANR",
   "transferable": 1,
 }
 `;
 
-exports[`rmrk2.0.0 Nft: Buy should match snapshot 1`] = `"RMRK::BUY::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
+exports[`rmrk2.0.0 Nft: Buy should match snapshot 1`] = `"RMRK::BUY::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
 
-exports[`rmrk2.0.0 Nft: Consume should match snapshot 1`] = `"RMRK::CONSUME::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777"`;
+exports[`rmrk2.0.0 Nft: Consume should match snapshot 1`] = `"RMRK::CONSUME::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777"`;
 
-exports[`rmrk2.0.0 Nft: Emote should match snapshot 1`] = `"RMRK::EMOTE::2.0.0::rmrk2::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::1F600"`;
+exports[`rmrk2.0.0 Nft: Emote should match snapshot 1`] = `"RMRK::EMOTE::2.0.0::rmrk2::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::1F600"`;
 
-exports[`rmrk2.0.0 Nft: Equip should match snapshot 1`] = `"RMRK::EQUIP::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::base-test.test"`;
+exports[`rmrk2.0.0 Nft: Equip should match snapshot 1`] = `"RMRK::EQUIP::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::base-test.test"`;
 
-exports[`rmrk2.0.0 Nft: Get id should match snapshot 1`] = `"1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777"`;
+exports[`rmrk2.0.0 Nft: Get id should match snapshot 1`] = `"1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777"`;
 
-exports[`rmrk2.0.0 Nft: List should match snapshot 1`] = `"RMRK::LIST::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::1000"`;
+exports[`rmrk2.0.0 Nft: List should match snapshot 1`] = `"RMRK::LIST::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::1000"`;
 
-exports[`rmrk2.0.0 Nft: Mint should match snapshot 1`] = `"RMRK::MINT::2.0.0::%7B%22collection%22%3A%22d43593c715a56da27d-KANARIABIRDS%22%2C%22symbol%22%3A%22KANR%22%2C%22transferable%22%3A1%2C%22sn%22%3A%220000000000000777%22%7D::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
+exports[`rmrk2.0.0 Nft: Mint should match snapshot 1`] = `"RMRK::MINT::2.0.0::%7B%22collection%22%3A%22d43593c715a56da27d-KANARIABIRDS%22%2C%22symbol%22%3A%22KANR%22%2C%22transferable%22%3A1%2C%22sn%22%3A%2200000777%22%7D::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
 
-exports[`rmrk2.0.0 Nft: Resadd should match snapshot 1`] = `"RMRK::RESADD::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::%7B%22base%22%3A%22base-4-KBASE777%22%2C%22id%22%3A%22xXhhR%22%7D"`;
+exports[`rmrk2.0.0 Nft: Resadd should match snapshot 1`] = `"RMRK::RESADD::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::%7B%22base%22%3A%22base-4-KBASE777%22%2C%22id%22%3A%22xXhhR%22%7D"`;
 
-exports[`rmrk2.0.0 Nft: Send should match snapshot 1`] = `"RMRK::SEND::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
+exports[`rmrk2.0.0 Nft: Send should match snapshot 1`] = `"RMRK::SEND::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;

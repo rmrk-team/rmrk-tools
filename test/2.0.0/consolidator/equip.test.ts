@@ -194,7 +194,7 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
         })
       ),
       ...getBlockCallsMock(
-        mintNftMock(3).accept(mintNftMock2(6).getId(), "nft"),
+        mintNftMock(3).accept(mintNftMock2(6).getId(), "NFT"),
         getBobKey().address
       ),
       ...getBlockCallsMock(

@@ -28,7 +28,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        mintNftMock(3).accept(resid, "resource"),
+        mintNftMock(3).accept(resid, "RES"),
         getBobKey().address
       ),
     ]);
@@ -47,7 +47,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
         getBobKey().address
       ),
       ...getBlockCallsMock(
-        mintNftMock(3).accept(mintNftMock2(4).getId(), "nft")
+        mintNftMock(3).accept(mintNftMock2(4).getId(), "NFT")
       ),
     ]);
     const consolidator = new Consolidator();
@@ -59,7 +59,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(
-        mintNftMock(4).accept(resid, "resource"),
+        mintNftMock(4).accept(resid, "RES"),
         getBobKey().address
       ),
     ]);
@@ -72,7 +72,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftMock(3).consume(), getBobKey().address),
       ...getBlockCallsMock(
-        mintNftMock(3).accept(resid, "resource"),
+        mintNftMock(3).accept(resid, "RES"),
         getBobKey().address
       ),
     ]);

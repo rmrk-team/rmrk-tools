@@ -83,13 +83,13 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id
     );
-    if (entity == "nft") {
+    if (entity == "NFT") {
       this.nfts[nftIndex] = {
         ...this.nfts[nftIndex],
         children: nft?.children,
         priority: nft?.priority || this.nfts[nftIndex].priority,
       };
-    } else if (entity === "resource") {
+    } else if (entity === "RES") {
       this.nfts[nftIndex] = {
         ...this.nfts[nftIndex],
         resources: nft?.resources,

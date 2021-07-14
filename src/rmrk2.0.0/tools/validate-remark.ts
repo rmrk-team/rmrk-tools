@@ -68,7 +68,7 @@ const LISTStruct = type({
 const ACCEPTStruct = type({
   id: string(),
   nftId: string(),
-  entity: enums(["nft", "resource"]),
+  entity: enums(["NFT", "RES"]),
 });
 
 const EQUIPStruct = type({

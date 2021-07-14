@@ -62,7 +62,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send non-existant NFT 99-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888"
+      "[SEND] Attempting to send non-existant NFT 99-d43593c715a56da27d-KANARIABIRDS-KANR-00000888"
     );
   });
 
@@ -76,7 +76,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send burned NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888"
+      "[SEND] Attempting to send burned NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888"
     );
   });
 
@@ -91,7 +91,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send non-owned NFT 5-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000999, real owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+      "[SEND] Attempting to send non-owned NFT 5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999, real owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
     );
   });
 
@@ -104,7 +104,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send NFT to a non existing NFT 5-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777."
+      "[SEND] Attempting to send NFT to a non existing NFT 5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777."
     );
   });
 });
