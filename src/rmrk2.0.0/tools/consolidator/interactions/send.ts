@@ -61,24 +61,29 @@ export const sendInteraction = async (
     const oldOwner = await dbAdapter.getNFTById(nft.owner);
     rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
 
-    if (oldOwner?.children && oldOwner?.children[sendEntity.id]) {
-      delete oldOwner.children[sendEntity.id];
-      if (Object.keys(oldOwner.children).length < 1) {
-        oldOwner.children = null;
-      }
+    const oldOwnerChildIndex =
+      oldOwner &&
+      oldOwner.children.findIndex((child) => child.id === sendEntity.id);
+
+    if (
+      oldOwner &&
+      typeof oldOwnerChildIndex !== "undefined" &&
+      oldOwnerChildIndex > -1
+    ) {
+      oldOwner.children.splice(oldOwnerChildIndex, 1);
     }
 
     // Add NFT as child of new owner
     const newOwner = await dbAdapter.getNFTById(sendEntity.recipient);
-    if (newOwner && !newOwner?.children?.[sendEntity.id]) {
-      if (!newOwner.children) {
-        newOwner.children = {};
-      }
-      newOwner.children[sendEntity.id] = {
+    const newOwnerChild =
+      newOwner && newOwner.children.find((child) => child.id === sendEntity.id);
+
+    if (newOwner && !newOwnerChild) {
+      newOwner.children.push({
         id: sendEntity.id,
         pending: rootNewOwner !== remark.caller,
         equipped: "",
-      };
+      });
     }
   }
 

@@ -30,15 +30,16 @@ export const validateMintNFT = async (
 
       // Add NFT as child of new owner
       const newOwner = await dbAdapter.getNFTById(nft.owner);
-      if (newOwner && !newOwner?.children?.[nft.getId()]) {
-        if (!newOwner.children) {
-          newOwner.children = {};
-        }
-        newOwner.children[nft.getId()] = {
+      const childIndex =
+        (newOwner &&
+          newOwner.children.findIndex((child) => child.id === nft.getId())) ||
+        -1;
+      if (newOwner && childIndex < 0) {
+        newOwner.children.push({
           id: nft.getId(),
           equipped: "",
           pending: rootowner !== remark.caller,
-        };
+        });
       }
     }
   }

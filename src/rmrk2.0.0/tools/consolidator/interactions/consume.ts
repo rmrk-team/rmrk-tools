@@ -36,9 +36,12 @@ export const consumeInteraction = async (
   if (!isValidAddressPolkadotAddress(nft.owner)) {
     //Owner is nft, remove current nft from owner's children
     const owner = await dbAdapter.getNFTById(nft.owner);
-
-    if (owner?.children && owner?.children[nft.getId()]) {
-      delete owner.children[nft.getId()];
+    const childIndex =
+      (owner &&
+        owner.children.findIndex((child) => child.id === nft.getId())) ||
+      -1;
+    if (owner && childIndex > -1) {
+      owner.children.splice(childIndex, 1);
     }
   }
 

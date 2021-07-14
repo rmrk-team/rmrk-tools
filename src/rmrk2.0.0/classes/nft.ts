@@ -30,7 +30,7 @@ export class NFT {
   changes: Change[] = [];
   owner: string;
   rootowner: string;
-  children: Record<string, NFTChild> | null = null;
+  children: NFTChild[] = [];
   resources: IResourceConsolidated[] = [];
   burned: string;
   constructor(nftInstance: INftInstanceProps) {
@@ -42,7 +42,7 @@ export class NFT {
     this.resources = [];
     this.metadata = nftInstance.metadata;
     this.priority = [];
-    this.children = null;
+    this.children = [];
     this.owner = nftInstance.owner || "";
     this.rootowner = "";
     this.reactions = {};

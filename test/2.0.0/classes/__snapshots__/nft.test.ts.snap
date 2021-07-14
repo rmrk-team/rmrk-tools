@@ -16,7 +16,7 @@ NFT {
       "opType": "CHANGEISSUER",
     },
   ],
-  "children": null,
+  "children": Array [],
   "collection": "d43593c715a56da27d-KANARIABIRDS",
   "forsale": 0n,
   "metadata": undefined,

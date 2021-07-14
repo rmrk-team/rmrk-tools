@@ -55,7 +55,7 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
-  it("Should fail to Equip non existant NFT", async () => {
+  it("Should fail to Equip non existent NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(
         mintNftMock2(6).equip(
@@ -80,7 +80,7 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
-  it("Should fail to Equip NFT on a non-existant parent NFT", async () => {
+  it("Should fail to Equip NFT on a non-existent parent NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock().mint()),

@@ -44,20 +44,24 @@ export const equipInteraction = async (
     );
   }
 
-  if (parentNft.children?.[equipEntity.id]?.pending) {
+  if (
+    parentNft.children.find((child) => child.id === equipEntity.id)?.pending
+  ) {
     throw new Error(
       `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it wasn't accepted by a parent yet`
     );
   }
 
-  if (!parentNft.children?.[nft.getId()]) {
+  const child = parentNft.children.find((child) => child.id === nft.getId());
+
+  if (!child) {
     throw new Error(
       `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it's parent is missing children array`
     );
   }
 
   if (equipEntity.baseslot === "") {
-    parentNft.children[nft.getId()].equipped = "";
+    child.equipped = "";
   }
 
   if (equipEntity.baseslot) {
@@ -105,6 +109,6 @@ export const equipInteraction = async (
       );
     }
 
-    parentNft.children[nft.getId()].equipped = equipEntity.baseslot;
+    child.equipped = equipEntity.baseslot;
   }
 };

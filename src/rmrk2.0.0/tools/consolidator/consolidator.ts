@@ -75,7 +75,7 @@ export interface NFTConsolidated {
   rootowner: string;
   burned: string;
   priority: string[];
-  children: Record<string, NFTChild> | null;
+  children: NFTChild[];
   resources: IResourceConsolidated[];
 }
 

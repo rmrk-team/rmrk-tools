@@ -20,13 +20,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -53,7 +53,7 @@ Object {
           "opType": "SEND",
         },
       ],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -91,7 +91,7 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -126,7 +126,7 @@ Object {
           "opType": "SEND",
         },
       ],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -144,13 +144,13 @@ Object {
       "block": 5,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000999",
@@ -188,13 +188,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": true,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -229,7 +229,7 @@ Object {
           "opType": "SEND",
         },
       ],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",

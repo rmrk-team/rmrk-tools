@@ -51,13 +51,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "base-4-KBASE777.backpack",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -83,7 +83,7 @@ Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -109,7 +109,7 @@ Object {
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT on a non-existant parent NFT 1`] = `
+exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT on a non-existent parent NFT 1`] = `
 Object {
   "bases": Array [],
   "collections": Array [
@@ -137,7 +137,7 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -214,13 +214,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -244,7 +244,7 @@ Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -327,13 +327,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -359,7 +359,7 @@ Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -444,13 +444,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -476,7 +476,7 @@ Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -547,7 +547,7 @@ Object {
           "opType": "CONSUME",
         },
       ],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -565,7 +565,7 @@ Object {
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip non existant NFT 1`] = `
+exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip non existent NFT 1`] = `
 Object {
   "bases": Array [],
   "collections": Array [],
@@ -617,7 +617,7 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -635,7 +635,7 @@ Object {
       "block": 4,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -681,13 +681,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": true,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -714,7 +714,7 @@ Object {
           "opType": "SEND",
         },
       ],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
@@ -783,13 +783,13 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Object {
-        "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888": Object {
+      "children": Array [
+        Object {
           "equipped": "",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
           "pending": false,
         },
-      },
+      ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000777",
@@ -815,7 +815,7 @@ Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
-      "children": null,
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-0000000000000888",
