@@ -244,6 +244,7 @@ export interface Resource {
 export interface IResourceConsolidated {
   id: string;
   base?: string;
+  parts?: string[];
   media?: string;
   metadata?: string;
   slot?: string;
