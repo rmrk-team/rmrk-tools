@@ -35,11 +35,11 @@ export const resAddInteraction = async (
 
   const accepted = rootowner === remark.caller;
   resaddEntity.pending = !accepted;
-  const { pending, id, metadata, base, media, slot } = resaddEntity;
+  const { pending, id, metadata, base, media, slot, parts } = resaddEntity;
 
   // JSON.parse would remove unwanted undefines
   nft.resources.push(
-    JSON.parse(JSON.stringify({ pending, id, metadata, base, media, slot }))
+    JSON.parse(JSON.stringify({ pending, id, metadata, base, media, slot, parts }))
   );
   // If this is the first resource being added and is immediatly accepted, set default priority array
   if (accepted) {

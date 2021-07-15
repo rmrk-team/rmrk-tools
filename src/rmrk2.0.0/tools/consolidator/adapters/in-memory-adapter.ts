@@ -7,7 +7,7 @@ import { Collection } from "../../../classes/collection";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "./types";
 import { Base } from "../../../classes/base";
-import { Accept } from "../../../classes/accept";
+import { AcceptEntityType } from "../../../classes/accept";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
   public nfts: NFTConsolidated[];
@@ -75,10 +75,20 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
+  public async updateSetPriority(nft: NFT, consolidatedNFT: NFTConsolidated) {
+    const nftIndex = this.nfts.findIndex(
+      (nftItem) => nftItem.id === consolidatedNFT.id
+    );
+    this.nfts[nftIndex] = {
+      ...this.nfts[nftIndex],
+      priority: nft.priority,
+    };
+  }
+
   public async updateNftAccept(
     nft: NFT,
     consolidatedNFT: NFTConsolidated,
-    entity: Accept["entity"]
+    entity: AcceptEntityType
   ) {
     const nftIndex = this.nfts.findIndex(
       (nftItem) => nftItem.id === consolidatedNFT.id

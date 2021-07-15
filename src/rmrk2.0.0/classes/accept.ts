@@ -1,11 +1,13 @@
 import { validateAccept } from "../tools/validate-remark";
 
+export type AcceptEntityType = "NFT" | "RES";
+
 export class Accept {
   readonly id: string;
   readonly nftId: string;
-  readonly entity: "NFT" | "RES";
+  readonly entity: AcceptEntityType;
 
-  constructor(nftId: string, entity: "NFT" | "RES", id: string) {
+  constructor(nftId: string, entity: AcceptEntityType, id: string) {
     this.id = id;
     this.nftId = nftId;
     this.entity = entity;
@@ -17,10 +19,10 @@ export class Accept {
       const [_prefix, _op_type, _version, nftId, entity, id] = remark.split(
         "::"
       );
-      return new this(nftId, entity as Accept["entity"], id);
+      return new this(nftId, entity as AcceptEntityType, id);
     } catch (e) {
       console.error(e.message);
-      console.log(`ACCEPT error: full input was ${remark}`);
+      console.log(`ACCEPT error: fu ll input was ${remark}`);
       return e.message;
     }
   }

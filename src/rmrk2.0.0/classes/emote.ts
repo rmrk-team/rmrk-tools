@@ -2,19 +2,23 @@ import { validateEmote } from "../tools/validate-remark";
 import { VERSION } from "../tools/constants";
 import { isValidEmoji } from "../tools/validate-emoji";
 
-type TEmoteNamespace = "rmrk1" | "rmrk2" | "pubkey";
+export enum EMOTE_NAMESPACES {
+  RMRK1 = "RMRK1",
+  RMRK2 = "RMRK2",
+  PUBKEY = "PUBKEY",
+}
 
-const validateNamespace = (namespace: TEmoteNamespace) => {
-  return ["rmrk1", "rmrk2", "pubkey"].includes(namespace);
+const validateNamespace = (namespace: EMOTE_NAMESPACES) => {
+  return ["RMRK1", "RMRK2", "PUBKEY"].includes(namespace);
 };
 
 export class Emote {
   unicode: string;
   id: string;
-  namespace: TEmoteNamespace;
+  namespace: EMOTE_NAMESPACES;
   static V = VERSION;
 
-  constructor(namespace: TEmoteNamespace, id: string, unicode: string) {
+  constructor(namespace: EMOTE_NAMESPACES, id: string, unicode: string) {
     this.unicode = unicode;
     this.id = id;
     this.namespace = namespace;
@@ -31,13 +35,13 @@ export class Emote {
         id,
         unicode,
       ] = remark.split("::");
-      if (!validateNamespace(namespace as TEmoteNamespace)) {
+      if (!validateNamespace(namespace as EMOTE_NAMESPACES)) {
         throw new Error("Not a valid emote namespace");
       }
       if (!isValidEmoji(unicode)) {
         throw new Error(`Invalid emoji unicode ${unicode}`);
       }
-      return new Emote(namespace as TEmoteNamespace, id, unicode);
+      return new Emote(namespace as EMOTE_NAMESPACES, id, unicode);
     } catch (e) {
       console.error(e.message);
       console.log(`EMOTE error: full input was ${remark}`);

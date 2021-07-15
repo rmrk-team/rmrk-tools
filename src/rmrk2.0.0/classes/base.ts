@@ -48,12 +48,16 @@ export class Base {
           "collection as a new instance first, then change issuer."
       );
     }
-    return `RMRK::CHANGEISSUER::${VERSION}::${this.getId()}::${address}`;
+    return `${PREFIX}::${
+      OP_TYPES.CHANGEISSUER
+    }::${VERSION}::${this.getId()}::${address}`;
   }
 
   /**
    *
-   * @param collections - array of collection ids
+   * @param slot slot id
+   * @param collections array of collection ids
+   * @param operator whether to add, remove or replace collectionId
    */
   public equippable({
     slot,
@@ -74,7 +78,9 @@ export class Base {
     }
     return `${PREFIX}::${
       OP_TYPES.EQUIPPABLE
-    }::${VERSION}::${this.getId()}::${slot}::${operator}${collections.join(",")}`;
+    }::${VERSION}::${this.getId()}::${slot}::${operator}${collections.join(
+      ","
+    )}`;
   }
 
   public getId(): string {

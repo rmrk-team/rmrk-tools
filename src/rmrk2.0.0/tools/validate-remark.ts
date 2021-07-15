@@ -92,7 +92,7 @@ const SENDStruct = type({
 const EMOTEStruct = type({
   id: string(),
   unicode: string(),
-  namespace: enums(["rmrk1", "rmrk2", "pubkey"]),
+  namespace: enums(["RMRK1", "RMRK2", "PUBKEY"]),
 });
 
 const BaseStruct = type({

@@ -48,6 +48,8 @@ import { Accept } from "../../classes/accept";
 import { acceptInteraction } from "./interactions/accept";
 import { Equip } from "../../classes/equip";
 import { equipInteraction } from "./interactions/equip";
+import { setPriorityInteraction } from "./interactions/setpriority";
+import { Setpriority } from "../../classes/setpriority";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -705,6 +707,50 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The SETPRIORITY interaction allows NFT owner to change resource priority array on NFT
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/setpriority.md
+   */
+  private async setpriority(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(
+      OP_TYPES.SETPRIORITY,
+      remark
+    ).bind(this);
+    const setPriorityEntity = Setpriority.fromRemark(remark.remark);
+    if (typeof setPriorityEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.SETPRIORITY}] Dead before instantiation: ${setPriorityEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      setPriorityEntity.id
+    );
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+
+    try {
+      await setPriorityInteraction(
+        remark,
+        setPriorityEntity,
+        this.dbAdapter,
+        nft
+      );
+      if (nft && consolidatedNFT) {
+        await this.dbAdapter.updateSetPriority(nft, consolidatedNFT);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.SETPRIORITY]: nft.getId() });
+        }
+      }
+    } catch (e) {
+      invalidate(setPriorityEntity.id, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -791,6 +837,13 @@ export class Consolidator {
           if (await this.equip(remark)) {
             continue;
           }
+          break;
+
+        case OP_TYPES.SETPRIORITY:
+          if (await this.setpriority(remark)) {
+            continue;
+          }
+
           break;
 
         default:

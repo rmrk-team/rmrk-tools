@@ -22,7 +22,11 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     ...getBlockCallsMock(mintNftMock().mint()),
     ...getBlockCallsMock(createBaseMock().base()),
     ...getBlockCallsMock(
-      mintNftMock(3).resadd({ base: createBaseMock(4).getId(), id: resid2 })
+      mintNftMock(3).resadd({
+        base: createBaseMock(4).getId(),
+        id: resid2,
+        parts: ["background", "backpack", "tail"],
+      })
     ),
     ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
     ...getBlockCallsMock(
@@ -126,7 +130,10 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
       ...getBlockCallsMock(mintNftMock().mint()),
       ...getBlockCallsMock(createBaseMock().base()),
       ...getBlockCallsMock(
-        mintNftMock(3).resadd({ base: createBaseMock(4).getId(), id: resid2 })
+        mintNftMock(3).resadd({
+          base: createBaseMock(4).getId(),
+          id: resid2,
+        })
       ),
       ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
       ...getBlockCallsMock(

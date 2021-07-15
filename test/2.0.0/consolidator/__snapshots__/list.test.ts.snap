@@ -17,6 +17,7 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
+      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -72,6 +73,7 @@ Object {
   ],
   "nfts": Array [
     Object {
+      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -96,6 +98,7 @@ Object {
       "transferable": 1,
     },
     Object {
+      "attributes": Array [],
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -142,6 +145,7 @@ Object {
   ],
   "nfts": Array [
     Object {
+      "attributes": Array [],
       "block": 3,
       "burned": "true",
       "changes": Array [
@@ -222,6 +226,7 @@ Object {
   ],
   "nfts": Array [
     Object {
+      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],

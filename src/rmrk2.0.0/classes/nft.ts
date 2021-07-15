@@ -3,9 +3,10 @@ import { validateNFT } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { nanoid } from "nanoid";
-import { Accept } from "./accept";
+import { AcceptEntityType } from "./accept";
 import { Attribute } from "../../types";
 import { isValidEmoji } from "../tools/validate-emoji";
+import { EMOTE_NAMESPACES } from "./emote";
 
 interface INftInstanceProps {
   block: number;
@@ -15,6 +16,7 @@ interface INftInstanceProps {
   sn: string;
   metadata?: string;
   owner?: string;
+  attributes: Attribute[];
 }
 
 export class NFT {
@@ -33,6 +35,7 @@ export class NFT {
   children: NFTChild[] = [];
   resources: IResourceConsolidated[] = [];
   burned: string;
+  attributes: Attribute[];
   constructor(nftInstance: INftInstanceProps) {
     this.block = nftInstance.block;
     this.collection = nftInstance.collection;
@@ -48,6 +51,7 @@ export class NFT {
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
+    this.attributes = nftInstance.attributes || undefined;
   }
 
   public getId(): string {
@@ -72,8 +76,9 @@ export class NFT {
         transferable: this.transferable,
         sn: this.sn,
         metadata: this.metadata,
+        attributes: this.attributes,
       })
-    )}${recipient ? "::" + recipient : ""}`;
+    )}${recipient ? "::" + recipient.replace(/\\s/g, "") : ""}`;
   }
 
   public send(recipient: string): string {
@@ -108,6 +113,7 @@ export class NFT {
         sn: obj.sn,
         metadata: obj.metadata,
         owner: recipient,
+        attributes: obj.attributes || [],
       });
     } catch (e) {
       console.error(e.message);
@@ -137,7 +143,7 @@ export class NFT {
       );
     }
     return `${PREFIX}::${OP_TYPES.BUY}::${VERSION}::${this.getId()}${
-      recipient ? "::" + recipient : ""
+      recipient ? "::" + recipient.replace(/\\s/g, "") : ""
     }`;
   }
 
@@ -150,7 +156,7 @@ export class NFT {
     return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
   }
 
-  public emote(unicode: string): string {
+  public emote(unicode: string, namespace = EMOTE_NAMESPACES.RMRK2): string {
     if (!this.block) {
       throw new Error(
         "You can only emote on an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
@@ -163,7 +169,7 @@ export class NFT {
     }
     return `${PREFIX}::${
       OP_TYPES.EMOTE
-    }::${VERSION}::rmrk2::${this.getId()}::${unicode}`;
+    }::${VERSION}::${namespace}::${this.getId()}::${unicode}`;
   }
 
   public resadd(resource: Resource): string {
@@ -183,7 +189,7 @@ export class NFT {
    *
    * @param id - either child NFT id or resource id to accept from pending state
    */
-  public accept(id: string, entity: Accept["entity"]): string {
+  public accept(id: string, entity: AcceptEntityType): string {
     if (!this.block) {
       throw new Error(
         "You can only accept resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
@@ -207,6 +213,43 @@ export class NFT {
     return `${PREFIX}::${
       OP_TYPES.EQUIP
     }::${VERSION}::${this.getId()}::${baseslot}`;
+  }
+
+  /**
+   *
+   * @param name - attribute trait_type value
+   * @param value - attribute value
+   */
+  public setattribute(name: string, value: string): string {
+    if (!this.block) {
+      throw new Error("You can only set attribute on an existing NFT.");
+    }
+    const isMutable = this.attributes.find(
+      (attribute) => attribute.trait_type === name
+    )?.mutable;
+    if (!isMutable) {
+      throw new Error(`The attribute "${name}" cannot be mutated`);
+    }
+    return `${PREFIX}::${
+      OP_TYPES.SETATTRIBUTE
+    }::${VERSION}::${this.getId()}::${encodeURIComponent(
+      name
+    )}::${encodeURIComponent(value)}`;
+  }
+
+  /**
+   *
+   * @param priority - Array of resource ids in the order that they should be displayed in
+   */
+  public setpriority(priority: string[]): string {
+    if (!this.block) {
+      throw new Error("You can only set priority on an existing NFT.");
+    }
+    return `${PREFIX}::${
+      OP_TYPES.SETPRIORITY
+    }::${VERSION}::${this.getId()}::${encodeURIComponent(
+      JSON.stringify(priority)
+    )}`;
   }
 }
 
@@ -236,6 +279,7 @@ export interface Resource {
   id?: string;
   base?: string;
   media?: string;
+  parts?: string[];
   metadata?: string;
   slot?: string;
   pending?: boolean;

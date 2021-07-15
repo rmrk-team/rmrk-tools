@@ -75,6 +75,7 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
+      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],

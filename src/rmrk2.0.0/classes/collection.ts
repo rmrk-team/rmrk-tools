@@ -1,7 +1,7 @@
 import { Change } from "../changelog";
 import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
-import { OP_TYPES, VERSION } from "../tools/constants";
+import {OP_TYPES, PREFIX, VERSION} from "../tools/constants";
 import { Attribute } from "../../types";
 
 export class Collection {
@@ -33,7 +33,7 @@ export class Collection {
     if (this.block) {
       throw new Error("An already existing collection cannot be created!");
     }
-    return `RMRK::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
+    return `${PREFIX}::${OP_TYPES.CREATE}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         max: this.max,
         issuer: this.issuer,
@@ -52,7 +52,7 @@ export class Collection {
           "collection as a new instance first, then change issuer."
       );
     }
-    return `RMRK::CHANGEISSUER::${VERSION}::${this.id}::${address}`;
+    return `${PREFIX}::${OP_TYPES.CHANGEISSUER}::${VERSION}::${this.id}::${address}`;
   }
 
   public addChange(c: Change): Collection {

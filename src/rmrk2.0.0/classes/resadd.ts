@@ -8,6 +8,7 @@ export class Resadd {
   readonly media?: string;
   readonly metadata?: string;
   readonly slot?: string;
+  readonly parts?: string[];
   id: string;
   nftId: string;
   pending: boolean;
@@ -17,6 +18,7 @@ export class Resadd {
     this.media = resource.media;
     this.metadata = resource.metadata;
     this.slot = resource.slot;
+    this.parts = resource.parts;
     this.pending = resource.pending || true;
     this.nftId = nftId;
     this.id = resource.id || nanoid(5);
