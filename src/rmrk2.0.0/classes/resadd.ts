@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 
 export class Resadd {
   readonly base?: string;
-  readonly media?: string;
+  readonly src?: string;
   readonly metadata?: string;
   readonly slot?: string;
   readonly parts?: string[];
@@ -15,7 +15,7 @@ export class Resadd {
 
   constructor(nftId: string, resource: Resource) {
     this.base = resource.base;
-    this.media = resource.media;
+    this.src = resource.src;
     this.metadata = resource.metadata;
     this.slot = resource.slot;
     this.parts = resource.parts;

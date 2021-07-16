@@ -1,0 +1,1582 @@
+[
+  { "1F194": [{ "slot": "necklace", "resources": ["1F194_Necklace.svg"] }] },
+  { "1F32B": [{ "slot": "eyes", "resources": ["1f32b_eyes.svg"] }] },
+  {
+    "1F388": [
+      {
+        "slot": "object",
+        "resources": ["1F388_objectleft.svg", "1F388_objectright.svg"]
+      },
+      { "slot": "backpack", "resources": ["1f388_backpack_rare.svg"] }
+    ]
+  },
+  {
+    "1F3F9": [
+      {
+        "slot": "object",
+        "resources": ["1f3f9_objectleft_rare.svg", "1f3f9_objectright_rare.svg"]
+      }
+    ]
+  },
+  {
+    "1F484": [
+      {
+        "slot": "object",
+        "resources": ["1F484_objectLeft.svg", "1F484_objectRight.svg"]
+      }
+    ]
+  },
+  { "1F52F": [{ "slot": "necklace", "resources": ["1F52F_Necklace.svg"] }] },
+  { "1F54E": [{ "slot": "necklace", "resources": ["1F54E_Necklace.svg"] }] },
+  {
+    "1F60F": [
+      { "slot": "beak", "resources": ["1F60F_beak.svg"] },
+      { "slot": "eyes", "resources": ["1F60F_eyes.svg"] }
+    ]
+  },
+  { "1F6D0": [{ "slot": "necklace", "resources": ["1F6D0_Necklace.svg"] }] },
+  { "1F9DC": [{ "slot": "top", "resources": ["1f9dc_top_rare.svg"] }] },
+  {
+    "1FA93": [
+      {
+        "slot": "object",
+        "resources": ["1FA93_objectleft.svg", "1fa93_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f1e6-1f1f1": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e6-1f1f1_objectLeft.svg",
+          "1f1e6-1f1f1_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e6-1f1f6": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e6-1f1f6_objectLeft.svg",
+          "1f1e6-1f1f6_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e6-1f1fa": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e6-1f1fa_objectLeft.svg",
+          "1f1e6-1f1fa_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e8-1f1e6": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e8-1f1e6_objectLeft.svg",
+          "1f1e8-1f1e6_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e8-1f1f2": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e8-1f1f2_objectLeft.svg",
+          "1f1e8-1f1f2_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e8-1f1f3": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e8-1f1f3_objectLeft.svg",
+          "1f1e8-1f1f3_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1e9-1f1ea": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1e9-1f1ea_objectLeft.svg",
+          "1f1e9-1f1ea_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1ea-1f1f8": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1ea-1f1f8_ObjectLeft.svg",
+          "1f1ea-1f1f8_ObjectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1ec-1f1e7": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1ec-1f1e7_objectLeft.svg",
+          "1f1ec-1f1e7_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1ee-1f1f1": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1ee-1f1f1_objectLeft.svg",
+          "1f1ee-1f1f1_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1ee-1f1f9": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1ee-1f1f9_objectLeft.svg",
+          "1f1ee-1f1f9_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1ef-1f1f5": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1ef-1f1f5_objectLeft.svg",
+          "1f1ef-1f1f5_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1f7-1f1fa": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1f7-1f1fa_objectLeft.svg",
+          "1f1f7-1f1fa_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f1fa-1f1f8": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f1fa-1f1f8_objectLeft.svg",
+          "1f1fa-1f1f8_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f300": [{ "slot": "backpack", "resources": ["1f300_backpack_rare.svg"] }]
+  },
+  {
+    "1f303": [{ "slot": "background", "resources": ["1f303_background.svg"] }]
+  },
+  {
+    "1f304": [{ "slot": "background", "resources": ["1f304_background.svg"] }]
+  },
+  {
+    "1f306": [{ "slot": "background", "resources": ["1f306_background.svg"] }]
+  },
+  {
+    "1f308": [
+      { "slot": "backpack", "resources": ["1f308_backpack.svg"] },
+      { "slot": "tail", "resources": ["1f308_tail_rare.svg"] }
+    ]
+  },
+  {
+    "1f309": [{ "slot": "background", "resources": ["1F309_background.svg"] }]
+  },
+  {
+    "1f30a": [
+      { "slot": "background", "resources": ["1f30a_background.svg"] },
+      { "slot": "backpack", "resources": ["1f30a_backpack.svg"] },
+      { "slot": "backpack", "resources": ["1f30a_backpack_rare.svg"] },
+      { "slot": "body", "resources": ["1f30a_body.svg"] },
+      { "slot": "footleft", "resources": ["1f30a_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f30a_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f30a_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f30a_handright.svg"] },
+      { "slot": "head", "resources": ["1f30a_head.svg"] },
+      { "slot": "headwear", "resources": ["1f30a_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f30a_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f30a_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f30a_wingright.svg"] }
+    ]
+  },
+  {
+    "1f30b": [
+      { "slot": "background", "resources": ["1f30b_background.svg"] },
+      { "slot": "body", "resources": ["1f30b_body.svg"] },
+      { "slot": "footleft", "resources": ["1f30b_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f30b_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f30b_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f30b_handright.svg"] },
+      { "slot": "head", "resources": ["1f30b_head.svg"] },
+      { "slot": "headwear", "resources": ["1f30b_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f30b_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f30b_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f30b_wingright.svg"] }
+    ]
+  },
+  {
+    "1f30c": [{ "slot": "background", "resources": ["1f30c_background.svg"] }]
+  },
+  {
+    "1f311": [{ "slot": "background", "resources": ["1f311_background.svg"] }]
+  },
+  {
+    "1f312": [{ "slot": "background", "resources": ["1f312_background.svg"] }]
+  },
+  {
+    "1f313": [{ "slot": "background", "resources": ["1f313_background.svg"] }]
+  },
+  {
+    "1f314": [{ "slot": "background", "resources": ["1f314_background.svg"] }]
+  },
+  {
+    "1f315": [{ "slot": "background", "resources": ["1f315_background.svg"] }]
+  },
+  {
+    "1f316": [{ "slot": "background", "resources": ["1f316_background.svg"] }]
+  },
+  {
+    "1f317": [{ "slot": "background", "resources": ["1f317_background.svg"] }]
+  },
+  {
+    "1f318": [{ "slot": "background", "resources": ["1f318_background.svg"] }]
+  },
+  {
+    "1f31f": [
+      { "slot": "foreground", "resources": ["1f31f_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f31f_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f320": [
+      { "slot": "foreground", "resources": ["1f320_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f32a-fe0f": [
+      { "slot": "background", "resources": ["1f32a-fe0f_background.svg"] },
+      { "slot": "backpack", "resources": ["1f32a-fe0f_backpack.svg"] },
+      { "slot": "backpack", "resources": ["1f32a-fe0f_backpack_rare2.svg"] },
+      { "slot": "body", "resources": ["1f32a-fe0f_body.svg"] },
+      { "slot": "footleft", "resources": ["1f32a-fe0f_footLeft.svg"] },
+      { "slot": "footright", "resources": ["1f32a-fe0f_footRight.svg"] },
+      { "slot": "foreground", "resources": ["1f32a-fe0f_foreground.svg"] },
+      { "slot": "handleft", "resources": ["1f32a-fe0f_handLeft.svg"] },
+      { "slot": "handright", "resources": ["1f32a-fe0f_handRight.svg"] },
+      { "slot": "head", "resources": ["1f32a-fe0f_head.svg"] },
+      { "slot": "headwear", "resources": ["1f32a-fe0f_headwear.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f32a-fe0f_objectleft.svg", "1f32a-fe0f_objectright.svg"]
+      },
+      { "slot": "tail", "resources": ["1f32a-fe0f_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f32a-fe0f_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["1f32a-fe0f_wingRight.svg"] }
+    ]
+  },
+  { "1f334": [{ "slot": "backpack", "resources": ["1f334_backpack.svg"] }] },
+  {
+    "1f336-fe0f": [
+      {
+        "slot": "object",
+        "resources": ["1f336-fe0f_objectLeft.svg", "1f336-fe0f_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f338": [
+      { "slot": "backpack", "resources": ["1F338_backpack_rare.svg"] },
+      { "slot": "foreground", "resources": ["1f338_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f338_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f339": [
+      { "slot": "foreground", "resources": ["1f339_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f339_foreground_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f339_objectLeft.svg", "1f339_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f33b": [
+      {
+        "slot": "object",
+        "resources": ["1f33b_objectLeft.svg", "1f33b_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f33e": [{ "slot": "foreground", "resources": ["1f33e_foreground.svg"] }]
+  },
+  {
+    "1f340": [
+      { "slot": "foreground", "resources": ["1f340_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f340_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f341": [
+      { "slot": "background", "resources": ["1f341_background.svg"] },
+      { "slot": "foreground", "resources": ["1f341_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f341_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f344": [
+      { "slot": "foreground", "resources": ["1f344_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f344_foreground_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f344_objectLeft.svg", "1f344_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f346": [
+      {
+        "slot": "object",
+        "resources": ["1f346_objectLeft.svg", "1f346_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f35e": [
+      {
+        "slot": "object",
+        "resources": ["1f35e_objectLeft.svg", "1f35e_objectRight.svg"]
+      }
+    ]
+  },
+  { "1f366": [{ "slot": "headwear", "resources": ["1f366_headwear.svg"] }] },
+  {
+    "1f369": [
+      {
+        "slot": "object",
+        "resources": ["1f369_objectleft.svg", "1f369_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f377": [
+      {
+        "slot": "object",
+        "resources": ["1f377_ObjectRight.svg", "1f377_objectLeft.svg"]
+      }
+    ]
+  },
+  {
+    "1f378": [
+      {
+        "slot": "object",
+        "resources": ["1f378_objectLeft.svg", "1f378_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f381": [
+      { "slot": "foreground", "resources": ["1f381_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f381_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f382": [
+      { "slot": "foreground", "resources": ["1f382_foreground_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f382_objectleft.svg", "1f382_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f383": [
+      { "slot": "foreground", "resources": ["1f383_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f386": [{ "slot": "background", "resources": ["1f386_background.svg"] }]
+  },
+  {
+    "1f38c": [
+      {
+        "slot": "object",
+        "resources": ["1f38c_objectLeft.svg", "1f38c_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f38f": [
+      {
+        "slot": "object",
+        "resources": ["1f38f_objectleft.svg", "1f38f_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f391": [{ "slot": "background", "resources": ["1f391_background.svg"] }]
+  },
+  {
+    "1f399": [{ "slot": "headwear", "resources": ["1f399_headwear_rare.svg"] }]
+  },
+  {
+    "1f39b-fe0f": [
+      { "slot": "foreground", "resources": ["1f39b-fe0f_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f3a4": [
+      {
+        "slot": "object",
+        "resources": ["1f3a4_objectLeft.svg", "1f3a4_objectRight.svg"]
+      }
+    ]
+  },
+  { "1f3a9": [{ "slot": "headwear", "resources": ["1f3a9_headwear.svg"] }] },
+  {
+    "1f3ae": [
+      {
+        "slot": "object",
+        "resources": ["1f3ae_objectleft.svg", "1f3ae_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f3af": [{ "slot": "foreground", "resources": ["1f3af_foreground.svg"] }]
+  },
+  {
+    "1f3b5": [
+      { "slot": "background", "resources": ["1f3b5_background.svg"] },
+      { "slot": "necklace", "resources": ["1f3b5_necklace.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f3b5_objectLeft.svg", "1f3b5_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3b6": [{ "slot": "foreground", "resources": ["1f3b6_foreground.svg"] }]
+  },
+  {
+    "1f3b7": [
+      {
+        "slot": "object",
+        "resources": ["1f3b7_objectRight.svg", "1f3b7_objectleft.svg"]
+      }
+    ]
+  },
+  {
+    "1f3b8": [
+      {
+        "slot": "object",
+        "resources": ["1f3b8_objectleft.svg", "1f3b8_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f3ba": [
+      {
+        "slot": "object",
+        "resources": ["1f3ba_objectLeft.svg", "1f3ba_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3c0": [
+      {
+        "slot": "object",
+        "resources": ["1f3c0_objectLeft.svg", "1f3c0_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3c1": [
+      {
+        "slot": "object",
+        "resources": ["1f3c1_objectLeft.svg", "1f3c1_objectRight.svg"]
+      }
+    ]
+  },
+  { "1f3c5": [{ "slot": "necklace", "resources": ["1f3c5_necklace.svg"] }] },
+  {
+    "1f3c6": [
+      {
+        "slot": "object",
+        "resources": ["1f3c6_objectLeft.svg", "1f3c6_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3d4-fe0f": [
+      { "slot": "background", "resources": ["1f3d4-fe0f_background.svg"] }
+    ]
+  },
+  {
+    "1f3d5-fe0f": [
+      { "slot": "background", "resources": ["1f3d5-fe0f_background.svg"] }
+    ]
+  },
+  {
+    "1f3d6-fe0f": [
+      { "slot": "background", "resources": ["1f3d6-fe0f_background_epic.svg"] },
+      { "slot": "backpack", "resources": ["1f3d6-fe0f_backpack_rare.svg"] },
+      { "slot": "headwear", "resources": ["1f3d6-fe0f_headwear.svg"] }
+    ]
+  },
+  {
+    "1f3dc-fe0f": [
+      { "slot": "background", "resources": ["1f3dc-fe0f_background.svg"] }
+    ]
+  },
+  {
+    "1f3dd-fe0f": [
+      { "slot": "background", "resources": ["1f3dd-fe0f_background.svg"] }
+    ]
+  },
+  {
+    "1f3ef": [{ "slot": "background", "resources": ["1f3ef_background.svg"] }]
+  },
+  {
+    "1f3f3-fe0f": [
+      {
+        "slot": "object",
+        "resources": ["1f3f3-fe0f_objectLeft.svg", "1f3f3-fe0f_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3f3-fe0f-200d-1f308": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f3f3-fe0f-200d-1f308_objectLeft.svg",
+          "1f3f3-fe0f-200d-1f308_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f3f4": [
+      {
+        "slot": "object",
+        "resources": ["1f3f4_objectLeft.svg", "1f3f4_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f3f4-200d-2620-fe0f": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f3f4-200d-2620-fe0f_objectleft.svg",
+          "1f3f4-200d-2620-fe0f_objectright.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f409": [
+      { "slot": "background", "resources": ["1f409_background.svg"] },
+      { "slot": "body", "resources": ["1f409_body.svg"] },
+      { "slot": "footleft", "resources": ["1f409_footLeft.svg"] },
+      { "slot": "footright", "resources": ["1f409_footRight.svg"] },
+      { "slot": "handleft", "resources": ["1f409_handLeft.svg"] },
+      { "slot": "handright", "resources": ["1f409_handRight.svg"] },
+      { "slot": "head", "resources": ["1f409_head.svg"] },
+      { "slot": "headwear", "resources": ["1f409_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f409_headwear_rare.svg"] },
+      { "slot": "tail", "resources": ["1f409_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f409_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["1f409_wingRight.svg"] }
+    ]
+  },
+  {
+    "1f40b": [{ "slot": "foreground", "resources": ["1f40b_foreground.svg"] }]
+  },
+  {
+    "1f40d": [
+      { "slot": "headwear", "resources": ["1f40d_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f40d_headwear_rare.svg"] }
+    ]
+  },
+  { "1f410": [{ "slot": "headwear", "resources": ["1f410_headwear.svg"] }] },
+  {
+    "1f413": [
+      { "slot": "headwear", "resources": ["1f413_headwear.svg"] },
+      { "slot": "necklace", "resources": ["1f413_necklace.svg"] }
+    ]
+  },
+  {
+    "1f419": [
+      { "slot": "headwear", "resources": ["1f419_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f419_tail_rare.svg"] }
+    ]
+  },
+  {
+    "1f41f": [{ "slot": "foreground", "resources": ["1f41f_foreground.svg"] }]
+  },
+  {
+    "1f426": [{ "slot": "foreground", "resources": ["1f426_foreground.svg"] }]
+  },
+  { "1f428": [{ "slot": "headwear", "resources": ["1f428_headwear.svg"] }] },
+  {
+    "1f430": [
+      { "slot": "beak", "resources": ["1f430_beak.svg"] },
+      { "slot": "headwear", "resources": ["1f430_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f430_tail.svg"] }
+    ]
+  },
+  {
+    "1f431": [
+      { "slot": "headwear", "resources": ["1f431_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f431_headwear_rare.svg"] },
+      { "slot": "tail", "resources": ["1f431_tail.svg"] }
+    ]
+  },
+  {
+    "1f433": [{ "slot": "foreground", "resources": ["1f433_foreground.svg"] }]
+  },
+  {
+    "1f436": [
+      { "slot": "headwear", "resources": ["1f436_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f436_headwear_rare.svg"] }
+    ]
+  },
+  {
+    "1f437": [
+      { "slot": "headwear", "resources": ["1f437_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f437_headwear_rare.svg"] }
+    ]
+  },
+  { "1f44d": [{ "slot": "necklace", "resources": ["1f44d_necklace.svg"] }] },
+  {
+    "1f451": [
+      { "slot": "headwear", "resources": ["1f451_headwear.svg"] },
+      { "slot": "headwear", "resources": ["1f451_headwear_rare.svg"] }
+    ]
+  },
+  { "1f453": [{ "slot": "headwear", "resources": ["1f453_Headwear.svg"] }] },
+  {
+    "1f468-200d-1f680": [
+      { "slot": "backpack", "resources": ["1f468-200d-1f680_backpack.svg"] }
+    ]
+  },
+  { "1f477": [{ "slot": "headwear", "resources": ["1f477_headwear.svg"] }] },
+  {
+    "1f479": [{ "slot": "headwear", "resources": ["1f479_headwear_rare.svg"] }]
+  },
+  {
+    "1f47b": [
+      { "slot": "background", "resources": ["1f47b_background.svg"] },
+      { "slot": "foreground", "resources": ["1f47b_foreground.svg"] }
+    ]
+  },
+  { "1f47d": [{ "slot": "backpack", "resources": ["1f47d_backpack.svg"] }] },
+  {
+    "1f47f": [
+      { "slot": "beak", "resources": ["1f47f_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f47f_eyes.svg"] },
+      { "slot": "headwear", "resources": ["1f47f_headwear.svg"] }
+    ]
+  },
+  {
+    "1f483": [{ "slot": "headwear", "resources": ["1f483_headwear_rare.svg"] }]
+  },
+  { "1f488": [{ "slot": "headwear", "resources": ["1f488_headwear_4.svg"] }] },
+  {
+    "1f48d": [
+      {
+        "slot": "object",
+        "resources": ["1f48d_objectLeft.svg", "1f48d_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f48e": [
+      { "slot": "background", "resources": ["1f48e_background.svg"] },
+      { "slot": "body", "resources": ["1f48e_body.svg"] },
+      { "slot": "footleft", "resources": ["1f48e_footLeft.svg"] },
+      { "slot": "footright", "resources": ["1f48e_footRight.svg"] },
+      { "slot": "handleft", "resources": ["1f48e_handLeft.svg"] },
+      { "slot": "handright", "resources": ["1f48e_handRight.svg"] },
+      { "slot": "head", "resources": ["1f48e_head.svg"] },
+      { "slot": "headwear", "resources": ["1f48e_headwear.svg"] },
+      { "slot": "necklace", "resources": ["1f48e_necklace.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f48e_objectLeft.svg", "1f48e_objectRight.svg"]
+      },
+      { "slot": "tail", "resources": ["1f48e_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f48e_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["1f48e_wingRight.svg"] }
+    ]
+  },
+  {
+    "1f492": [{ "slot": "background", "resources": ["1f492_background.svg"] }]
+  },
+  {
+    "1f496": [
+      { "slot": "foreground", "resources": ["1f496_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f496_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f4a0": [
+      { "slot": "necklace", "resources": ["1f4a0_necklace.svg"] },
+      { "slot": "necklace", "resources": ["1f4a0_necklace_rare.svg"] }
+    ]
+  },
+  {
+    "1f4a3": [
+      {
+        "slot": "object",
+        "resources": ["1f4a3_objectLeft.svg", "1f4a3_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f4a5": [
+      { "slot": "backpack", "resources": ["1f4a5_backpack.svg"] },
+      { "slot": "backpack", "resources": ["1f4a5_backpack_rare.svg"] }
+    ]
+  },
+  {
+    "1f4a7": [
+      { "slot": "body", "resources": ["1f4a7_body.svg"] },
+      { "slot": "footleft", "resources": ["1f4a7_footLeft.svg"] },
+      { "slot": "footright", "resources": ["1f4a7_footRight.svg"] },
+      { "slot": "handleft", "resources": ["1f4a7_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f4a7_handright.svg"] },
+      { "slot": "head", "resources": ["1f4a7_head.svg"] },
+      { "slot": "tail", "resources": ["1f4a7_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f4a7_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f4a7_wingright.svg"] }
+    ]
+  },
+  {
+    "1f4a9": [
+      { "slot": "backpack", "resources": ["1f4a9_backpack.svg"] },
+      { "slot": "backpack", "resources": ["1f4a9_backpack_epic.svg"] },
+      { "slot": "backpack", "resources": ["1f4a9_backpack_rare.svg"] }
+    ]
+  },
+  { "1f4ab": [{ "slot": "headwear", "resources": ["1f4ab_headwear.svg"] }] },
+  {
+    "1f4af": [
+      {
+        "slot": "object",
+        "resources": ["1f4af_objectLeft.svg", "1f4af_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f4b0": [{ "slot": "foreground", "resources": ["1f4b0_foreground.svg"] }]
+  },
+  {
+    "1f4b5": [
+      {
+        "slot": "object",
+        "resources": ["1f4b5_ObjectLeft.svg", "1f4b5_ObjectRightsvg.svg"]
+      }
+    ]
+  },
+  {
+    "1f4b8": [
+      { "slot": "foreground", "resources": ["1f4b8_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f4b8_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f4bb": [{ "slot": "foreground", "resources": ["1f4bb_foreground.svg"] }]
+  },
+  { "1f4e1": [{ "slot": "backpack", "resources": ["1f4e1_backpack.svg"] }] },
+  {
+    "1f4ff": [
+      {
+        "slot": "object",
+        "resources": ["1f4ff_objectLeft.svg", "1f4ff_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f525": [
+      { "slot": "background", "resources": ["1f525_background.svg"] },
+      { "slot": "body", "resources": ["1f525_body.svg"] },
+      { "slot": "footleft", "resources": ["1f525_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f525_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f525_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f525_handright.svg"] },
+      { "slot": "head", "resources": ["1f525_head.svg"] },
+      { "slot": "headwear", "resources": ["1f525_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f525_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f525_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f525_wingright.svg"] }
+    ]
+  },
+  {
+    "1f52b": [
+      {
+        "slot": "object",
+        "resources": ["1f52b_objectleft_rare.svg", "1f52b_objectright_rare.svg"]
+      }
+    ]
+  },
+  {
+    "1f52e": [
+      {
+        "slot": "object",
+        "resources": ["1f52e_objectLeft.svg", "1f52e_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f531": [
+      {
+        "slot": "object",
+        "resources": ["1f531_objectLeft.svg", "1f531_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f549-fe0f": [
+      { "slot": "background", "resources": ["1F549-fe0f_background.svg"] },
+      { "slot": "necklace", "resources": ["1f549-fe0f_necklace.svg"] }
+    ]
+  },
+  {
+    "1f54a-fe0f": [
+      { "slot": "backpack", "resources": ["1f54a-fe0f_backpack_rare.svg"] },
+      { "slot": "beak", "resources": ["1f54a-fe0f_beak.svg"] },
+      { "slot": "foreground", "resources": ["1f54a-fe0f_foreground.svg"] }
+    ]
+  },
+  {
+    "1f575-fe0f-200d-2642-fe0f": [
+      {
+        "slot": "headwear",
+        "resources": ["1f575-fe0f-200d-2642-fe0f_headwear.svg"]
+      },
+      {
+        "slot": "object",
+        "resources": [
+          "1f575-fe0f-200d-2642-fe0f_objectleft.svg",
+          "1f575-fe0f-200d-2642-fe0f_objectright.svg"
+        ]
+      },
+      { "slot": "top", "resources": ["1f575-fe0f-200d-2642-fe0f_top_rare.svg"] }
+    ]
+  },
+  {
+    "1f576-fe0f": [
+      { "slot": "headwear", "resources": ["1f576-fe0f_headwear.svg"] }
+    ]
+  },
+  {
+    "1f58c": [
+      {
+        "slot": "object",
+        "resources": ["1f58c_objectLeft.svg", "1f58c_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f5dd-fe0f": [
+      {
+        "slot": "object",
+        "resources": ["1f5dd-fe0f_objectleft.svg", "1f5dd-fe0f_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f5fb": [
+      { "slot": "background", "resources": ["1f5fb_background_epic.svg"] }
+    ]
+  },
+  {
+    "1f607": [
+      { "slot": "foreground", "resources": ["1f607_foreground_rare.svg"] },
+      { "slot": "headwear", "resources": ["1f607_headwear.svg"] }
+    ]
+  },
+  { "1f608": [{ "slot": "headwear", "resources": ["1f608_headwear.svg"] }] },
+  {
+    "1f609": [
+      { "slot": "beak", "resources": ["1f609_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f609_eyes.svg"] }
+    ]
+  },
+  {
+    "1f60d": [
+      { "slot": "beak", "resources": ["1f60d_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f60d_eyes.svg"] }
+    ]
+  },
+  {
+    "1f60e": [
+      { "slot": "beak", "resources": ["1f60e_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f60e_eyes.svg"] }
+    ]
+  },
+  {
+    "1f618": [
+      { "slot": "beak", "resources": ["1f618_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f618_eyes.svg"] }
+    ]
+  },
+  {
+    "1f61e": [
+      { "slot": "beak", "resources": ["1f61e_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f61e_eyes.svg"] }
+    ]
+  },
+  {
+    "1f620": [
+      { "slot": "beak", "resources": ["1F620_beak.svg"] },
+      { "slot": "eyes", "resources": ["1F620_eyes.svg"] }
+    ]
+  },
+  {
+    "1f62C": [
+      { "slot": "beak", "resources": ["1f62C_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f62C_eyes.svg"] }
+    ]
+  },
+  {
+    "1f680": [
+      { "slot": "backpack", "resources": ["1f680_backpack_rare.svg"] },
+      { "slot": "foreground", "resources": ["1f680_foreground.svg"] }
+    ]
+  },
+  {
+    "1f6a9": [
+      {
+        "slot": "object",
+        "resources": ["1f6a9_objectLeft.svg", "1f6a9_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f6e1-fe0f": [
+      { "slot": "foreground", "resources": ["1f6e1-fe0f_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f6e1-fe0f_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f6f5": [{ "slot": "backpack", "resources": ["1f6f5_backpack_rare.svg"] }]
+  },
+  {
+    "1f6f8": [{ "slot": "background", "resources": ["1f6f8_background.svg"] }]
+  },
+  {
+    "1f916": [
+      { "slot": "backpack", "resources": ["1f916_backpack.svg"] },
+      { "slot": "body", "resources": ["1f916_body.svg"] },
+      { "slot": "footleft", "resources": ["1f916_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f916_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f916_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f916_handright.svg"] },
+      { "slot": "head", "resources": ["1f916_head.svg"] },
+      { "slot": "headwear", "resources": ["1f916_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f916_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f916_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f916_wingright.svg"] }
+    ]
+  },
+  { "1f920": [{ "slot": "headwear", "resources": ["1f920_headwear.svg"] }] },
+  { "1f929": [{ "slot": "headwear", "resources": ["1f929_headwear.svg"] }] },
+  {
+    "1f92f": [
+      { "slot": "beak", "resources": ["1f92f_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f92f_eyes.svg"] },
+      { "slot": "headwear", "resources": ["1f92f_headwear.svg"] }
+    ]
+  },
+  { "1f947": [{ "slot": "necklace", "resources": ["1f947_necklace.svg"] }] },
+  {
+    "1f951": [
+      {
+        "slot": "object",
+        "resources": ["1f951_objectleft.svg", "1f951_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1f970": [
+      { "slot": "beak", "resources": ["1f970_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f970_eyes.svg"] }
+    ]
+  },
+  {
+    "1f973": [
+      { "slot": "foreground", "resources": ["1f973_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f973_foreground_rare.svg"] },
+      { "slot": "headwear", "resources": ["1f973_headwear.svg"] }
+    ]
+  },
+  {
+    "1f976": [
+      { "slot": "beak", "resources": ["1f976_beak.svg"] },
+      { "slot": "eyes", "resources": ["1f976_eyes.svg"] }
+    ]
+  },
+  {
+    "1f981": [
+      { "slot": "headwear", "resources": ["1f981_headwear.svg"] },
+      { "slot": "necklace", "resources": ["1f981_necklace.svg"] }
+    ]
+  },
+  {
+    "1f984": [
+      { "slot": "background", "resources": ["1f984_background_epic.svg"] },
+      { "slot": "headwear", "resources": ["1f984_headwear.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f984_objectleft_rare.svg", "1f984_objectright_rare.svg"]
+      }
+    ]
+  },
+  { "1f985": [{ "slot": "backpack", "resources": ["1f985_backpack.svg"] }] },
+  { "1f987": [{ "slot": "headwear", "resources": ["1f987_headwear.svg"] }] },
+  {
+    "1f988": [{ "slot": "foreground", "resources": ["1f988_foreground.svg"] }]
+  },
+  {
+    "1f98b": [
+      { "slot": "body", "resources": ["1f98b_body.svg"] },
+      { "slot": "footleft", "resources": ["1f98b_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f98b_footright.svg"] },
+      { "slot": "foreground", "resources": ["1f98b_foreground.svg"] },
+      { "slot": "foreground", "resources": ["1f98b_foreground_rare.svg"] },
+      { "slot": "handleft", "resources": ["1f98b_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f98b_handright.svg"] },
+      { "slot": "head", "resources": ["1f98b_head.svg"] },
+      { "slot": "headwear", "resources": ["1f98b_headwear.svg"] },
+      { "slot": "tail", "resources": ["1f98b_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f98b_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f98b_wingright.svg"] }
+    ]
+  },
+  {
+    "1f996": [
+      { "slot": "headwear", "resources": ["1f996_headwear.svg"] },
+      { "slot": "necklace", "resources": ["1f996_necklace.svg"] }
+    ]
+  },
+  { "1f99a": [{ "slot": "tail", "resources": ["1f99a_tail.svg"] }] },
+  {
+    "1f9b4": [
+      { "slot": "foreground", "resources": ["1f9b4_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "1f9be": [
+      { "slot": "background", "resources": ["1f9be_background.svg"] },
+      { "slot": "body", "resources": ["1f9be_body.svg"] },
+      { "slot": "footleft", "resources": ["1f9be_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f9be_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f9be_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f9be_handright.svg"] },
+      { "slot": "head", "resources": ["1f9be_head.svg"] },
+      { "slot": "headwear", "resources": ["1f9be_headwear_rare.svg"] },
+      { "slot": "tail", "resources": ["1f9be_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f9be_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f9be_wingright.svg"] }
+    ]
+  },
+  { "1f9d0": [{ "slot": "headwear", "resources": ["1f9d0_headwear.svg"] }] },
+  {
+    "1f9d1-200d-1f3a4": [
+      {
+        "slot": "object",
+        "resources": [
+          "1f9d1-200d-1f3a4_objectLeft.svg",
+          "1f9d1-200d-1f3a4_objectRight.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f9d1-200d-1f3a8": [
+      {
+        "slot": "headwear",
+        "resources": ["1f9d1-200d-1f3a8_headwear_rare.svg"]
+      }
+    ]
+  },
+  {
+    "1f9d8": [{ "slot": "background", "resources": ["1f9d8_background.svg"] }]
+  },
+  {
+    "1f9d9": [
+      { "slot": "headwear", "resources": ["1f9d9_headwear_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1f9d9_objectLeft.svg", "1f9d9_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f9da-200d-2640-fe0f": [
+      {
+        "slot": "backpack",
+        "resources": ["1f9da-200d-2640-fe0f_backpack_epic.svg"]
+      },
+      {
+        "slot": "foreground",
+        "resources": ["1f9da-200d-2640-fe0f_foreground.svg"]
+      },
+      {
+        "slot": "foreground",
+        "resources": ["1f9da-200d-2640-fe0f_foreground_rare.svg"]
+      },
+      {
+        "slot": "object",
+        "resources": [
+          "1f9da-200d-2640-fe0f_objectleft.svg",
+          "1f9da-200d-2640-fe0f_objectright.svg"
+        ]
+      }
+    ]
+  },
+  {
+    "1f9db-200d-2642-fe0f": [
+      {
+        "slot": "backpack",
+        "resources": ["1f9db-200d-2642-fe0f_backpack_rare.svg"]
+      },
+      { "slot": "beak", "resources": ["1f9db-200d-2642-fe0f_beak.svg"] },
+      {
+        "slot": "necklace",
+        "resources": ["1f9db-200d-2642-fe0f_necklace_rare.svg"]
+      }
+    ]
+  },
+  {
+    "1f9de-200d-2642-fe0f": [
+      {
+        "slot": "headwear",
+        "resources": ["1f9de-200d-2642-fe0f_headwear_rare.svg"]
+      },
+      { "slot": "top", "resources": ["1f9de-200d-2642-fe0f_top_rare.svg"] }
+    ]
+  },
+  {
+    "1f9df": [
+      { "slot": "background", "resources": ["1f9df_background.svg"] },
+      { "slot": "beak", "resources": ["1f9df_beak.svg"] },
+      { "slot": "body", "resources": ["1f9df_body.svg"] },
+      { "slot": "eyes", "resources": ["1f9df_eyes.svg"] },
+      { "slot": "footleft", "resources": ["1f9df_footleft.svg"] },
+      { "slot": "footright", "resources": ["1f9df_footright.svg"] },
+      { "slot": "handleft", "resources": ["1f9df_handleft.svg"] },
+      { "slot": "handright", "resources": ["1f9df_handright.svg"] },
+      { "slot": "head", "resources": ["1f9df_head.svg"] },
+      { "slot": "tail", "resources": ["1f9df_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1f9df_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1f9df_wingright.svg"] }
+    ]
+  },
+  {
+    "1f9e0": [
+      { "slot": "background", "resources": ["1f9e0_background.svg"] },
+      { "slot": "headwear", "resources": ["1f9e0_headwear_rare.svg"] }
+    ]
+  },
+  {
+    "1f9e8": [
+      {
+        "slot": "object",
+        "resources": ["1f9e8_objectLeft.svg", "1f9e8_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "1f9ec": [
+      {
+        "slot": "object",
+        "resources": ["1f9ec_objectleft.svg", "1f9ec_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1fa78": [
+      { "slot": "body", "resources": ["1fa78_body.svg"] },
+      { "slot": "footleft", "resources": ["1fa78_footLeft.svg"] },
+      { "slot": "footright", "resources": ["1fa78_footRight.svg"] },
+      { "slot": "handleft", "resources": ["1fa78_handleft.svg"] },
+      { "slot": "handright", "resources": ["1fa78_handright.svg"] },
+      { "slot": "head", "resources": ["1fa78_head.svg"] },
+      { "slot": "tail", "resources": ["1fa78_tail.svg"] },
+      { "slot": "wingleft", "resources": ["1fa78_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["1fa78_wingright.svg"] }
+    ]
+  },
+  { "1fa82": [{ "slot": "backpack", "resources": ["1fa82_backpack.svg"] }] },
+  {
+    "1fa95": [
+      { "slot": "headwear", "resources": ["1fa95_headwear_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["1fa95_objectLeft_rare.svg", "1fa95_objectRight_rare.svg"]
+      }
+    ]
+  },
+  {
+    "1faa8": [
+      {
+        "slot": "object",
+        "resources": ["1faa8_objectleft.svg", "1faa8_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "1fab1": [{ "slot": "background", "resources": ["1fab1_background.svg"] }]
+  },
+  {
+    "2600": [
+      { "slot": "body", "resources": ["2600_body.svg"] },
+      { "slot": "footleft", "resources": ["2600_footleft.svg"] },
+      { "slot": "footright", "resources": ["2600_footright.svg"] },
+      { "slot": "handleft", "resources": ["2600_handleft.svg"] },
+      { "slot": "handright", "resources": ["2600_handright.svg"] },
+      { "slot": "head", "resources": ["2600_head.svg"] },
+      { "slot": "headwear", "resources": ["2600_headwear.svg"] },
+      { "slot": "tail", "resources": ["2600_tail.svg"] },
+      { "slot": "wingleft", "resources": ["2600_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["2600_wingright.svg"] }
+    ]
+  },
+  {
+    "2604-fe0f": [
+      { "slot": "backpack", "resources": ["2604-fe0f_backpack_rare.svg"] }
+    ]
+  },
+  {
+    "2626-fe0f": [
+      { "slot": "necklace", "resources": ["2626-fe0f_Necklace.svg"] }
+    ]
+  },
+  {
+    "262a-fe0f": [
+      { "slot": "necklace", "resources": ["262a-fe0f_Necklace.svg"] }
+    ]
+  },
+  {
+    "262e-fe0f": [
+      { "slot": "necklace", "resources": ["262e-fe0f_necklace.svg"] }
+    ]
+  },
+  {
+    "262f-fe0f": [
+      { "slot": "necklace", "resources": ["262f-fe0f_Necklace.svg"] }
+    ]
+  },
+  {
+    "2638-fe0f": [
+      { "slot": "necklace", "resources": ["2638-fe0f_necklace.svg"] }
+    ]
+  },
+  {
+    "263a-fe0f": [
+      { "slot": "beak", "resources": ["263a-fe0f_beak.svg"] },
+      { "slot": "eyes", "resources": ["263a-fe0f_eyes.svg"] }
+    ]
+  },
+  { "2648": [{ "slot": "necklace", "resources": ["2648_necklace.svg"] }] },
+  { "2649": [{ "slot": "necklace", "resources": ["2649_necklace.svg"] }] },
+  { "264A": [{ "slot": "necklace", "resources": ["264A_necklace.svg"] }] },
+  { "264B": [{ "slot": "necklace", "resources": ["264B_necklace.svg"] }] },
+  { "264C": [{ "slot": "necklace", "resources": ["264C_Necklace.svg"] }] },
+  { "264D": [{ "slot": "necklace", "resources": ["264D_Necklace.svg"] }] },
+  { "264E": [{ "slot": "necklace", "resources": ["264E_necklace.svg"] }] },
+  { "264F": [{ "slot": "necklace", "resources": ["264F_necklace.svg"] }] },
+  { "2650": [{ "slot": "necklace", "resources": ["2650_necklace.svg"] }] },
+  { "2651": [{ "slot": "necklace", "resources": ["2651_necklace.svg"] }] },
+  { "2652": [{ "slot": "necklace", "resources": ["2652_Necklace.svg"] }] },
+  { "2653": [{ "slot": "necklace", "resources": ["2653_Necklace.svg"] }] },
+  {
+    "2694-fe0f": [
+      { "slot": "background", "resources": ["2694-fe0f_background.svg"] },
+      { "slot": "backpack", "resources": ["2694-fe0f_backpack.svg"] },
+      { "slot": "body", "resources": ["2694-fe0f_body.svg"] },
+      { "slot": "footleft", "resources": ["2694-fe0f_footleft.svg"] },
+      { "slot": "footright", "resources": ["2694-fe0f_footright.svg"] },
+      { "slot": "foreground", "resources": ["2694-fe0f_foreground_rare.svg"] },
+      { "slot": "handleft", "resources": ["2694-fe0f_handleft.svg"] },
+      { "slot": "handright", "resources": ["2694-fe0f_handright.svg"] },
+      { "slot": "head", "resources": ["2694-fe0f_head.svg"] },
+      { "slot": "headwear", "resources": ["2694-fe0f_headwear.svg"] },
+      {
+        "slot": "object",
+        "resources": ["2694-fe0f_objectLeft.svg", "2694-fe0f_objectRight.svg"]
+      },
+      { "slot": "tail", "resources": ["2694-fe0f_tail.svg"] },
+      { "slot": "wingleft", "resources": ["2694-fe0f_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["2694-fe0f_wingright.svg"] }
+    ]
+  },
+  {
+    "269b-fe0f": [
+      { "slot": "necklace", "resources": ["269b-fe0f_necklace.svg"] }
+    ]
+  },
+  {
+    "26CE": [
+      { "slot": "necklace", "resources": ["26CE_Necklace.svg"] },
+      { "slot": "background", "resources": ["26CE_background.svg"] }
+    ]
+  },
+  {
+    "26a1": [
+      { "slot": "tail", "resources": ["26a1_Tail.svg"] },
+      { "slot": "backpack", "resources": ["26a1_backpack.svg"] },
+      {
+        "slot": "object",
+        "resources": ["26a1_objectleft.svg", "26a1_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "26e9-fe0f": [
+      { "slot": "background", "resources": ["26e9-fe0f_background.svg"] }
+    ]
+  },
+  { "26ea": [{ "slot": "background", "resources": ["26ea_background.svg"] }] },
+  {
+    "26f0-fe0f": [
+      { "slot": "background", "resources": ["26f0-fe0f_background.svg"] }
+    ]
+  },
+  {
+    "271d-fe0f": [
+      { "slot": "necklace", "resources": ["271d-fe0f_necklace.svg"] },
+      { "slot": "necklace", "resources": ["271d-fe0f_necklace_2.svg"] }
+    ]
+  },
+  {
+    "2721-fe0f": [
+      { "slot": "necklace", "resources": ["2721-fe0f_Necklace.svg"] }
+    ]
+  },
+  {
+    "2728": [
+      { "slot": "foreground", "resources": ["2728_foreground.svg"] },
+      { "slot": "foreground", "resources": ["2728_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "2744-fe0f": [
+      { "slot": "foreground", "resources": ["2744-fe0f_foreground.svg"] },
+      { "slot": "foreground", "resources": ["2744-fe0f_foreground_rare.svg"] }
+    ]
+  },
+  {
+    "2764-fe0f": [
+      { "slot": "necklace", "resources": ["2764-fe0f_necklace.svg"] }
+    ]
+  },
+  {
+    "2B50": [
+      { "slot": "necklace", "resources": ["2B50_Necklace.svg"] },
+      {
+        "slot": "object",
+        "resources": ["2B50_objectLeft.svg", "2B50_objectRight.svg"]
+      }
+    ]
+  },
+  { "2b55": [{ "slot": "necklace", "resources": ["2b55_necklace.svg"] }] },
+  {
+    "Huginn": [
+      { "slot": "beak", "resources": ["huginn_beak.svg"] },
+      { "slot": "body", "resources": ["huginn_body.svg"] },
+      { "slot": "eyes", "resources": ["huginn_eyes.svg"] },
+      { "slot": "footleft", "resources": ["huginn_footLeft.svg"] },
+      { "slot": "footright", "resources": ["huginn_footRight.svg"] },
+      { "slot": "handleft", "resources": ["huginn_handLeft.svg"] },
+      { "slot": "handright", "resources": ["huginn_handRight.svg"] },
+      { "slot": "head", "resources": ["huginn_head.svg"] },
+      { "slot": "headwear", "resources": ["huginn_headwear.svg"] },
+      { "slot": "tail", "resources": ["huginn_tail.svg"] },
+      { "slot": "wingleft", "resources": ["huginn_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["huginn_wingRight.svg"] }
+    ]
+  },
+  { "Kucoin": [{ "slot": "necklace", "resources": ["Kucoin_necklace.svg"] }] },
+  {
+    "Kusama": [
+      { "slot": "body", "resources": ["Kusama_body.svg"] },
+      { "slot": "footleft", "resources": ["Kusama_footLeft.svg"] },
+      { "slot": "footright", "resources": ["Kusama_footRight.svg"] },
+      { "slot": "handleft", "resources": ["Kusama_handLeft.svg"] },
+      { "slot": "handright", "resources": ["Kusama_handRight.svg"] },
+      { "slot": "head", "resources": ["Kusama_head.svg"] },
+      { "slot": "headwear", "resources": ["Kusama_headwear.svg"] },
+      { "slot": "headwear", "resources": ["Kusama_headwear_rare.svg"] },
+      { "slot": "tail", "resources": ["Kusama_tail.svg"] },
+      { "slot": "wingleft", "resources": ["Kusama_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["Kusama_wingRight.svg"] },
+      { "slot": "background", "resources": ["kusama_background.svg"] }
+    ]
+  },
+  { "Meme": [{ "slot": "headwear", "resources": ["Meme_headwear.svg"] }] },
+  {
+    "Muninn": [
+      { "slot": "beak", "resources": ["muninn_beak.svg"] },
+      { "slot": "body", "resources": ["muninn_body.svg"] },
+      { "slot": "eyes", "resources": ["muninn_eyes.svg"] },
+      { "slot": "footleft", "resources": ["muninn_footLeft.svg"] },
+      { "slot": "footright", "resources": ["muninn_footRight.svg"] },
+      { "slot": "handleft", "resources": ["muninn_handLeft.svg"] },
+      { "slot": "handright", "resources": ["muninn_handRight.svg"] },
+      { "slot": "head", "resources": ["muninn_head.svg"] },
+      { "slot": "headwear", "resources": ["muninn_headwear.svg"] },
+      { "slot": "tail", "resources": ["muninn_tail.svg"] },
+      { "slot": "wingleft", "resources": ["muninn_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["muninn_wingRight.svg"] }
+    ]
+  },
+  {
+    "Polkadot": [
+      { "slot": "background", "resources": ["polkadot_background.svg"] },
+      { "slot": "body", "resources": ["polkadot_body.svg"] },
+      { "slot": "footleft", "resources": ["polkadot_footLeft.svg"] },
+      { "slot": "footright", "resources": ["polkadot_footRight.svg"] },
+      { "slot": "handleft", "resources": ["polkadot_handLeft.svg"] },
+      { "slot": "handright", "resources": ["polkadot_handRight.svg"] },
+      { "slot": "head", "resources": ["polkadot_head.svg"] },
+      { "slot": "headwear", "resources": ["polkadot_headwear.svg"] },
+      { "slot": "tail", "resources": ["polkadot_tail.svg"] },
+      { "slot": "wingleft", "resources": ["polkadot_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["polkadot_wingRight.svg"] }
+    ]
+  },
+  {
+    "Sticker": [
+      {
+        "slot": "object",
+        "resources": ["sticker_objectleft.svg", "sticker_objectright.svg"]
+      }
+    ]
+  },
+  {
+    "Valhalla": [
+      { "slot": "background", "resources": ["valhalla_background.svg"] }
+    ]
+  },
+  {
+    "artisttrait": [
+      { "slot": "eyes", "resources": ["artisttrait_eyes.svg"] },
+      { "slot": "foreground", "resources": ["artisttrait_foreground.svg"] }
+    ]
+  },
+  {
+    "cyberbird": [
+      { "slot": "background", "resources": ["cyberbird_background.svg"] },
+      { "slot": "body", "resources": ["cyberbird_body.svg"] },
+      { "slot": "eyes", "resources": ["cyberbird_eyes.svg"] },
+      { "slot": "footleft", "resources": ["cyberbird_footleft.svg"] },
+      { "slot": "footright", "resources": ["cyberbird_footright.svg"] },
+      { "slot": "handleft", "resources": ["cyberbird_handleft.svg"] },
+      { "slot": "handright", "resources": ["cyberbird_handright.svg"] },
+      { "slot": "head", "resources": ["cyberbird_head.svg"] },
+      { "slot": "headwear", "resources": ["cyberbird_headwear.svg"] },
+      { "slot": "headwear", "resources": ["cyberbird_headwear_rare.svg"] },
+      { "slot": "necklace", "resources": ["cyberbird_necklace.svg"] },
+      { "slot": "tail", "resources": ["cyberbird_tail.svg"] },
+      { "slot": "wingleft", "resources": ["cyberbird_wingleft.svg"] },
+      { "slot": "wingright", "resources": ["cyberbird_wingright.svg"] }
+    ]
+  },
+  {
+    "devil": [
+      { "slot": "eyes", "resources": ["devil_Eyes.svg"] },
+      { "slot": "headwear", "resources": ["devil_headwear_rare.svg"] },
+      {
+        "slot": "object",
+        "resources": ["devil_objectLeft.svg", "devil_objectRight.svg"]
+      }
+    ]
+  },
+  {
+    "devtrait": [
+      { "slot": "eyes", "resources": ["devtrait_eyes.svg"] },
+      { "slot": "foreground", "resources": ["devtrait_foreground.svg"] }
+    ]
+  },
+  {
+    "goldtrim": [
+      { "slot": "body", "resources": ["goldtrim_body.svg"] },
+      { "slot": "footleft", "resources": ["goldtrim_footLeft.svg"] },
+      { "slot": "footright", "resources": ["goldtrim_footRight.svg"] },
+      { "slot": "handleft", "resources": ["goldtrim_handLeft.svg"] },
+      { "slot": "handright", "resources": ["goldtrim_handRight.svg"] },
+      { "slot": "head", "resources": ["goldtrim_head.svg"] },
+      { "slot": "headwear", "resources": ["goldtrim_headwear.svg"] },
+      { "slot": "headwear", "resources": ["goldtrim_headwear_rare.svg"] },
+      { "slot": "tail", "resources": ["goldtrim_tail.svg"] },
+      { "slot": "wingleft", "resources": ["goldtrim_wingLeft.svg"] },
+      { "slot": "wingright", "resources": ["goldtrim_wingRight.svg"] }
+    ]
+  },
+  {
+    "megawreath": [
+      { "slot": "headwear", "resources": ["megawreath_headwear.svg"] }
+    ]
+  },
+  {
+    "midsommar": [
+      { "slot": "background", "resources": ["midsommar_background.svg"] }
+    ]
+  },
+  {
+    "rasta": [
+      { "slot": "beak", "resources": ["rasta_beak.svg"] },
+      { "slot": "eyes", "resources": ["rasta_eyes.svg"] },
+      { "slot": "headwear", "resources": ["rasta_headwear.svg"] }
+    ]
+  },
+  {
+    "substrapunk": [
+      { "slot": "foreground", "resources": ["substrapunk_foreground.svg"] }
+    ]
+  },
+  { "wreath": [{ "slot": "headwear", "resources": ["wreath_headwear.svg"] }] }
+]

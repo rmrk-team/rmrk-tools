@@ -278,7 +278,7 @@ export interface Reactionmap {
 export interface Resource {
   id?: string;
   base?: string;
-  media?: string;
+  src?: string;
   parts?: string[];
   metadata?: string;
   slot?: string;
@@ -289,7 +289,7 @@ export interface IResourceConsolidated {
   id: string;
   base?: string;
   parts?: string[];
-  media?: string;
+  src?: string;
   metadata?: string;
   slot?: string;
   pending: boolean;

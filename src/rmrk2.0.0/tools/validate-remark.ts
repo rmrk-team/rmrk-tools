@@ -42,7 +42,7 @@ const NFTStruct = type({
 
 const ResourceStruct = type({
   base: optional(pattern(string(), new RegExp("^base-"))),
-  media: optional(string()),
+  src: optional(string()),
   slot: optional(pattern(string(), new RegExp("^base-"))),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });

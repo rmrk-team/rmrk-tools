@@ -98,6 +98,7 @@ export class Collection {
 }
 
 export interface CollectionMetadata {
+  name?: string;
   description?: string;
   attributes: Attribute[];
   external_url?: string;
