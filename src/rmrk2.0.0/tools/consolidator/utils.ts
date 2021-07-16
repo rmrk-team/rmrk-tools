@@ -54,8 +54,17 @@ export const consolidatedNFTtoInstance = (
   if (!nft) {
     return undefined;
   }
-  const { block, collection, symbol, transferable, sn, metadata, id, ...rest } =
-    nft || {};
+  const {
+    block,
+    collection,
+    symbol,
+    transferable,
+    sn,
+    metadata,
+    id,
+    attributes,
+    ...rest
+  } = nft || {};
   const nftInstance = new NFT({
     block,
     collection,
@@ -63,6 +72,7 @@ export const consolidatedNFTtoInstance = (
     transferable,
     sn,
     metadata,
+    attributes,
   });
   const {
     owner,

@@ -38,7 +38,7 @@ import {
   isValidAddressPolkadotAddress,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
-import { BaseType } from "../types";
+import {Attribute, BaseType} from "../types";
 import { Base, IBasePart } from "../../classes/base";
 import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
@@ -79,6 +79,7 @@ export interface NFTConsolidated {
   priority: string[];
   children: NFTChild[];
   resources: IResourceConsolidated[];
+  attributes: Attribute[]
 }
 
 export interface CollectionConsolidated {
