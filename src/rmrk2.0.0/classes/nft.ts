@@ -178,6 +178,11 @@ export class NFT {
         "You can only add resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
+
+    if (resource.slot && !resource.slot.includes(".")) {
+      throw new Error("Base slot is missing dot '.'");
+    }
+
     return `${PREFIX}::${
       OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(

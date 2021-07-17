@@ -39,7 +39,9 @@ export const resAddInteraction = async (
 
   // JSON.parse would remove unwanted undefines
   nft.resources.push(
-    JSON.parse(JSON.stringify({ pending, id, metadata, base, src, slot, parts }))
+    JSON.parse(
+      JSON.stringify({ pending, id, metadata, base, src, slot, parts })
+    )
   );
   // If this is the first resource being added and is immediatly accepted, set default priority array
   if (accepted) {

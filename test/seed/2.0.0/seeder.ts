@@ -18,6 +18,7 @@ import fs from "fs";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { Attribute } from "../../../src/rmrk2.0.0/tools/types";
 import { getApi } from "../../../src/rmrk2.0.0/tools/utils";
+import { nanoid } from "nanoid";
 
 const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
 const fsPromises = fs.promises;
@@ -25,6 +26,85 @@ const defaultOptions = {
   pinataOptions: {
     cidVersion: 1,
   },
+};
+
+// const WS_URL = "wss://staging.node.rmrk.app";
+const WS_URL = "ws://127.0.0.1:9944";
+
+const slotsParts = {
+  background: 0,
+  foreground: 18,
+  headwear: 13,
+  backpack: 1,
+  objectLeft: 14,
+  objectRight: 15,
+  necklace: 12,
+};
+
+// const fixedSlotsGems = [
+//   "gemslot1",
+//   "gemslot2",
+//   "gemslot3",
+//   "gemslot4",
+//   "gemslot5",
+// ];
+
+const fixedPartsMap = {
+  tail: 2,
+  wingleft: 3,
+  body: 4,
+  footleft: 5,
+  footright: 6,
+  top: 7,
+  wingright: 8,
+  head: 9,
+  eyes: 10,
+  beak: 11,
+  handright: 16,
+  handleft: 17,
+};
+
+const getFixedKanariaParts = (
+  partsByEmote: {
+    slot: string;
+    resources: string[];
+  }[]
+): IBasePart[] => {
+  const fixedParts: IBasePart[] = [];
+  partsByEmote.forEach((part) => {
+    if (
+      part.slot !== "object" &&
+      !Object.keys(slotsParts).includes(part.slot)
+    ) {
+      fixedParts.push({
+        type: "fixed",
+        id: part.resources[0].replace(".svg", ""),
+        src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${part.resources[0].slice(
+          0,
+          part.resources[0].indexOf("_")
+        )}/${part.resources[0]}`,
+        // @ts-ignore
+        z: fixedPartsMap[part.slot],
+      });
+    }
+  });
+
+  return fixedParts;
+};
+
+const getSlotKanariaParts = (equippable: string[] | "*" = []): IBasePart[] => {
+  const slotParts: IBasePart[] = [];
+  Object.keys(slotsParts).forEach((slotid) => {
+    slotParts.push({
+      type: "slot",
+      id: slotid,
+      equippable,
+      // @ts-ignore
+      z: slotsParts[slotid],
+    });
+  });
+
+  return slotParts;
 };
 
 const getBaseParts = (equippable: string[] | "*" = []) => {
@@ -78,8 +158,7 @@ const getBaseParts = (equippable: string[] | "*" = []) => {
     },
     {
       id: "top",
-      type: "slot",
-      equippable,
+      type: "fixed",
       z: 7,
     },
     {
@@ -202,21 +281,39 @@ let classBlock = 0;
 // let nftBlock = 0;
 let baseBlock = 0;
 
-export const seedKanariaBase = async (
-  api: ApiPromise,
-  kp: KeyringPair,
-  kp2: KeyringPair
-) => {
+export const seedKanariaBase = async (nfts: NFT[], nftMintBlock: number) => {
   try {
-    const accounts = getKeys();
+    const ws = WS_URL;
+    const phrase = "//Alice";
+    console.log("Connecting...");
+    const api = await getApi(ws);
+    console.log("Connected.");
+
+    const kp = getKeyringFromUri(phrase);
+    const kp2 = getKeyringFromUri("//Bob");
+
+    const collections = await getCollections();
+    const equippable = collections.map((collection) => collection.id);
+    const emotesBreakdownRaw = await fsPromises.readFile(
+      `${process.cwd()}/test/seed/2.0.0/data/emote-resources.json`
+    );
+
+    const emotesBreakdownRawJson: {
+      slot: string;
+      resources: string[];
+    }[] = JSON.parse(emotesBreakdownRaw.toString());
+
+    const baseParts = [
+      ...getFixedKanariaParts(emotesBreakdownRawJson),
+      ...getSlotKanariaParts(equippable),
+    ];
+    console.log(baseParts);
     const base = new Base(
       0,
-      "KBASE777",
-      encodeAddress(accounts[0].address, 2),
+      "KANBASE",
+      encodeAddress(kp.address, 2),
       "svg",
-      getBaseParts([
-        Collection.generateId(u8aToHex(getKeys()[0].publicKey), "KANARIAPARTS"),
-      ])
+      baseParts
     );
 
     const txs = [base.base()].map((remark) => api.tx.system.remark(remark));
@@ -224,13 +321,23 @@ export const seedKanariaBase = async (
       if (status.isInBlock) {
         console.log(`included in ${status.asInBlock}`);
         const block = await api.rpc.chain.getBlock(status.asInBlock);
-        baseBlock = block.block.header.number.toNumber();
+        console.log(
+          "BASE BLOCK NUMBER: ",
+          block.block.header.number.toNumber()
+        );
+
+        seedKanariaItemsResources(
+          block.block.header.number.toNumber(),
+          nfts,
+          nftMintBlock
+        );
       }
     });
   } catch (error) {
     console.log("SEED BASE ERROR", error);
   }
 };
+// seedKanariaBase();
 
 export const pinCollectionsMetadatas = async () => {
   const metadataRaw = await fsPromises.readFile(
@@ -259,7 +366,13 @@ export const pinCollectionsMetadatas = async () => {
   fs.writeFileSync(`collection-metadatas.json`, JSON.stringify(result));
 };
 
-const getCollections = async () => {
+const getCollections = async (): Promise<
+  {
+    symbol: string;
+    metadata: string;
+    id: string;
+  }[]
+> => {
   await cryptoWaitReady();
 
   return [
@@ -302,6 +415,10 @@ const getCollections = async () => {
   ];
 };
 
+const mapCollectionIdToSymbol = {
+  background: "KANBACK",
+};
+
 export const uploadRMRKMetadata = async (
   metadataFields: NFTMetadata
 ): Promise<string> => {
@@ -333,6 +450,7 @@ interface MetadataRaw {
   Collection: "";
   Minted: "";
   Amount: "";
+  Ready: "" | "Y";
 }
 
 export const generateKanariaMetadata = async () => {
@@ -344,91 +462,22 @@ export const generateKanariaMetadata = async () => {
       throw new Error("No metadata file");
     }
     const metadataRawJson: MetadataRaw[] = JSON.parse(metadataRaw.toString());
-    //
-    // Assets_SVG_thumbnails
-    // Assets_SVG
-
-    const emoteFolders = await fsPromises.readdir(
-      `${process.cwd()}/test/seed/2.0.0/data/Assets_SVG`
+    const metadataRawJsonReady = metadataRawJson.filter(
+      (metadata) => metadata.Ready === "Y"
     );
-    const promises = emoteFolders.map(async (emoteFolderName) => {
-      const resourceFiles = await fsPromises.readdir(
-        `${process.cwd()}/test/seed/2.0.0/data/Assets_SVG/${emoteFolderName}`
-      );
-      const resourceMap = {};
-      if (resourceFiles.length) {
-        // eslint-disable-next-line security/detect-object-injection
-        // @ts-ignore
-        resourceMap[emoteFolderName] = [];
-      }
-      resourceFiles.forEach((resourceFile) => {
-        const isSvg = resourceFile.includes(".svg");
-        if (isSvg) {
-          const nameWithoutEmotePrefix = resourceFile.slice(
-            `${emoteFolderName}_`.length
-          );
 
-          let slot = nameWithoutEmotePrefix
-            .slice(
-              0,
-              nameWithoutEmotePrefix.includes("_")
-                ? nameWithoutEmotePrefix.indexOf("_")
-                : nameWithoutEmotePrefix.indexOf(".svg")
-            )
-            .toLowerCase();
+    const pinnedRaw = await fsPromises.readFile(
+      `${process.cwd()}/pinned-items-metadatas.json`
+    );
+    const pinnedRawJson = JSON.parse(pinnedRaw.toString());
 
-          if (slot.includes("object")) {
-            slot = "object";
-            // eslint-disable-next-line security/detect-object-injection
-            // @ts-ignore
-
-            const partIndex =
-              // eslint-disable-next-line security/detect-object-injection
-              // @ts-ignore
-              resourceMap[emoteFolderName].findIndex(
-                (nft: { slot: string }) => nft.slot === slot
-              );
-            // eslint-disable-next-line security/detect-object-injection
-            // @ts-ignore
-            if (resourceMap[emoteFolderName][partIndex]) {
-              // eslint-disable-next-line security/detect-object-injection
-              // @ts-ignore
-              resourceMap[emoteFolderName][partIndex].resources.push(
-                resourceFile
-              );
-            } else {
-              // eslint-disable-next-line security/detect-object-injection
-              // @ts-ignore
-              resourceMap[emoteFolderName].push({
-                slot,
-                resources: [resourceFile],
-              });
-            }
-          } else {
-            // eslint-disable-next-line security/detect-object-injection
-            // @ts-ignore
-            resourceMap[emoteFolderName].push({
-              slot,
-              resources: [resourceFile],
-            });
-          }
-        }
-        // console.log(resourceMap);
-      });
-
-      return resourceMap;
-      // console.log(resourceFiles);
-    });
-
-    const result = await Promise.all(promises);
-    await pinCollectionsMetadatas();
-    console.log(result);
-
-    fs.writeFileSync(`emote-resources.json`, JSON.stringify(result));
+    const emotesBreakdownRaw = await fsPromises.readFile(
+      `${process.cwd()}/test/seed/2.0.0/data/emote-resources.json`
+    );
 
     // console.log(files);
 
-    const matadata = metadataRawJson.map((metadataRawItem) => {
+    let matadata = metadataRawJsonReady.map((metadataRawItem) => {
       const attributes: Attribute[] = [];
       Object.keys(metadataRawItem).forEach((key) => {
         if (key.includes("Attribute:")) {
@@ -443,10 +492,12 @@ export const generateKanariaMetadata = async () => {
       });
 
       return {
-        id: `${metadataRawItem.emote}-${metadataRawItem.shortName}`,
+        id: `${metadataRawItem.item.replace(".svg", "")}`,
         slot: metadataRawItem.type,
         metadata: {
-          image: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${metadataRawItem.emote}/${metadataRawItem.item}`,
+          image: `ipfs://ipfs/QmVwVkgrZd3wHn5EC1Lvmcbxvz497sw9YgDywmZaxrfXE5/${
+            metadataRawItem.emote
+          }/${metadataRawItem.item.replace(".svg", "_thumb.svg")}`,
           description: metadataRawItem.Description,
           name: metadataRawItem.Name,
           attributes,
@@ -454,13 +505,215 @@ export const generateKanariaMetadata = async () => {
       };
     });
 
-    // console.log(matadata);
+    // Filter out what is already pinned
+    matadata = matadata.filter((mtd) => pinnedRawJson.findIndex(mtd?.id) < 0);
+
+    const promises = matadata.map(async (metadataItem) => {
+      const options = {
+        ...defaultOptions,
+        pinataMetadata: { name: metadataItem.id },
+      };
+      try {
+        const metadata = { ...metadataItem.metadata };
+        const metadataHashResult = await pinata.pinJSONToIPFS(
+          metadata,
+          options
+        );
+        return {
+          ...metadataItem,
+          metadata: `ipfs://ipfs/${metadataHashResult.IpfsHash}`,
+        };
+      } catch (error) {
+        console.log(error);
+        console.log(JSON.stringify(error));
+        return "";
+      }
+    });
+
+    const pinnedMetadata = await Promise.all(promises);
+    console.log(pinnedMetadata);
+
+    fs.writeFileSync(
+      `${process.cwd()}/test/seed/2.0.0/data/pinned-items-metadatas.json`,
+      JSON.stringify(pinnedMetadata.filter((mtdta) => mtdta !== ""))
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+// generateKanariaMetadata();
+
+export const seedKanariaNftItems = async () => {
+  try {
+    const ws = WS_URL;
+    const phrase = "//Alice";
+    console.log("Connecting...");
+    const api = await getApi(ws);
+    console.log("Connected.");
+
+    const kp = getKeyringFromUri(phrase);
+    const kp2 = getKeyringFromUri("//Bob");
+
+    const pinnedItemsMetadataRaw = await fsPromises.readFile(
+      `${process.cwd()}/test/seed/2.0.0/data/pinned-items-metadatas.json`
+    );
+    if (!pinnedItemsMetadataRaw) {
+      throw new Error("No pinnedItemsMetadata file");
+    }
+    const pinnedItemsMetadataRawJson: {
+      id: string;
+      metadata: string;
+      slot: string;
+    }[] = JSON.parse(pinnedItemsMetadataRaw.toString());
+
+    const nfts: NFT[] = [];
+
+    const promises = pinnedItemsMetadataRawJson.map((metadata, index) => {
+      // @ts-ignore
+      if (!mapCollectionIdToSymbol[metadata.slot]) {
+        return "";
+      }
+
+      const nft = new NFT({
+        block: 0,
+        collection: Collection.generateId(
+          u8aToHex(getKeys()[0].publicKey),
+          // @ts-ignore
+          mapCollectionIdToSymbol[metadata.slot]
+        ),
+        symbol: metadata.id,
+        transferable: 1,
+        sn: `${(index + 1).toString()}`.padStart(8, "0"),
+        owner: encodeAddress(kp.address, 2),
+        attributes: [],
+      });
+
+      nfts.push(nft);
+
+      return nft.mint();
+    });
+
+    const remarks = await Promise.all(promises);
+    console.log(remarks);
+    const txs = remarks
+      .filter((remark) => remark !== "")
+      .map((remark) => api.tx.system.remark(remark));
+    await api.tx.utility.batch(txs).signAndSend(kp, async ({ status }) => {
+      if (status.isInBlock) {
+        console.log(`Nested Kanaria NFT items included in ${status.asInBlock}`);
+        const block = await api.rpc.chain.getBlock(status.asInBlock);
+        console.log("NFT BLOCK NUMBER: ", block.block.header.number.toNumber());
+
+        seedKanariaBase(nfts, block.block.header.number.toNumber());
+      }
+    });
+  } catch (error) {
+    console.log(JSON.stringify(error));
+  }
+};
+
+// seedKanariaNftItems();
+
+const seedKanariaItemsResources = async (
+  baseBlock: number,
+  nfts: NFT[],
+  nftMintBlock: number
+) => {
+  try {
+    const ws = WS_URL;
+    const phrase = "//Alice";
+    console.log("Connecting...");
+    const api = await getApi(ws);
+    console.log("Connected.");
+
+    const kp = getKeyringFromUri(phrase);
+    const kp2 = getKeyringFromUri("//Bob");
+
+    // const consolidatedJson = []
+
+    const emotesBreakdownRaw = await fsPromises.readFile(
+      `${process.cwd()}/test/seed/2.0.0/data/emote-resources.json`
+    );
+
+    const emotesBreakdownRawJson: {
+      slot: string;
+      resources: string[];
+    }[] = JSON.parse(emotesBreakdownRaw.toString());
+
+    const promises = nfts.map((consolidatedNft) => {
+      // @ts-ignore
+      if (!mapCollectionIdToSymbol["background"]) {
+        return "";
+      }
+
+      const findResources = emotesBreakdownRawJson.find((emts) =>
+        emts.resources.includes(`${consolidatedNft.symbol}.svg`)
+      );
+
+      if (!findResources) {
+        return "";
+      }
+
+      console.log("nftMintBlock", nftMintBlock);
+
+      const nft = new NFT({
+        block: nftMintBlock,
+        collection: consolidatedNft.collection,
+        symbol: consolidatedNft.symbol,
+        transferable: consolidatedNft.transferable,
+        sn: consolidatedNft.sn,
+        owner: consolidatedNft.owner,
+        attributes: [],
+      });
+
+      const base = new Base(
+        baseBlock,
+        "KANBASE",
+        encodeAddress(kp.address, 2),
+        "svg",
+        []
+      );
+
+      const rmrks = findResources.resources.map((res) => [
+        nft.resadd({
+          id: nanoid(5),
+          src: `ipfs://ipfs/QmVwVkgrZd3wHn5EC1Lvmcbxvz497sw9YgDywmZaxrfXE5/${res.slice(
+            0,
+            res.indexOf("_")
+          )}/${res}`,
+        }),
+        nft.resadd({
+          slot: `${base.getId()}.${findResources.slot}`,
+          id: nanoid(5),
+          src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${res.slice(
+            0,
+            res.indexOf("_")
+          )}/${res}`,
+        }),
+      ]);
+      //nft.resadd({ base: base.getId() })
+      return rmrks.flat();
+    });
+
+    const remarks = await Promise.all(promises);
+    console.log(remarks);
+    const txs = remarks
+      .filter((rmrk) => rmrk !== "")
+      .flat()
+      .map((remark) => api.tx.system.remark(remark));
+    await api.tx.utility.batch(txs).signAndSend(kp, async ({ status }) => {
+      if (status.isInBlock) {
+        console.log(`Nested Kanaria NFT Resource added in ${status.asInBlock}`);
+        const block = await api.rpc.chain.getBlock(status.asInBlock);
+        classBlock = block.block.header.number.toNumber();
+      }
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-// generateKanariaMetadata();
+// seedKanariaItemsResources();
 
 const getKeyringFromUri = (phrase: string): KeyringPair => {
   const keyring = new Keyring({ type: "sr25519" });
@@ -469,7 +722,7 @@ const getKeyringFromUri = (phrase: string): KeyringPair => {
 
 export const seedKanariaBasCollections = async () => {
   try {
-    const ws = "ws://127.0.0.1:9944";
+    const ws = WS_URL;
     const phrase = "//Alice";
     console.log("Connecting...");
     const api = await getApi(ws);
@@ -498,6 +751,8 @@ export const seedKanariaBasCollections = async () => {
         console.log(`included in ${status.asInBlock}`);
         const block = await api.rpc.chain.getBlock(status.asInBlock);
         classBlock = block.block.header.number.toNumber();
+
+        seedKanariaNftItems();
       }
     });
   } catch (error) {
