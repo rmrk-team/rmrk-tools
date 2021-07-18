@@ -1,35 +1,21 @@
-import { ApiPromise, Keyring } from "@polkadot/api";
+import { Keyring } from "@polkadot/api";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { u8aToHex } from "@polkadot/util";
 import getKeys from "../devaccs";
-import {
-  Collection,
-  CollectionMetadata,
-} from "../../../src/rmrk2.0.0/classes/collection";
+import { Collection } from "../../../src/rmrk2.0.0/classes/collection";
 import { NFT } from "../../../src/rmrk2.0.0";
 import { Base, IBasePart } from "../../../src/rmrk2.0.0/classes/base";
-import { Equippable } from "../../../src/rmrk2.0.0/classes/equippable";
 import { encodeAddress } from "@polkadot/keyring";
-import { Resadd } from "../../../src/rmrk2.0.0/classes/resadd";
-import { NFTMetadata } from "../../../src/rmrk2.0.0/classes/nft";
-// @ts-ignore
-import pinataSDK from "@pinata/sdk";
+
 import fs from "fs";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { Attribute } from "../../../src/rmrk2.0.0/tools/types";
 import { getApi } from "../../../src/rmrk2.0.0/tools/utils";
 import { nanoid } from "nanoid";
 
-const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
 const fsPromises = fs.promises;
-const defaultOptions = {
-  pinataOptions: {
-    cidVersion: 1,
-  },
-};
 
-// const WS_URL = "wss://staging.node.rmrk.app";
-const WS_URL = "ws://127.0.0.1:9944";
+const WS_URL = "wss://staging.node.rmrk.app";
+// const WS_URL = "ws://127.0.0.1:9944";
 
 const slotsParts = {
   background: 0,
@@ -40,14 +26,6 @@ const slotsParts = {
   objectRight: 15,
   necklace: 12,
 };
-
-// const fixedSlotsGems = [
-//   "gemslot1",
-//   "gemslot2",
-//   "gemslot3",
-//   "gemslot4",
-//   "gemslot5",
-// ];
 
 const fixedPartsMap = {
   tail: 2,
@@ -64,6 +42,109 @@ const fixedPartsMap = {
   handleft: 17,
 };
 
+const fixedPartsCardLayout = {};
+
+const GEM_IPFS_FOLDER =
+  "ipfs://ipfs/Qmdjhybtovq6qzpofB12byktjHP67iqpn4euACzjULVjhg";
+const getGemParts = (equippable: string[] | "*" = []): IBasePart[] => {
+  const fixedSlotsGems: IBasePart[] = [
+    {
+      type: "slot",
+      id: "gem_empty1",
+      equippable,
+      z: 95,
+      src: `${GEM_IPFS_FOLDER}/gem_01_openslot.svg`,
+    },
+    {
+      type: "slot",
+      id: "gem_empty2",
+      equippable,
+      z: 96,
+      src: `${GEM_IPFS_FOLDER}/gem_02_openslot.svg`,
+    },
+    {
+      type: "slot",
+      id: "gem_empty3",
+      equippable,
+      z: 97,
+      src: `${GEM_IPFS_FOLDER}/gem_03_openslot.svg`,
+    },
+    {
+      type: "slot",
+      id: "gem_empty4",
+      equippable,
+      z: 98,
+      src: `${GEM_IPFS_FOLDER}/gem_04_openslot.svg`,
+    },
+    {
+      type: "slot",
+      id: "gem_empty5",
+      equippable,
+      z: 99,
+      src: `${GEM_IPFS_FOLDER}/gem_05_openslot.svg`,
+    },
+    {
+      type: "fixed",
+      id: "gem_rotten1",
+      z: 95,
+      src: `${GEM_IPFS_FOLDER}/gem_01_rotten.svg`,
+    },
+    {
+      type: "fixed",
+      id: "gem_rotten2",
+      z: 96,
+      src: `${GEM_IPFS_FOLDER}/gem_02_rotten.svg`,
+    },
+    {
+      type: "fixed",
+      id: "gem_rotten3",
+      z: 97,
+      src: `${GEM_IPFS_FOLDER}/gem_03_rotten.svg`,
+    },
+    {
+      type: "fixed",
+      id: "gem_rotten4",
+      z: 98,
+      src: `${GEM_IPFS_FOLDER}/gem_04_rotten.svg`,
+    },
+    {
+      type: "fixed",
+      id: "gem_rotten5",
+      z: 99,
+      src: `${GEM_IPFS_FOLDER}/gem_05_rotten.svg`,
+    },
+  ];
+
+  return fixedSlotsGems;
+};
+
+const cardLayotParts: IBasePart[] = [
+  {
+    type: "fixed",
+    id: "card_le",
+    z: 90,
+    src: `ipfs://ipfs/QmSL1AenhMCFCYSJcNHNbJtvyd7GjcogXcAoVBPyQkTi1f/rarity_limited.svg`,
+  },
+  {
+    type: "fixed",
+    id: "card_r",
+    z: 90,
+    src: `ipfs://ipfs/QmSL1AenhMCFCYSJcNHNbJtvyd7GjcogXcAoVBPyQkTi1f/rarity_rare.svg`,
+  },
+  {
+    type: "fixed",
+    id: "card_f",
+    z: 90,
+    src: `ipfs://ipfs/QmSL1AenhMCFCYSJcNHNbJtvyd7GjcogXcAoVBPyQkTi1f/rarity_founder.svg`,
+  },
+  {
+    type: "fixed",
+    id: "card_sf",
+    z: 90,
+    src: `ipfs://ipfs/QmSL1AenhMCFCYSJcNHNbJtvyd7GjcogXcAoVBPyQkTi1f/rarity_superfounder.svg`,
+  },
+];
+
 const getFixedKanariaParts = (
   partsByEmote: {
     slot: string;
@@ -79,10 +160,9 @@ const getFixedKanariaParts = (
       fixedParts.push({
         type: "fixed",
         id: part.resources[0].replace(".svg", ""),
-        src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${part.resources[0].slice(
-          0,
-          part.resources[0].indexOf("_")
-        )}/${part.resources[0]}`,
+        src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${part.resources[0]
+          .slice(0, part.resources[0].indexOf("_"))
+          .toLowerCase()}/${part.resources[0].toLowerCase()}`,
         // @ts-ignore
         z: fixedPartsMap[part.slot],
       });
@@ -105,176 +185,6 @@ const getSlotKanariaParts = (equippable: string[] | "*" = []): IBasePart[] => {
   });
 
   return slotParts;
-};
-
-const getBaseParts = (equippable: string[] | "*" = []) => {
-  const BIRD_1_BASE_PARTS: IBasePart[] = [
-    {
-      id: "background",
-      type: "slot",
-      equippable,
-      z: 0,
-    },
-    {
-      id: "backpack",
-      type: "slot",
-      equippable,
-      z: 1,
-    },
-    {
-      id: "tail",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
-      z: 2,
-    },
-    {
-      id: "wingleft",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_wingLeft.svg",
-      z: 3,
-    },
-    {
-      id: "body",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_body.svg",
-      z: 4,
-    },
-    {
-      id: "footleft",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_footLeft.svg",
-      z: 5,
-    },
-    {
-      id: "footright",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_footRight.svg",
-      z: 6,
-    },
-    {
-      id: "top",
-      type: "fixed",
-      z: 7,
-    },
-    {
-      id: "wingright",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_wingRight.svg",
-      z: 8,
-    },
-    {
-      id: "head",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_head.svg",
-      z: 9,
-    },
-    {
-      id: "eyes",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_eyes.svg",
-      z: 10,
-    },
-    {
-      id: "beak",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_beak.svg",
-      z: 11,
-    },
-    {
-      id: "necklace",
-      type: "slot",
-      equippable,
-      z: 12,
-    },
-    {
-      id: "headwear",
-      type: "slot",
-      equippable,
-      z: 13,
-    },
-    {
-      id: "objectleft",
-      type: "slot",
-      equippable,
-      z: 14,
-    },
-    {
-      id: "objectright",
-      type: "slot",
-      equippable,
-      z: 15,
-    },
-    {
-      id: "handright",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_handRight.svg",
-      z: 16,
-    },
-    {
-      id: "handleft",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_handLeft.svg",
-      z: 17,
-    },
-    {
-      id: "foreground",
-      type: "slot",
-      equippable,
-      z: 18,
-    },
-    {
-      id: "gemslot1",
-      type: "fixed",
-      z: 90,
-      src:
-        "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_01_decayed.svg",
-    },
-    {
-      id: "gemslot2",
-      type: "slot",
-      equippable,
-      z: 91,
-      src:
-        "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_02_openslot.svg",
-    },
-    {
-      id: "gemslot3",
-      type: "slot",
-      equippable,
-      z: 92,
-      src:
-        "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_03_openslot.svg",
-    },
-    {
-      id: "gemslot4",
-      type: "slot",
-      equippable,
-      z: 93,
-      src:
-        "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_04_openslot.svg",
-    },
-    {
-      id: "gemslot5",
-      type: "slot",
-      equippable,
-      z: 94,
-      src:
-        "ipfs://ipfs/QmSFkuSVnGLdBiT4s6NU5UZCSxpHWdExEMMgtic97j2dpT/gem_05_openslot.svg",
-    },
-  ];
-
-  return BIRD_1_BASE_PARTS;
 };
 
 let classBlock = 0;
@@ -306,6 +216,8 @@ export const seedKanariaBase = async (nfts: NFT[], nftMintBlock: number) => {
     const baseParts = [
       ...getFixedKanariaParts(emotesBreakdownRawJson),
       ...getSlotKanariaParts(equippable),
+      ...getGemParts(equippable),
+      ...cardLayotParts,
     ];
     console.log(baseParts);
     const base = new Base(
@@ -338,33 +250,6 @@ export const seedKanariaBase = async (nfts: NFT[], nftMintBlock: number) => {
   }
 };
 // seedKanariaBase();
-
-export const pinCollectionsMetadatas = async () => {
-  const metadataRaw = await fsPromises.readFile(
-    `${process.cwd()}/test/seed/2.0.0/data/kanaria-tradable-collections-metadata.json`
-  );
-  if (!metadataRaw) {
-    throw new Error("No metadata file");
-  }
-  const metadataRawJson = JSON.parse(metadataRaw.toString());
-
-  const promises = metadataRawJson.map(async (metadata: { name: any }) => {
-    const options = {
-      ...defaultOptions,
-      pinataMetadata: { name: metadata.name },
-    };
-    try {
-      const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
-      return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
-    } catch (error) {
-      console.log(JSON.stringify(error));
-    }
-  });
-
-  const result = await Promise.all(promises);
-
-  fs.writeFileSync(`collection-metadatas.json`, JSON.stringify(result));
-};
 
 const getCollections = async (): Promise<
   {
@@ -419,128 +304,6 @@ const mapCollectionIdToSymbol = {
   background: "KANBACK",
 };
 
-export const uploadRMRKMetadata = async (
-  metadataFields: NFTMetadata
-): Promise<string> => {
-  const options = {
-    ...defaultOptions,
-    pinataMetadata: { name: metadataFields.name },
-  };
-  try {
-    const metadata = { ...metadataFields };
-    const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
-    return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
-  } catch (error) {
-    return "";
-  }
-};
-
-interface MetadataRaw {
-  item: string;
-  emote: string;
-  Rarity: string;
-  type: string;
-  path: string;
-  shortName: string;
-  fullName: string;
-  Name: string;
-  Description: string;
-  "Attribute: context": "";
-  "Attribute: type": "";
-  Collection: "";
-  Minted: "";
-  Amount: "";
-  Ready: "" | "Y";
-}
-
-export const generateKanariaMetadata = async () => {
-  try {
-    const metadataRaw = await fsPromises.readFile(
-      `${process.cwd()}/test/seed/2.0.0/data/metadata.json`
-    );
-    if (!metadataRaw) {
-      throw new Error("No metadata file");
-    }
-    const metadataRawJson: MetadataRaw[] = JSON.parse(metadataRaw.toString());
-    const metadataRawJsonReady = metadataRawJson.filter(
-      (metadata) => metadata.Ready === "Y"
-    );
-
-    const pinnedRaw = await fsPromises.readFile(
-      `${process.cwd()}/pinned-items-metadatas.json`
-    );
-    const pinnedRawJson = JSON.parse(pinnedRaw.toString());
-
-    const emotesBreakdownRaw = await fsPromises.readFile(
-      `${process.cwd()}/test/seed/2.0.0/data/emote-resources.json`
-    );
-
-    // console.log(files);
-
-    let matadata = metadataRawJsonReady.map((metadataRawItem) => {
-      const attributes: Attribute[] = [];
-      Object.keys(metadataRawItem).forEach((key) => {
-        if (key.includes("Attribute:")) {
-          const attributeKey = key.slice("Attribute: ".length);
-          const attributeValue =
-            metadataRawItem[key as keyof typeof metadataRawItem];
-          attributes.push({
-            trait_type: attributeKey,
-            value: attributeValue,
-          });
-        }
-      });
-
-      return {
-        id: `${metadataRawItem.item.replace(".svg", "")}`,
-        slot: metadataRawItem.type,
-        metadata: {
-          image: `ipfs://ipfs/QmVwVkgrZd3wHn5EC1Lvmcbxvz497sw9YgDywmZaxrfXE5/${
-            metadataRawItem.emote
-          }/${metadataRawItem.item.replace(".svg", "_thumb.svg")}`,
-          description: metadataRawItem.Description,
-          name: metadataRawItem.Name,
-          attributes,
-        },
-      };
-    });
-
-    // Filter out what is already pinned
-    matadata = matadata.filter((mtd) => pinnedRawJson.findIndex(mtd?.id) < 0);
-
-    const promises = matadata.map(async (metadataItem) => {
-      const options = {
-        ...defaultOptions,
-        pinataMetadata: { name: metadataItem.id },
-      };
-      try {
-        const metadata = { ...metadataItem.metadata };
-        const metadataHashResult = await pinata.pinJSONToIPFS(
-          metadata,
-          options
-        );
-        return {
-          ...metadataItem,
-          metadata: `ipfs://ipfs/${metadataHashResult.IpfsHash}`,
-        };
-      } catch (error) {
-        console.log(error);
-        console.log(JSON.stringify(error));
-        return "";
-      }
-    });
-
-    const pinnedMetadata = await Promise.all(promises);
-    console.log(pinnedMetadata);
-
-    fs.writeFileSync(
-      `${process.cwd()}/test/seed/2.0.0/data/pinned-items-metadatas.json`,
-      JSON.stringify(pinnedMetadata.filter((mtdta) => mtdta !== ""))
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
 // generateKanariaMetadata();
 
 export const seedKanariaNftItems = async () => {
@@ -677,18 +440,16 @@ const seedKanariaItemsResources = async (
       const rmrks = findResources.resources.map((res) => [
         nft.resadd({
           id: nanoid(5),
-          src: `ipfs://ipfs/QmVwVkgrZd3wHn5EC1Lvmcbxvz497sw9YgDywmZaxrfXE5/${res.slice(
-            0,
-            res.indexOf("_")
-          )}/${res}`,
+          src: `ipfs://ipfs/QmZX9GT5aaMgaL7b4dmMM4cfuZnaM3gQU4g8DutT47bPrY/${res
+            .slice(0, res.indexOf("_"))
+            .toLowerCase()}/${res.replace(".svg", "_thumb.png").toLowerCase()}`,
         }),
         nft.resadd({
           slot: `${base.getId()}.${findResources.slot}`,
           id: nanoid(5),
-          src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${res.slice(
-            0,
-            res.indexOf("_")
-          )}/${res}`,
+          src: `ipfs://ipfs/QmeXUDt9hpoUGRdGiahLSQmf5fegUJ5Jm6fei1xnBeNuDK/${res
+            .slice(0, res.indexOf("_"))
+            .toLowerCase()}/${res.toLowerCase()}`,
         }),
       ]);
       //nft.resadd({ base: base.getId() })
@@ -751,6 +512,8 @@ export const seedKanariaBasCollections = async () => {
         console.log(`included in ${status.asInBlock}`);
         const block = await api.rpc.chain.getBlock(status.asInBlock);
         classBlock = block.block.header.number.toNumber();
+
+        console.log("genesis class block: ", classBlock);
 
         seedKanariaNftItems();
       }
