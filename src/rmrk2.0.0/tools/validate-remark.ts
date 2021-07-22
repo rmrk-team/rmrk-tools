@@ -80,7 +80,7 @@ const BUYStruct = type({
   id: string(),
 });
 
-const CONSUMEStruct = type({
+const BURNStruct = type({
   id: string(),
 });
 
@@ -284,13 +284,13 @@ export const validateBuy = (remark: string): any => {
   }
 };
 
-export const validateConsume = (remark: string): any => {
+export const validateBurn = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, id] = remark.split("::");
 
   try {
-    validateRemarkBase(remark, OP_TYPES.CONSUME);
-    return assert({ id }, CONSUMEStruct);
+    validateRemarkBase(remark, OP_TYPES.BURN);
+    return assert({ id }, BURNStruct);
   } catch (error) {
     console.log("StructError is:", error);
     throw new Error(

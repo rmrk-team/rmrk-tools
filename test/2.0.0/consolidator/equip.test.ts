@@ -76,7 +76,7 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock().mint()),
-      ...getBlockCallsMock(mintNftMock(3).consume()),
+      ...getBlockCallsMock(mintNftMock(3).burn()),
       ...getBlockCallsMock(mintNftMock(3).equip("base-test.test")),
     ]);
     const consolidator = new Consolidator();

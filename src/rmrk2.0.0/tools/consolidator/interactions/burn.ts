@@ -2,34 +2,34 @@ import { OP_TYPES, PREFIX } from "../../constants";
 import { BlockCall } from "../../types";
 import { Change } from "../../../changelog";
 import { Remark } from "../remark";
-import { Consume } from "../../../classes/consume";
+import { Burn } from "../../../classes/burn";
 import { NFT } from "../../../classes/nft";
 import { hexToString } from "@polkadot/util";
 import { isValidAddressPolkadotAddress } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
-export const consumeInteraction = async (
+export const burnInteraction = async (
   remark: Remark,
-  consumeEntity: Consume,
+  burnEntity: Burn,
   dbAdapter: IConsolidatorAdapter,
   nft?: NFT
 ): Promise<void> => {
   if (!nft) {
     throw new Error(
-      `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-existant NFT ${consumeEntity.id}`
+      `[${OP_TYPES.BURN}] Attempting to BURN non-existant NFT ${burnEntity.id}`
     );
   }
 
   if (Boolean(nft.burned)) {
     throw new Error(
-      `[${OP_TYPES.CONSUME}] Attempting to burn already burned NFT ${consumeEntity.id}`
+      `[${OP_TYPES.BURN}] Attempting to burn already burned NFT ${burnEntity.id}`
     );
   }
 
   // Check if burner is owner of NFT
   if (nft.owner != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.CONSUME}] Attempting to CONSUME non-owned NFT ${consumeEntity.id}`
+      `[${OP_TYPES.BURN}] Attempting to BURN non-owned NFT ${burnEntity.id}`
     );
   }
 
@@ -68,7 +68,7 @@ export const consumeInteraction = async (
     new: burnReason,
     caller: remark.caller,
     block: remark.block,
-    opType: OP_TYPES.CONSUME,
+    opType: OP_TYPES.BURN,
   } as Change);
   nft.burned = burnReason;
 
@@ -79,7 +79,7 @@ export const consumeInteraction = async (
     new: BigInt(0),
     caller: remark.caller,
     block: remark.block,
-    opType: OP_TYPES.CONSUME,
+    opType: OP_TYPES.BURN,
   } as Change);
   nft.forsale = BigInt(0);
 };

@@ -70,7 +70,7 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
   it("Should invalidate accept if NFT is burned", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
-      ...getBlockCallsMock(mintNftMock(3).consume(), getBobKey().address),
+      ...getBlockCallsMock(mintNftMock(3).burn(), getBobKey().address),
       ...getBlockCallsMock(
         mintNftMock(3).accept(resid, "RES"),
         getBobKey().address

@@ -283,7 +283,7 @@ Object {
           "field": "burned",
           "new": "true",
           "old": "",
-          "opType": "CONSUME",
+          "opType": "BURN",
         },
         Object {
           "block": 5,
@@ -291,7 +291,7 @@ Object {
           "field": "forsale",
           "new": 0n,
           "old": 1000000000000n,
-          "opType": "CONSUME",
+          "opType": "BURN",
         },
       ],
       "children": Array [],

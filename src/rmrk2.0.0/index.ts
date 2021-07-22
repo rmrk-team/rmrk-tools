@@ -1,6 +1,7 @@
 export { Consolidator } from "./tools/consolidator/consolidator";
 export { Collection } from "./classes/collection";
 export { NFT } from "./classes/nft";
+export { Base } from "./classes/base";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
 export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";
 export { RemarkListener } from "./listener";
@@ -8,7 +9,7 @@ export { validateMintNFT } from "./tools/consolidator/interactions/mint";
 export { validateCreateIds } from "./tools/consolidator/interactions/create";
 export { listForSaleInteraction } from "./tools/consolidator/interactions/list";
 export { emoteInteraction } from "./tools/consolidator/interactions/emote";
-export { consumeInteraction } from "./tools/consolidator/interactions/consume";
+export { burnInteraction } from "./tools/consolidator/interactions/burn";
 export { changeIssuerInteraction } from "./tools/consolidator/interactions/changeIssuer";
 export { buyInteraction } from "./tools/consolidator/interactions/buy";
 export { sendInteraction } from "./tools/consolidator/interactions/send";

@@ -34,7 +34,7 @@ NFT {
 
 exports[`rmrk2.0.0 Nft: Buy should match snapshot 1`] = `"RMRK::BUY::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
 
-exports[`rmrk2.0.0 Nft: Consume should match snapshot 1`] = `"RMRK::CONSUME::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777"`;
+exports[`rmrk2.0.0 Nft: Consume should match snapshot 1`] = `"RMRK::BURN::2.0.0::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777"`;
 
 exports[`rmrk2.0.0 Nft: Emote should match snapshot 1`] = `"RMRK::EMOTE::2.0.0::RMRK2::1-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::1F600"`;
 

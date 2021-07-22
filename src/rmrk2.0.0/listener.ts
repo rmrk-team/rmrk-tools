@@ -199,7 +199,7 @@ export class RemarkListener {
     Subscribe to latest block heads, (finalised, and un-finalised)
     Save them to 2 separate arrays, and once block is finalised, remove it from unfinalised array
     this.latestBlockCalls is array of unfinalised blocks,
-    we keep it for reference in case consumer wants to disable remarks that are being interacted with
+    we keep it for reference in case burnr wants to disable remarks that are being interacted with
    */
   private async initialiseListener({ finalised }: { finalised: boolean }) {
     const headSubscriber = finalised

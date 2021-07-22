@@ -155,7 +155,7 @@ Object {
           "field": "burned",
           "new": "true",
           "old": "",
-          "opType": "CONSUME",
+          "opType": "BURN",
         },
         Object {
           "block": 4,
@@ -163,7 +163,7 @@ Object {
           "field": "forsale",
           "new": 0n,
           "old": 0n,
-          "opType": "CONSUME",
+          "opType": "BURN",
         },
       ],
       "children": Array [],

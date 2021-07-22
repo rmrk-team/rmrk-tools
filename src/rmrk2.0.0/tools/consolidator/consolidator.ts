@@ -17,8 +17,8 @@ import { sendInteraction } from "./interactions/send";
 import { Send } from "../../classes/send";
 import { List } from "../../classes/list";
 import { listForSaleInteraction } from "./interactions/list";
-import { Consume } from "../../classes/consume";
-import { consumeInteraction } from "./interactions/consume";
+import { Burn } from "../../classes/burn";
+import { burnInteraction } from "./interactions/burn";
 import { Buy } from "../../classes/buy";
 import { buyInteraction } from "./interactions/buy";
 import { Emote } from "../../classes/emote";
@@ -38,7 +38,7 @@ import {
   isValidAddressPolkadotAddress,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
-import {Attribute, BaseType} from "../types";
+import { Attribute, BaseType } from "../types";
 import { Base, IBasePart } from "../../classes/base";
 import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
@@ -79,7 +79,7 @@ export interface NFTConsolidated {
   priority: string[];
   children: NFTChild[];
   resources: IResourceConsolidated[];
-  attributes: Attribute[]
+  attributes: Attribute[];
 }
 
 export interface CollectionConsolidated {
@@ -294,7 +294,7 @@ export class Consolidator {
 
   /**
    * Send an NFT to an arbitrary recipient.
-   * You can only SEND an existing NFT (one that has not been CONSUMEd yet).
+   * You can only SEND an existing NFT (one that has not been BURNd yet).
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/send.md
    */
   private async send(remark: Remark): Promise<boolean> {
@@ -336,7 +336,7 @@ export class Consolidator {
   /**
    * A LIST interaction lists an NFT as available for sale. The NFT can be instantly purchased.
    * A listing can be canceled, and is automatically considered canceled when a BUY is executed on top of a given LIST.
-   * You can only LIST an existing NFT (one that has not been CONSUMEd yet).
+   * You can only LIST an existing NFT (one that has not been BURNd yet).
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/list.md
    */
   private async list(remark: Remark): Promise<boolean> {
@@ -375,41 +375,41 @@ export class Consolidator {
   }
 
   /**
-   * The CONSUME interaction burns an NFT for a specific purpose.
+   * The BURN interaction burns an NFT for a specific purpose.
    * This is useful when NFTs are spendable like with in-game potions, one-time votes in DAOs, or concert tickets.
-   * You can only CONSUME an existing NFT (one that has not been CONSUMEd yet).
-   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/consume.md
+   * You can only BURN an existing NFT (one that has not been BURNd yet).
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/burn.md
    */
-  private async consume(remark: Remark): Promise<boolean> {
-    const invalidate = this.updateInvalidCalls(OP_TYPES.CONSUME, remark).bind(
+  private async burn(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.BURN, remark).bind(
       this
     );
 
-    const consumeEntity = Consume.fromRemark(remark.remark);
-    // Check if consume is valid
-    if (typeof consumeEntity === "string") {
+    const burnEntity = Burn.fromRemark(remark.remark);
+    // Check if burn is valid
+    if (typeof burnEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.CONSUME}] Dead before instantiation: ${consumeEntity}`
+        `[${OP_TYPES.BURN}] Dead before instantiation: ${burnEntity}`
       );
       return true;
     }
 
     // Find the NFT in state
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
-      consumeEntity.id
+      burnEntity.id
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
     try {
-      await consumeInteraction(remark, consumeEntity, this.dbAdapter, nft);
+      await burnInteraction(remark, burnEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
-        await this.dbAdapter.updateNFTConsume(nft, consolidatedNFT);
+        await this.dbAdapter.updateNFTBurn(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {
-          this.interactionChanges.push({ [OP_TYPES.CONSUME]: nft.getId() });
+          this.interactionChanges.push({ [OP_TYPES.BURN]: nft.getId() });
         }
       }
     } catch (e) {
-      invalidate(consumeEntity.id, e.message);
+      invalidate(burnEntity.id, e.message);
       return true;
     }
 
@@ -419,7 +419,7 @@ export class Consolidator {
   /**
    * The BUY interaction allows a user to immediately purchase an NFT listed for sale using the LIST interaction,
    * as long as the listing hasn't been canceled.
-   * You can only BUY an existing NFT (one that has not been CONSUMEd yet).
+   * You can only BUY an existing NFT (one that has not been BURNd yet).
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/buy.md
    */
   private async buy(remark: Remark): Promise<boolean> {
@@ -455,7 +455,7 @@ export class Consolidator {
 
   /**
    * React to an NFT with an emoticon.
-   * You can only EMOTE on an existing NFT (one that has not been CONSUMEd yet).
+   * You can only EMOTE on an existing NFT (one that has not been BURNd yet).
    * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/emote.md
    */
   private async emote(remark: Remark): Promise<boolean> {
@@ -784,9 +784,9 @@ export class Consolidator {
           }
           break;
 
-        case OP_TYPES.CONSUME:
+        case OP_TYPES.BURN:
           // An NFT was burned
-          if (await this.consume(remark)) {
+          if (await this.burn(remark)) {
             continue;
           }
           break;

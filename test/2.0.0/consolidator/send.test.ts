@@ -70,7 +70,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const nftMock = mintNftMock2(4);
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
-      ...getBlockCallsMock(nftMock.consume()),
+      ...getBlockCallsMock(nftMock.burn()),
       ...getBlockCallsMock(nftMock.send(getBobKey().address)), // Send to Bob first
     ]);
     const consolidator = new Consolidator();

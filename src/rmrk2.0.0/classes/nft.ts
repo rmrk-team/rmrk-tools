@@ -147,13 +147,13 @@ export class NFT {
     }`;
   }
 
-  public consume(): string {
+  public burn(): string {
     if (!this.block) {
       throw new Error(
-        "You can only consume an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
+        "You can only burn an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
-    return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
+    return `${PREFIX}::${OP_TYPES.BURN}::${VERSION}::${this.getId()}`;
   }
 
   public emote(unicode: string, namespace = EMOTE_NAMESPACES.RMRK2): string {

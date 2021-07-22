@@ -40,7 +40,7 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
   it("Should prevent to LIST burned NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
-      ...getBlockCallsMock(mintNftMock(3).consume()),
+      ...getBlockCallsMock(mintNftMock(3).burn()),
       ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
     ]);
     const consolidator = new Consolidator();

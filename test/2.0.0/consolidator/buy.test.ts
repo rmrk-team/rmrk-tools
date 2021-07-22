@@ -88,7 +88,7 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
-      ...getBlockCallsMock(mintNftMock(3).consume()),
+      ...getBlockCallsMock(mintNftMock(3).burn()),
       ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
         {
           call: "balances.transfer",
