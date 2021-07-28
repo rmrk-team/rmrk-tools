@@ -45,6 +45,7 @@ const ResourceStruct = type({
   src: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
   slot: optional(pattern(string(), new RegExp(/^base-\S+\.{1}\S+$/))),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+  thumb: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
 const IsBigInt = define("BigInt", (value: any) => {

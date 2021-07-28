@@ -288,6 +288,7 @@ export interface Resource {
   metadata?: string;
   slot?: string;
   pending?: boolean;
+  thumb?: string
 }
 
 export interface IResourceConsolidated {
