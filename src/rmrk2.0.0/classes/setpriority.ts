@@ -1,4 +1,4 @@
-import { validateResadd } from "../tools/validate-remark";
+import { validateSetPriority } from "../tools/validate-remark";
 import { getRemarkData } from "../../rmrk1.0.0/tools/utils";
 
 export class Setpriority {
@@ -12,7 +12,7 @@ export class Setpriority {
 
   static fromRemark(remark: string): Setpriority | string {
     try {
-      validateResadd(remark);
+      validateSetPriority(remark);
       const [_prefix, _op_type, _version, id, priority] = remark.split("::");
       const priorityArray: string[] = getRemarkData(priority);
       return new this(id, priorityArray);

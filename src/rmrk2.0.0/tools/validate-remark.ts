@@ -209,6 +209,26 @@ export const validateResadd = (remark: string): any => {
   }
 };
 
+
+export const validateSetPriority = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id, priority] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.SETPRIORITY);
+    if (!id) {
+      throw new Error("No NFT id specified for SETPRIORITY");
+    }
+    return true;
+    // const obj = getRemarkData(priority);
+    // return assert(obj, ResourceStruct);
+  } catch (error) {
+    throw new Error(
+        error?.message || "Something went wrong during SETPRIORITY remark validation"
+    );
+  }
+};
+
 export const validateSend = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
