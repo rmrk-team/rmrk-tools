@@ -296,6 +296,7 @@ export interface IResourceConsolidated {
   base?: string;
   parts?: string[];
   src?: string;
+  thumb?: string;
   metadata?: string;
   slot?: string;
   pending: boolean;
