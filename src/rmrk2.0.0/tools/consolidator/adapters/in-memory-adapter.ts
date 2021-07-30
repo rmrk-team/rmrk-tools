@@ -119,7 +119,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
-  public async updateNFTChildren(nft: NFT) {
+  public async updateNFTChildrenRootOwner(nft: NFT) {
     if (nft.children && nft.children.length > 0) {
       const promises = nft.children.map(async (child) => {
         const nftIndex = this.nfts.findIndex(

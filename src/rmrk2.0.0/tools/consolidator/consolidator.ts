@@ -321,7 +321,7 @@ export class Consolidator {
       await sendInteraction(remark, sendEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT);
-        await this.dbAdapter.updateNFTChildren(nft);
+        await this.dbAdapter.updateNFTChildrenRootOwner(nft);
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
         }
@@ -442,6 +442,7 @@ export class Consolidator {
       buyInteraction(remark, buyEntity, nft, this.ss58Format);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT);
+        await this.dbAdapter.updateNFTChildrenRootOwner(nft);
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({ [OP_TYPES.BUY]: nft.getId() });
         }

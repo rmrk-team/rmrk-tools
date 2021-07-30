@@ -30,6 +30,7 @@ export const buyInteraction = (
     opType: OP_TYPES.BUY,
   } as Change);
   nft.owner = buyEntity.recipient || remark.caller;
+  nft.rootowner = buyEntity.recipient || remark.caller;
 
   nft.addChange({
     field: "forsale",
