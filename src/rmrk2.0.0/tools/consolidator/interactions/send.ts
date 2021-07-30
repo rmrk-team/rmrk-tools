@@ -9,6 +9,7 @@ import {
   findRealOwner,
   isValidAddressPolkadotAddress,
 } from "../utils";
+import { uploadRMRKMetadata } from "../../metadata-to-ipfs";
 
 export const sendInteraction = async (
   remark: Remark,
@@ -54,7 +55,7 @@ export const sendInteraction = async (
     );
   }
 
-  let rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
+  const rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
 
   if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
     // Remove NFT from children of previous owner

@@ -321,6 +321,7 @@ export class Consolidator {
       await sendInteraction(remark, sendEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT);
+        await this.dbAdapter.updateNFTChildren(nft);
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
         }
