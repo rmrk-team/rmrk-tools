@@ -41,6 +41,8 @@ export const validateMintNFT = async (
           pending: rootowner !== remark.caller,
         });
       }
+
+      nft.pending = rootowner !== remark.caller;
     }
   }
 

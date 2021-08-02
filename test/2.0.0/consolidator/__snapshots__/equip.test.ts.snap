@@ -64,6 +64,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [
         "xXhhR",
       ],
@@ -96,6 +97,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [
         "jXhhR",
       ],
@@ -151,6 +153,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -235,6 +238,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [
@@ -260,6 +264,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [
@@ -350,6 +355,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [
         "xXhhR",
       ],
@@ -377,6 +383,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [
         "jXhhR",
       ],
@@ -469,6 +476,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [
         "xXhhR",
       ],
@@ -496,6 +504,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [
         "jXhhR",
       ],
@@ -568,6 +577,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -639,6 +649,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -658,6 +669,7 @@ Object {
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -711,6 +723,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -739,6 +752,7 @@ Object {
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
@@ -815,6 +829,7 @@ Object {
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
       "priority": Array [
         "xXhhR",
       ],
@@ -847,6 +862,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
       "priority": Array [
         "jXhhR",
       ],

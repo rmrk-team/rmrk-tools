@@ -80,6 +80,7 @@ export interface NFTConsolidated {
   children: NFTChild[];
   resources: IResourceConsolidated[];
   attributes: Attribute[];
+  pending: boolean;
 }
 
 export interface CollectionConsolidated {

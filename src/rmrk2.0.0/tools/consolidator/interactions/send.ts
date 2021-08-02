@@ -84,6 +84,8 @@ export const sendInteraction = async (
         pending: rootNewOwner !== remark.caller,
         equipped: "",
       });
+
+      nft.pending = rootNewOwner !== remark.caller;
     }
   }
 

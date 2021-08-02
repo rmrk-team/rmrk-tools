@@ -36,6 +36,7 @@ export class NFT {
   resources: IResourceConsolidated[] = [];
   burned: string;
   attributes: Attribute[];
+  pending: boolean;
   constructor(nftInstance: INftInstanceProps) {
     this.block = nftInstance.block;
     this.collection = nftInstance.collection;
@@ -52,6 +53,7 @@ export class NFT {
     this.forsale = BigInt(0);
     this.burned = "";
     this.attributes = nftInstance.attributes || undefined;
+    this.pending = false;
   }
 
   public getId(): string {
@@ -288,7 +290,7 @@ export interface Resource {
   metadata?: string;
   slot?: string;
   pending?: boolean;
-  thumb?: string
+  thumb?: string;
 }
 
 export interface IResourceConsolidated {
