@@ -41,6 +41,18 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
+  it("rootowner should be updated recursivly", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock().mint()),
+      ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(mintNftMock3().mint(mintNftMock2(4).getId())),
+      ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
   it("Should set NFT as pending if sent from non parent owner", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),

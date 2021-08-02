@@ -119,15 +119,27 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     };
   }
 
-  public async updateNFTChildrenRootOwner(nft: NFT) {
+  public async updateNFTChildrenRootOwner(
+    nft: NFT | NFTConsolidated,
+    rootowner?: string
+  ) {
     if (nft.children && nft.children.length > 0) {
       const promises = nft.children.map(async (child) => {
         const nftIndex = this.nfts.findIndex(
           (nftItem) => nftItem.id === child.id
         );
+        if (
+          this.nfts[nftIndex]?.children &&
+          this.nfts[nftIndex]?.children.length > 0
+        ) {
+          await this.updateNFTChildrenRootOwner(
+            this.nfts[nftIndex],
+            rootowner || nft.rootowner
+          );
+        }
         this.nfts[nftIndex] = {
           ...this.nfts[nftIndex],
-          rootowner: nft.rootowner,
+          rootowner: rootowner || nft.rootowner,
         };
       });
 

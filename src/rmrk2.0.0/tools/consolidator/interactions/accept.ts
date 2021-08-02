@@ -39,9 +39,9 @@ export const acceptInteraction = async (
       );
     }
 
-    const child = nft.children.find((child) => child.id === acceptEntity.id);
-    if (child) {
-      child.pending = false;
+    const childIndex = nft.children.findIndex((child) => child.id === acceptEntity.id);
+    if (childIndex > -1) {
+      nft.children[childIndex].pending = false;
     }
   } else if (acceptEntity.entity === "RES") {
     const resourceIndex = nft.resources.findIndex(
