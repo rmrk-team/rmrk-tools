@@ -48,6 +48,7 @@ export const validateMintNFT = async (
 
   // nft.owner can be already set if mint remark has recipient field that allows to mint directly onto another nft
   nft.owner = nft.owner || remark.caller;
+  nft.rootowner = nft.rootowner || remark.caller;
 
   if (nft.owner === "") {
     throw new Error(
