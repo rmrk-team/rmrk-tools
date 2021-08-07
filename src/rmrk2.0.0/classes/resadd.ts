@@ -23,7 +23,7 @@ export class Resadd {
     this.parts = resource.parts;
     this.pending = resource.pending || true;
     this.nftId = nftId;
-    this.id = resource.id || nanoid(5);
+    this.id = resource.id || nanoid(8);
   }
 
   static fromRemark(remark: string): Resadd | string {

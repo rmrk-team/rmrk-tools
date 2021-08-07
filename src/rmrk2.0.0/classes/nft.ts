@@ -188,7 +188,7 @@ export class NFT {
     return `${PREFIX}::${
       OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
-      JSON.stringify({ ...resource, id: resource.id || nanoid(5) })
+      JSON.stringify({ ...resource, id: resource.id || nanoid(8) })
     )}`;
   }
 
