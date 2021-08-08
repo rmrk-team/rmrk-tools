@@ -169,6 +169,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       owner: nft?.owner,
       rootowner: nft?.rootowner,
       forsale: BigInt(0),
+      pending: nft?.pending,
     };
   }
 

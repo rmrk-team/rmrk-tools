@@ -66,6 +66,16 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
+  it("Should set NFT as pending if sent to non owned NFT", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock3().mint(), getBobKey().address),
+      ...getBlockCallsMock(mintNftMock2(4).send(mintNftMock3(5).getId())), // Send to Bob's NFT
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
   it("Should invalidate SEND to non-existant NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
