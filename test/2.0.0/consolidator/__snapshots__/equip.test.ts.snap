@@ -752,7 +752,7 @@ Object {
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
-      "pending": false,
+      "pending": true,
       "priority": Array [],
       "reactions": Object {},
       "resources": Array [],
