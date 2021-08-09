@@ -4,7 +4,6 @@ exports[`rmrk2.0.0 Nft: Accept should match snapshot 1`] = `"RMRK::ACCEPT::2.0.0
 
 exports[`rmrk2.0.0 Nft: Add change should match snapshot 1`] = `
 NFT {
-  "attributes": undefined,
   "block": 0,
   "burned": "",
   "changes": Array [
@@ -24,6 +23,7 @@ NFT {
   "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
   "pending": false,
   "priority": Array [],
+  "properties": undefined,
   "reactions": Object {},
   "resources": Array [],
   "rootowner": "",

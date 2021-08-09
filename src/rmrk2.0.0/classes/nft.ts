@@ -4,9 +4,9 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { nanoid } from "nanoid";
 import { AcceptEntityType } from "./accept";
-import { Attribute } from "../../types";
 import { isValidEmoji } from "../tools/validate-emoji";
 import { EMOTE_NAMESPACES } from "./emote";
+import { IAttribute, IProperties } from "../tools/types";
 
 interface INftInstanceProps {
   block: number;
@@ -16,7 +16,7 @@ interface INftInstanceProps {
   sn: string;
   metadata?: string;
   owner?: string;
-  attributes: Attribute[];
+  properties?: IProperties;
 }
 
 export class NFT {
@@ -35,7 +35,7 @@ export class NFT {
   children: NFTChild[] = [];
   resources: IResourceConsolidated[] = [];
   burned: string;
-  attributes: Attribute[];
+  properties: IProperties;
   pending: boolean;
   constructor(nftInstance: INftInstanceProps) {
     this.block = nftInstance.block;
@@ -52,7 +52,7 @@ export class NFT {
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
-    this.attributes = nftInstance.attributes || undefined;
+    this.properties = nftInstance.properties || undefined;
     this.pending = false;
   }
 
@@ -78,7 +78,7 @@ export class NFT {
         transferable: this.transferable,
         sn: this.sn,
         metadata: this.metadata,
-        attributes: this.attributes,
+        properties: this.properties,
       })
     )}${recipient ? "::" + recipient.replace(/\\s/g, "") : ""}`;
   }
@@ -115,7 +115,7 @@ export class NFT {
         sn: obj.sn,
         metadata: obj.metadata,
         owner: recipient,
-        attributes: obj.attributes || [],
+        properties: obj.properties || {},
       });
     } catch (e) {
       console.error(e.message);
@@ -227,21 +227,25 @@ export class NFT {
    * @param name - attribute trait_type value
    * @param value - attribute value
    */
-  public setattribute(name: string, value: string): string {
+  public setattribute(
+    key: string,
+    value: Partial<IAttribute>,
+    freeze?: "freeze"
+  ): string {
     if (!this.block) {
       throw new Error("You can only set attribute on an existing NFT.");
     }
-    const isMutable = this.attributes.find(
-      (attribute) => attribute.trait_type === name
-    )?.mutable;
+    const isMutable = this.properties[key]?._mutator;
     if (!isMutable) {
-      throw new Error(`The attribute "${name}" cannot be mutated`);
+      throw new Error(`The attribute "${key}" cannot be mutated`);
     }
     return `${PREFIX}::${
       OP_TYPES.SETATTRIBUTE
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
-      name
-    )}::${encodeURIComponent(value)}`;
+      key
+    )}::${encodeURIComponent(JSON.stringify(value))}${
+      freeze ? "::" + freeze : ""
+    }`;
   }
 
   /**
@@ -266,7 +270,7 @@ export interface NFTMetadata {
   image_data?: string;
   description?: string;
   name?: string;
-  attributes: Attribute[];
+  properties: IProperties;
   background_color?: string;
   animation_url?: string;
   youtube_url?: string;

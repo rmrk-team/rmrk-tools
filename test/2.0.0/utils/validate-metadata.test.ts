@@ -6,9 +6,7 @@ import {
   metadataMockAllValid2,
   metadataMockAllValid3,
   metadataMockAllValid4,
-  metadataMockAllValid5,
   metadataMockAllValid6,
-  metadataMockAllValid7,
 } from "../mocks/metadata-valid";
 
 export const attributesMockDateInvalid = [
@@ -24,7 +22,7 @@ export const metadataMockAllInvalid = {
   image_data: "",
   description: "Mock description",
   name: "Mock 1",
-  attributes: attributesMockBoostNumberValid,
+  properties: attributesMockBoostNumberValid,
   background_color: "",
   animation_url: "ipfs://ipfs/12345",
   youtube_url: "https://youtube.com",
@@ -55,21 +53,9 @@ describe("validation: validateMetadata with valid mocks", () => {
     ).not.toThrow();
   });
 
-  it("should be valid5", () => {
-    expect(() =>
-      validateMetadata(metadataMockAllValid5 as NFTMetadata)
-    ).not.toThrow();
-  });
-
   it("should be valid6", () => {
     expect(() =>
       validateMetadata(metadataMockAllValid6 as NFTMetadata)
-    ).not.toThrow();
-  });
-
-  it("should be valid7", () => {
-    expect(() =>
-      validateMetadata(metadataMockAllValid7 as NFTMetadata)
     ).not.toThrow();
   });
 });
@@ -141,92 +127,55 @@ describe("validation: validateMetadata with invalid mocks", () => {
     expect(() =>
       validateMetadata({
         image: "ipfs://dfsdf",
-        attributes: [{ value: 123 }],
+        properties: { test: { value: 123, type: "string" } },
       } as NFTMetadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "boost_number",
+        properties: {
+          test: {
+            type: "int",
             value: "123",
           },
-        ],
+        },
       } as NFTMetadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "boost_percentage",
-            value: "123",
-          },
-        ],
-      } as NFTMetadata)
-    ).toThrow();
-
-    expect(() =>
-      validateMetadata({
-        image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "number",
-            value: "123",
-          },
-        ],
-      } as NFTMetadata)
-    ).toThrow();
-
-    expect(() =>
-      validateMetadata({
-        image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "date",
-            value: "123",
-          },
-        ],
-      } as NFTMetadata)
-    ).toThrow();
-
-    expect(() =>
-      validateMetadata({
-        image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "date",
+        properties: {
+          test: {
+            type: "string",
             value: 123,
           },
-        ],
+        },
       } as NFTMetadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         image: "ipfs://dfsdf",
-        attributes: [
-          {
-            max_value: 122,
-            display_type: "number",
+        properties: {
+          test: {
+            type: "int",
             value: 123,
           },
-        ],
+        },
       } as NFTMetadata)
-    ).toThrow();
+    ).toBeTruthy();
 
     expect(() =>
       validateMetadata({
         image: "ipfs://dfsdf",
-        attributes: [
-          {
-            display_type: "number",
+        properties: {
+          test: {
+            type: "float",
             value: "123",
           },
-        ],
+        },
       } as NFTMetadata)
     ).toThrow();
   });

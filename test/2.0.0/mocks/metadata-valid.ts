@@ -1,39 +1,30 @@
-export const attributesMockBoostNumberValid = [
-  {
-    display_type: "boost_number",
-    trait_type: "mock",
-    value: 2,
-    max_value: 4,
+export const attributesMockBoostNumberValid = {
+  test: {
+    type: "string",
+    value: "mock",
   },
-];
+};
 
-export const attributesMockBoostPercentageValid = [
-  {
-    display_type: "boost_percentage",
-    trait_type: "mock",
+export const attributesMockNumberValid = {
+  test: {
+    type: "int",
     value: 2,
   },
-];
+};
 
-export const attributesMockNumberValid = [
-  {
-    display_type: "number",
-    value: 2,
+export const attributesMockFloatValid = {
+  test: {
+    type: "float",
+    value: 2.2,
   },
-];
+};
 
-export const attributesMockValueValid = [
-  {
+export const attributesMockValueValid = {
+  test: {
+    type: "string",
     value: "2",
   },
-];
-
-export const attributesMockDateValid = [
-  {
-    display_type: "date",
-    value: 1620380805485,
-  },
-];
+};
 
 export const metadataMockAllValid = {
   external_url: "https://youtube.com",
@@ -41,7 +32,7 @@ export const metadataMockAllValid = {
   image_data: "",
   description: "Mock description",
   name: "Mock 1",
-  attributes: attributesMockBoostNumberValid,
+  properties: attributesMockBoostNumberValid,
   background_color: "",
   animation_url: "ipfs://ipfs/12345",
   youtube_url: "https://youtube.com",
@@ -51,7 +42,7 @@ export const metadataMockAllValid2 = {
   image: "ipfs://ipfs/12345",
   description: "Mock description",
   name: "Mock 1",
-  attributes: attributesMockBoostNumberValid,
+  properties: attributesMockBoostNumberValid,
   background_color: "",
   youtube_url: "https://youtube.com",
 };
@@ -62,20 +53,10 @@ export const metadataMockAllValid3 = {
 
 export const metadataMockAllValid4 = {
   animation_url: "ipfs://ipfs/12345",
-  attributes: attributesMockNumberValid,
-};
-
-export const metadataMockAllValid5 = {
-  animation_url: "ipfs://ipfs/12345",
-  attributes: attributesMockBoostPercentageValid,
+  properties: attributesMockNumberValid,
 };
 
 export const metadataMockAllValid6 = {
   animation_url: "ipfs://ipfs/12345",
-  attributes: attributesMockValueValid,
-};
-
-export const metadataMockAllValid7 = {
-  animation_url: "ipfs://ipfs/12345",
-  attributes: attributesMockDateValid,
+  properties: attributesMockValueValid,
 };

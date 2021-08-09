@@ -9,5 +9,4 @@ export interface Attribute {
   trait_type?: string;
   value: number | string;
   max_value?: number;
-  mutable?: boolean;
 }

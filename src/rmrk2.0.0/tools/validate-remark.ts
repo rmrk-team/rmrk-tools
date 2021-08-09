@@ -11,9 +11,12 @@ import {
   enums,
   union,
   array,
+  literal,
+  any,
 } from "superstruct";
 import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
+import { PropertiesStruct } from "./validate-metadata";
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -74,7 +77,10 @@ const ACCEPTStruct = type({
 
 const EQUIPStruct = type({
   id: string(),
-  baseslot: union([pattern(string(), new RegExp(/^$/)), pattern(string(), new RegExp(/^base-\S+\.{1}\S+$/))]), // Allow only 1 dot
+  baseslot: union([
+    pattern(string(), new RegExp(/^$/)),
+    pattern(string(), new RegExp(/^base-\S+\.{1}\S+$/)),
+  ]), // Allow only 1 dot
 });
 
 const BUYStruct = type({
@@ -209,7 +215,6 @@ export const validateResadd = (remark: string): any => {
   }
 };
 
-
 export const validateSetPriority = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, id, priority] = remark.split("::");
@@ -224,7 +229,35 @@ export const validateSetPriority = (remark: string): any => {
     // return assert(obj, ResourceStruct);
   } catch (error) {
     throw new Error(
-        error?.message || "Something went wrong during SETPRIORITY remark validation"
+      error?.message ||
+        "Something went wrong during SETPRIORITY remark validation"
+    );
+  }
+};
+
+export const validateSetAttribute = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [
+    _prefix,
+    _op_type,
+    _version,
+    id,
+    key,
+    attribute,
+    freeze,
+  ] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.SETATTRIBUTE);
+    if (!id) {
+      throw new Error("No NFT id specified for SETATTRIBUTE");
+    }
+    const obj = getRemarkData(attribute);
+    return assert(obj, PropertiesStruct);
+  } catch (error) {
+    throw new Error(
+      error?.message ||
+        "Something went wrong during SETATTRIBUTE remark validation"
     );
   }
 };

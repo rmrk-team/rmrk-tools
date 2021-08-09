@@ -1,8 +1,8 @@
 import { Change } from "../changelog";
 import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
-import {OP_TYPES, PREFIX, VERSION} from "../tools/constants";
-import { Attribute } from "../../types";
+import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
+import {IProperties} from "../../types";
 
 export class Collection {
   readonly block: number;
@@ -100,7 +100,7 @@ export class Collection {
 export interface CollectionMetadata {
   name?: string;
   description?: string;
-  attributes: Attribute[];
+  properties: IProperties;
   external_url?: string;
   image?: string;
   image_data?: string;

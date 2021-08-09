@@ -10,7 +10,6 @@ import { hexToU8a, isHex } from "@polkadot/util";
 import { IConsolidatorAdapter } from "./adapters/types";
 import { Base } from "../../classes/base";
 import { changeIssuerInteraction } from "./interactions/changeIssuer";
-import { OP_TYPES } from "../constants";
 import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
 
@@ -62,7 +61,7 @@ export const consolidatedNFTtoInstance = (
     sn,
     metadata,
     id,
-    attributes,
+    properties,
     ...rest
   } = nft || {};
   const nftInstance = new NFT({
@@ -72,7 +71,7 @@ export const consolidatedNFTtoInstance = (
     transferable,
     sn,
     metadata,
-    attributes,
+    properties,
   });
   const {
     owner,

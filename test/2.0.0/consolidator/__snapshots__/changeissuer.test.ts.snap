@@ -75,7 +75,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -87,6 +86,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
