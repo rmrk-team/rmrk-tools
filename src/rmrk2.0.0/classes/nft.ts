@@ -35,7 +35,7 @@ export class NFT {
   children: NFTChild[] = [];
   resources: IResourceConsolidated[] = [];
   burned: string;
-  properties: IProperties;
+  properties?: IProperties;
   pending: boolean;
   constructor(nftInstance: INftInstanceProps) {
     this.block = nftInstance.block;
@@ -235,7 +235,7 @@ export class NFT {
     if (!this.block) {
       throw new Error("You can only set attribute on an existing NFT.");
     }
-    const isMutable = this.properties[key]?._mutator;
+    const isMutable = this.properties?.[key]?._mutator;
     if (!isMutable) {
       throw new Error(`The attribute "${key}" cannot be mutated`);
     }

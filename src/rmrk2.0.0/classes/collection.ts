@@ -2,7 +2,7 @@ import { Change } from "../changelog";
 import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
-import {IProperties} from "../../types";
+import { IProperties } from "../tools/types";
 
 export class Collection {
   readonly block: number;
