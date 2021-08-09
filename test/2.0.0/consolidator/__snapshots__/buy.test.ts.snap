@@ -17,7 +17,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -54,6 +53,7 @@ Object {
       "owner": "5Cafn1kueAGQnrcvN2uHFQ5NaMznSMyrfeUzuDHDQsMRSsN6",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -82,7 +82,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -119,6 +118,7 @@ Object {
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -155,7 +155,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -176,6 +175,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -212,7 +212,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -233,6 +232,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -269,7 +269,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "true",
       "changes": Array [
@@ -306,6 +305,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -359,7 +359,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -371,6 +370,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",

@@ -4,17 +4,12 @@ import { List } from "../classes/list";
 import { Emote } from "../classes/emote";
 import { ChangeIssuer } from "../classes/changeissuer";
 
-export type DisplayType =
-  | "boost_number"
-  | "boost_percentage"
-  | "number"
-  | "date";
+export type IProperties = Record<string, IAttribute>;
 
-export interface Attribute {
-  display_type?: DisplayType;
-  trait_type?: string;
-  value: number | string;
-  max_value?: number;
+export interface IAttribute {
+  _mutator?: "issuer" | "owner" | "string";
+  type: "array" | "object" | "int" | "float" | "string";
+  value: any;
 }
 
 export type Options = {

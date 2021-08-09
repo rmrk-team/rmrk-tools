@@ -3,7 +3,7 @@ import { Change } from "../changelog";
 import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, VERSION } from "../tools/constants";
-import { Attribute } from "../../types";
+import { Attribute } from "../types";
 
 export class Collection {
   readonly block: number;

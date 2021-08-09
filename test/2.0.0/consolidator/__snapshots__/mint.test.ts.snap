@@ -17,7 +17,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -29,6 +28,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -37,7 +37,6 @@ Object {
       "transferable": 1,
     },
     Object {
-      "attributes": Array [],
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -49,6 +48,7 @@ Object {
       "owner": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "pending": true,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -77,7 +77,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -89,6 +88,7 @@ Object {
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",

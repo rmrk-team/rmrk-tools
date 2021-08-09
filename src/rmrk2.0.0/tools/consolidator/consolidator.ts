@@ -3,7 +3,6 @@ import {
   NFT,
   NFTChild,
   Reactionmap,
-  Resource,
 } from "../../classes/nft";
 import { Change } from "../../changelog";
 import { Collection } from "../../classes/collection";
@@ -38,7 +37,7 @@ import {
   isValidAddressPolkadotAddress,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
-import { Attribute, BaseType } from "../types";
+import { BaseType, IProperties } from "../types";
 import { Base, IBasePart } from "../../classes/base";
 import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
@@ -50,6 +49,8 @@ import { Equip } from "../../classes/equip";
 import { equipInteraction } from "./interactions/equip";
 import { setPriorityInteraction } from "./interactions/setpriority";
 import { Setpriority } from "../../classes/setpriority";
+import { SetAttribute } from "../../classes/setattribute";
+import { setAttributeInteraction } from "./interactions/setattribute";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -79,7 +80,7 @@ export interface NFTConsolidated {
   priority: string[];
   children: NFTChild[];
   resources: IResourceConsolidated[];
-  attributes: Attribute[];
+  properties: IProperties;
   pending: boolean;
 }
 
@@ -755,6 +756,52 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The SETATTRIBUTE interaction allows NFT owner to change or set new attribute on NFT
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/setattribute.md
+   */
+  private async setattribute(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(
+      OP_TYPES.SETATTRIBUTE,
+      remark
+    ).bind(this);
+    const setAttributeEntity = SetAttribute.fromRemark(remark.remark);
+    if (typeof setAttributeEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.SETATTRIBUTE}] Dead before instantiation: ${setAttributeEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
+      setAttributeEntity.id
+    );
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+
+    try {
+      await setAttributeInteraction(
+        remark,
+        setAttributeEntity,
+        this.dbAdapter,
+        nft
+      );
+      if (nft && consolidatedNFT) {
+        await this.dbAdapter.updateSetAttribute(nft, consolidatedNFT);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({
+            [OP_TYPES.SETATTRIBUTE]: nft.getId(),
+          });
+        }
+      }
+    } catch (e) {
+      invalidate(setAttributeEntity.id, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -847,7 +894,12 @@ export class Consolidator {
           if (await this.setpriority(remark)) {
             continue;
           }
+          break;
 
+        case OP_TYPES.SETATTRIBUTE:
+          if (await this.setattribute(remark)) {
+            continue;
+          }
           break;
 
         default:

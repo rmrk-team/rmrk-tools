@@ -1,7 +1,6 @@
 import { NFTMetadata } from "../classes/nft";
 import { CollectionMetadata } from "../classes/collection";
 import {
-  number,
   optional,
   pattern,
   string,
@@ -9,11 +8,11 @@ import {
   any,
   assert,
   object,
-  union,
   enums,
-  array,
+  record,
+  literal,
 } from "superstruct";
-import { Attribute } from "./types";
+import { IProperties } from "./types";
 
 const MetadataStruct = type({
   name: optional(string()),
@@ -29,60 +28,41 @@ const MetadataStruct = type({
   external_url: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
-const AttributeStruct = object({
-  value: union([string(), number()]),
-  trait_type: optional(string()),
-  display_type: optional(
-    enums(["boost_number", "boost_percentage", "number", "date"])
-  ),
-  max_value: optional(number()),
+export const PropertiesStruct = object({
+  value: any(),
+  type: enums(["string", "array", "object", "int", "float"]),
+  _mutable: optional(literal("freeze")),
 });
 
-export const validateAttributes = (attributes?: Attribute[]) => {
-  if (!attributes) {
+export const validateAttributes = (properties?: IProperties) => {
+  if (!properties) {
     return true;
   }
-  assert(attributes, array(AttributeStruct));
+  assert(properties, record(string(), PropertiesStruct));
 
-  attributes.forEach((attribute) => {
-    const { value, display_type, max_value } = attribute;
-    if (
-      display_type === "boost_number" ||
-      display_type === "boost_percentage" ||
-      display_type === "number" ||
-      display_type === "date"
-    ) {
+  Object.values(properties).forEach((attribute) => {
+    const { value, type, _mutator } = attribute;
+    if (type === "string") {
+      if (typeof value !== "string") {
+        throw new Error("for type 'string' 'value' has to be a string");
+      }
+    }
+
+    if (type === "int" || type === "float") {
       if (typeof value !== "number") {
-        throw new Error(
-          "for 'boost_number' | 'boost_percentage' | 'number' | 'date' attributes 'value' has to be a number"
-        );
+        throw new Error("for type 'number' 'value' has to be a number");
       }
     }
 
-    if (max_value && max_value > 0) {
-      if (value > max_value) {
-        throw new Error("'value' cannot be greater than 'max_value'");
+    if (type === "array") {
+      if (!Array.isArray(value)) {
+        throw new Error("for type 'array' 'value' has to be an array");
       }
     }
 
-    if (
-      typeof value === "number" &&
-      (!display_type ||
-        !["boost_number", "boost_percentage", "number", "date"].includes(
-          display_type
-        ))
-    ) {
-      throw new Error(
-        "'value' of type number can only be paired with appropriate 'display_type'"
-      );
-    }
-
-    if (display_type === "date") {
-      const date = new Date(value);
-      if (!(date instanceof Date) || date.getFullYear() < 1971) {
-        throw new Error(
-          "when 'display_type' is 'date', then 'value' has to be of unix timestamp type"
-        );
+    if (type === "object") {
+      if (typeof value !== "object") {
+        throw new Error("for type 'object' 'value' has to be an Object");
       }
     }
   });
@@ -104,6 +84,6 @@ export const validateMetadata = (
     throw new Error("image or animation_url is missing");
   }
 
-  validateAttributes(metadata.attributes);
+  validateAttributes(metadata.properties);
   return true;
 };

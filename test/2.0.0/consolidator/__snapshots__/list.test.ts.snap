@@ -17,7 +17,6 @@ Object {
   "invalid": Array [],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [
@@ -38,6 +37,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -74,7 +74,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -92,6 +91,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -100,7 +100,6 @@ Object {
       "transferable": 1,
     },
     Object {
-      "attributes": Array [],
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -112,6 +111,7 @@ Object {
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -148,7 +148,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "true",
       "changes": Array [
@@ -177,6 +176,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -230,7 +230,6 @@ Object {
   ],
   "nfts": Array [
     Object {
-      "attributes": Array [],
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -242,6 +241,7 @@ Object {
       "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
       "pending": false,
       "priority": Array [],
+      "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
