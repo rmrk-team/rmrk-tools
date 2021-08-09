@@ -80,7 +80,7 @@ export interface NFTConsolidated {
   priority: string[];
   children: NFTChild[];
   resources: IResourceConsolidated[];
-  properties: IProperties;
+  properties?: IProperties;
   pending: boolean;
 }
 

@@ -23,9 +23,13 @@ export const setAttributeInteraction = async (
     );
   }
 
-  const existingAttribute = nft.properties[setAttributeEntity.key];
+  const existingAttribute = nft.properties?.[setAttributeEntity.key];
   if (existingAttribute) {
-    if (!existingAttribute._mutator || existingAttribute._mutator !== "issuer" && existingAttribute._mutator !== "owner") {
+    if (
+      !existingAttribute._mutator ||
+      (existingAttribute._mutator !== "issuer" &&
+        existingAttribute._mutator !== "owner")
+    ) {
       throw new Error(
         `[${OP_TYPES.SETATTRIBUTE}] Attempting to set attribute on immutable attribute ${setAttributeEntity.key}`
       );
@@ -50,6 +54,10 @@ export const setAttributeInteraction = async (
         );
       }
     }
+  }
+
+  if (!nft.properties) {
+    nft.properties = {};
   }
 
   if (setAttributeEntity.attribute.value && setAttributeEntity.attribute.type) {
