@@ -193,4 +193,32 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
     const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult).toMatchSnapshot();
   });
+
+  it("should be able to freeze attribute ", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftWithPropertiesOwner().mint()),
+      ...getBlockCallsMock(
+        mintNftWithPropertiesOwner(3).setattribute(
+          "test",
+          {
+            type: "int",
+            value: 2,
+          },
+          "freeze"
+        )
+      ),
+      ...getBlockCallsMock(
+        mintNftWithPropertiesOwner(3).setattribute("test", {
+          type: "float",
+          value: 3,
+        })
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult.invalid[0].message).toEqual(
+      "[SETATTRIBUTE] Attempting to set attribute on immutable attribute test"
+    );
+  });
 });
