@@ -270,7 +270,7 @@ export interface NFTMetadata {
   image_data?: string;
   description?: string;
   name?: string;
-  properties: IProperties;
+  properties?: IProperties;
   background_color?: string;
   animation_url?: string;
   youtube_url?: string;
