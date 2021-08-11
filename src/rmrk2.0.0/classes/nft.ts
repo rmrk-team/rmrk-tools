@@ -235,7 +235,7 @@ export class NFT {
     if (!this.block) {
       throw new Error("You can only set attribute on an existing NFT.");
     }
-    const isMutable = this.properties?.[key]?._mutator;
+    const isMutable = this.properties?.[key]?._mutable;
     if (!isMutable) {
       throw new Error(`The attribute "${key}" cannot be mutated`);
     }

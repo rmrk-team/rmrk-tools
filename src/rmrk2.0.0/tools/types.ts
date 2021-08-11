@@ -7,7 +7,7 @@ import { ChangeIssuer } from "../classes/changeissuer";
 export type IProperties = Record<string, IAttribute>;
 
 export interface IAttribute {
-  _mutator?: "issuer" | "owner" | "string";
+  _mutable?: boolean;
   type: "array" | "object" | "int" | "float" | "string";
   value: any;
 }

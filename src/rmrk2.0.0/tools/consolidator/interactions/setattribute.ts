@@ -25,32 +25,18 @@ export const setAttributeInteraction = async (
 
   const existingAttribute = nft.properties?.[setAttributeEntity.key];
   if (existingAttribute) {
-    if (
-      !existingAttribute._mutator ||
-      (existingAttribute._mutator !== "issuer" &&
-        existingAttribute._mutator !== "owner")
-    ) {
+    if (!existingAttribute._mutable) {
       throw new Error(
         `[${OP_TYPES.SETATTRIBUTE}] Attempting to set attribute on immutable attribute ${setAttributeEntity.key}`
       );
     }
 
-    if (existingAttribute._mutator === "issuer") {
-      const nftCollection = await dbAdapter.getCollectionById(nft.collection);
-
-      if (!nftCollection || nftCollection.issuer !== remark.caller) {
-        throw new Error(
-          `[${OP_TYPES.SETATTRIBUTE}] Attempting to set attribute on and NFT where issuer is _mutator don't match. Expected ${remark.caller} but received ${nftCollection?.issuer}`
-        );
-      }
-    }
-
-    if (existingAttribute._mutator === "owner") {
+    if (existingAttribute._mutable) {
       const rootowner = await findRealOwner(nft.owner, dbAdapter);
 
       if (rootowner !== remark.caller) {
         throw new Error(
-          `[${OP_TYPES.SETATTRIBUTE}] Attempting to set attribute on and NFT where rootowner is _mutator don't match. Expected ${remark.caller} but received ${rootowner}`
+          `[${OP_TYPES.SETATTRIBUTE}] Attempting to set attribute on a non-owned NFT. Expected ${remark.caller} but received ${rootowner}`
         );
       }
     }
@@ -67,6 +53,6 @@ export const setAttributeInteraction = async (
     };
   }
   if (setAttributeEntity.freeze === "freeze") {
-    delete nft.properties[setAttributeEntity.key]._mutator;
+    nft.properties[setAttributeEntity.key]._mutable = false;
   }
 };

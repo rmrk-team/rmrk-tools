@@ -41,7 +41,7 @@ export const validateAttributes = (properties?: IProperties) => {
   assert(properties, record(string(), PropertiesStruct));
 
   Object.values(properties).forEach((attribute) => {
-    const { value, type, _mutator } = attribute;
+    const { value, type } = attribute;
     if (type === "string") {
       if (typeof value !== "string") {
         throw new Error("for type 'string' 'value' has to be a string");
