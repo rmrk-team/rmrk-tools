@@ -7,6 +7,7 @@ import { AcceptEntityType } from "./accept";
 import { isValidEmoji } from "../tools/validate-emoji";
 import { EMOTE_NAMESPACES } from "./emote";
 import { IAttribute, IProperties } from "../tools/types";
+import {Theme} from "./base";
 
 interface INftInstanceProps {
   block: number;
@@ -295,8 +296,8 @@ export interface Resource {
   slot?: string;
   pending?: boolean;
   thumb?: string;
-  themes?: string[];
-  themable?: boolean;
+  theme?: Theme;
+  themeId?: string;
 }
 
 export interface IResourceConsolidated {
@@ -308,6 +309,8 @@ export interface IResourceConsolidated {
   metadata?: string;
   slot?: string;
   pending: boolean;
+  theme?: Theme;
+  themeId?: string;
 }
 
 export interface NFTChild {
