@@ -11,19 +11,22 @@ export class Base {
   readonly parts?: IBasePart[];
   issuer: string;
   changes: Change[] = [];
+  themes?: Record<string, Theme>;
 
   constructor(
     block: number,
     symbol: string,
     issuer: string,
     type: BaseType,
-    parts?: IBasePart[]
+    parts?: IBasePart[],
+    themes?: Record<string, Theme>
   ) {
     this.block = block;
     this.symbol = symbol;
     this.type = type;
     this.issuer = issuer;
     this.parts = parts || undefined;
+    this.themes = themes || undefined;
   }
 
   public base(): string {
@@ -36,6 +39,7 @@ export class Base {
         type: this.type,
         issuer: this.issuer,
         parts: this.parts,
+        themes: this.themes,
       })
     )}`;
   }
@@ -83,6 +87,37 @@ export class Base {
     )}`;
   }
 
+  /**
+   *
+   * @param themeId theme id
+   * @param theme Theme object
+   */
+  public themeadd({
+    themeId,
+    theme,
+  }: {
+    themeId: string;
+    theme: Theme;
+  }): string {
+    if (!this.block) {
+      throw new Error(
+        "You can only add theme on an existing Base. If you just created this, please load a new, separate instance as the block number is an important part of an Base's ID."
+      );
+    }
+    if (!themeId) {
+      throw new Error("You cannot add theme without specifying it's id");
+    }
+
+    if (this.themes?.[themeId]) {
+      throw new Error("There is already a theme with this id");
+    }
+    return `${PREFIX}::${
+      OP_TYPES.THEMEADD
+    }::${VERSION}::${this.getId()}::${themeId}::${encodeURIComponent(
+      JSON.stringify(theme)
+    )}`;
+  }
+
   public getId(): string {
     if (!this.block)
       throw new Error("This base is not minted, so it cannot have an ID.");
@@ -106,7 +141,14 @@ export class Base {
       validateBase(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
       const obj = getRemarkData(dataString);
-      return new this(block, obj.symbol, obj.issuer, obj.type, obj.parts);
+      return new this(
+        block,
+        obj.symbol,
+        obj.issuer,
+        obj.type,
+        obj.parts,
+        obj.themes
+      );
     } catch (e) {
       console.error(e.message);
       console.log(`BASE error: full input was ${remark}`);
@@ -123,3 +165,5 @@ export interface IBasePart {
   z?: number;
   src?: string;
 }
+
+export type Theme = Record<string, string | boolean>;

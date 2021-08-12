@@ -1,6 +1,6 @@
 import { validateResadd } from "../tools/validate-remark";
 import { Resource } from "./nft";
-import { getRemarkData } from "../../rmrk1.0.0/tools/utils";
+import { getRemarkData } from "../tools/utils";
 import { nanoid } from "nanoid";
 
 export class Resadd {

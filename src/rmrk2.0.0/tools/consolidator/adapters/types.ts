@@ -30,6 +30,10 @@ export interface IConsolidatorAdapter {
     base: Base,
     consolidatedBase: BaseConsolidated
   ): Promise<any>;
+  updateBaseThemeAdd(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ): Promise<any>;
   updateCollectionIssuer(
     collection: Collection,
     consolidatedCollection: CollectionConsolidated

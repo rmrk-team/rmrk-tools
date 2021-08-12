@@ -31,6 +31,12 @@ Object {
         },
       ],
       "symbol": "KBASE777",
+      "themes": Object {
+        "themeOne": Object {
+          "_inherit": true,
+          "primary": "#fff",
+        },
+      },
       "type": "svg",
     },
   ],

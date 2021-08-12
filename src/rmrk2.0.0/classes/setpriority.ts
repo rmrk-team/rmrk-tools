@@ -1,5 +1,5 @@
 import { validateSetPriority } from "../tools/validate-remark";
-import { getRemarkData } from "../../rmrk1.0.0/tools/utils";
+import { getRemarkData } from "../tools/utils";
 
 export class Setpriority {
   id: string;

@@ -295,6 +295,8 @@ export interface Resource {
   slot?: string;
   pending?: boolean;
   thumb?: string;
+  themes?: string[];
+  themable?: boolean;
 }
 
 export interface IResourceConsolidated {

@@ -87,7 +87,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
 
   public async updateSetAttribute(nft: NFT, consolidatedNFT: NFTConsolidated) {
     const nftIndex = this.nfts.findIndex(
-        (nftItem) => nftItem.id === consolidatedNFT.id
+      (nftItem) => nftItem.id === consolidatedNFT.id
     );
     this.nfts[nftIndex] = {
       ...this.nfts[nftIndex],
@@ -212,6 +212,19 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       ...base,
       id: base.getId(),
     });
+  }
+
+  public async updateBaseThemeAdd(
+    base: Base,
+    consolidatedBase: BaseConsolidated
+  ) {
+    const baseIndex = this.bases.findIndex(
+      (baseItem) => baseItem.id === consolidatedBase.id
+    );
+    this.bases[baseIndex] = {
+      ...this.bases[baseIndex],
+      themes: base?.themes,
+    };
   }
 
   public async updateCollectionIssuer(

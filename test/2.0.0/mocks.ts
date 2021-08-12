@@ -61,32 +61,39 @@ export const mintNftMock3 = (block?: number): NFT =>
   });
 
 export const createBaseMock = (block?: number): Base =>
-  new Base(block || 0, "KBASE777", getAliceKey().address, "svg", [
-    {
-      id: "background",
-      type: "slot",
-      equippable: [],
-      z: 0,
-    },
-    {
-      id: "backpack",
-      type: "slot",
-      equippable: [
-        Collection.generateId(
-          u8aToHex(getAliceKey().publicKey),
-          "KANARIABIRDS"
-        ),
-      ],
-      z: 1,
-    },
-    {
-      id: "tail",
-      type: "fixed",
-      src:
-        "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
-      z: 2,
-    },
-  ]);
+  new Base(
+    block || 0,
+    "KBASE777",
+    getAliceKey().address,
+    "svg",
+    [
+      {
+        id: "background",
+        type: "slot",
+        equippable: [],
+        z: 0,
+      },
+      {
+        id: "backpack",
+        type: "slot",
+        equippable: [
+          Collection.generateId(
+            u8aToHex(getAliceKey().publicKey),
+            "KANARIABIRDS"
+          ),
+        ],
+        z: 1,
+      },
+      {
+        id: "tail",
+        type: "fixed",
+        src:
+          "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+        z: 2,
+      },
+    ],
+    { themeOne: { _inherit: true, primary: "#fff" } }
+  );
 
 export const getBlockCallsMock = (
   remark: string,

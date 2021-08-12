@@ -13,6 +13,9 @@ import {
   array,
   literal,
   any,
+  object,
+  record,
+  boolean,
 } from "superstruct";
 import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
@@ -118,6 +121,12 @@ const EQUIPPABLEStruct = type({
   id: string(),
   slot: string(),
   classes: pattern(string(), new RegExp(collectionRegexPattern)),
+});
+
+const THEMEADDStruct = type({
+  baseId: string(),
+  themeId: string(),
+  theme: record(string(), union([string(), boolean()])),
 });
 
 export const validateRemarkBase = (remark: string, opType: OP_TYPES) => {
@@ -306,6 +315,23 @@ export const validateEquippable = (remark: string): any => {
     throw new Error(
       error?.message ||
         "Something went wrong during EQUIPPABLE remark validation"
+    );
+  }
+};
+
+export const validateThemeadd = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, baseId, themeId, theme] = remark.split(
+    "::"
+  );
+
+  try {
+    const obj = getRemarkData(theme);
+    validateRemarkBase(remark, OP_TYPES.THEMEADD);
+    return assert({ baseId, themeId, theme: obj }, THEMEADDStruct);
+  } catch (error) {
+    throw new Error(
+      error?.message || "Something went wrong during THEMEADD remark validation"
     );
   }
 };

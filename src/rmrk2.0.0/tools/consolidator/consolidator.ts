@@ -38,7 +38,7 @@ import {
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType, IProperties } from "../types";
-import { Base, IBasePart } from "../../classes/base";
+import { Base, IBasePart, Theme } from "../../classes/base";
 import { equippableInteraction } from "./interactions/equippable";
 import { Equippable } from "../../classes/equippable";
 import { Resadd } from "../../classes/resadd";
@@ -51,6 +51,8 @@ import { setPriorityInteraction } from "./interactions/setpriority";
 import { Setpriority } from "../../classes/setpriority";
 import { SetAttribute } from "../../classes/setattribute";
 import { setAttributeInteraction } from "./interactions/setattribute";
+import { Themeadd } from "../../classes/themeadd";
+import { themeAddInteraction } from "./interactions/themeadd";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -101,6 +103,7 @@ export interface BaseConsolidated {
   type: BaseType;
   parts?: IBasePart[];
   changes: Change[];
+  themes?: Record<string, Theme>;
 }
 
 export class Consolidator {
@@ -802,6 +805,46 @@ export class Consolidator {
     return false;
   }
 
+  /**
+   * The THEMEADD interaction allows BASE issuer to add a new theme to a Base
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/themeadd.md
+   */
+  private async themeadd(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.THEMEADD, remark).bind(
+      this
+    );
+    const themeAddEntity = Themeadd.fromRemark(remark.remark);
+    if (typeof themeAddEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.THEMEADD}] Dead before instantiation: ${themeAddEntity}`
+      );
+      return true;
+    }
+
+    const consolidatedBase = await this.dbAdapter.getBaseById(
+      themeAddEntity.baseId
+    );
+    const base = consolidatedBasetoInstance(consolidatedBase);
+
+    try {
+      themeAddInteraction(remark, themeAddEntity, base);
+      if (base && consolidatedBase) {
+        await this.dbAdapter.updateBaseThemeAdd(base, consolidatedBase);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({
+            [OP_TYPES.THEMEADD]: base.getId(),
+          });
+        }
+      }
+    } catch (e) {
+      invalidate(themeAddEntity.baseId, e.message);
+      return true;
+    }
+
+    return false;
+  }
+
   public async consolidate(rmrks?: Remark[]): Promise<ConsolidatorReturnType> {
     const remarks = rmrks || [];
     // console.log(remarks);
@@ -898,6 +941,12 @@ export class Consolidator {
 
         case OP_TYPES.SETATTRIBUTE:
           if (await this.setattribute(remark)) {
+            continue;
+          }
+          break;
+
+        case OP_TYPES.THEMEADD:
+          if (await this.themeadd(remark)) {
             continue;
           }
           break;
