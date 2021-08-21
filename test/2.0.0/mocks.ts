@@ -30,6 +30,17 @@ export const createCollectionMock = (block?: number): Collection => {
   );
 };
 
+export const createCollectionMock2 = (block?: number): Collection => {
+  return new Collection(
+    block || 0,
+    0,
+    getAliceKey().address,
+    "KANARIAGEMS",
+    Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIAGEMS"),
+    "https://some.url"
+  );
+};
+
 export const mintNftMock = (block?: number): NFT =>
   new NFT({
     block: block || 0,

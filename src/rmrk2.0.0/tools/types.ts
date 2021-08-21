@@ -3,11 +3,18 @@ import { Buy } from "../classes/buy";
 import { List } from "../classes/list";
 import { Emote } from "../classes/emote";
 import { ChangeIssuer } from "../classes/changeissuer";
+import { OP_TYPES } from "./constants";
 
 export type IProperties = Record<string, IAttribute>;
 
 export interface IAttribute {
-  _mutable?: boolean;
+  _mutation?: {
+    allowed: boolean;
+    with?: {
+      opType: OP_TYPES;
+      condition?: string;
+    };
+  };
   type: "array" | "object" | "int" | "float" | "string";
   value: any;
 }

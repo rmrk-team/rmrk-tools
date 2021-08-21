@@ -7,7 +7,7 @@ import { AcceptEntityType } from "./accept";
 import { isValidEmoji } from "../tools/validate-emoji";
 import { EMOTE_NAMESPACES } from "./emote";
 import { IAttribute, IProperties } from "../tools/types";
-import {Theme} from "./base";
+import { Theme } from "./base";
 
 interface INftInstanceProps {
   block: number;
@@ -236,7 +236,7 @@ export class NFT {
     if (!this.block) {
       throw new Error("You can only set attribute on an existing NFT.");
     }
-    const isMutable = this.properties?.[key]?._mutable;
+    const isMutable = this.properties?.[key]?._mutation?.allowed;
     if (!isMutable) {
       throw new Error(`The attribute "${key}" cannot be mutated`);
     }

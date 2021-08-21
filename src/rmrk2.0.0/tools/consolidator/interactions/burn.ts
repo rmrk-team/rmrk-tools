@@ -59,8 +59,6 @@ export const burnInteraction = async (
     });
   }
 
-  // const [prefix, op_type, version] = remark.split("::");
-
   const burnReason = burnReasons.length < 1 ? "true" : burnReasons.join("~~~");
   nft.addChange({
     field: "burned",

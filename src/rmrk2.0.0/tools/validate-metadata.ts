@@ -11,8 +11,10 @@ import {
   enums,
   record,
   literal,
+  boolean,
 } from "superstruct";
 import { IProperties } from "./types";
+import { OP_TYPES } from "./constants";
 
 const MetadataStruct = type({
   name: optional(string()),
@@ -31,7 +33,35 @@ const MetadataStruct = type({
 export const PropertiesStruct = object({
   value: any(),
   type: enums(["string", "array", "object", "int", "float"]),
-  _mutable: optional(literal("freeze")),
+  _mutation: optional(
+    object({
+      allowed: boolean(),
+      with: optional(
+        object({
+          opType: enums([
+            "BUY",
+            "LIST",
+            "CREATE",
+            "MINT",
+            "SEND",
+            "EMOTE",
+            "CHANGEISSUER",
+            "BURN",
+            "BASE",
+            "EQUIPPABLE",
+            "THEMEADD",
+            "RESADD",
+            "ACCEPT",
+            "ACCEPT",
+            "EQUIP",
+            "SETATTRIBUTE",
+            "SETPRIORITY",
+          ] as OP_TYPES[]),
+          condition: optional(string()),
+        })
+      ),
+    })
+  ),
 });
 
 export const validateAttributes = (properties?: IProperties) => {
