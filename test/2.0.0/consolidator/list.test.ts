@@ -29,6 +29,17 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
+  it("Should prevent to LIST if parent is forsale", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock2(4).list(BigInt(1e12))),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
   it("Should prevent to LIST non-existent NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),

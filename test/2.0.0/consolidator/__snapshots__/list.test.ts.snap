@@ -188,6 +188,55 @@ Object {
 }
 `;
 
+exports[`rmrk2.0.0 Consolidator: LIST Should prevent to LIST if parent is forsale 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [],
+  "nfts": Array [
+    Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "forsale",
+          "new": 1000000000000n,
+          "old": 0n,
+          "opType": "LIST",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 1000000000000n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
+}
+`;
+
 exports[`rmrk2.0.0 Consolidator: LIST Should prevent to LIST non-existent NFT 1`] = `
 Object {
   "bases": Array [],

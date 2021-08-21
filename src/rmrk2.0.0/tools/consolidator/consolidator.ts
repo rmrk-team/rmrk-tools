@@ -106,6 +106,35 @@ export interface BaseConsolidated {
   themes?: Record<string, Theme>;
 }
 
+const invalidateIfParentIsForsale = async (
+  nftId: string,
+  dbAdapter: IConsolidatorAdapter
+): Promise<boolean> => {
+  if (!nftId) {
+    throw new Error("invalidateIfParentIsForsale NFT id is missing");
+  }
+  if (isValidAddressPolkadotAddress(nftId)) {
+    return true;
+  } else {
+    const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
+
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+    if (!nft) {
+      // skip
+      return true;
+    }
+
+    if (nft.forsale > BigInt(0)) {
+      throw new Error(
+        `Attempting to do something with an NFT who's parent ${nft.getId()} is listed for sale`
+      );
+    }
+
+    // Bubble up until owner of nft is polkadot address
+    return await invalidateIfParentIsForsale(nft.owner, dbAdapter);
+  }
+};
+
 export class Consolidator {
   readonly invalidCalls: InvalidCall[];
   readonly collections: Collection[];
@@ -323,6 +352,10 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
+      if (nft?.owner) {
+        await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
+      }
+
       await sendInteraction(remark, sendEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT);
@@ -365,6 +398,9 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
+      if (nft?.owner) {
+        await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
+      }
       listForSaleInteraction(remark, listEntity, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT);
@@ -407,6 +443,9 @@ export class Consolidator {
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
     try {
+      if (nft?.owner) {
+        await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
+      }
       await burnInteraction(remark, burnEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBurn(nft, consolidatedNFT);
@@ -444,6 +483,9 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
+      if (nft?.owner) {
+        await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
+      }
       buyInteraction(remark, buyEntity, nft, this.ss58Format);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT);
