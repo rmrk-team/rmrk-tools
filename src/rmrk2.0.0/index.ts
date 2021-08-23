@@ -17,3 +17,4 @@ export { resAddInteraction } from "./tools/consolidator/interactions/resadd";
 export { acceptInteraction } from "./tools/consolidator/interactions/accept";
 export { equippableInteraction } from "./tools/consolidator/interactions/equippable";
 export { equipInteraction } from "./tools/consolidator/interactions/equip";
+export * from "./tools/constants";
