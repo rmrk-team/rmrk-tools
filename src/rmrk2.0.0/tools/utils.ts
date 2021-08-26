@@ -290,12 +290,14 @@ export const getRemarkData = (dataString: string) => {
  */
 export const filterBlocksByCollection = (
   blockCalls: BlockCalls[],
-  collectionFilter: string,
-  prefixes: string[]
+  prefixes: string[],
+  collectionFilter?: string,
 ): BlockCalls[] =>
   blockCalls.filter((block) =>
     getRemarksFromBlocks([block], prefixes).some(
       (rmrk) =>
-        rmrk.remark.includes(collectionFilter) && rmrk.remark.includes("::2.0.0")
+        ((collectionFilter && rmrk.remark.includes(collectionFilter)) ||
+          !collectionFilter) &&
+        rmrk.remark.includes("::2.0.0")
     )
   );

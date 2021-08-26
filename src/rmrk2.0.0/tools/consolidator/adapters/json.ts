@@ -42,8 +42,8 @@ export default class JsonAdapter {
     if (this.collectionFilter) {
       blocks = filterBlocksByCollection(
         blocks,
-        this.collectionFilter,
-        this.prefixes
+        this.prefixes,
+        this.collectionFilter
       );
     }
     return getRemarksFromBlocks(blocks, this.prefixes);

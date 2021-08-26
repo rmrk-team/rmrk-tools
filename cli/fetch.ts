@@ -83,13 +83,11 @@ const fetch = async () => {
     ss58Format
   );
 
-  if (collectionFilter) {
-    extracted = filterBlocksByCollection(
-      extracted,
-      collectionFilter,
-      prefixToArray(args["--prefixes"] || "")
-    );
-  }
+  extracted = filterBlocksByCollection(
+    extracted,
+    prefixToArray(args["--prefixes"] || ""),
+    collectionFilter
+  );
 
   let outputFileName =
     output !== ""
