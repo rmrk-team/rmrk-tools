@@ -29,8 +29,12 @@ export const isValidAddressPolkadotAddress = (address: string) => {
 
 export const findRealOwner = async (
   nftId: string,
-  dbAdapter: IConsolidatorAdapter
+  dbAdapter: IConsolidatorAdapter,
+  level = 1
 ): Promise<string> => {
+  if (level > 10) {
+    throw new Error("Trying to findu owner too deep, possible stack overflow");
+  }
   if (isValidAddressPolkadotAddress(nftId)) {
     return nftId;
   } else {
@@ -43,7 +47,7 @@ export const findRealOwner = async (
     }
 
     // Bubble up until owner of nft is polkadot address
-    return await findRealOwner(nft.owner, dbAdapter);
+    return await findRealOwner(nft.owner, dbAdapter, level + 1);
   }
 };
 

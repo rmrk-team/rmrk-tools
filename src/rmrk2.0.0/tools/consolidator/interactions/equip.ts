@@ -73,7 +73,7 @@ export const equipInteraction = async (
 
     if (!nftHasSlotResource) {
       throw new Error(
-        `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it has no compatible resource`
+        `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it has no compatible resource ${equipEntity.baseslot}`
       );
     }
 
