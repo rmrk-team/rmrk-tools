@@ -9,6 +9,8 @@ import {
 import fs from "fs";
 import fetchRemarks from "../src/rmrk2.0.0/tools/fetchRemarks";
 import arg from "arg";
+import { hexToString, stringToHex } from "@polkadot/util";
+import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 
 const fetch = async () => {
   const args = arg({
@@ -74,6 +76,8 @@ const fetch = async () => {
     process.exit(1);
   }
 
+  //0x3a3a322e302e303a3a
+
   console.log(`Processing block range from ${from} to ${to}.`);
   let extracted = await fetchRemarks(
     api,
@@ -83,11 +87,24 @@ const fetch = async () => {
     ss58Format
   );
 
-  extracted = filterBlocksByCollection(
-    extracted,
-    prefixToArray(args["--prefixes"] || ""),
-    collectionFilter
-  );
+  extracted = extracted.filter((remark) => {
+    const filteredRemark: BlockCalls = { ...remark, calls: [] };
+    if (remark && remark?.calls) {
+      filteredRemark.calls = remark.calls.filter((call) => {
+        return hexToString(call.value).includes("::2.0.0::");
+      });
+    }
+
+    return filteredRemark.calls.length > 0;
+  });
+
+  if (collectionFilter) {
+    extracted = filterBlocksByCollection(
+      extracted,
+      prefixToArray(args["--prefixes"] || ""),
+      collectionFilter
+    );
+  }
 
   let outputFileName =
     output !== ""
