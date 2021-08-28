@@ -33,7 +33,9 @@ export const findRealOwner = async (
   level = 1
 ): Promise<string> => {
   if (level > 10) {
-    throw new Error("Trying to findu owner too deep, possible stack overflow");
+    throw new Error(
+      "Trying to find an owner too deep, possible stack overflow"
+    );
   }
   if (isValidAddressPolkadotAddress(nftId)) {
     return nftId;

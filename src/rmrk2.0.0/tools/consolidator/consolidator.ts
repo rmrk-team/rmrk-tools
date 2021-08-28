@@ -108,10 +108,16 @@ export interface BaseConsolidated {
 
 const invalidateIfParentIsForsale = async (
   nftId: string,
-  dbAdapter: IConsolidatorAdapter
+  dbAdapter: IConsolidatorAdapter,
+  level = 1
 ): Promise<boolean> => {
   if (!nftId) {
     throw new Error("invalidateIfParentIsForsale NFT id is missing");
+  }
+  if (level > 10) {
+    throw new Error(
+      "Trying to invalidateIfParentIsForsale too deep, possible stack overflow"
+    );
   }
   if (isValidAddressPolkadotAddress(nftId)) {
     return true;
@@ -131,7 +137,7 @@ const invalidateIfParentIsForsale = async (
     }
 
     // Bubble up until owner of nft is polkadot address
-    return await invalidateIfParentIsForsale(nft.owner, dbAdapter);
+    return await invalidateIfParentIsForsale(nft.owner, dbAdapter, level + 1);
   }
 };
 
@@ -401,6 +407,7 @@ export class Consolidator {
       if (nft?.owner) {
         await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
       }
+
       listForSaleInteraction(remark, listEntity, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT);
