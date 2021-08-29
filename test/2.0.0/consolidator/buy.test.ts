@@ -5,7 +5,7 @@ import {
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
-  mintNftMock,
+  mintNftMock, mintNftMock2, mintNftMock3,
 } from "../mocks";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -119,6 +119,24 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
         {
           call: "balances.transfer",
           value: `${getAliceKey().address},${BigInt(2e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("Should correctly change rootowner odf all child NFTs", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(mintNftMock3().mint(mintNftMock2(4).getId())),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
           caller: getBobKey().address,
         },
       ]),
