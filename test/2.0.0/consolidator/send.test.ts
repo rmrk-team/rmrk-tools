@@ -76,6 +76,19 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
+  it("Should invalidate SEND if recursion detected", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock3().mint(mintNftMock2(4).getId())),
+      ...getBlockCallsMock(mintNftMock2(4).send(mintNftMock3(5).getId())),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "Cannot have an nft that is it's own child"
+    );
+  });
+
   it("Should invalidate SEND to non-existant NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),

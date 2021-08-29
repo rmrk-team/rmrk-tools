@@ -12,19 +12,14 @@ import { Base } from "../../classes/base";
 import { changeIssuerInteraction } from "./interactions/changeIssuer";
 import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
+import { add } from "winston";
 
 /**
  * Validate polkadot address
  * @param address
  */
 export const isValidAddressPolkadotAddress = (address: string) => {
-  try {
-    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
-
-    return true;
-  } catch (error) {
-    return false;
-  }
+  return !address.includes("-");
 };
 
 export const findRealOwner = async (
@@ -50,6 +45,32 @@ export const findRealOwner = async (
 
     // Bubble up until owner of nft is polkadot address
     return await findRealOwner(nft.owner, dbAdapter, level + 1);
+  }
+};
+
+export const invalidateIfRecursion = async (
+  nftId: string,
+  recepientId: string,
+  dbAdapter: IConsolidatorAdapter
+): Promise<boolean> => {
+  if (isValidAddressPolkadotAddress(recepientId)) {
+    return true;
+  } else {
+    const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recepientId);
+
+    const nft = consolidatedNFTtoInstance(consolidatedNFT);
+    if (!nft) {
+      // skip
+      return true;
+    }
+
+    // const hasRecursiveChild = nft.children.find(child => child.id === initialNftId);
+    if (nft.getId() === nftId) {
+      throw new Error("Cannot have an nft that is it's own child");
+    }
+
+    // Bubble up until owner of nft is polkadot address
+    return await invalidateIfRecursion(nftId, nft.owner, dbAdapter);
   }
 };
 

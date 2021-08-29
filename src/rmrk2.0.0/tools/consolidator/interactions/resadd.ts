@@ -1,5 +1,5 @@
 import { Remark } from "../remark";
-import { NFT } from "../../../classes/nft";
+import { IResourceConsolidated, NFT, Resource } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
 import { Resadd } from "../../../classes/resadd";
 import { findRealOwner } from "../utils";
@@ -48,23 +48,26 @@ export const resAddInteraction = async (
     theme,
   } = resaddEntity;
 
-  // JSON.parse would remove unwanted undefines
-  nft.resources.push(
-    JSON.parse(
-      JSON.stringify({
-        pending,
-        id,
-        metadata,
-        base,
-        src,
-        slot,
-        parts,
-        thumb,
-        themeId,
-        theme,
-      })
-    )
-  );
+  const resource: IResourceConsolidated = {
+    pending,
+    id,
+    metadata,
+    base,
+    src,
+    slot,
+    parts,
+    thumb,
+    themeId,
+    theme,
+  };
+  // Remove undefines
+  Object.keys(resource).forEach((resKey) => {
+    if (resource[resKey as keyof IResourceConsolidated] === undefined) {
+      delete resource[resKey as keyof IResourceConsolidated];
+    }
+  });
+
+  nft.resources.push(resource);
   // If this is the first resource being added and is immediatly accepted, set default priority array
   if (accepted) {
     if (!nft.priority.includes(resaddEntity.id)) {

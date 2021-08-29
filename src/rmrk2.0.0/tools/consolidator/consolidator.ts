@@ -34,6 +34,7 @@ import {
   consolidatedBasetoInstance,
   consolidatedCollectionToInstance,
   consolidatedNFTtoInstance,
+  invalidateIfRecursion,
   isValidAddressPolkadotAddress,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
@@ -317,6 +318,10 @@ export class Consolidator {
       : undefined;
 
     try {
+      if (nft.getId()) {
+        await invalidateIfRecursion(nft.getId(), nft.owner, this.dbAdapter);
+      }
+
       await validateMintNFT(remark, nft, this.dbAdapter, collection);
       await this.dbAdapter.updateNFTMint(nft);
 
@@ -359,6 +364,11 @@ export class Consolidator {
 
     try {
       if (nft?.owner) {
+        await invalidateIfRecursion(
+          sendEntity.id,
+          sendEntity.recipient,
+          this.dbAdapter
+        );
         await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
       }
 

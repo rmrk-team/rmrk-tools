@@ -303,8 +303,7 @@ export const filterBlocksByCollection = (
   blockCalls.filter((block) =>
     getRemarksFromBlocks([block], prefixes).some(
       (rmrk) =>
-        ((collectionFilter && rmrk.remark.includes(collectionFilter)) ||
-          !collectionFilter) &&
-        rmrk.remark.includes("::2.0.0")
+        (collectionFilter && rmrk.remark.includes(collectionFilter)) ||
+        !collectionFilter
     )
   );
