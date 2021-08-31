@@ -67,7 +67,7 @@ Object {
     Object {
       "block": 5,
       "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[LIST] Attempting to list NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888 who's owner is another NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777.",
+      "message": "[LIST] Attempting to list non-owned NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888, real owner: 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "op_type": "LIST",
     },

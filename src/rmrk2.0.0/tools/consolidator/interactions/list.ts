@@ -22,14 +22,18 @@ export const listForSaleInteraction = (
     );
   }
 
-  if (!isValidAddressPolkadotAddress(nft.owner)) {
+  // Check if allowed to send parent NFT. ( owner is Polkadot address )
+  if (isValidAddressPolkadotAddress(nft.owner) && nft.owner != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.LIST}] Attempting to list NFT ${listEntity.id} who's owner is another NFT ${nft.owner}.`
+      `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real owner: ${nft.owner}`
     );
   }
 
-  // Check if allowed to issue send - if owner == caller
-  if (nft.owner != remark.caller) {
+  // Check if allowed to send child NFT. ( owner is another NFT id )
+  if (
+    !isValidAddressPolkadotAddress(nft.owner) &&
+    nft.rootowner != remark.caller
+  ) {
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real owner: ${nft.owner}`
     );
