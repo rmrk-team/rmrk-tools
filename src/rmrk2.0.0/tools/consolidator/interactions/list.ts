@@ -3,13 +3,15 @@ import { List } from "../../../classes/list";
 import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
 import { Change } from "../../../changelog";
-import { isValidAddressPolkadotAddress } from "../utils";
+import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
+import { IConsolidatorAdapter } from "../adapters/types";
 
-export const listForSaleInteraction = (
+export const listForSaleInteraction = async (
   remark: Remark,
   listEntity: List,
+  dbAdapter: IConsolidatorAdapter,
   nft?: NFT
-): void => {
+): Promise<void> => {
   if (!nft) {
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list non-existant NFT ${listEntity.id}`
@@ -29,13 +31,11 @@ export const listForSaleInteraction = (
     );
   }
 
-  // Check if allowed to send child NFT. ( owner is another NFT id )
-  if (
-    !isValidAddressPolkadotAddress(nft.owner) &&
-    nft.rootowner != remark.caller
-  ) {
+  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  // Check if allowed to send child NFT by rootowner and owner is another NFT id
+  if (!isValidAddressPolkadotAddress(nft.owner) && rootowner != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real owner: ${nft.owner}`
+      `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real rootowner: ${rootowner}`
     );
   }
 

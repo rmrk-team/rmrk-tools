@@ -418,7 +418,7 @@ export class Consolidator {
         await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
       }
 
-      listForSaleInteraction(remark, listEntity, nft);
+      await listForSaleInteraction(remark, listEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {
