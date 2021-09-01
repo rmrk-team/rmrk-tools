@@ -20,3 +20,5 @@ export { changeIssuerInteraction } from "./tools/consolidator/interactions/chang
 export { buyInteraction } from "./tools/consolidator/interactions/buy";
 export { sendInteraction } from "./tools/consolidator/interactions/send";
 export * from "./tools/constants";
+export * from "./tools/validate-remark";
+export * from "./tools/validate-metadata";
