@@ -166,7 +166,7 @@ describe("utils: getBlockCallsFromSignedBlock", () => {
   expect.assertions(1);
 
   it("should Block calls from remarks with correct nested extras", async () => {
-    const api = await getApi("wss://node.rmrk.app");
+    const api = await getApi("wss://kusama-rpc.polkadot.io");
     expect(
       await getBlockCallsFromSignedBlock(
         blockWithMultipleRemarks[0],
