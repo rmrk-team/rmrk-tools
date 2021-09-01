@@ -12,4 +12,4 @@ export { consumeInteraction } from "./tools/consolidator/interactions/consume";
 export { changeIssuerInteraction } from "./tools/consolidator/interactions/changeIssuer";
 export { buyInteraction } from "./tools/consolidator/interactions/buy";
 export { sendInteraction } from "./tools/consolidator/interactions/send";
-export * as constants from "./tools/constants";
+export * from "./tools/constants";

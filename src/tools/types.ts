@@ -29,7 +29,7 @@ export type BlockCall = {
   extras?: BlockCall[];
 };
 
-export enum OP_TYPES {
+export const enum OP_TYPES {
   BUY = "BUY",
   LIST = "LIST",
   MINT = "MINT",
