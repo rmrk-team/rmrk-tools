@@ -1,6 +1,12 @@
 export { Consolidator } from "./tools/consolidator/consolidator";
 export { Collection } from "./rmrk1.0.0/classes/collection";
 export { NFT } from "./rmrk1.0.0/classes/nft";
+export { List } from "./rmrk1.0.0/classes/list";
+export { Consume } from "./rmrk1.0.0/classes/consume";
+export { ChangeIssuer } from "./rmrk1.0.0/classes/changeissuer";
+export { Buy } from "./rmrk1.0.0/classes/buy";
+export { Send } from "./rmrk1.0.0/classes/send";
+export { Emote } from "./rmrk1.0.0/classes/emote";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
 export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";
 export * from "./tools/consolidator/utils";
