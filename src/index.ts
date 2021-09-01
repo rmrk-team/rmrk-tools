@@ -3,6 +3,7 @@ export { Collection } from "./rmrk1.0.0/classes/collection";
 export { NFT } from "./rmrk1.0.0/classes/nft";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
 export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";
+export * from "./tools/consolidator/utils";
 export { RemarkListener } from "./listener";
 export { validateMintNFT } from "./tools/consolidator/interactions/mintNFT";
 export { validateMintIds } from "./tools/consolidator/interactions/mint";

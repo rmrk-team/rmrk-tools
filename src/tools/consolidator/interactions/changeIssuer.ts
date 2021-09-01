@@ -4,17 +4,6 @@ import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { ChangeIssuer } from "../../../rmrk1.0.0/classes/changeissuer";
 
-export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
-  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark);
-
-  if (typeof changeIssuerEntity === "string") {
-    throw new Error(
-      `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${changeIssuerEntity}`
-    );
-  }
-  return changeIssuerEntity;
-};
-
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,

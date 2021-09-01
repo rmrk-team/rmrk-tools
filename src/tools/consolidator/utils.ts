@@ -1,6 +1,12 @@
 import { NFT } from "../../rmrk1.0.0/classes/nft";
 import { CollectionConsolidated, NFTConsolidated } from "./consolidator";
-import { Collection } from "../../rmrk1.0.0/classes/collection";
+import {
+  Collection as C100,
+  Collection,
+} from "../../rmrk1.0.0/classes/collection";
+import { Remark } from "./remark";
+import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
+import { OP_TYPES } from "../constants";
 
 export const consolidatedNFTtoInstance = (
   nft?: NFTConsolidated
@@ -66,4 +72,23 @@ export const consolidatedCollectionToInstance = (
   colleactionClass.loadedMetadata = loadedMetadata;
 
   return colleactionClass;
+};
+export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
+  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark);
+
+  if (typeof changeIssuerEntity === "string") {
+    throw new Error(
+      `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${changeIssuerEntity}`
+    );
+  }
+  return changeIssuerEntity;
+};
+export const getCollectionFromRemark = (remark: Remark) => {
+  const collection = C100.fromRemark(remark.remark, remark.block);
+  if (typeof collection === "string") {
+    throw new Error(
+      `[${OP_TYPES.MINT}] Dead before instantiation: ${collection}`
+    );
+  }
+  return collection;
 };
