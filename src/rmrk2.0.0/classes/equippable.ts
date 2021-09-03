@@ -36,7 +36,7 @@ export class Equippable {
       }
 
       return new Equippable(id, slot, equippableChange);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`EQUIPPABLE error: full input was ${remark}`);
       return e.message;

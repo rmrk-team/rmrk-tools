@@ -17,7 +17,7 @@ export const pinToIpfs = async (filePath: string, name?: string) => {
     const readableStreamForFile = fs.createReadStream(filePath);
     const result = await pinata.pinFileToIPFS(readableStreamForFile, options);
     return result.IpfsHash;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
   }
 };
@@ -35,7 +35,7 @@ export const uploadRMRKMetadata = async (
     const metadata = { ...metadataFields, image: `ipfs://ipfs/${imageHash}` };
     const metadataHashResult = await pinata.pinJSONToIPFS(metadata, options);
     return `ipfs://ipfs/${metadataHashResult.IpfsHash}`;
-  } catch (error) {
+  } catch (error: any) {
     return "";
   }
 };

@@ -62,7 +62,7 @@ const IsBigInt = define("BigInt", (value: any) => {
 
     const priceBigInt = BigInt(parseInt(value));
     return typeof priceBigInt === "bigint";
-  } catch (error) {
+  } catch (error: any) {
     return false;
   }
 });
@@ -155,7 +155,7 @@ export const validateCollection = (remark: string): any => {
       throw new Error("NFT Collection is missing metadata");
     }
     return assert(obj, CollectionStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -170,7 +170,7 @@ export const validateNFT = (remark: string): any => {
     validateRemarkBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
     return assert(obj, NFTStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -185,7 +185,7 @@ export const validateBase = (remark: string): any => {
     validateRemarkBase(remark, OP_TYPES.BASE);
     const obj = getRemarkData(dataString);
     return assert(obj, BaseStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during Base remark validation"
     );
@@ -199,7 +199,7 @@ export const validateList = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.LIST);
     return assert({ id, price }, LISTStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -217,7 +217,7 @@ export const validateResadd = (remark: string): any => {
     }
     const obj = getRemarkData(resource);
     return assert(obj, ResourceStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during RESADD remark validation"
     );
@@ -236,7 +236,7 @@ export const validateSetPriority = (remark: string): any => {
     return true;
     // const obj = getRemarkData(priority);
     // return assert(obj, ResourceStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message ||
         "Something went wrong during SETPRIORITY remark validation"
@@ -263,7 +263,7 @@ export const validateSetAttribute = (remark: string): any => {
     }
     const obj = getRemarkData(attribute);
     return assert(obj, PropertiesStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message ||
         "Something went wrong during SETATTRIBUTE remark validation"
@@ -283,7 +283,7 @@ export const validateSend = (remark: string): any => {
       );
     }
     return assert({ id, recipient }, SENDStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -297,7 +297,7 @@ export const validateEmote = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.EMOTE);
     return assert({ id, unicode }, EMOTEStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -311,7 +311,7 @@ export const validateEquippable = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.EQUIPPABLE);
     return assert({ id, slot, classes }, EQUIPPABLEStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message ||
         "Something went wrong during EQUIPPABLE remark validation"
@@ -329,7 +329,7 @@ export const validateThemeadd = (remark: string): any => {
     const obj = getRemarkData(theme);
     validateRemarkBase(remark, OP_TYPES.THEMEADD);
     return assert({ baseId, themeId, theme: obj }, THEMEADDStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during THEMEADD remark validation"
     );
@@ -343,7 +343,7 @@ export const validateChangeIssuer = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -357,7 +357,7 @@ export const validateBuy = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.BUY);
     return assert({ id }, BUYStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -371,7 +371,7 @@ export const validateBurn = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.BURN);
     return assert({ id }, BURNStruct);
-  } catch (error) {
+  } catch (error: any) {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
@@ -386,7 +386,7 @@ export const validateAccept = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.ACCEPT);
     return assert({ id, nftId, entity }, ACCEPTStruct);
-  } catch (error) {
+  } catch (error: any) {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during ASCCEPT remark validation"
@@ -401,7 +401,7 @@ export const validateEquip = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.EQUIP);
     return assert({ id, baseslot }, EQUIPStruct);
-  } catch (error) {
+  } catch (error: any) {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during EQUIP remark validation"

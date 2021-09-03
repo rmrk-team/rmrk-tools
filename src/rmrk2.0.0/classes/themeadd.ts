@@ -28,7 +28,7 @@ export class Themeadd {
       ] = remark.split("::");
       const themeObj: Theme = getRemarkData(theme);
       return new Themeadd(baseId, themeId, themeObj);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`THEMEADD error: full input was ${remark}`);
       return e.message;

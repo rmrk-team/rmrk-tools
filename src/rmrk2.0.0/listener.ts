@@ -139,7 +139,7 @@ export class RemarkListener {
         to,
         this.prefixes
       );
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       return [];
     }
@@ -229,7 +229,7 @@ export class RemarkListener {
       if (this.missingBlockCallsFetched && finalised && calls.length === 0) {
         try {
           await this.storageProvider.set(header.number.toNumber());
-        } catch (e) {
+        } catch (e: any) {
           console.error(e);
         }
       }

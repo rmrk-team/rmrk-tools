@@ -16,7 +16,7 @@ export class Setpriority {
       const [_prefix, _op_type, _version, id, priority] = remark.split("::");
       const priorityArray: string[] = getRemarkData(priority);
       return new this(id, priorityArray);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`SETPRIORITY error: full input was ${remark}`);
       return e.message;

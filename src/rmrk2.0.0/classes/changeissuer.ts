@@ -14,7 +14,7 @@ export class ChangeIssuer {
       validateChangeIssuer(remark);
       const [prefix, op_type, version, id, issuer] = remark.split("::");
       return new ChangeIssuer(issuer, id);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`CHANGEISSUER error: full input was ${remark}`);
       return e.message;

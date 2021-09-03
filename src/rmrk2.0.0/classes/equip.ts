@@ -16,7 +16,7 @@ export class Equip {
         "::"
       );
       return new this(id, baseslot);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`EQUIP error: full input was ${remark}`);
       return e.message;

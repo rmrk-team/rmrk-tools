@@ -37,7 +37,7 @@ export class SetAttribute {
         throw new Error(`Not a valid freeze ${freeze}`);
       }
       return new SetAttribute(id, key, attributeObj, freeze as "freeze");
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`SETATTRIBUTE error: full input was ${remark}`);
       return e.message;

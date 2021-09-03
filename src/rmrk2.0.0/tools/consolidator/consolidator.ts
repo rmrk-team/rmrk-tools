@@ -210,7 +210,7 @@ export class Consolidator {
     let base;
     try {
       base = getBaseFromRemark(remark);
-    } catch (e) {
+    } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
     }
@@ -230,7 +230,7 @@ export class Consolidator {
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.BASE]: base.getId() });
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(base.getId(), e.message);
       return true;
     }
@@ -250,7 +250,7 @@ export class Consolidator {
     let collection;
     try {
       collection = getCollectionFromRemark(remark);
-    } catch (e) {
+    } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
     }
@@ -273,7 +273,7 @@ export class Consolidator {
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.CREATE]: collection.id });
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(collection.id, e.message);
       return true;
     }
@@ -329,7 +329,7 @@ export class Consolidator {
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.MINT]: nft.getId() });
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(nft.getId(), e.message);
       return true;
     }
@@ -380,7 +380,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(sendEntity.id, e.message);
       return true;
     }
@@ -425,7 +425,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.LIST]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(listEntity.id, e.message);
       return true;
     }
@@ -470,7 +470,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.BURN]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(burnEntity.id, e.message);
       return true;
     }
@@ -511,7 +511,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.BUY]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(buyEntity.id, e.message);
       return true;
     }
@@ -547,7 +547,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.EMOTE]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(emoteEntity.id, e.message);
       return true;
     }
@@ -571,7 +571,7 @@ export class Consolidator {
     let changeIssuerEntity: ChangeIssuer;
     try {
       changeIssuerEntity = getChangeIssuerEntity(remark);
-    } catch (e) {
+    } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
     }
@@ -603,7 +603,7 @@ export class Consolidator {
           this.dbAdapter
         );
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(changeIssuerEntity.id, e.message);
       return true;
     }
@@ -638,7 +638,7 @@ export class Consolidator {
       if (base && consolidatedBase) {
         await this.dbAdapter.updateBaseEquippable(base, consolidatedBase);
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(equippableEntity.id, e.message);
       return true;
     }
@@ -676,7 +676,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.RESADD]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(resaddEntity.nftId, e.message);
       return true;
     }
@@ -718,7 +718,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.ACCEPT]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(acceptEntity.nftId, e.message);
       return true;
     }
@@ -766,7 +766,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.EQUIP]: parentNft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(equipEntity.id, e.message);
       return true;
     }
@@ -810,7 +810,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.SETPRIORITY]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(setPriorityEntity.id, e.message);
       return true;
     }
@@ -856,7 +856,7 @@ export class Consolidator {
           });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(setAttributeEntity.id, e.message);
       return true;
     }
@@ -896,7 +896,7 @@ export class Consolidator {
           });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(themeAddEntity.baseId, e.message);
       return true;
     }

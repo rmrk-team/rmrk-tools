@@ -42,7 +42,7 @@ export class Emote {
         throw new Error(`Invalid emoji unicode ${unicode}`);
       }
       return new Emote(namespace as EMOTE_NAMESPACES, id, unicode);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`EMOTE error: full input was ${remark}`);
       return e.message;

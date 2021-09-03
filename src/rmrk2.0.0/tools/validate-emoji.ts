@@ -15,7 +15,7 @@ export const unifiedToNative = (unified: string) => {
     return stringFromCodePoint(
       ...codePoints.map((codePoint) => Number(codePoint))
     );
-  } catch (error) {
+  } catch (error: any) {
     return "";
   }
 };

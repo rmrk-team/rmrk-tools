@@ -20,7 +20,7 @@ export class Accept {
         "::"
       );
       return new this(nftId, entity as AcceptEntityType, id);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`ACCEPT error: fu ll input was ${remark}`);
       return e.message;

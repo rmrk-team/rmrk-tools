@@ -149,7 +149,7 @@ export class Base {
         obj.parts,
         obj.themes
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`BASE error: full input was ${remark}`);
       return e.message;

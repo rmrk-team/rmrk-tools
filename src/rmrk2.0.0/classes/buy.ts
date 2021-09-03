@@ -14,7 +14,7 @@ export class Buy {
       validateBuy(remark);
       const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
       return new Buy(id, recipient);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`BUY error: full input was ${remark}`);
       return e.message;

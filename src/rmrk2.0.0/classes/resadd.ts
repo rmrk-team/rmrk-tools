@@ -37,7 +37,7 @@ export class Resadd {
       const [_prefix, _op_type, _version, nftId, resource] = remark.split("::");
       const resourceObj: Resource = getRemarkData(resource);
       return new this(nftId, resourceObj);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`RESADD error: full input was ${remark}`);
       return e.message;

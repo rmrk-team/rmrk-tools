@@ -89,7 +89,7 @@ export class Collection {
         obj.id,
         obj.metadata
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`${OP_TYPES.CREATE} error: full input was ${remark}`);
       return e.message;

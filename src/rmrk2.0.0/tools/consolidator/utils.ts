@@ -167,7 +167,7 @@ export const doesRecipientExists = async (
       const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recipient);
       return Boolean(consolidatedNFT);
     }
-  } catch (error) {
+  } catch (error: any) {
     return false;
   }
 };

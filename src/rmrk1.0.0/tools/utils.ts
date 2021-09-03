@@ -209,7 +209,7 @@ export const getBlockCallsFromSignedBlock = async (
               caller: derivedMultisigAccount,
             });
           }
-        } catch (error) {
+        } catch (error: any) {
           console.log(
             `Skipping multisig call ${signedBlock.block?.header?.number}-${extrinsicIndex} due to the fact that we cannot decode 3rd argument which is supposed to be system.remark`,
             error

@@ -118,7 +118,7 @@ export class NFT {
         owner: recipient,
         properties: obj.properties || {},
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`MINT error: full input was ${remark}`);
       return e.message;

@@ -47,7 +47,7 @@ const IsBigInt = define("BigInt", (value: any) => {
 
     const priceBigInt = BigInt(parseInt(value));
     return typeof priceBigInt === "bigint";
-  } catch (error) {
+  } catch (error: any) {
     return false;
   }
 });
@@ -106,7 +106,7 @@ export const validateCollection = (remark: string): any => {
       throw new Error("NFT is missing metadata");
     }
     return assert(obj, CollectionStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -124,7 +124,7 @@ export const validateNFT = (remark: string): any => {
       throw new Error("NFT is missing metadata");
     }
     return assert(obj, NFTStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -138,7 +138,7 @@ export const validateList = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.LIST);
     return assert({ id, price }, LISTStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -157,7 +157,7 @@ export const validateSend = (remark: string): any => {
       );
     }
     return assert({ id, recipient }, SENDStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -171,7 +171,7 @@ export const validateEmote = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.EMOTE);
     return assert({ id, unicode }, EMOTEStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -185,7 +185,7 @@ export const validateChangeIssuer = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -199,7 +199,7 @@ export const validateBuy = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.BUY);
     return assert({ id }, BUYStruct);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
     );
@@ -213,7 +213,7 @@ export const validateConsume = (remark: string): any => {
   try {
     validateBase(remark, OP_TYPES.CONSUME);
     return assert({ id }, CONSUMEStruct);
-  } catch (error) {
+  } catch (error: any) {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during remark validation"
