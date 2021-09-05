@@ -5,13 +5,16 @@ import { Change } from "../../../changelog";
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
+import { findRealOwner } from "../utils";
+import { IConsolidatorAdapter } from "../adapters/types";
 
-export const buyInteraction = (
+export const buyInteraction = async (
   remark: Remark, // Current remark
   buyEntity: Buy,
+  dbAdapter: IConsolidatorAdapter,
   nft?: NFT, // NFT in current state
   ss58Format?: number
-): void => {
+): Promise<void> => {
   // An NFT was bought after having been LISTed for sale
   if (!nft) {
     throw new Error(
@@ -19,6 +22,8 @@ export const buyInteraction = (
     );
   }
 
+  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  nft.rootowner = rootowner;
   validate(remark, buyEntity, nft, ss58Format);
 
   nft.addChange({
@@ -53,7 +58,7 @@ const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
         ? encodeAddress(owner, ss58Format)
         : owner;
       transferValue = [ownerEncoded, forsale].join(",");
-      if (transferValue === `${nft.owner},${nft.forsale}`) {
+      if (transferValue === `${nft.rootowner},${nft.forsale}`) {
         transferValid = true;
       }
     }

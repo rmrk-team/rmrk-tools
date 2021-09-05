@@ -503,7 +503,13 @@ export class Consolidator {
       if (nft?.owner) {
         await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
       }
-      buyInteraction(remark, buyEntity, nft, this.ss58Format);
+      await buyInteraction(
+        remark,
+        buyEntity,
+        this.dbAdapter,
+        nft,
+        this.ss58Format
+      );
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT);
         await this.dbAdapter.updateNFTChildrenRootOwner(nft);
