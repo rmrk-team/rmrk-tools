@@ -94,7 +94,7 @@ export const sendInteraction = async (
     const promises = nft.children.map(async (child) => {
       const childNftConsolidated = await dbAdapter.getNFTById(child.id);
       const childNft = consolidatedNFTtoInstance(childNftConsolidated);
-      if (childNft?.forsale) {
+      if (childNft?.forsale && childNftConsolidated) {
         childNft.addChange({
           field: "forsale",
           old: childNft.forsale,
@@ -104,6 +104,7 @@ export const sendInteraction = async (
           opType: OP_TYPES.SEND,
         } as Change);
         childNft.forsale = BigInt(0);
+        await dbAdapter.updateNFTSend(childNft, childNftConsolidated);
       }
       return childNft;
     });

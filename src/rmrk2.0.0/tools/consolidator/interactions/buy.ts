@@ -30,7 +30,7 @@ export const buyInteraction = async (
     const promises = nft.children.map(async (child) => {
       const childNftConsolidated = await dbAdapter.getNFTById(child.id);
       const childNft = consolidatedNFTtoInstance(childNftConsolidated);
-      if (childNft?.forsale) {
+      if (childNft?.forsale && childNftConsolidated) {
         childNft.addChange({
           field: "forsale",
           old: childNft.forsale,
@@ -40,6 +40,7 @@ export const buyInteraction = async (
           opType: OP_TYPES.BUY,
         } as Change);
         childNft.forsale = BigInt(0);
+        await dbAdapter.updateNFTBuy(childNft, childNftConsolidated);
       }
       return childNft;
     });
