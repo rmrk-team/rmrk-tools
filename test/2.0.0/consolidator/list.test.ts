@@ -40,7 +40,7 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
-  it("Should ", async () => {
+  it("Should update children to forsale 0", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
