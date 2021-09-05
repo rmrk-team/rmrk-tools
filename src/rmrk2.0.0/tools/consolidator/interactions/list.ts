@@ -3,7 +3,11 @@ import { List } from "../../../classes/list";
 import { NFT } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
 import { Change } from "../../../changelog";
-import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
+import {
+  consolidatedNFTtoInstance,
+  findRealOwner,
+  isValidAddressPolkadotAddress,
+} from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
 export const listForSaleInteraction = async (
@@ -43,6 +47,27 @@ export const listForSaleInteraction = async (
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${listEntity.id}.`
     );
+  }
+
+  if (nft.children && nft.children.length > 0) {
+    const promises = nft.children.map(async (child) => {
+      const childNftConsolidated = await dbAdapter.getNFTById(child.id);
+      const childNft = consolidatedNFTtoInstance(childNftConsolidated);
+      if (childNft?.forsale) {
+        childNft.addChange({
+          field: "forsale",
+          old: childNft.forsale,
+          new: BigInt(0),
+          caller: remark.caller,
+          block: remark.block,
+          opType: OP_TYPES.LIST,
+        } as Change);
+        childNft.forsale = BigInt(0);
+      }
+      return childNft;
+    });
+
+    await Promise.all(promises);
   }
 
   if (listEntity.price !== nft.forsale) {

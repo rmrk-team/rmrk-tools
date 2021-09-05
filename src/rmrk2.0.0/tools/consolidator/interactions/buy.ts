@@ -5,7 +5,7 @@ import { Change } from "../../../changelog";
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
-import { findRealOwner } from "../utils";
+import { consolidatedNFTtoInstance, findRealOwner } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
 export const buyInteraction = async (
@@ -25,6 +25,27 @@ export const buyInteraction = async (
   const rootowner = await findRealOwner(nft.owner, dbAdapter);
   nft.rootowner = rootowner;
   validate(remark, buyEntity, nft, ss58Format);
+
+  if (nft.children && nft.children.length > 0) {
+    const promises = nft.children.map(async (child) => {
+      const childNftConsolidated = await dbAdapter.getNFTById(child.id);
+      const childNft = consolidatedNFTtoInstance(childNftConsolidated);
+      if (childNft?.forsale) {
+        childNft.addChange({
+          field: "forsale",
+          old: childNft.forsale,
+          new: BigInt(0),
+          caller: remark.caller,
+          block: remark.block,
+          opType: OP_TYPES.BUY,
+        } as Change);
+        childNft.forsale = BigInt(0);
+      }
+      return childNft;
+    });
+
+    await Promise.all(promises);
+  }
 
   nft.addChange({
     field: "owner",

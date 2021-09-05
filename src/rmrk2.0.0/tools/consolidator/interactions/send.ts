@@ -5,6 +5,7 @@ import { Send } from "../../../classes/send";
 import { NFT } from "../../../classes/nft";
 import { IConsolidatorAdapter } from "../adapters/types";
 import {
+  consolidatedNFTtoInstance,
   doesRecipientExists,
   findRealOwner,
   isValidAddressPolkadotAddress,
@@ -87,6 +88,27 @@ export const sendInteraction = async (
 
       nft.pending = rootNewOwner !== remark.caller;
     }
+  }
+
+  if (nft.children && nft.children.length > 0) {
+    const promises = nft.children.map(async (child) => {
+      const childNftConsolidated = await dbAdapter.getNFTById(child.id);
+      const childNft = consolidatedNFTtoInstance(childNftConsolidated);
+      if (childNft?.forsale) {
+        childNft.addChange({
+          field: "forsale",
+          old: childNft.forsale,
+          new: BigInt(0),
+          caller: remark.caller,
+          block: remark.block,
+          opType: OP_TYPES.SEND,
+        } as Change);
+        childNft.forsale = BigInt(0);
+      }
+      return childNft;
+    });
+
+    await Promise.all(promises);
   }
 
   nft.addChange({
