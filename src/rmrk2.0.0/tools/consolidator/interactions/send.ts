@@ -73,23 +73,22 @@ export const sendInteraction = async (
     ) {
       oldOwner.children.splice(oldOwnerChildIndex, 1);
     }
+  }
 
-    if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
-      // Add NFT as child of new owner
-      const newOwner = await dbAdapter.getNFTById(sendEntity.recipient);
-      const newOwnerChild =
-        newOwner &&
-        newOwner.children.find((child) => child.id === sendEntity.id);
+  if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
+    // Add NFT as child of new owner
+    const newOwner = await dbAdapter.getNFTById(sendEntity.recipient);
+    const newOwnerChild =
+      newOwner && newOwner.children.find((child) => child.id === sendEntity.id);
 
-      if (newOwner && !newOwnerChild) {
-        newOwner.children.push({
-          id: sendEntity.id,
-          pending: rootNewOwner !== remark.caller,
-          equipped: "",
-        });
+    if (newOwner && !newOwnerChild) {
+      newOwner.children.push({
+        id: sendEntity.id,
+        pending: rootNewOwner !== remark.caller,
+        equipped: "",
+      });
 
-        nft.pending = rootNewOwner !== remark.caller;
-      }
+      nft.pending = rootNewOwner !== remark.caller;
     }
   }
 
