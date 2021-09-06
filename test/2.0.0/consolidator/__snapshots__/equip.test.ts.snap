@@ -724,7 +724,7 @@ Object {
     Object {
       "block": 6,
       "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "message": "[EQUIP] Cannot equip NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888 because it wasn't accepted by a parent yet",
+      "message": "[EQUIP] Cannot equip NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888 because it's parent is missing children array",
       "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "op_type": "EQUIP",
     },
@@ -734,13 +734,7 @@ Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
-      "children": Array [
-        Object {
-          "equipped": "",
-          "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
-          "pending": true,
-        },
-      ],
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
@@ -775,7 +769,7 @@ Object {
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
-      "pending": true,
+      "pending": false,
       "priority": Array [],
       "properties": Object {},
       "reactions": Object {},

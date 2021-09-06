@@ -58,7 +58,7 @@ export const sendInteraction = async (
 
   const rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
 
-  if (!isValidAddressPolkadotAddress(sendEntity.recipient)) {
+  if (!isValidAddressPolkadotAddress(nft.owner)) {
     // Remove NFT from children of previous owner
     const oldOwner = await dbAdapter.getNFTById(nft.owner);
 
