@@ -1,9 +1,9 @@
 // @todo: add data!
 import { Change } from "../changelog";
-import { validateCollection } from "../../tools/validate-remark";
-import { getRemarkData } from "../../tools/utils";
-import { OP_TYPES, VERSION } from "../../tools/constants";
-import { Attribute } from "../../types";
+import { validateCollection } from "../tools/validate-remark";
+import { getRemarkData } from "../tools/utils";
+import { OP_TYPES, VERSION } from "../tools/constants";
+import { Attribute } from "../types";
 
 export class Collection {
   readonly block: number;
@@ -97,7 +97,7 @@ export class Collection {
         obj.id,
         obj.metadata
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`${OP_TYPES.MINT} error: full input was ${remark}`);
       return e.message;

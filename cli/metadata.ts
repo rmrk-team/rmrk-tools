@@ -1,8 +1,8 @@
 #! /usr/bin/env node
-import { uploadRMRKMetadata } from "../src/tools/metadata-to-ipfs";
+import { uploadRMRKMetadata } from "../src/rmrk2.0.0/tools/metadata-to-ipfs";
 import arg from "arg";
 import fs from "fs";
-import { NFTMetadata } from "../src/rmrk1.0.0/classes/nft";
+import { NFTMetadata } from "../src/rmrk2.0.0/classes/nft";
 
 const fsPromises = fs.promises;
 

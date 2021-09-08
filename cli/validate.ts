@@ -1,7 +1,7 @@
 #! /usr/bin/env node
-import { NFT as N100 } from "../src/rmrk1.0.0/classes/nft";
-import { deeplog } from "../src/tools/utils";
-import { OP_TYPES } from "../src/tools/constants";
+import { NFT as N100 } from "../src/rmrk2.0.0/classes/nft";
+import { deeplog } from "../src/rmrk2.0.0/tools/utils";
+import { OP_TYPES } from "../src/rmrk2.0.0/tools/constants";
 import arg from "arg";
 
 const validate = async () => {
@@ -21,8 +21,8 @@ const validate = async () => {
     );
   }
   switch (exploded[1]) {
-    case OP_TYPES.MINTNFT:
-      console.log(`Identified as ${OP_TYPES.MINTNFT}`);
+    case OP_TYPES.MINT:
+      console.log(`Identified as ${OP_TYPES.MINT}`);
       const n = N100.fromRemark(remark);
       deeplog(n);
       break;

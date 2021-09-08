@@ -1,0 +1,218 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: ACCEPT Accept a child NFT on a NFT 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [],
+  "nfts": Array [
+    Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [],
+      "children": Array [
+        Object {
+          "equipped": "",
+          "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+          "pending": false,
+        },
+      ],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+    Object {
+      "block": 4,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 5,
+          "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "field": "owner",
+          "new": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+          "old": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "opType": "SEND",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+      "metadata": undefined,
+      "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000888",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: ACCEPT Should invalidate accept if NFT doesn't exist 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [
+    Object {
+      "block": 6,
+      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "message": "[ACCEPT] Attempting to accept RES on a non-existant NFT 4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "op_type": "ACCEPT",
+    },
+  ],
+  "nfts": Array [
+    Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "owner",
+          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "opType": "SEND",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [
+        Object {
+          "id": "jXhhR",
+          "metadata": "ipfs://ipfs/123",
+          "pending": true,
+        },
+      ],
+      "rootowner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: ACCEPT Should invalidate accept if NFT is burned 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [
+    Object {
+      "block": 7,
+      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "message": "[ACCEPT] Attempting to accept RES on burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "op_type": "ACCEPT",
+    },
+  ],
+  "nfts": Array [
+    Object {
+      "block": 3,
+      "burned": "true",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "owner",
+          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "opType": "SEND",
+        },
+        Object {
+          "block": 6,
+          "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "field": "burned",
+          "new": "true",
+          "old": "",
+          "opType": "BURN",
+        },
+        Object {
+          "block": 6,
+          "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+          "field": "forsale",
+          "new": 0n,
+          "old": 0n,
+          "opType": "BURN",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [
+        Object {
+          "id": "jXhhR",
+          "metadata": "ipfs://ipfs/123",
+          "pending": true,
+        },
+      ],
+      "rootowner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  ],
+}
+`;

@@ -1,8 +1,8 @@
 #! /usr/bin/env node
-import { RemarkListener } from "../src/listener";
-import { getApi } from "../src/tools/utils";
-import { Remark } from "../src/tools/consolidator/remark";
-import { Consolidator } from "../src";
+import { RemarkListener } from "../src/rmrk2.0.0/listener";
+import { getApi } from "../src/rmrk2.0.0/tools/utils";
+import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
+import { Consolidator } from "../src/rmrk2.0.0";
 
 const runListener = async () => {
   const api = await getApi("wss://kusama-rpc.polkadot.io");

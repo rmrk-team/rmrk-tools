@@ -1,9 +1,9 @@
 #! /usr/bin/env node
 import fs from "fs";
-import JsonAdapter from "../src/tools/consolidator/adapters/json";
-import { Consolidator } from "../src/tools/consolidator/consolidator";
+import JsonAdapter from "../src/rmrk2.0.0/tools/consolidator/adapters/json";
+import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
-import { getApi, prefixToArray } from "../src/tools/utils";
+import { getApi, prefixToArray } from "../src/rmrk2.0.0/tools/utils";
 
 const consolidate = async () => {
   const args = arg({

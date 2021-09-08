@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Collection: Add change should match snapshot 1`] = `
+Collection {
+  "block": 0,
+  "changes": Array [
+    Object {
+      "block": 0,
+      "caller": "",
+      "field": "",
+      "new": "",
+      "old": "",
+      "opType": "CHANGEISSUER",
+    },
+  ],
+  "id": "d43593c715a56da27d-KANARIABIRDS",
+  "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+  "max": 0,
+  "metadata": "https://some.url",
+  "symbol": "KANARIABIRDS",
+}
+`;
+
+exports[`rmrk2.0.0 Collection: Change issuer should match snapshot 1`] = `"RMRK::CHANGEISSUER::2.0.0::d43593c715a56da27d-KANARIABIRDS::5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"`;
+
+exports[`rmrk2.0.0 Collection: Create should match snapshot 1`] = `"RMRK::CREATE::2.0.0::%7B%22max%22%3A0%2C%22issuer%22%3A%225GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY%22%2C%22symbol%22%3A%22KANARIABIRDS%22%2C%22id%22%3A%22d43593c715a56da27d-KANARIABIRDS%22%2C%22metadata%22%3A%22https%3A%2F%2Fsome.url%22%7D"`;
+
+exports[`rmrk2.0.0 Collection: Get changes should match snapshot 1`] = `
+Array [
+  Object {
+    "block": 0,
+    "caller": "",
+    "field": "",
+    "new": "",
+    "old": "",
+    "opType": "CHANGEISSUER",
+  },
+]
+`;

@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: CREATE NFT CLASS should correctly create a NFT Collection 1`] = `
+Object {
+  "bases": Array [],
+  "collections": Array [
+    Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  ],
+  "invalid": Array [],
+  "nfts": Array [],
+}
+`;

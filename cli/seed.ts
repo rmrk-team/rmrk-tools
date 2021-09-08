@@ -1,6 +1,6 @@
 #! /usr/bin/env node
-import { getApi } from "../src/tools/utils";
-import { Seeder } from "../test/seed/seeder";
+import { getApi } from "../src/rmrk2.0.0/tools/utils";
+// import { Seeder } from "../test/seed/2.0.0/seeder";
 import readline from "readline";
 import arg from "arg";
 import { Keyring } from "@polkadot/api";
@@ -25,6 +25,7 @@ const seed = async () => {
   console.log("Connected.");
 
   const kp = getKeyringFromUri(phrase);
+  const kp2 = getKeyringFromUri("//Bob");
   console.log(`Will seed from ${kp.address}`);
 
   if ((await api.rpc.system.chain()).toHuman() != "Development") {
@@ -39,30 +40,30 @@ const seed = async () => {
           );
           process.exit(1);
         }
-        await goSeed(command, kp);
+        // await goSeed(command, kp);
       } else {
         console.log("Execution stopped");
         process.exit(1);
       }
     });
   } else {
-    await goSeed(command, kp);
+    // await goSeed(command, kp);
   }
 
-  async function goSeed(command: string, kp: KeyringPair) {
-    const s = new Seeder(api, kp);
-
-    switch (command) {
-      case "file":
-        console.log("Looking for seed files inside " + folder);
-        await s.seedFromFolder(folder);
-        break;
-      default:
-        console.error(`Unknown command ${command}`);
-        break;
-    }
-    process.exit(0);
-  }
+  // async function goSeed(command: string, kp: KeyringPair) {
+  //   const s = new Seeder(api, kp, kp2);
+  //
+  //   switch (command) {
+  //     case "file":
+  //       console.log("Looking for seed files inside " + folder);
+  //       await s.seedBase();
+  //       break;
+  //     default:
+  //       console.error(`Unknown command ${command}`);
+  //       break;
+  //   }
+  //   process.exit(0);
+  // }
 };
 
 function askQuestion(query: string) {
@@ -84,4 +85,4 @@ function getKeyringFromUri(phrase: string): KeyringPair {
   return keyring.addFromUri(phrase);
 }
 
-seed();
+// seed();

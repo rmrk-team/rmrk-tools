@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: CREATE BASE should correctly create a Base 1`] = `
+Object {
+  "bases": Array [
+    Object {
+      "block": 2,
+      "changes": Array [],
+      "id": "base-2-KBASE777",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "parts": Array [
+        Object {
+          "equippable": Array [],
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": Array [
+            "d43593c715a56da27d-KANARIABIRDS",
+          ],
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "themes": Object {
+        "themeOne": Object {
+          "_inherit": true,
+          "primary": "#fff",
+        },
+      },
+      "type": "svg",
+    },
+  ],
+  "collections": Array [],
+  "invalid": Array [],
+  "nfts": Array [],
+}
+`;

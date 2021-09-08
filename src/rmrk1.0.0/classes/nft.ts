@@ -1,9 +1,9 @@
 // @todo add data field
 import { Change } from "../changelog";
-import { validateNFT } from "../../tools/validate-remark";
-import { getRemarkData } from "../../tools/utils";
-import { OP_TYPES, PREFIX, VERSION } from "../../tools/constants";
-import { Attribute } from "../../types";
+import { validateNFT } from "../tools/validate-remark";
+import { getRemarkData } from "../tools/utils";
+import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
+import { Attribute } from "../types";
 
 export class NFT {
   readonly block: number;
@@ -112,7 +112,7 @@ export class NFT {
         obj.data,
         block // Set initial updatedAtBlock
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`MINTNFT error: full input was ${remark}`);
       return e.message;

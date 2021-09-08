@@ -1,4 +1,4 @@
-import { validateEmote } from "../../tools/validate-remark";
+import { validateEmote } from "../tools/validate-remark";
 
 export class Emote {
   unicode: string;
@@ -15,7 +15,7 @@ export class Emote {
       validateEmote(remark);
       const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
       return new Emote(id, unicode);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`EMOTE error: full input was ${remark}`);
       return e.message;
