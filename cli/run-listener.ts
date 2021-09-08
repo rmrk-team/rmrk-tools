@@ -5,7 +5,7 @@ import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
 import { Consolidator } from "../src/rmrk2.0.0";
 
 const runListener = async () => {
-  const api = await getApi("wss://node.rmrk.app");
+  const api = await getApi("wss://kusama-rpc.polkadot.io");
   const consolidateFunction = async (remarks: Remark[]) => {
     const consolidator = new Consolidator();
     return await consolidator.consolidate(remarks);

@@ -4,17 +4,6 @@ import { Change } from "../../../changelog";
 import { Remark } from "../remark";
 import { ChangeIssuer } from "../../../classes/changeissuer";
 
-export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
-  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark);
-
-  if (typeof changeIssuerEntity === "string") {
-    throw new Error(
-      `[${OP_TYPES.CHANGEISSUER}] Dead before instantiation: ${changeIssuerEntity}`
-    );
-  }
-  return changeIssuerEntity;
-};
-
 export const changeIssuerInteraction = (
   remark: Remark,
   changeIssuerEntity: ChangeIssuer,

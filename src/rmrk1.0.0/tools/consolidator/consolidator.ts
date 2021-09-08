@@ -6,7 +6,7 @@ import {
 } from "../../classes/collection";
 import { OP_TYPES } from "../constants";
 import { Remark } from "./remark";
-import { getCollectionFromRemark, validateMintIds } from "./interactions/mint";
+import { validateMintIds } from "./interactions/mint";
 import { sendInteraction } from "./interactions/send";
 import { Send } from "../../classes/send";
 import { List } from "../../classes/list";
@@ -21,14 +21,14 @@ import { ChangeIssuer } from "../../classes/changeissuer";
 // import { deeplog } from "../utils";
 import {
   changeIssuerInteraction,
-  getChangeIssuerEntity,
+
 } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mintNFT";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
   consolidatedCollectionToInstance,
-  consolidatedNFTtoInstance,
+  consolidatedNFTtoInstance, getChangeIssuerEntity, getCollectionFromRemark,
 } from "./utils";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
