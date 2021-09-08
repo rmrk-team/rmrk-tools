@@ -1,11 +1,8 @@
 import { NFT } from "../../classes/nft";
 import { CollectionConsolidated, NFTConsolidated } from "./consolidator";
-import {
-  Collection as C100,
-  Collection,
-} from "../../rmrk1.0.0/classes/collection";
+import { Collection as C100, Collection } from "../../classes/collection";
 import { Remark } from "./remark";
-import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
+import { ChangeIssuer } from "../../classes/changeissuer";
 import { OP_TYPES } from "../constants";
 
 export const consolidatedNFTtoInstance = (
