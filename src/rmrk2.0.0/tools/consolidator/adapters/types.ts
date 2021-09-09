@@ -20,7 +20,10 @@ export interface IConsolidatorAdapter {
   ): Promise<any>;
   updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
-  updateNFTBurn(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
+  updateNFTBurn(
+    nft: NFT | NFTConsolidated,
+    consolidatedNFT: NFTConsolidated
+  ): Promise<any>;
   updateNFTMint(nft: NFT): Promise<any>;
   updateSetPriority(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateSetAttribute(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;

@@ -7,6 +7,55 @@ import { NFT } from "../../../classes/nft";
 import { hexToString } from "@polkadot/util";
 import { isValidAddressPolkadotAddress } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
+import { NFTConsolidated } from "../consolidator";
+
+const burnNFTChildren = async (
+  nft: NFT | NFTConsolidated,
+  remark: Remark,
+  dbAdapter: IConsolidatorAdapter,
+  level?: number
+) => {
+  if ((level || 1) < 10 && nft.children && nft.children.length > 0) {
+    const promises = nft.children.map(async (child) => {
+      const childNft = await dbAdapter.getNFTById(child.id);
+      if (childNft?.children && childNft?.children.length > 0) {
+        await burnNFTChildren(childNft, remark, dbAdapter, (level || 1) + 1);
+      }
+
+      if (childNft) {
+        const updatedNft: NFTConsolidated = {
+          ...childNft,
+          forsale: BigInt(0),
+          owner: childNft.rootowner,
+          burned: "true",
+          changes: [
+            ...childNft.changes,
+            {
+              field: "burned",
+              old: "",
+              new: "true",
+              caller: remark.caller,
+              block: remark.block,
+              opType: OP_TYPES.BURN,
+            },
+            {
+              field: "forsale",
+              old: nft.forsale,
+              new: BigInt(0),
+              caller: remark.caller,
+              block: remark.block,
+              opType: OP_TYPES.BURN,
+            },
+          ],
+        };
+
+        await dbAdapter.updateNFTBurn(updatedNft, updatedNft);
+      }
+    });
+
+    await Promise.all(promises);
+  }
+};
 
 export const burnInteraction = async (
   remark: Remark,
@@ -58,6 +107,8 @@ export const burnInteraction = async (
       }
     });
   }
+
+  await burnNFTChildren(nft, remark, dbAdapter, 1);
 
   const burnReason = burnReasons.length < 1 ? "true" : burnReasons.join("~~~");
   nft.addChange({
