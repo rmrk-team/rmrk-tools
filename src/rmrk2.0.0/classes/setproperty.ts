@@ -2,25 +2,25 @@ import { validateSetAttribute } from "../tools/validate-remark";
 import { IAttribute } from "../tools/types";
 import { getRemarkData } from "../tools/utils";
 
-export class SetAttribute {
+export class Setproperty {
   key: string;
-  attribute: Partial<IAttribute>;
+  property: Partial<IAttribute>;
   id: string;
   freeze?: "freeze";
 
   constructor(
     id: string,
     key: string,
-    attribute: Partial<IAttribute>,
+    property: Partial<IAttribute>,
     freeze?: "freeze"
   ) {
     this.id = id;
-    this.attribute = attribute;
+    this.property = property;
     this.key = key;
     this.freeze = freeze;
   }
 
-  static fromRemark(remark: string): SetAttribute | string {
+  static fromRemark(remark: string): Setproperty | string {
     try {
       validateSetAttribute(remark);
       const [
@@ -29,17 +29,17 @@ export class SetAttribute {
         _version,
         id,
         key,
-        attribute,
+        property,
         freeze,
       ] = remark.split("::");
-      const attributeObj: Partial<IAttribute> = getRemarkData(attribute);
+      const attributeObj: Partial<IAttribute> = getRemarkData(property);
       if (freeze && freeze !== "freeze") {
         throw new Error(`Not a valid freeze ${freeze}`);
       }
-      return new SetAttribute(id, key, attributeObj, freeze as "freeze");
+      return new Setproperty(id, key, attributeObj, freeze as "freeze");
     } catch (e: any) {
       console.error(e.message);
-      console.log(`SETATTRIBUTE error: full input was ${remark}`);
+      console.log(`SETPROPERTY error: full input was ${remark}`);
       return e.message;
     }
   }

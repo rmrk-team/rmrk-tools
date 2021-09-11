@@ -252,21 +252,21 @@ export const validateSetAttribute = (remark: string): any => {
     _version,
     id,
     key,
-    attribute,
+    property,
     freeze,
   ] = remark.split("::");
 
   try {
-    validateRemarkBase(remark, OP_TYPES.SETATTRIBUTE);
+    validateRemarkBase(remark, OP_TYPES.SETPROPERTY);
     if (!id) {
-      throw new Error("No NFT id specified for SETATTRIBUTE");
+      throw new Error("No NFT id specified for SETPROPERTY");
     }
-    const obj = getRemarkData(attribute);
-    return assert(obj, PropertiesStruct);
+    const obj = getRemarkData(property);
+    return assert(obj, any());
   } catch (error: any) {
     throw new Error(
       error?.message ||
-        "Something went wrong during SETATTRIBUTE remark validation"
+        "Something went wrong during SETPROPERTY remark validation"
     );
   }
 };

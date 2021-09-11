@@ -107,7 +107,7 @@ export const getRemarksFromBlocks = (
         case OP_TYPES.CREATE:
         case OP_TYPES.RESADD:
         case OP_TYPES.THEMEADD:
-        case OP_TYPES.SETATTRIBUTE:
+        case OP_TYPES.SETPROPERTY:
         case OP_TYPES.SETPRIORITY:
         case OP_TYPES.BASE:
           remark = decodeURI(hexToString(call.value));
@@ -286,7 +286,11 @@ export const getBlockCallsFromSignedBlock = async (
 
 export const getRemarkData = (dataString: string) => {
   const data = decodeURIComponent(dataString);
-  return JSON.parse(data);
+  try {
+    return JSON.parse(data);
+  } catch (error) {
+    return data;
+  }
 };
 
 /**

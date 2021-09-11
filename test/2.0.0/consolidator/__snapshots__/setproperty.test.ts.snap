@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`rmrk2.0.0 Consolidator: SETATTRIBUTE should allow if we are trying to mutate attribute with matching mutation condition 1`] = `
+exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow if we are trying to mutate property with matching mutation condition 1`] = `
 Object {
   "bases": Array [],
   "collections": Array [
@@ -39,8 +39,15 @@ Object {
       "priority": Array [],
       "properties": Object {
         "test": Object {
-          "type": "int",
-          "value": 2,
+          "_mutation": Object {
+            "allowed": true,
+            "with": Object {
+              "condition": "d43593c715a56da27d-KANARIAGEMS",
+              "opType": "BURN",
+            },
+          },
+          "type": "string",
+          "value": "bar",
         },
       },
       "reactions": Object {},
@@ -74,7 +81,7 @@ Object {
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: SETATTRIBUTE should allow to mutate attribute if owner _mutator match 1`] = `
+exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow to mutate property if owner _mutator match 1`] = `
 Object {
   "bases": Array [],
   "collections": Array [
@@ -122,8 +129,11 @@ Object {
       "priority": Array [],
       "properties": Object {
         "test": Object {
-          "type": "int",
-          "value": 2,
+          "_mutation": Object {
+            "allowed": true,
+          },
+          "type": "string",
+          "value": "bar",
         },
       },
       "reactions": Object {},
@@ -137,7 +147,7 @@ Object {
 }
 `;
 
-exports[`rmrk2.0.0 Consolidator: SETATTRIBUTE should throw if we are trying to mutate attribute with no matching extra call condition 1`] = `
+exports[`rmrk2.0.0 Consolidator: SETPROPERTY should throw if we are trying to mutate property with no matching extra call condition 1`] = `
 Object {
   "bases": Array [],
   "collections": Array [
@@ -164,9 +174,9 @@ Object {
     Object {
       "block": 6,
       "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      "message": "[SETATTRIBUTE] Attempting to mutate an attribute but it's mutation condition doesn't match",
+      "message": "[SETPROPERTY] Attempting to mutate an property but it's mutation condition doesn't match",
       "object_id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
-      "op_type": "SETATTRIBUTE",
+      "op_type": "SETPROPERTY",
     },
   ],
   "nfts": Array [

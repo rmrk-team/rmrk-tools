@@ -225,23 +225,23 @@ export class NFT {
 
   /**
    *
-   * @param name - attribute trait_type value
-   * @param value - attribute value
+   * @param key -property key
+   * @param value - aproperty value
    */
-  public setattribute(
+  public setproperty(
     key: string,
-    value: Partial<IAttribute>,
+    value: any,
     freeze?: "freeze"
   ): string {
     if (!this.block) {
-      throw new Error("You can only set attribute on an existing NFT.");
+      throw new Error("You can only set property on an existing NFT.");
     }
     const isMutable = this.properties?.[key]?._mutation?.allowed;
     if (!isMutable) {
-      throw new Error(`The attribute "${key}" cannot be mutated`);
+      throw new Error(`The property "${key}" cannot be mutated`);
     }
     return `${PREFIX}::${
-      OP_TYPES.SETATTRIBUTE
+      OP_TYPES.SETPROPERTY
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
       key
     )}::${encodeURIComponent(JSON.stringify(value))}${

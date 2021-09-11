@@ -84,67 +84,53 @@ const mintNftWithProperties = (block?: number) =>
     },
   });
 
-describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
+describe("rmrk2.0.0 Consolidator: SETPROPERTY", () => {
   const getSetupRemarks = () => [
     ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(createCollectionMock2().create()),
   ];
 
-  it("should throw if we are trying to mutate immutable attribute", async () => {
-    expect(() =>
-      mintNftWithProperties(5).setattribute("test", {
-        type: "int",
-        value: 2,
-      })
-    ).toThrow();
+  it("should throw if we are trying to mutate immutable property", async () => {
+    expect(() => mintNftWithProperties(5).setproperty("test", 2)).toThrow();
   });
 
-  it("should throw if we are trying to mutate attribute with wrong rootowner _mutation", async () => {
+  it("should throw if we are trying to mutate property with wrong rootowner _mutation", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithPropertiesOwner().mint()),
       ...getBlockCallsMock(
-        mintNftWithPropertiesOwner(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        }),
+        mintNftWithPropertiesOwner(4).setproperty("test", "bar"),
         getBobKey().address
       ),
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult.invalid[0].message).toEqual(
-      "[SETATTRIBUTE] Attempting to set attribute on a non-owned NFT. Expected 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty but received 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+      "[SETPROPERTY] Attempting to set property on a non-owned NFT. Expected 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty but received 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
     );
   });
 
-  it("should throw if we are trying to mutate attribute with no matching extra call passed", async () => {
+  it("should throw if we are trying to mutate property with no matching extra call passed", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithMutatorCondition().mint()),
       ...getBlockCallsMock(
-        mintNftWithMutatorCondition(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        })
+        mintNftWithMutatorCondition(4).setproperty("test", "bar")
       ),
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult.invalid[0].message).toEqual(
-      "[SETATTRIBUTE] Attempting to mutate attribute without matching extra call of op type BURN"
+      "[SETPROPERTY] Attempting to mutate property without matching extra call of op type BURN"
     );
   });
 
-  it("should throw if we are trying to mutate attribute with no matching extra call passed", async () => {
+  it("should throw if we are trying to mutate property with no matching extra call passed", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithMutatorCondition().mint()),
       ...getBlockCallsMock(
-        mintNftWithMutatorCondition(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        }),
+        mintNftWithMutatorCondition(4).setproperty("test", "bar"),
         undefined,
         [
           {
@@ -162,16 +148,13 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
     );
   });
 
-  it("should throw if we are trying to mutate attribute with no matching extra call condition", async () => {
+  it("should throw if we are trying to mutate property with no matching extra call condition", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithMutatorCondition().mint()),
       ...getBlockCallsMock(mintNftWithPropertiesOwner().mint()),
       ...getBlockCallsMock(
-        mintNftWithMutatorCondition(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        }),
+        mintNftWithMutatorCondition(4).setproperty("test", "bar"),
         undefined,
         [
           {
@@ -187,16 +170,13 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
-  it("should allow if we are trying to mutate attribute with matching mutation condition", async () => {
+  it("should allow if we are trying to mutate property with matching mutation condition", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithMutatorCondition().mint()),
       ...getBlockCallsMock(mintGemNft().mint()),
       ...getBlockCallsMock(
-        mintNftWithMutatorCondition(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        }),
+        mintNftWithMutatorCondition(4).setproperty("test", "bar"),
         undefined,
         [
           {
@@ -212,7 +192,7 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
-  it("should allow to mutate attribute if owner _mutator match", async () => {
+  it("should allow to mutate property if owner _mutator match", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithPropertiesOwner().mint()),
@@ -220,10 +200,7 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
         mintNftWithPropertiesOwner(4).send(getBobKey().address)
       ), // Send to Bob first
       ...getBlockCallsMock(
-        mintNftWithPropertiesOwner(4).setattribute("test", {
-          type: "int",
-          value: 2,
-        }),
+        mintNftWithPropertiesOwner(4).setproperty("test", "bar"),
         getBobKey().address
       ),
     ]);
@@ -232,31 +209,21 @@ describe("rmrk2.0.0 Consolidator: SETATTRIBUTE", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
-  it("should be able to freeze attribute ", async () => {
+  it("should be able to freeze property ", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithPropertiesOwner().mint()),
       ...getBlockCallsMock(
-        mintNftWithPropertiesOwner(4).setattribute(
-          "test",
-          {
-            type: "int",
-            value: 2,
-          },
-          "freeze"
-        )
+        mintNftWithPropertiesOwner(4).setproperty("test", "bar", "freeze")
       ),
       ...getBlockCallsMock(
-        mintNftWithPropertiesOwner(4).setattribute("test", {
-          type: "float",
-          value: 3,
-        })
+        mintNftWithPropertiesOwner(4).setproperty("test", "baz")
       ),
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult.invalid[0].message).toEqual(
-      "[SETATTRIBUTE] Attempting to set attribute on immutable attribute test"
+      "[SETPROPERTY] Attempting to set property on immutable property test"
     );
   });
 });

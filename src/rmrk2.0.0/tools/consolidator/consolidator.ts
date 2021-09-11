@@ -50,8 +50,8 @@ import { Equip } from "../../classes/equip";
 import { equipInteraction } from "./interactions/equip";
 import { setPriorityInteraction } from "./interactions/setpriority";
 import { Setpriority } from "../../classes/setpriority";
-import { SetAttribute } from "../../classes/setattribute";
-import { setAttributeInteraction } from "./interactions/setattribute";
+import { Setproperty } from "../../classes/setproperty";
+import { setPropertyInteraction } from "./interactions/setproperty";
 import { Themeadd } from "../../classes/themeadd";
 import { themeAddInteraction } from "./interactions/themeadd";
 
@@ -825,32 +825,32 @@ export class Consolidator {
   }
 
   /**
-   * The SETATTRIBUTE interaction allows NFT owner to change or set new attribute on NFT
-   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/setattribute.md
+   * The SETPROPERTY interaction allows NFT owner to change or set new property on NFT
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/setproperty.md
    */
-  private async setattribute(remark: Remark): Promise<boolean> {
+  private async setproperty(remark: Remark): Promise<boolean> {
     const invalidate = this.updateInvalidCalls(
-      OP_TYPES.SETATTRIBUTE,
+      OP_TYPES.SETPROPERTY,
       remark
     ).bind(this);
-    const setAttributeEntity = SetAttribute.fromRemark(remark.remark);
-    if (typeof setAttributeEntity === "string") {
+    const setPropertyEntity = Setproperty.fromRemark(remark.remark);
+    if (typeof setPropertyEntity === "string") {
       invalidate(
         remark.remark,
-        `[${OP_TYPES.SETATTRIBUTE}] Dead before instantiation: ${setAttributeEntity}`
+        `[${OP_TYPES.SETPROPERTY}] Dead before instantiation: ${setPropertyEntity}`
       );
       return true;
     }
 
     const consolidatedNFT = await this.dbAdapter.getNFTByIdUnique(
-      setAttributeEntity.id
+      setPropertyEntity.id
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      await setAttributeInteraction(
+      await setPropertyInteraction(
         remark,
-        setAttributeEntity,
+        setPropertyEntity,
         this.dbAdapter,
         nft
       );
@@ -858,12 +858,12 @@ export class Consolidator {
         await this.dbAdapter.updateSetAttribute(nft, consolidatedNFT);
         if (this.emitInteractionChanges) {
           this.interactionChanges.push({
-            [OP_TYPES.SETATTRIBUTE]: nft.getId(),
+            [OP_TYPES.SETPROPERTY]: nft.getId(),
           });
         }
       }
     } catch (e: any) {
-      invalidate(setAttributeEntity.id, e.message);
+      invalidate(setPropertyEntity.id, e.message);
       return true;
     }
 
@@ -1004,8 +1004,8 @@ export class Consolidator {
           }
           break;
 
-        case OP_TYPES.SETATTRIBUTE:
-          if (await this.setattribute(remark)) {
+        case OP_TYPES.SETPROPERTY:
+          if (await this.setproperty(remark)) {
             continue;
           }
           break;

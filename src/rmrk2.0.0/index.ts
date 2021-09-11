@@ -10,7 +10,7 @@ export { Send } from "./classes/send";
 export { Emote } from "./classes/emote";
 export { Accept } from "./classes/accept";
 export { Resadd } from "./classes/resadd";
-export { SetAttribute } from "./classes/setattribute";
+export { Setproperty } from "./classes/setproperty";
 export { Equip } from "./classes/equip";
 export { Equippable } from "./classes/equippable";
 export { Setpriority } from "./classes/setpriority";

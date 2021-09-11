@@ -26,7 +26,7 @@ const MetadataStruct = type({
   image_data: optional(string()),
   background_color: optional(string()),
   youtube_url: optional(pattern(string(), new RegExp("^https://.*$"))),
-  attributes: any(),
+  properties: any(),
   external_url: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
@@ -54,7 +54,7 @@ export const PropertiesStruct = object({
             "ACCEPT",
             "ACCEPT",
             "EQUIP",
-            "SETATTRIBUTE",
+            "SETPROPERTY",
             "SETPRIORITY",
           ] as OP_TYPES[]),
           condition: optional(string()),
@@ -70,8 +70,8 @@ export const validateAttributes = (properties?: IProperties) => {
   }
   assert(properties, record(string(), PropertiesStruct));
 
-  Object.values(properties).forEach((attribute) => {
-    const { value, type } = attribute;
+  Object.values(properties).forEach((property) => {
+    const { value, type } = property;
     if (type === "string") {
       if (typeof value !== "string") {
         throw new Error("for type 'string' 'value' has to be a string");
