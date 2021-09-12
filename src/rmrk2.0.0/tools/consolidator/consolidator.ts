@@ -1032,12 +1032,14 @@ export class Consolidator {
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
-      nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
+      nfts: this.dbAdapter.getAllNFTs
+        ? Object.values(await this.dbAdapter.getAllNFTs())
+        : [],
       collections: this.dbAdapter.getAllCollections
-        ? await this.dbAdapter.getAllCollections()
+        ? Object.values(await this.dbAdapter.getAllCollections())
         : [],
       bases: this.dbAdapter.getAllBases
-        ? await this.dbAdapter.getAllBases()
+        ? Object.values(await this.dbAdapter.getAllBases())
         : [],
       invalid: this.invalidCalls,
     };
