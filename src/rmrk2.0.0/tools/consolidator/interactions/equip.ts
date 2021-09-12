@@ -37,7 +37,8 @@ export const equipInteraction = async (
   }
 
   // If NFT owner is adding this resource then immediatly accept it
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
   if (rootowner !== remark.caller) {
     throw new Error(
       `[${OP_TYPES.EQUIP}] Attempting to equip on non-owned NFT ${equipEntity.id}`

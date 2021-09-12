@@ -34,7 +34,8 @@ export const setPropertyInteraction = async (
     }
 
     if (existingProperty?._mutation?.allowed) {
-      const rootowner = await findRealOwner(nft.owner, dbAdapter);
+      const rootowner =
+        nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
 
       if (rootowner !== remark.caller) {
         throw new Error(

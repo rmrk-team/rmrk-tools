@@ -24,7 +24,8 @@ export const acceptInteraction = async (
   }
 
   // If NFT owner is adding this resource then immediatly accept it
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
   if (rootowner !== remark.caller) {
     throw new Error(
       `[${OP_TYPES.ACCEPT}] Attempting to accept ${acceptEntity.entity} on non-owned NFT ${acceptEntity.nftId}`
@@ -39,7 +40,9 @@ export const acceptInteraction = async (
       );
     }
 
-    const childIndex = nft.children.findIndex((child) => child.id === acceptEntity.id);
+    const childIndex = nft.children.findIndex(
+      (child) => child.id === acceptEntity.id
+    );
     if (childIndex > -1) {
       nft.children[childIndex].pending = false;
     }

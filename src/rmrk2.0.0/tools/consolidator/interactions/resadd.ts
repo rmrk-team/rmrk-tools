@@ -31,7 +31,7 @@ export const resAddInteraction = async (
   }
 
   // If NFT owner is adding this resource then immediatly accept it
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner = nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
 
   const accepted = rootowner === remark.caller;
   resaddEntity.pending = !accepted;

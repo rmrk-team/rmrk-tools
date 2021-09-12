@@ -35,7 +35,8 @@ export const listForSaleInteraction = async (
     );
   }
 
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
   // Check if allowed to send child NFT by rootowner and owner is another NFT id
   if (!isValidAddressPolkadotAddress(nft.owner) && rootowner != remark.caller) {
     throw new Error(

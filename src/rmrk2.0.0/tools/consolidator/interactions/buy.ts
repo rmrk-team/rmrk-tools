@@ -22,7 +22,8 @@ export const buyInteraction = async (
     );
   }
 
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
   nft.rootowner = rootowner;
   validate(remark, buyEntity, nft, ss58Format);
 

@@ -5,14 +5,11 @@ import {
   NFTConsolidated,
 } from "./consolidator";
 import { Collection } from "../../classes/collection";
-import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { hexToU8a, isHex } from "@polkadot/util";
 import { IConsolidatorAdapter } from "./adapters/types";
 import { Base } from "../../classes/base";
 import { changeIssuerInteraction } from "./interactions/changeIssuer";
 import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
-import { add } from "winston";
 
 /**
  * Validate polkadot address
@@ -37,14 +34,13 @@ export const findRealOwner = async (
   } else {
     const consolidatedNFT = await dbAdapter.getNFTByIdUnique(nftId);
 
-    const nft = consolidatedNFTtoInstance(consolidatedNFT);
-    if (!nft) {
+    if (!consolidatedNFT) {
       // skip
       return "";
     }
 
     // Bubble up until owner of nft is polkadot address
-    return await findRealOwner(nft.owner, dbAdapter, level + 1);
+    return await findRealOwner(consolidatedNFT.owner, dbAdapter, level + 1);
   }
 };
 
@@ -58,19 +54,18 @@ export const invalidateIfRecursion = async (
   } else {
     const consolidatedNFT = await dbAdapter.getNFTByIdUnique(recepientId);
 
-    const nft = consolidatedNFTtoInstance(consolidatedNFT);
-    if (!nft) {
+    if (!consolidatedNFT) {
       // skip
       return true;
     }
 
     // const hasRecursiveChild = nft.children.find(child => child.id === initialNftId);
-    if (nft.getId() === nftId) {
+    if (consolidatedNFT.id === nftId) {
       throw new Error("Cannot have an nft that is it's own child");
     }
 
     // Bubble up until owner of nft is polkadot address
-    return await invalidateIfRecursion(nftId, nft.owner, dbAdapter);
+    return await invalidateIfRecursion(nftId, consolidatedNFT.owner, dbAdapter);
   }
 };
 

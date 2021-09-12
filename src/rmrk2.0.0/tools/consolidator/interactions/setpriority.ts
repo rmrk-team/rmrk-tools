@@ -23,7 +23,8 @@ export const setPriorityInteraction = async (
     );
   }
 
-  const rootowner = await findRealOwner(nft.owner, dbAdapter);
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
   if (rootowner !== remark.caller) {
     throw new Error(
       `[${OP_TYPES.SETPRIORITY}] Attempting to set priority on non-owned NFT ${setPriorityEntity.id}`
