@@ -50,7 +50,7 @@ export interface IConsolidatorAdapter {
   getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;
   getBaseById(id: string): Promise<BaseConsolidated | undefined>;
   getNFTByIdUnique(id: string): Promise<NFTConsolidated | undefined>;
-  getAllNFTs?: () => Promise<NFTConsolidated[]>;
-  getAllCollections?: () => Promise<CollectionConsolidated[]>;
-  getAllBases?: () => Promise<BaseConsolidated[]>;
+  getAllNFTs?: () => Promise<Record<string, NFTConsolidated>>;
+  getAllCollections?: () => Promise<Record<string, CollectionConsolidated>>;
+  getAllBases?: () => Promise<Record<string, BaseConsolidated>>;
 }

@@ -10,13 +10,13 @@ import { Base } from "../../../classes/base";
 import { AcceptEntityType } from "../../../classes/accept";
 
 export class InMemoryAdapter implements IConsolidatorAdapter {
-  public nfts: NFTConsolidated[];
-  public collections: CollectionConsolidated[];
-  public bases: BaseConsolidated[];
+  public nfts: Record<string, NFTConsolidated>;
+  public collections: Record<string, CollectionConsolidated>;
+  public bases: Record<string, BaseConsolidated>;
   constructor() {
-    this.nfts = [];
-    this.collections = [];
-    this.bases = [];
+    this.nfts = {};
+    this.collections = {};
+    this.bases = {};
   }
 
   public async getAllNFTs() {
@@ -32,11 +32,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async updateNFTEmote(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       reactions: nft?.reactions,
     };
   }
@@ -45,52 +42,37 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     base: Base,
     consolidatedBase: BaseConsolidated
   ) {
-    const baseIndex = this.bases.findIndex(
-      (baseItem) => baseItem.id === consolidatedBase.id
-    );
-    this.bases[baseIndex] = {
-      ...this.bases[baseIndex],
+    this.bases[consolidatedBase.id] = {
+      ...this.bases[consolidatedBase.id],
       parts: base?.parts,
     };
   }
 
   public async updateNFTList(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       forsale: nft?.forsale,
       changes: nft?.changes,
     };
   }
 
   public async updateEquip(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       children: nft.children,
     };
   }
 
   public async updateSetPriority(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       priority: nft.priority,
     };
   }
 
   public async updateSetAttribute(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       properties: nft.properties,
     };
   }
@@ -100,32 +82,26 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     consolidatedNFT: NFTConsolidated,
     entity: AcceptEntityType
   ) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
     if (entity == "NFT") {
-      this.nfts[nftIndex] = {
-        ...this.nfts[nftIndex],
+      this.nfts[consolidatedNFT.id] = {
+        ...this.nfts[consolidatedNFT.id],
         children: nft?.children,
-        priority: nft?.priority || this.nfts[nftIndex].priority,
+        priority: nft?.priority || this.nfts[consolidatedNFT.id].priority,
       };
     } else if (entity === "RES") {
-      this.nfts[nftIndex] = {
-        ...this.nfts[nftIndex],
+      this.nfts[consolidatedNFT.id] = {
+        ...this.nfts[consolidatedNFT.id],
         resources: nft?.resources,
-        priority: nft?.priority || this.nfts[nftIndex].priority,
+        priority: nft?.priority || this.nfts[consolidatedNFT.id].priority,
       };
     }
   }
 
   public async updateNftResadd(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       resources: nft?.resources,
-      priority: nft?.priority || this.nfts[nftIndex].priority,
+      priority: nft?.priority || this.nfts[consolidatedNFT.id].priority,
     };
   }
 
@@ -136,21 +112,18 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   ) {
     if ((level || 1) < 10 && nft.children && nft.children.length > 0) {
       const promises = nft.children.map(async (child) => {
-        const nftIndex = this.nfts.findIndex(
-          (nftItem) => nftItem.id === child.id
-        );
         if (
-          this.nfts[nftIndex]?.children &&
-          this.nfts[nftIndex]?.children.length > 0
+          this.nfts[child.id]?.children &&
+          this.nfts[child.id]?.children.length > 0
         ) {
           await this.updateNFTChildrenRootOwner(
-            this.nfts[nftIndex],
+            this.nfts[child.id],
             rootowner || nft.rootowner,
             (level || 1) + 1
           );
         }
-        this.nfts[nftIndex] = {
-          ...this.nfts[nftIndex],
+        this.nfts[child.id] = {
+          ...this.nfts[child.id],
           forsale: BigInt(0),
           rootowner: rootowner || nft.rootowner,
         };
@@ -161,11 +134,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       owner: nft?.owner,
       rootowner: nft?.rootowner,
       changes: nft?.changes,
@@ -174,11 +144,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async updateNFTSend(nft: NFT, consolidatedNFT: NFTConsolidated) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       changes: nft?.changes,
       owner: nft?.owner,
       rootowner: nft?.rootowner,
@@ -191,11 +158,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     nft: NFT | NFTConsolidated,
     consolidatedNFT: NFTConsolidated
   ) {
-    const nftIndex = this.nfts.findIndex(
-      (nftItem) => nftItem.id === consolidatedNFT.id
-    );
-    this.nfts[nftIndex] = {
-      ...this.nfts[nftIndex],
+    this.nfts[consolidatedNFT.id] = {
+      ...this.nfts[consolidatedNFT.id],
       burned: nft?.burned,
       changes: nft?.changes,
       forsale: BigInt(nft.forsale) > BigInt(0) ? BigInt(0) : nft.forsale,
@@ -203,19 +167,19 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   }
 
   public async updateNFTMint(nft: NFT) {
-    this.nfts.push({
+    this.nfts[nft.getId()] = {
       ...nft,
       symbol: nft.symbol,
       id: nft.getId(),
-    });
+    };
   }
 
   public async updateCollectionMint(collection: CollectionConsolidated) {
-    return this.collections.push(collection);
+    return (this.collections[collection.id] = collection);
   }
 
   public async updateBase(base: Base) {
-    return this.bases.push({
+    return (this.bases[base.getId()] = {
       ...base,
       id: base.getId(),
     });
@@ -225,11 +189,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     base: Base,
     consolidatedBase: BaseConsolidated
   ) {
-    const baseIndex = this.bases.findIndex(
-      (baseItem) => baseItem.id === consolidatedBase.id
-    );
-    this.bases[baseIndex] = {
-      ...this.bases[baseIndex],
+    this.bases[consolidatedBase.id] = {
+      ...this.bases[consolidatedBase.id],
       themes: base?.themes,
     };
   }
@@ -238,11 +199,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     collection: Collection,
     consolidatedCollection: CollectionConsolidated
   ) {
-    const collectionIndex = this.collections.findIndex(
-      (nftItem) => nftItem.id === consolidatedCollection.id
-    );
-    this.collections[collectionIndex] = {
-      ...this.collections[collectionIndex],
+    this.collections[consolidatedCollection.id] = {
+      ...this.collections[consolidatedCollection.id],
       issuer: collection?.issuer,
       changes: collection?.changes,
     };
@@ -252,34 +210,29 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     base: Base,
     consolidatedBase: BaseConsolidated
   ) {
-    const baseIndex = this.bases.findIndex(
-      (baseItem) => baseItem.id === consolidatedBase.id
-    );
-    this.bases[baseIndex] = {
-      ...this.bases[baseIndex],
+    this.bases[consolidatedBase.id] = {
+      ...this.bases[consolidatedBase.id],
       issuer: base?.issuer,
       changes: base?.changes,
     };
   }
 
   public async getNFTById(id: string) {
-    return this.nfts.find((nft) => nft.id === id);
+    return this.nfts[id];
   }
 
   public async getCollectionById(id: string) {
-    return this.collections.find((collection) => collection.id === id);
+    return this.collections[id];
   }
 
   /**
    * Find existing NFT by id
    */
   public async getNFTByIdUnique(id: string) {
-    return this.nfts.find((nft) => {
-      return nft.id === id;
-    });
+    return this.nfts[id];
   }
 
   public async getBaseById(id: string) {
-    return this.bases.find((base) => base.id === id);
+    return this.bases[id];
   }
 }
