@@ -9,6 +9,7 @@
   "main": "dist/rmrk2.0.0/index.cjs",
   "module": "./dist/rmrk2.0.0/index.es.js",
   "types": "./dist/rmrk2.0.0/index.d.ts",
+  "type": "module",
   "exports": {
     "import": "./dist/rmrk2.0.0/index.es.js",
     "require": "./dist/rmrk2.0.0/index.cjs"
@@ -19,7 +20,7 @@
     "dist-cli"
   ],
   "scripts": {
-    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:browser && yarn build:cli",
+    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:cli",
     "build:es": "rollup --config ./config/rollup.js",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
     "build:umd": "webpack --config ./config/webpack.config.umd.js",
