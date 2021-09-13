@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jestConfig = require("./jest.config");
+const jestConfig = require("./jest.config.cjs");
 
 module.exports = {
   ...jestConfig,
   collectCoverageFrom: [
-    "src/rmrk1.0.0/tools/**/*.ts",
-    "src/rmrk1.0.0/classes/**/*.ts",
+    "src/rmrk2.0.0/classes/**/*",
+    "src/rmrk2.0.0/tools/**/*",
   ],
 };
