@@ -6,7 +6,8 @@
     "type": "git",
     "url": "https://github.com/Swader/rmrk-tools"
   },
-  "main": "dist/index.cjs",
+  "type": "module",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
