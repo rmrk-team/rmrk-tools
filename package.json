@@ -4,15 +4,14 @@
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Swader/rmrk-tools"
+    "url": "https://github.com/rmrk-team/rmrk-tools"
   },
-  "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs"
   },
   "files": [
     "dist",
