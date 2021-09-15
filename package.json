@@ -16,16 +16,12 @@
   },
   "files": [
     "dist",
-    "browser",
     "dist-cli"
   ],
   "scripts": {
-    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:browser && yarn build:cli",
+    "build": "tsc && yarn build:es && yarn build:cjs && yarn build:cli",
     "build:es": "rollup --config ./config/rollup.js",
     "build:cjs": "rollup --config ./config/rollup-cjs.js",
-    "build:umd": "webpack --config ./config/webpack.config.umd.js",
-    "build:polkadot-browser": "webpack --config ./config/webpack.config.polkadot-umd.js",
-    "build:browser": "yarn build:umd && yarn build:polkadot-browser",
     "build:cli": "tsc --project tsconfig.cli-dist.json",
     "clean": "rm -rf build",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",

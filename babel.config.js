@@ -6,7 +6,7 @@ module.exports = (api) => {
       [
         "@babel/preset-env",
         {
-          targets: { browsers: "defaults, not ie 11", node: true },
+          targets: { browsers: "defaults, not ie 11", node: 'current' },
           modules: false,
           useBuiltIns: false,
           loose: true,
