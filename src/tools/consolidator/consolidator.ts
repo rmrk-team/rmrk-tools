@@ -19,16 +19,15 @@ import { Emote } from "../../rmrk1.0.0/classes/emote";
 import { emoteInteraction } from "./interactions/emote";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 // import { deeplog } from "../utils";
-import {
-  changeIssuerInteraction,
-
-} from "./interactions/changeIssuer";
+import { changeIssuerInteraction } from "./interactions/changeIssuer";
 import { validateMintNFT } from "./interactions/mintNFT";
 import { InMemoryAdapter } from "./adapters/in-memory-adapter";
 import { IConsolidatorAdapter } from "./adapters/types";
 import {
   consolidatedCollectionToInstance,
-  consolidatedNFTtoInstance, getChangeIssuerEntity, getCollectionFromRemark,
+  consolidatedNFTtoInstance,
+  getChangeIssuerEntity,
+  getCollectionFromRemark,
 } from "./utils";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
@@ -139,7 +138,7 @@ export class Consolidator {
     let collection;
     try {
       collection = getCollectionFromRemark(remark);
-    } catch (e) {
+    } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
     }
@@ -162,7 +161,7 @@ export class Consolidator {
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.MINT]: collection.id });
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(collection.id, e.message);
       return true;
     }
@@ -214,7 +213,7 @@ export class Consolidator {
       if (this.emitInteractionChanges) {
         this.interactionChanges.push({ [OP_TYPES.MINTNFT]: nft.getId() });
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(nft.getId(), e.message);
       return true;
     }
@@ -255,7 +254,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(sendEntity.id, e.message);
       return true;
     }
@@ -296,7 +295,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.LIST]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(listEntity.id, e.message);
       return true;
     }
@@ -342,7 +341,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.CONSUME]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(consumeEntity.id, e.message);
       return true;
     }
@@ -379,7 +378,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.BUY]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(buyEntity.id, e.message);
       return true;
     }
@@ -419,7 +418,7 @@ export class Consolidator {
           this.interactionChanges.push({ [OP_TYPES.EMOTE]: nft.getId() });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(emoteEntity.id, e.message);
       return true;
     }
@@ -443,7 +442,7 @@ export class Consolidator {
     let changeIssuerEntity: ChangeIssuer;
     try {
       changeIssuerEntity = getChangeIssuerEntity(remark);
-    } catch (e) {
+    } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
     }
@@ -468,7 +467,7 @@ export class Consolidator {
           });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       invalidate(changeIssuerEntity.id, e.message);
       return true;
     }
@@ -550,9 +549,11 @@ export class Consolidator {
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
-      nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : [],
+      nfts: this.dbAdapter.getAllNFTs
+        ? Object.values(await this.dbAdapter.getAllNFTs())
+        : [],
       collections: this.dbAdapter.getAllCollections
-        ? await this.dbAdapter.getAllCollections()
+        ? Object.values(await this.dbAdapter.getAllCollections())
         : [],
       invalid: this.invalidCalls,
     };

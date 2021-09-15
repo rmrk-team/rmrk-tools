@@ -112,7 +112,7 @@ export class NFT {
         obj.data,
         block // Set initial updatedAtBlock
       );
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.message);
       console.log(`MINTNFT error: full input was ${remark}`);
       return e.message;
