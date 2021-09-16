@@ -27,12 +27,12 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
-    expect(consolidatedResult.nfts[0].resources[0].pending).toBeFalsy();
-    expect(consolidatedResult.nfts[0].resources[0].metadata).toEqual(
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending).toBeFalsy();
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata).toEqual(
       "ipfs://ipfs/123"
     );
-    expect(consolidatedResult.nfts[0].priority[0]).toEqual(
-      consolidatedResult.nfts[0].resources[0].id
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority[0]).toEqual(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
     );
   });
 
@@ -61,6 +61,6 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
-    expect(consolidatedResult.nfts[0].resources[0].pending).toBeTruthy();
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending).toBeTruthy();
   });
 });

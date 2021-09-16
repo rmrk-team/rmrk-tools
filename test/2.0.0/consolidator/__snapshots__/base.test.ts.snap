@@ -2,8 +2,8 @@
 
 exports[`rmrk2.0.0 Consolidator: CREATE BASE should correctly create a Base 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-2-KBASE777": Object {
       "block": 2,
       "changes": Array [],
       "id": "base-2-KBASE777",
@@ -39,9 +39,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [],
+  },
+  "collections": Object {},
   "invalid": Array [],
-  "nfts": Array [],
+  "nfts": Object {},
 }
 `;

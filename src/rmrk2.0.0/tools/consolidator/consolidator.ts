@@ -58,9 +58,9 @@ import { themeAddInteraction } from "./interactions/themeadd";
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
 export type ConsolidatorReturnType = {
-  nfts: NFTConsolidated[];
-  collections: CollectionConsolidated[];
-  bases: BaseConsolidated[];
+  nfts: Record<string, NFTConsolidated>;
+  collections: Record<string, CollectionConsolidated>;
+  bases: Record<string, BaseConsolidated>;
   invalid: InvalidCall[];
   changes?: InteractionChanges;
   lastBlock?: number;
@@ -1033,14 +1033,14 @@ export class Consolidator {
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
       nfts: this.dbAdapter.getAllNFTs
-        ? Object.values(await this.dbAdapter.getAllNFTs())
-        : [],
+        ? await this.dbAdapter.getAllNFTs()
+        : {},
       collections: this.dbAdapter.getAllCollections
-        ? Object.values(await this.dbAdapter.getAllCollections())
-        : [],
+        ? await this.dbAdapter.getAllCollections()
+        : {},
       bases: this.dbAdapter.getAllBases
-        ? Object.values(await this.dbAdapter.getAllBases())
-        : [],
+        ? await this.dbAdapter.getAllBases()
+        : {},
       invalid: this.invalidCalls,
     };
     if (this.emitInteractionChanges) {

@@ -2,9 +2,9 @@
 
 exports[`rmrk2.0.0 Consolidator: CREATE NFT CLASS should correctly create a NFT Collection 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -13,8 +13,8 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [],
+  "nfts": Object {},
 }
 `;

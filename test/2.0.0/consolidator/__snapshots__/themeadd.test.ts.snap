@@ -2,8 +2,8 @@
 
 exports[`rmrk2.0.0 Consolidator: THEMEADD Add theme to a base 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -38,9 +38,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -49,10 +49,10 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -72,6 +72,6 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;

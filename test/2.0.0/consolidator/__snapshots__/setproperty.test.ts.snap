@@ -2,9 +2,9 @@
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow if we are trying to mutate property with matching mutation condition 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -13,7 +13,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-    Collection {
+    "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIAGEMS",
@@ -22,10 +22,10 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIAGEMS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -57,7 +57,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "5-d43593c715a56da27d-KANARIAGEMS-KANGEM-00000111": Object {
       "block": 5,
       "burned": "",
       "changes": Array [],
@@ -77,15 +77,15 @@ Object {
       "symbol": "KANGEM",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow to mutate property if owner _mutator match 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -94,7 +94,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-    Collection {
+    "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIAGEMS",
@@ -103,10 +103,10 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIAGEMS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 4,
       "burned": "",
       "changes": Array [
@@ -143,15 +143,15 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should throw if we are trying to mutate property with no matching extra call condition 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -160,7 +160,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-    Collection {
+    "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIAGEMS",
@@ -169,7 +169,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIAGEMS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 6,
@@ -179,8 +179,8 @@ Object {
       "op_type": "SETPROPERTY",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -212,7 +212,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 5,
       "burned": "",
       "changes": Array [],
@@ -240,6 +240,6 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;

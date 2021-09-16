@@ -2,8 +2,8 @@
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Equip NFT on another NFT successfully 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -39,9 +39,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -50,10 +50,10 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -92,7 +92,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
@@ -120,15 +120,15 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT on a non-existent parent NFT 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -137,7 +137,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 4,
@@ -147,8 +147,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -168,14 +168,14 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT while base is still pending accept 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -211,9 +211,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -222,7 +222,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 9,
@@ -232,8 +232,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -265,7 +265,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
@@ -291,14 +291,14 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT without compatible resource 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -334,9 +334,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -345,7 +345,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 8,
@@ -355,8 +355,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -390,7 +390,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
@@ -418,14 +418,14 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT without it's base slot whitelisting this collection 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -461,9 +461,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -472,7 +472,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 8,
@@ -482,8 +482,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -517,7 +517,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
@@ -545,15 +545,15 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip burned NFT 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -562,7 +562,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 5,
@@ -572,8 +572,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "true",
       "changes": Array [
@@ -610,14 +610,14 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip non existent NFT 1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [],
+  "bases": Object {},
+  "collections": Object {},
   "invalid": Array [
     Object {
       "block": 2,
@@ -627,15 +627,15 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [],
+  "nfts": Object {},
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip non-owned NFT  1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -644,7 +644,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 5,
@@ -661,8 +661,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -682,7 +682,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 4,
       "burned": "",
       "changes": Array [],
@@ -702,15 +702,15 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip not accepted NFT  1`] = `
 Object {
-  "bases": Array [],
-  "collections": Array [
-    Collection {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -719,7 +719,7 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [
     Object {
       "block": 6,
@@ -729,8 +729,8 @@ Object {
       "op_type": "EQUIP",
     },
   ],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -756,7 +756,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 4,
       "burned": "",
       "changes": Array [
@@ -785,14 +785,14 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIP UNEquip NFT on another NFT successfully 1`] = `
 Object {
-  "bases": Array [
-    Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
       "block": 4,
       "changes": Array [],
       "id": "base-4-KBASE777",
@@ -828,9 +828,9 @@ Object {
       },
       "type": "svg",
     },
-  ],
-  "collections": Array [
-    Collection {
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
@@ -839,10 +839,10 @@ Object {
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
     },
-  ],
+  },
   "invalid": Array [],
-  "nfts": Array [
-    Object {
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
       "block": 3,
       "burned": "",
       "changes": Array [],
@@ -881,7 +881,7 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    Object {
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
       "block": 6,
       "burned": "",
       "changes": Array [],
@@ -909,6 +909,6 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-  ],
+  },
 }
 `;

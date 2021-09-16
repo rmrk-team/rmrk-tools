@@ -34,7 +34,9 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
-    expect(consolidatedResult.nfts[0].resources[0].pending).toBeFalsy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeFalsy();
   });
 
   it("Accept a child NFT on a NFT", async () => {
