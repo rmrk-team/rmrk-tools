@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: "./src/rmrk2.0.0/index.ts",
+  entry: "./src/index.ts",
   module: {
     rules: [
       {
