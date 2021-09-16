@@ -5,7 +5,11 @@ import { Change } from "../../../changelog";
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
-import { consolidatedNFTtoInstance, findRealOwner } from "../utils";
+import {
+  consolidatedNFTtoInstance,
+  findRealOwner,
+  isValidAddressPolkadotAddress,
+} from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
 export const buyInteraction = async (
@@ -47,6 +51,22 @@ export const buyInteraction = async (
     });
 
     await Promise.all(promises);
+  }
+
+  if (!isValidAddressPolkadotAddress(nft.owner)) {
+    const oldOwner = await dbAdapter.getNFTById(nft.owner);
+
+    const oldOwnerChildIndex =
+      oldOwner &&
+      oldOwner.children.findIndex((child) => child.id === buyEntity.id);
+
+    if (
+      oldOwner &&
+      typeof oldOwnerChildIndex !== "undefined" &&
+      oldOwnerChildIndex > -1
+    ) {
+      oldOwner.children.splice(oldOwnerChildIndex, 1);
+    }
   }
 
   nft.addChange({
