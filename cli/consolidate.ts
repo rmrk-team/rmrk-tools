@@ -4,6 +4,7 @@ import JsonAdapter from "../src/rmrk2.0.0/tools/consolidator/adapters/json";
 import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
 import { getApi, prefixToArray } from "../src/rmrk2.0.0/tools/utils";
+import JsonStreamStringify from "json-stream-stringify";
 
 const consolidate = async () => {
   const args = arg({
@@ -41,15 +42,28 @@ const consolidate = async () => {
   const con = new Consolidator(ss58Format);
   const ret = await con.consolidate(remarks);
 
+  const consolidatedReturnObj = { ...ret, lastBlock: ja.getLastBlock() };
+
+  const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
+  let stringifiedConsolidated = "";
+  stringifyStream.on("data", (chunk: string) => {
+    stringifiedConsolidated += chunk;
+  });
+
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-  fs.writeFileSync(
-    `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
-  );
-  process.exit(0);
+
+  stringifyStream.on("end", () => {
+    fs.writeFileSync(`consolidated-from-${file}`, stringifiedConsolidated);
+    process.exit(0);
+  });
+
+  stringifyStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
+    process.exit(0);
+  });
 };
 
 consolidate();

@@ -11,6 +11,8 @@ import fetchRemarks from "../src/rmrk2.0.0/tools/fetchRemarks";
 import arg from "arg";
 import { hexToString, stringToHex } from "@polkadot/util";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
+import JsonStreamStringify from "json-stream-stringify";
+import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 
 const fetch = async () => {
   const args = arg({
@@ -91,7 +93,7 @@ const fetch = async () => {
     const filteredRemark: BlockCalls = { ...remark, calls: [] };
     if (remark && remark?.calls) {
       filteredRemark.calls = remark.calls.filter((call) => {
-        return hexToString(call.value).includes("::2.0.0::");
+        return hexToString(call.value).includes(`::${VERSION}::`);
       });
     }
 
@@ -120,9 +122,23 @@ const fetch = async () => {
     block: to,
     calls: [],
   });
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  fs.writeFileSync(outputFileName, JSON.stringify(extracted));
-  process.exit(0);
+
+  const stringifyStream = new JsonStreamStringify(extracted);
+
+  let stringifiedBlocks = "";
+  stringifyStream.on("data", (chunk: string) => {
+    stringifiedBlocks += chunk;
+  });
+
+  stringifyStream.on("end", () => {
+    fs.writeFileSync(outputFileName, stringifiedBlocks);
+    process.exit(0);
+  });
+
+  stringifyStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
+    process.exit(0);
+  });
 };
 
 fetch();
