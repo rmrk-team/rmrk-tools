@@ -9,8 +9,7 @@ import {
 import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
-// @ts-ignore
-import json from "big-json";
+import JsonStreamStringify from "json-stream-stringify";
 
 const fetch = async () => {
   const args = arg({
@@ -108,9 +107,8 @@ const fetch = async () => {
     calls: [],
   });
 
-  const stringifyStream = json.createStringifyStream({
-    body: extracted,
-  });
+  const stringifyStream = new JsonStreamStringify(extracted);
+
   let stringifiedBlocks = "";
   stringifyStream.on("data", (chunk: string) => {
     stringifiedBlocks += chunk;
