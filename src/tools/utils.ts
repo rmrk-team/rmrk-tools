@@ -2,7 +2,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { hexToString, stringToHex } from "@polkadot/util";
 import { URL } from "url";
 import { Remark } from "./consolidator/remark";
-import { OP_TYPES } from "./constants";
+import { OP_TYPES, VERSION } from "./constants";
 import { SignedBlock } from "@polkadot/types/interfaces/runtime";
 import { BlockCall, BlockCalls } from "./types";
 import { Call as TCall } from "@polkadot/types/interfaces";
@@ -92,7 +92,10 @@ export const getRemarksFromBlocks = (
     for (const call of row.calls) {
       if (call.call !== "system.remark") continue;
       const str = hexToString(call.value);
-      if (!prefixes.some((word) => str.startsWith(hexToString(word)))) {
+      if (
+        !prefixes.some((word) => str.startsWith(hexToString(word))) ||
+        !str.includes(`::${VERSION}::`)
+      ) {
         continue;
       }
       const meta = getMeta(call, row.block);
