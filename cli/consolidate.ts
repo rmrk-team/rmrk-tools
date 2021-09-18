@@ -4,6 +4,8 @@ import JsonAdapter from "../src/tools/consolidator/adapters/json";
 import { Consolidator } from "../src/tools/consolidator/consolidator";
 import arg from "arg";
 import { getApi, prefixToArray } from "../src/tools/utils";
+// @ts-ignore
+import json from "big-json";
 
 const consolidate = async () => {
   const args = arg({
@@ -41,15 +43,32 @@ const consolidate = async () => {
   const con = new Consolidator(ss58Format);
   const ret = await con.consolidate(remarks);
 
+  const consolidatedReturnObj = { ...ret, lastBlock: ja.getLastBlock() };
+
+  console.log("consolidatedReturnObj", consolidatedReturnObj);
+
+  const stringifyStream = json.createStringifyStream({
+    body: consolidatedReturnObj,
+  });
+  let stringifiedConsolidated = "";
+  stringifyStream.on("data", (chunk: string) => {
+    stringifiedConsolidated += chunk;
+  });
+
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-  fs.writeFileSync(
-    `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
-  );
-  process.exit(0);
+
+  stringifyStream.on("end", () => {
+    fs.writeFileSync(`consolidated-from-${file}`, stringifiedConsolidated);
+    process.exit(0);
+  });
+
+  stringifyStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
+    process.exit(0);
+  });
 };
 
 consolidate();

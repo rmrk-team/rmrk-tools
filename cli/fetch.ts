@@ -9,6 +9,8 @@ import {
 import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
+// @ts-ignore
+import json from "big-json";
 
 const fetch = async () => {
   const args = arg({
@@ -105,9 +107,24 @@ const fetch = async () => {
     block: to,
     calls: [],
   });
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
-  fs.writeFileSync(outputFileName, JSON.stringify(extracted));
-  process.exit(0);
+
+  const stringifyStream = json.createStringifyStream({
+    body: extracted,
+  });
+  let stringifiedBlocks = "";
+  stringifyStream.on("data", (chunk: string) => {
+    stringifiedBlocks += chunk;
+  });
+
+  stringifyStream.on("end", () => {
+    fs.writeFileSync(outputFileName, stringifiedBlocks);
+    process.exit(0);
+  });
+
+  stringifyStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
+    process.exit(0);
+  });
 };
 
 fetch();
