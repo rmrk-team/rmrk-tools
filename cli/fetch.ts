@@ -10,9 +10,9 @@ import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
 import JsonStreamStringify from "json-stream-stringify";
-import {BlockCalls} from "../src/tools/types";
-import {hexToString} from "@polkadot/util";
-import {VERSION} from "rollup";
+import { BlockCalls } from "../src/tools/types";
+import { hexToString } from "@polkadot/util";
+import { VERSION } from "../src/tools/constants";
 
 const fetch = async () => {
   const args = arg({
