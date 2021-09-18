@@ -10,6 +10,9 @@ import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
 import JsonStreamStringify from "json-stream-stringify";
+import {BlockCalls} from "../src/tools/types";
+import {hexToString} from "@polkadot/util";
+import {VERSION} from "rollup";
 
 const fetch = async () => {
   const args = arg({
@@ -83,6 +86,17 @@ const fetch = async () => {
     prefixToArray(args["--prefixes"] || ""),
     ss58Format
   );
+
+  extracted = extracted.filter((remark) => {
+    const filteredRemark: BlockCalls = { ...remark, calls: [] };
+    if (remark && remark?.calls) {
+      filteredRemark.calls = remark.calls.filter((call) => {
+        return hexToString(call.value).includes(`::${VERSION}::`);
+      });
+    }
+
+    return filteredRemark.calls.length > 0;
+  });
 
   if (collectionFilter) {
     extracted = filterBlocksByCollection(
