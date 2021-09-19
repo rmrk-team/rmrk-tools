@@ -44,24 +44,24 @@ const consolidate = async () => {
 
   const consolidatedReturnObj = { ...ret, lastBlock: ja.getLastBlock() };
 
-  const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
-  let stringifiedConsolidated = "";
-  stringifyStream.on("data", (chunk: string) => {
-    stringifiedConsolidated += chunk;
-  });
-
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
 
+  const writeStream = fs.createWriteStream(`consolidated-from-${file}`, {
+    flags: "w",
+  });
+
+  const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
+  stringifyStream.pipe(writeStream);
+
   stringifyStream.on("end", () => {
-    fs.writeFileSync(`consolidated-from-${file}`, stringifiedConsolidated);
     process.exit(0);
   });
 
   stringifyStream.on("error", (error: any) => {
-    console.error("Fetch blocks error", error);
+    console.error("Consolidate blocks error", error);
     process.exit(0);
   });
 };
