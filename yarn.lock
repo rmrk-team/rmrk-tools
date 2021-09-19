@@ -6229,10 +6229,9 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
 
-json-stream-stringify@^2.0.3:
+"json-stream-stringify@git+https://github.com/Yuripetusko/json-stream-stringify#build":
   version "2.0.3"
-  resolved "https://registry.yarnpkg.com/json-stream-stringify/-/json-stream-stringify-2.0.3.tgz#9be009228aad8344f41d9749346c797075b7b438"
-  integrity sha512-Ry+1rZE1YVKlCMG1emCiReP/OfZrFrEGZn6TC7NPpIGO9NXf0KEqqBL0flgt2J59EiRPv+CKi7S7v31RAHrdXw==
+  resolved "git+https://github.com/Yuripetusko/json-stream-stringify#ed3d32a6b5c085e6486f49e0dd2458facdec1b76"
 
 json-stringify-safe@~5.0.1:
   version "5.0.1"

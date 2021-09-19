@@ -123,20 +123,19 @@ const fetch = async () => {
     calls: [],
   });
 
-  const stringifyStream = new JsonStreamStringify(extracted);
-
-  let stringifiedBlocks = "";
-  stringifyStream.on("data", (chunk: string) => {
-    stringifiedBlocks += chunk;
+  const writeStream = fs.createWriteStream(outputFileName, {
+    flags: "w",
   });
 
+  const stringifyStream = new JsonStreamStringify(extracted);
+  stringifyStream.pipe(writeStream);
+
   stringifyStream.on("end", () => {
-    fs.writeFileSync(outputFileName, stringifiedBlocks);
     process.exit(0);
   });
 
   stringifyStream.on("error", (error: any) => {
-    console.error("Fetch blocks error", error);
+    console.error("Consolidate blocks error", error);
     process.exit(0);
   });
 };
