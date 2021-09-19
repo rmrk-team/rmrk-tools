@@ -76,9 +76,9 @@ export const burnInteraction = async (
   }
 
   // Check if burner is owner of NFT
-  if (nft.owner != remark.caller) {
+  if ((nft.rootowner || nft.owner) != remark.caller) {
     throw new Error(
-      `[${OP_TYPES.BURN}] Attempting to BURN non-owned NFT ${burnEntity.id}`
+      `[${OP_TYPES.BURN}] Attempting to BURN non-owned NFT ${burnEntity.id}, real owner is ${nft.rootowner}`
     );
   }
 
