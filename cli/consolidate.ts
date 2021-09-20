@@ -50,7 +50,7 @@ const consolidate = async () => {
   };
 
   const writeStream = fs.createWriteStream(`consolidated-from-${file}`, {
-    flags: "w",
+    flags: "w+",
   });
 
   const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
