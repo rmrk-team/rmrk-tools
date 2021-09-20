@@ -8,7 +8,9 @@ Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec
 
 > Note: NodeJS 14+ is required. Please install with [NVM](https://nvm.sh).
 
-`yarn install rmrk-tools`
+```bash 
+yarn install rmrk-tools
+```
 
 ## Usage
 
@@ -16,7 +18,7 @@ Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec
 
 #### Fetch Manually and consolidate
 
-```
+```js
 import { fetchRemarks, getRemarksFromBlocks, getLatestFinalizedBlock, Consolidator } from 'rmrk-tools';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
@@ -43,7 +45,7 @@ const fetchAndConsolidate = async () => {
 
 ### Browser
 
-```
+```html
 <script src="node_modules/rmrk-tools"></script>
 <script>
     const { Collection, NFT, Consolidator, fetchRemarks } = window.rmrkTools;
@@ -58,7 +60,7 @@ You can use this package as a CLI tool
 Now you can use rmrk-tools coomands in your bash or npm scripts:
 You can use any of the available [Helper Tools](#helper-tools) by prepending `rmrk-tools-`
 
-```
+```json
 "scripts": {
   "fetch": "rmrk-tools-fetch",
   "consolidate": "rmrk-tools-consolidate",
@@ -68,7 +70,7 @@ You can use any of the available [Helper Tools](#helper-tools) by prepending `rm
 
 Or in bash scripts
 
-```
+```node
 #! /usr/bin/env node
 import shell from "shelljs";
 
@@ -81,7 +83,7 @@ shell.exec(
 
 ### `Consolidator`
 
-```
+```js
 import { Consolidator } from 'rmrk-tools';
 
 const consolidator = new Consolidator();
@@ -92,7 +94,7 @@ const { nfts, collections } = consolidator.consolidate(remarks);
 
 Subscribe to new Remarks
 
-```
+```js
 import { RemarkListener } from 'rmrk-tools';
 import { WsProvider } from "@polkadot/api";
 
@@ -115,7 +117,7 @@ startListening();
 
 if you want to subscribe to remarks that are included in unfinilised blocks to react to them quickly, you can use:
 
-```
+```js
 const unfinilisedSubscriber = listener.initialiseObservableUnfinalised();
 unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val));
 ```
@@ -123,7 +125,8 @@ unfinilisedSubscriber.subscribe((val) => console.log('Unfinalised remarks:', val
 By default Listener uses localstorage to save latest block number and default key it uses is `latestBlock`
 
 You can pass `storageKey` to listener initialisation to change localstorage key or you can pass your own implementation of `storageProvider` as long as it adhers to following interface
-```
+
+```js
 interface IStorageProvider {
   readonly storageKey: string;
   set(latestBlock: number): Promise<void>;
@@ -133,19 +136,19 @@ interface IStorageProvider {
 
 ### `Collection`
 
-```
+```js
 import { Collection } from 'rmrk-tools';
 ```
 
 Turn a remark into a collection object
 
-```
+```js
 Collection.fromRemark(remark)
 ```
 
 Create new collecton
 
-```
+```js
 const collection = new Collection(
   0,
   "Foo",
@@ -159,7 +162,7 @@ const collection = new Collection(
 
 ### `NFT`
 
-```
+```js
 import { fetchRemarks } from 'rmrk-tools';
 ```
 
@@ -167,7 +170,7 @@ import { fetchRemarks } from 'rmrk-tools';
 
 ### `fetchRemarks`
 
-```
+```js
 import { fetchRemarks } from 'rmrk-tools';
 
 const wsProvider = new WsProvider('wss://node.rmrk.app');
@@ -180,7 +183,7 @@ const remarkBlocks = await fetchRemarks(api, 6431422, 6431424, ['']);
 
 Get latest block number on the provided chain using polkadot api
 
-```
+```js
 import { getLatestFinalizedBlock } from 'rmrk-tools';
 
 const wsProvider = new WsProvider('wss://node.rmrk.app');
@@ -192,7 +195,7 @@ const to = await utils.getLatestFinalizedBlock(api);
 
 Turn extrinsics into remark objects
 
-```
+```js
 import { getRemarksFromBlocks } from 'rmrk-tools';
 const remarks = getRemarksFromBlocks(remarkBlocks);
 ```
@@ -222,7 +225,7 @@ Optional parameters:
 
 The return data will look like this:
 
-```js
+```json
 [
   {
     block: 8,
