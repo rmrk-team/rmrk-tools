@@ -124,7 +124,7 @@ const fetch = async () => {
   });
 
   const writeStream = fs.createWriteStream(outputFileName, {
-    flags: "w",
+    flags: "w+",
   });
 
   const stringifyStream = new JsonStreamStringify(extracted);
