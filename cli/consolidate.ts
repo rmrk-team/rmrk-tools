@@ -49,18 +49,16 @@ const consolidate = async () => {
     return this.toString();
   };
 
-  const transformStream = JSONStream.stringify();
-
   const writeStream = fs.createWriteStream(`consolidated-from-${file}`);
-  transformStream.pipe(writeStream);
-  consolidatedReturnObj.forEach(transformStream.write);
-  transformStream.end();
 
-  writeStream.on("finish", () => {
+  const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
+  stringifyStream.pipe(writeStream);
+
+  stringifyStream.on("end", () => {
     process.exit(0);
   });
 
-  writeStream.on("error", (error: any) => {
+  stringifyStream.on("error", (error: any) => {
     console.error("Consolidate blocks error", error);
     process.exit(0);
   });
