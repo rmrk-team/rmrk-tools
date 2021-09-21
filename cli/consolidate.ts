@@ -42,26 +42,16 @@ const consolidate = async () => {
   const con = new Consolidator(ss58Format);
   const ret = await con.consolidate(remarks);
 
-  const consolidatedReturnObj = { ...ret, lastBlock: ja.getLastBlock() };
-
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
 
-  const writeStream = fs.createWriteStream(`consolidated-from-${file}`);
-
-  const stringifyStream = new JsonStreamStringify(consolidatedReturnObj);
-  stringifyStream.pipe(writeStream);
-
-  stringifyStream.on("end", () => {
-    process.exit(0);
-  });
-
-  stringifyStream.on("error", (error: any) => {
-    console.error("Consolidate blocks error", error);
-    process.exit(0);
-  });
+  fs.writeFileSync(
+    `consolidated-from-${file}`,
+    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
+  );
+  process.exit(0);
 };
 
 consolidate();
