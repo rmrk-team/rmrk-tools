@@ -11,8 +11,9 @@ import fetchRemarks from "../src/rmrk2.0.0/tools/fetchRemarks";
 import arg from "arg";
 import { hexToString, stringToHex } from "@polkadot/util";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
-import JsonStreamStringify from "json-stream-stringify";
 import { VERSION } from "../src/rmrk2.0.0/tools/constants";
+// @ts-ignore
+import JSONStream from "JSONStream";
 
 const fetch = async () => {
   const args = arg({
@@ -123,19 +124,25 @@ const fetch = async () => {
     calls: [],
   });
 
-  const writeStream = fs.createWriteStream(outputFileName, {
-    flags: "w+",
-  });
 
-  const stringifyStream = new JsonStreamStringify(extracted);
-  stringifyStream.pipe(writeStream);
+  //@ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
 
-  stringifyStream.on("end", () => {
+  const transformStream = JSONStream.stringify();
+
+  const writeStream = fs.createWriteStream(outputFileName);
+  transformStream.pipe(writeStream);
+  extracted.forEach(transformStream.write);
+  transformStream.end();
+
+  writeStream.on("finish", () => {
     process.exit(0);
   });
 
-  stringifyStream.on("error", (error: any) => {
-    console.error("Consolidate blocks error", error);
+  writeStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
     process.exit(0);
   });
 };
