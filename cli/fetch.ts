@@ -9,10 +9,11 @@ import {
 import fs from "fs";
 import fetchRemarks from "../src/tools/fetchRemarks";
 import arg from "arg";
-import JsonStreamStringify from "json-stream-stringify";
 import { BlockCalls } from "../src/tools/types";
 import { hexToString } from "@polkadot/util";
 import { VERSION } from "../src/tools/constants";
+// @ts-ignore
+import JSONStream from "JSONStream";
 
 const fetch = async () => {
   const args = arg({
@@ -121,19 +122,24 @@ const fetch = async () => {
     calls: [],
   });
 
-  const writeStream = fs.createWriteStream(outputFileName, {
-    flags: "w+",
-  });
+  //@ts-ignore
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
 
-  const stringifyStream = new JsonStreamStringify(extracted);
-  stringifyStream.pipe(writeStream);
+  const transformStream = JSONStream.stringify();
 
-  stringifyStream.on("end", () => {
+  const writeStream = fs.createWriteStream(outputFileName);
+  transformStream.pipe(writeStream);
+  extracted.forEach(transformStream.write);
+  transformStream.end();
+
+  writeStream.on("finish", () => {
     process.exit(0);
   });
 
-  stringifyStream.on("error", (error: any) => {
-    console.error("Consolidate blocks error", error);
+  writeStream.on("error", (error: any) => {
+    console.error("Fetch blocks error", error);
     process.exit(0);
   });
 };
