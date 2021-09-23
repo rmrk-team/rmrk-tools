@@ -246,15 +246,9 @@ export const validateSetPriority = (remark: string): any => {
 
 export const validateSetAttribute = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [
-    _prefix,
-    _op_type,
-    _version,
-    id,
-    key,
-    property,
-    freeze,
-  ] = remark.split("::");
+  const [_prefix, _op_type, _version, id, key, property, freeze] = remark.split(
+    "::"
+  );
 
   try {
     validateRemarkBase(remark, OP_TYPES.SETPROPERTY);
@@ -292,7 +286,9 @@ export const validateSend = (remark: string): any => {
 
 export const validateEmote = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
+  const [_prefix, _op_type, _version, namespace, id, unicode] = remark.split(
+    "::"
+  );
 
   try {
     validateRemarkBase(remark, OP_TYPES.EMOTE);
