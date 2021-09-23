@@ -292,7 +292,7 @@ export const validateEmote = (remark: string): any => {
 
   try {
     validateRemarkBase(remark, OP_TYPES.EMOTE);
-    return assert({ id, unicode }, EMOTEStruct);
+    return assert({ id, unicode, namespace }, EMOTEStruct);
   } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
