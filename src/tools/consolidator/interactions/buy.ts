@@ -53,7 +53,10 @@ const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
         ? encodeAddress(owner, ss58Format)
         : owner;
       transferValue = [ownerEncoded, forsale].join(",");
-      if (transferValue === `${nft.owner},${nft.forsale}`) {
+      if (
+        nft.owner === ownerEncoded &&
+        BigInt(nft.forsale) >= BigInt(forsale)
+      ) {
         transferValid = true;
       }
     }
