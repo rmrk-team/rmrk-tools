@@ -36,7 +36,7 @@ describe("tools: Consolidator", () => {
     ]);
     const consolidator = new Consolidator(undefined, undefined, true);
     const consolidated = await consolidator.consolidate(remarks);
-    const withEmotes = consolidated.nfts.filter((nft) =>
+    const withEmotes = Object.values(consolidated.nfts).filter((nft) =>
       nft.changes.some((c) => c.field === "reactions")
     );
     expect(withEmotes).toMatchSnapshot();

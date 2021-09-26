@@ -47,7 +47,7 @@ const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
   let transferValid = false;
   let transferValue = "";
   remark.extra_ex?.forEach((el: BlockCall) => {
-    if (el.call === "balances.transfer") {
+    if (!transferValid && el.call === "balances.transfer") {
       const [owner, forsale] = el.value.split(",");
       const ownerEncoded = ss58Format
         ? encodeAddress(owner, ss58Format)
@@ -55,7 +55,7 @@ const isTransferValid = (remark: Remark, nft: N100, ss58Format?: number) => {
       transferValue = [ownerEncoded, forsale].join(",");
       if (
         nft.owner === ownerEncoded &&
-        BigInt(nft.forsale) >= BigInt(forsale)
+        BigInt(forsale) >= BigInt(nft.forsale)
       ) {
         transferValid = true;
       }
