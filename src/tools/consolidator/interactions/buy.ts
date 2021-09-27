@@ -19,7 +19,8 @@ export const buyInteraction = (
     );
   }
 
-  validate(remark, buyEntity, nft, ss58Format);
+  const transferValue = validate(remark, buyEntity, nft, ss58Format);
+  const [owner, forsale] = transferValue.split(",");
   nft.updatedAtBlock = remark.block;
 
   nft.addChange({
@@ -34,7 +35,7 @@ export const buyInteraction = (
 
   nft.addChange({
     field: "forsale",
-    old: nft.forsale,
+    old: forsale,
     new: BigInt(0),
     caller: remark.caller,
     block: remark.block,
@@ -98,4 +99,6 @@ const validate = (
         `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
       );
   }
+
+  return transferValue;
 };
