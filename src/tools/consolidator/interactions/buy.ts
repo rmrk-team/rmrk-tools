@@ -35,7 +35,7 @@ export const buyInteraction = (
 
   nft.addChange({
     field: "forsale",
-    old: forsale,
+    old: BigInt(forsale),
     new: BigInt(0),
     caller: remark.caller,
     block: remark.block,
