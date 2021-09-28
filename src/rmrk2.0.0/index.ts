@@ -17,7 +17,11 @@ export { Setpriority } from "./classes/setpriority";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
 export * from "./tools/consolidator/utils";
 export { RemarkListener } from "./listener";
-export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";
+export {
+  getLatestFinalizedBlock,
+  getRemarksFromBlocks,
+  getBlockCallsFromSignedBlock,
+} from "./tools/utils";
 export { validateMintNFT } from "./tools/consolidator/interactions/mint";
 export {
   validateCreateIds,
@@ -26,7 +30,10 @@ export {
 export { listForSaleInteraction } from "./tools/consolidator/interactions/list";
 export { emoteInteraction } from "./tools/consolidator/interactions/emote";
 export { burnInteraction } from "./tools/consolidator/interactions/burn";
-export { changeIssuerInteraction, getChangeIssuerEntity } from "./tools/consolidator/interactions/changeIssuer";
+export {
+  changeIssuerInteraction,
+  getChangeIssuerEntity,
+} from "./tools/consolidator/interactions/changeIssuer";
 export { buyInteraction } from "./tools/consolidator/interactions/buy";
 export { sendInteraction } from "./tools/consolidator/interactions/send";
 export { resAddInteraction } from "./tools/consolidator/interactions/resadd";
