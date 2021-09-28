@@ -8,7 +8,11 @@ export { Buy } from "./rmrk1.0.0/classes/buy";
 export { Send } from "./rmrk1.0.0/classes/send";
 export { Emote } from "./rmrk1.0.0/classes/emote";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
-export { getLatestFinalizedBlock, getRemarksFromBlocks } from "./tools/utils";
+export {
+  getLatestFinalizedBlock,
+  getRemarksFromBlocks,
+  getBlockCallsFromSignedBlock,
+} from "./tools/utils";
 export * from "./tools/consolidator/utils";
 export { RemarkListener } from "./listener";
 export { validateMintNFT } from "./tools/consolidator/interactions/mintNFT";
