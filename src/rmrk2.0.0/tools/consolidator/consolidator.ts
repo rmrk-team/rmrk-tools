@@ -643,6 +643,9 @@ export class Consolidator {
       equippableInteraction(remark, equippableEntity, base);
       if (base && consolidatedBase) {
         await this.dbAdapter.updateBaseEquippable(base, consolidatedBase);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.EQUIPPABLE]: base.getId() });
+        }
       }
     } catch (e: any) {
       invalidate(equippableEntity.id, e.message);
