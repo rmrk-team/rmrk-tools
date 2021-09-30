@@ -99,6 +99,7 @@ export interface CollectionConsolidated {
 
 export interface BaseConsolidated {
   block: number;
+  symbol: string;
   issuer: string;
   id: string;
   type: BaseType;

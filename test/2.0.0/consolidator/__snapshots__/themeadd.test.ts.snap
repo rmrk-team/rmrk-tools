@@ -35,6 +35,10 @@ Object {
         "theme2": Object {
           "primaryColor": "#000",
         },
+        "themeOne": Object {
+          "_inherit": true,
+          "primary": "#fff",
+        },
       },
       "type": "svg",
     },

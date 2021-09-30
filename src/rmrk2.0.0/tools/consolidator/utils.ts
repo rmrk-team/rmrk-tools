@@ -145,8 +145,8 @@ export const consolidatedBasetoInstance = (
   if (!base) {
     return undefined;
   }
-  const { block, id, issuer, type, parts } = base || {};
-  const baseInstance = new Base(block, id, issuer, type, parts);
+  const { block, id, issuer, type, parts, symbol, themes } = base || {};
+  const baseInstance = new Base(block, symbol, issuer, type, parts, themes);
 
   return baseInstance;
 };
