@@ -124,7 +124,6 @@ const fetch = async () => {
     calls: [],
   });
 
-
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
@@ -137,12 +136,14 @@ const fetch = async () => {
   extracted.forEach(transformStream.write);
   transformStream.end();
 
-  writeStream.on("finish", () => {
+  writeStream.on("finish", async () => {
+    await api.disconnect();
     process.exit(0);
   });
 
-  writeStream.on("error", (error: any) => {
+  writeStream.on("error", async (error: any) => {
     console.error("Fetch blocks error", error);
+    await api.disconnect();
     process.exit(0);
   });
 };
