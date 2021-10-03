@@ -138,14 +138,14 @@ const fetch = async () => {
 
   writeStream.on("finish", async () => {
     console.log("FINISH");
-    wtf.dump();
     await api.disconnect();
+    wtf.dump();
     process.exit(0);
   });
 
   writeStream.on("error", async (error: any) => {
-    await api.disconnect();
     console.error("Fetch blocks error", error);
+    await api.disconnect();
     wtf.dump();
     process.exit(0);
   });
