@@ -1,3 +1,5 @@
+import { validateBase } from "./tools/validate-remark";
+
 export { Consolidator } from "./tools/consolidator/consolidator";
 export { Collection } from "./rmrk1.0.0/classes/collection";
 export { NFT } from "./rmrk1.0.0/classes/nft";
