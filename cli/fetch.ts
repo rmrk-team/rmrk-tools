@@ -14,8 +14,6 @@ import { hexToString } from "@polkadot/util";
 import { VERSION } from "../src/tools/constants";
 // @ts-ignore
 import JSONStream from "JSONStream";
-// @ts-ignore
-import wtf from "wtfnode";
 
 const fetch = async () => {
   const args = arg({
@@ -139,20 +137,14 @@ const fetch = async () => {
   writeStream.on("finish", async () => {
     console.log("FINISH");
     await api.disconnect();
-    wtf.dump();
     process.exit(0);
   });
 
   writeStream.on("error", async (error: any) => {
     console.error("Fetch blocks error", error);
     await api.disconnect();
-    wtf.dump();
     process.exit(0);
   });
-
-  setInterval(() => {
-    wtf.dump();
-  }, 60000);
 };
 
 fetch();
