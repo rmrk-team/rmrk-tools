@@ -14,6 +14,8 @@ import {
 import { Remark } from "./tools/consolidator/remark";
 import { ConsolidatorReturnType } from "./tools/consolidator/consolidator";
 import fetchRemarks from "./tools/fetchRemarks";
+import { hexToString } from "@polkadot/util";
+import { VERSION } from "./tools/constants";
 
 interface IProps {
   polkadotApi: ApiPromise | null;
@@ -221,12 +223,20 @@ export class RemarkListener {
         this.prefixes,
         this.apiPromise
       );
+      const filteredCalls = calls.filter((call) => {
+        return hexToString(call.value).includes(`::${VERSION}::`);
+      });
+
       if (finalised) {
         this.currentBlockNum = header.number.toNumber();
       }
 
       // Update local db latestBlock
-      if (this.missingBlockCallsFetched && finalised && calls.length === 0) {
+      if (
+        this.missingBlockCallsFetched &&
+        finalised &&
+        filteredCalls.length === 0
+      ) {
         try {
           await this.storageProvider.set(header.number.toNumber());
         } catch (e: any) {
@@ -234,10 +244,10 @@ export class RemarkListener {
         }
       }
 
-      if (calls.length > 0) {
+      if (filteredCalls.length > 0) {
         const blockCalls: BlockCalls = {
           block: header.number.toNumber(),
-          calls,
+          calls: filteredCalls,
         };
 
         // If we are listening to finalised blocks
