@@ -43,6 +43,7 @@ const consolidate = async () => {
     "--ws": String, // Optional websocket url
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--lite": String, // Lightweight version of dumps
+    "--out": String, // optional output name
   });
 
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
@@ -58,6 +59,7 @@ const consolidate = async () => {
   const file = args["--json"];
   const collectionFilter = args["--collection"];
   const isLite = args["--lite"] || false;
+  const out = args["--out"];
 
   if (!file) {
     console.error("File path must be provided");
@@ -86,7 +88,7 @@ const consolidate = async () => {
   }
 
   fs.writeFileSync(
-    `consolidated-from-${file}`,
+    out ? `consolidated-from-${out}` : `consolidated-from-${file}`,
     JSON.stringify({ ...result, lastBlock: ja.getLastBlock() })
   );
   process.exit(0);
