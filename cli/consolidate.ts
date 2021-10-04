@@ -1,10 +1,40 @@
 #! /usr/bin/env node
 import fs from "fs";
 import JsonAdapter from "../src/tools/consolidator/adapters/json";
-import { Consolidator } from "../src/tools/consolidator/consolidator";
+import {
+  CollectionConsolidated,
+  Consolidator,
+  ConsolidatorReturnType,
+  NFTConsolidated,
+} from "../src/tools/consolidator/consolidator";
 import arg from "arg";
 import { getApi, prefixToArray } from "../src/tools/utils";
-import JsonStreamStringify from "json-stream-stringify";
+import { compose, filter, map, values } from "ramda";
+
+/**
+ * Create lightweight dump by excluding burned NFTs and emotes.
+ * Note: using ramda utils in order to preserve Record structure.
+ * @param result
+ */
+const getLiteDump = (result: ConsolidatorReturnType) => {
+  result.nfts = filter((d: NFTConsolidated) => d.burned === "", result.nfts);
+  result.nfts = map(
+    (nft: any) => ({
+      ...nft,
+      reactions: [],
+    }),
+    result.nfts
+  );
+  result.invalid = [];
+  // cleanup orphan collections
+  result.collections = filter(
+    (c: CollectionConsolidated) =>
+      values(filter((n: NFTConsolidated) => n.collection === c.id, result.nfts))
+        .length !== 0,
+    result.collections
+  );
+  return result;
+};
 
 const consolidate = async () => {
   const args = arg({
@@ -12,6 +42,7 @@ const consolidate = async () => {
     "--collection": String, // Filter by specific collection
     "--ws": String, // Optional websocket url
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
+    "--lite": String, // Lightweight version of dumps
   });
 
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
@@ -26,6 +57,8 @@ const consolidate = async () => {
 
   const file = args["--json"];
   const collectionFilter = args["--collection"];
+  const isLite = args["--lite"] || false;
+
   if (!file) {
     console.error("File path must be provided");
     process.exit(1);
@@ -39,17 +72,22 @@ const consolidate = async () => {
   }
   const ja = new JsonAdapter(file, prefixes, collectionFilter);
   const remarks = ja.getRemarks();
-  const con = new Consolidator(ss58Format);
-  const ret = await con.consolidate(remarks);
+  const consolidator = new Consolidator(ss58Format);
+  let result = await consolidator.consolidate(remarks);
 
   //@ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
 
+  // Lightweight dumps exclude burned nfts and reactions / emotes.
+  if (isLite) {
+    result = getLiteDump(result);
+  }
+
   fs.writeFileSync(
     `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
+    JSON.stringify({ ...result, lastBlock: ja.getLastBlock() })
   );
   process.exit(0);
 };
