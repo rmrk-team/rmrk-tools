@@ -254,9 +254,11 @@ export class RemarkListener {
         if (finalised) {
           this.latestBlockCallsFinalised.push(blockCalls);
           // Now that block has been finalised,
-          // remove remarks that we found in it from unfinalised blockCalls array that we keep in memory
+          // remove remarks that we found in it from unfinalised blockCalls array that we keep in memory or stalled blocks (more than 10 blocks)
           this.latestBlockCalls = this.latestBlockCalls.filter(
-            (item) => item?.block !== blockCalls.block
+            (item) =>
+              item?.block !== blockCalls.block ||
+              blockCalls.block - item.block > 10
           );
           // Call consolidate to re-consolidate and fire subscription event back to subscriber
           await this.consolidate();
