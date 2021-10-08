@@ -258,11 +258,15 @@ export class RemarkListener {
           this.latestBlockCalls = this.latestBlockCalls.filter(
             (item) =>
               item?.block !== blockCalls.block ||
-              blockCalls.block - item.block > 10
+              blockCalls.block - item.block > 20
           );
           // Call consolidate to re-consolidate and fire subscription event back to subscriber
           await this.consolidate();
         } else {
+          // Filter stalled blocks (20 blocks) to free up memory
+          this.latestBlockCalls = this.latestBlockCalls.filter(
+            (item) => blockCalls.block - item.block > 20
+          );
           this.latestBlockCalls.push(blockCalls);
           /* If someone is listening to unfinalised blocks, return them here */
           if (this.observerUnfinalised) {
