@@ -225,9 +225,16 @@ Object {
   },
   "invalid": Array [
     Object {
+      "block": 8,
+      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "message": "[ACCEPT] Attempting to accept NFT on non-owned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "object_id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "op_type": "ACCEPT",
+    },
+    Object {
       "block": 9,
       "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      "message": "[EQUIP] Cannot equip NFT 6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888 because parent's base is pending",
+      "message": "[EQUIP] Cannot equip NFT 6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888 because it wasn't accepted by a parent yet",
       "object_id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "op_type": "EQUIP",
     },
@@ -241,7 +248,7 @@ Object {
         Object {
           "equipped": "",
           "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
-          "pending": false,
+          "pending": true,
         },
       ],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
@@ -250,14 +257,16 @@ Object {
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
       "pending": false,
-      "priority": Array [],
+      "priority": Array [
+        "xXhhR",
+      ],
       "properties": Object {},
       "reactions": Object {},
       "resources": Array [
         Object {
           "base": "base-4-KBASE777",
           "id": "xXhhR",
-          "pending": true,
+          "pending": false,
         },
       ],
       "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
@@ -275,7 +284,7 @@ Object {
       "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
-      "pending": false,
+      "pending": true,
       "priority": Array [],
       "properties": Object {},
       "reactions": Object {},

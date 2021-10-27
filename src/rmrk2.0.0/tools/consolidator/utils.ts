@@ -97,6 +97,7 @@ export const consolidatedNFTtoInstance = (
   });
   const {
     owner,
+    rootowner,
     forsale,
     reactions,
     changes,
@@ -106,6 +107,7 @@ export const consolidatedNFTtoInstance = (
     priority,
   } = rest;
   nftInstance.owner = owner;
+  nftInstance.rootowner = rootowner;
   nftInstance.forsale = forsale;
   nftInstance.reactions = reactions;
   nftInstance.changes = changes;
