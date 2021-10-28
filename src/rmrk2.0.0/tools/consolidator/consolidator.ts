@@ -80,6 +80,7 @@ export interface NFTConsolidated {
   owner: string;
   rootowner: string;
   burned: string;
+  equipped: string;
   priority: string[];
   children: NFTChild[];
   resources: IResourceConsolidated[];
