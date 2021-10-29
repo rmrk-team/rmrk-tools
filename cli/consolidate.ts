@@ -44,10 +44,13 @@ const consolidate = async () => {
     "--prefixes": String, // Limit remarks to prefix. No default. Can be hex (0x726d726b,0x524d524b) or string (rmrk,RMRK), or combination (rmrk,0x524d524b), separate with comma for multiple
     "--lite": String, // Lightweight version of dumps
     "--out": String, // optional output name
+    "--to": Number, // Optional take block to inclusive
   });
 
   const ws = args["--ws"] || "ws://127.0.0.1:9944";
   const api = await getApi(ws);
+
+  const toBlock = args["--to"];
 
   const prefixes = prefixToArray(args["--prefixes"] || "0x726d726b,0x524d524b");
 
@@ -72,7 +75,7 @@ const consolidate = async () => {
     console.error("File is not readable. Are you providing the right path?");
     process.exit(1);
   }
-  const ja = new JsonAdapter(file, prefixes, collectionFilter);
+  const ja = new JsonAdapter(file, prefixes, collectionFilter, toBlock);
   const remarks = ja.getRemarks();
   const consolidator = new Consolidator(ss58Format);
   let result = await consolidator.consolidate(remarks);

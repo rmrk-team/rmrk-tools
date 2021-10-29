@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Remark } from "../remark";
 import { filterBlocksByCollection, getRemarksFromBlocks } from "../../utils";
-import { BlockCall } from "../../types";
+import { BlockCall, BlockCalls } from "../../types";
 
 /**
  * The JSON adapter expects to find a JSON array with elements
@@ -23,10 +23,21 @@ export default class JsonAdapter {
   private collectionFilter?: string;
   private prefixes: string[];
 
-  constructor(filePath: string, prefixes: string[], collectionFilter?: string) {
+  constructor(
+    filePath: string,
+    prefixes: string[],
+    collectionFilter?: string,
+    toBlock?: number
+  ) {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const rawdata = fs.readFileSync(filePath);
-    this.inputData = JSON.parse(rawdata.toString());
+
+    let data = JSON.parse(rawdata.toString());
+    if (toBlock) {
+      data = data.filter((obj: BlockCalls) => obj.block <= Number(toBlock));
+      console.log(`Take blocks to: ${toBlock}`);
+    }
+    this.inputData = data;
     this.collectionFilter = collectionFilter;
     this.prefixes = prefixes;
     //console.log(this.inputData);
