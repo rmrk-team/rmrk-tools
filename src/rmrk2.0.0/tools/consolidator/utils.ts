@@ -10,6 +10,27 @@ import { Base } from "../../classes/base";
 import { changeIssuerInteraction } from "./interactions/changeIssuer";
 import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
+import { OP_TYPES } from "../constants";
+
+export const validateMinBlockBetweenEvents = (
+  opType: OP_TYPES,
+  nft: NFTConsolidated,
+  remark: Remark
+) => {
+  const lastChange = nft.changes
+    .filter((change) => change.opType === opType)
+    .sort((change, prevChange) => prevChange.block - change.block)?.[0];
+
+  if (!lastChange?.block) {
+    return true;
+  }
+
+  if (remark.block - lastChange.block < 5) {
+    throw new Error(
+      `[${opType}] There should be minimum of 5 blocks between last ${opType} interaction: ${remark.remark}`
+    );
+  }
+};
 
 /**
  * Validate polkadot address

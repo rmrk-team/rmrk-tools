@@ -35,7 +35,7 @@ import {
   consolidatedCollectionToInstance,
   consolidatedNFTtoInstance,
   invalidateIfRecursion,
-  isValidAddressPolkadotAddress,
+  isValidAddressPolkadotAddress, validateMinBlockBetweenEvents,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType, IProperties } from "../types";
@@ -418,6 +418,10 @@ export class Consolidator {
     try {
       if (nft?.owner) {
         await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
+      }
+
+      if (consolidatedNFT) {
+        validateMinBlockBetweenEvents(OP_TYPES.LIST, consolidatedNFT, remark);
       }
 
       await listForSaleInteraction(remark, listEntity, this.dbAdapter, nft);
