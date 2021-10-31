@@ -90,4 +90,14 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
+
+  it("Should prevent to RE-LIST NFT within 5 blocks", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(2e12))),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
 });
