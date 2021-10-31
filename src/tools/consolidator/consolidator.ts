@@ -28,6 +28,7 @@ import {
   consolidatedNFTtoInstance,
   getChangeIssuerEntity,
   getCollectionFromRemark,
+  validateMinBlockBetweenEvents,
 } from "./utils";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
@@ -288,6 +289,10 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
+      if (consolidatedNFT) {
+        validateMinBlockBetweenEvents(OP_TYPES.LIST, consolidatedNFT, remark);
+      }
+
       listForSaleInteraction(remark, listEntity, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTList(nft, consolidatedNFT, remark.block);

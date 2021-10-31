@@ -8,6 +8,26 @@ import { Remark } from "./remark";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { OP_TYPES } from "../constants";
 
+export const validateMinBlockBetweenEvents = (
+  opType: OP_TYPES,
+  nft: NFTConsolidated,
+  remark: Remark
+) => {
+  const lastChange = nft.changes
+    .filter((change) => change.opType === opType)
+    .sort((change, prevChange) => prevChange.block - change.block)?.[0];
+
+  if (!lastChange?.block) {
+    return true;
+  }
+
+  if (remark.block - lastChange.block < 5) {
+    throw new Error(
+      `[${OP_TYPES.LIST}] There should be minimum of 5 blocks between last ${OP_TYPES.LIST} interaction: ${remark.remark}`
+    );
+  }
+};
+
 export const consolidatedNFTtoInstance = (
   nft?: NFTConsolidated
 ): NFT | undefined => {
