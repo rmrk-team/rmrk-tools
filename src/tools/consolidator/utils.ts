@@ -23,7 +23,7 @@ export const validateMinBlockBetweenEvents = (
 
   if (remark.block - lastChange.block < 5) {
     throw new Error(
-      `[${OP_TYPES.LIST}] There should be minimum of 5 blocks between last ${OP_TYPES.LIST} interaction: ${remark.remark}`
+      `[${OP_TYPES.LIST}] There should be minimum of 5 blocks between last ${opType} interaction: ${remark.remark}`
     );
   }
 };
