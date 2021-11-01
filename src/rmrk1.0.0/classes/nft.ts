@@ -58,7 +58,7 @@ export class NFT {
     return this;
   }
 
-  public mintnft(): string {
+  public mintnft(recipient?: string): string {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
@@ -71,7 +71,7 @@ export class NFT {
         sn: this.sn,
         metadata: this.metadata,
       })
-    )}`;
+    )}${recipient ? "::" + recipient.replace(/\\s/g, "") : ""}`;
   }
 
   public send(recipient: string): string {
@@ -81,9 +81,8 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${
-      OP_TYPES.SEND
-    }::${VERSION}::${this.getId()}::${recipient.replace(/\\s/g, "")}`;
+    return `${PREFIX}::${OP_TYPES.SEND
+      }::${VERSION}::${this.getId()}::${recipient.replace(/\\s/g, "")}`;
   }
 
   // @todo build this out, maybe data type?
@@ -129,9 +128,8 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
-      price > 0 ? price : 0
-    }`;
+    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${price > 0 ? price : 0
+      }`;
   }
 
   public buy(): string {
@@ -161,9 +159,8 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${
-      OP_TYPES.EMOTE
-    }::${VERSION}::${this.getId()}::${unicode}`;
+    return `${PREFIX}::${OP_TYPES.EMOTE
+      }::${VERSION}::${this.getId()}::${unicode}`;
   }
 
   /**
