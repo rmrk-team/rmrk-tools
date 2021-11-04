@@ -81,9 +81,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${
-      OP_TYPES.SEND
-    }::${VERSION}::${this.getId()}::${recipient.replace(/\\s/g, "")}`;
+    return NFT.sendById(this.getId(), recipient);
   }
 
   // @todo build this out, maybe data type?
@@ -129,9 +127,7 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
-      price > 0 ? price : 0
-    }`;
+    return NFT.listById(this.getId(), price);
   }
 
   public buy(): string {
@@ -151,7 +147,24 @@ export class NFT {
         separate instance as the block number is an important part of an NFT's ID.`
       );
     }
-    return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${this.getId()}`;
+    return NFT.consumeById(this.getId());
+  }
+
+  static sendById(id: string, recipient: string): string {
+    return `${PREFIX}::${OP_TYPES.SEND}::${VERSION}::${id}::${recipient.replace(
+      /\\s/g,
+      ""
+    )}`;
+  }
+
+  static listById(id: string, price: bigint | number): string {
+    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${id}::${
+      price > 0 ? price : 0
+    }`;
+  }
+
+  static consumeById(id: string): string {
+    return `${PREFIX}::${OP_TYPES.CONSUME}::${VERSION}::${id}`;
   }
 
   public emote(unicode: string): string {
