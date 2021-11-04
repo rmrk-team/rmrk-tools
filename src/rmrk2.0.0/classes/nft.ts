@@ -90,9 +90,24 @@ export class NFT {
         "You can only send an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
-    return `${PREFIX}::${
-      OP_TYPES.SEND
-    }::${VERSION}::${this.getId()}::${recipient.replace(/\\s/g, "")}`;
+    return NFT.sendById(this.getId(), recipient);
+  }
+
+  static sendById(id: string, recipient: string): string {
+    return `${PREFIX}::${OP_TYPES.SEND}::${VERSION}::${id}::${recipient.replace(
+      /\\s/g,
+      ""
+    )}`;
+  }
+
+  static listById(id: string, price: bigint | number): string {
+    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${id}::${
+      price > 0 ? price : 0
+    }`;
+  }
+
+  static burnById(id: string): string {
+    return `${PREFIX}::${OP_TYPES.BURN}::${VERSION}::${id}`;
   }
 
   static fromRemark(remark: string, block?: number): NFT | string {
@@ -134,9 +149,7 @@ export class NFT {
         "You can only list an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
-    return `${PREFIX}::${OP_TYPES.LIST}::${VERSION}::${this.getId()}::${
-      price > 0 ? price : 0
-    }`;
+    return NFT.listById(this.getId(), price);
   }
 
   public buy(recipient?: string): string {
@@ -156,7 +169,7 @@ export class NFT {
         "You can only burn an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
       );
     }
-    return `${PREFIX}::${OP_TYPES.BURN}::${VERSION}::${this.getId()}`;
+    return NFT.burnById(this.getId());
   }
 
   public emote(unicode: string, namespace = EMOTE_NAMESPACES.RMRK2): string {
@@ -228,11 +241,7 @@ export class NFT {
    * @param key -property key
    * @param value - aproperty value
    */
-  public setproperty(
-    key: string,
-    value: any,
-    freeze?: "freeze"
-  ): string {
+  public setproperty(key: string, value: any, freeze?: "freeze"): string {
     if (!this.block) {
       throw new Error("You can only set property on an existing NFT.");
     }
