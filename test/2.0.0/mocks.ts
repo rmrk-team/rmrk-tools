@@ -6,6 +6,7 @@ import { encodeAddress, Keyring } from "@polkadot/keyring";
 import { Base } from "../../src/rmrk2.0.0/classes/base";
 import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
 import { BlockCall } from "../../src/rmrk2.0.0/tools/types";
+import { KeyringPair } from "@polkadot/keyring/types";
 
 let block = 1;
 
@@ -19,24 +20,36 @@ export const getBobKey = () => {
   return keyringAlice.addFromUri("//Bob");
 };
 
-export const createCollectionMock = (block?: number): Collection => {
+export const createCollectionMock = (
+  block?: number,
+  address?: string
+): Collection => {
   return new Collection(
     block || 0,
     0,
-    getAliceKey().address,
+    address || getAliceKey().address,
     "KANARIABIRDS",
-    Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIABIRDS"),
+    Collection.generateId(
+      u8aToHex(address || getAliceKey().publicKey),
+      "KANARIABIRDS"
+    ),
     "https://some.url"
   );
 };
 
-export const createCollectionMock2 = (block?: number): Collection => {
+export const createCollectionMock2 = (
+  block?: number,
+  keyring?: KeyringPair
+): Collection => {
   return new Collection(
     block || 0,
     0,
-    getAliceKey().address,
+    keyring?.address || getAliceKey().address,
     "KANARIAGEMS",
-    Collection.generateId(u8aToHex(getAliceKey().publicKey), "KANARIAGEMS"),
+    Collection.generateId(
+      u8aToHex(keyring?.publicKey || getAliceKey().publicKey),
+      "KANARIAGEMS"
+    ),
     "https://some.url"
   );
 };
@@ -61,10 +74,10 @@ export const mintNftMock2 = (block?: number): NFT =>
     owner: getAliceKey().address,
   });
 
-export const mintNftMock3 = (block?: number): NFT =>
+export const mintNftMock3 = (block?: number, collectionId?: string): NFT =>
   new NFT({
     block: block || 0,
-    collection: createCollectionMock().id,
+    collection: collectionId || createCollectionMock().id,
     symbol: "KANR",
     sn: "999".padStart(8, "0"),
     transferable: 1,

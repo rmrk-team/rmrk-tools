@@ -17,14 +17,14 @@ export const validateMintNFT = async (
     );
   }
 
+  if (remark.caller !== nftParentCollection.issuer) {
+    throw new Error(
+      `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentCollection.issuer}, caller: ${remark.caller}`
+    );
+  }
+
   if (nft.owner) {
-    if (isValidAddressPolkadotAddress(nft.owner)) {
-      if (remark.caller !== nftParentCollection.issuer) {
-        throw new Error(
-          `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentCollection.issuer}, caller: ${remark.caller}`
-        );
-      }
-    } else {
+    if (!isValidAddressPolkadotAddress(nft.owner)) {
       const rootowner =
         nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
       nft.rootowner = rootowner || remark.caller;

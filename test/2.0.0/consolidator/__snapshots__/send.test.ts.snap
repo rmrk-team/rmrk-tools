@@ -265,6 +265,15 @@ exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT Should set NFT as pending
 Object {
   "bases": Object {},
   "collections": Object {
+    "8eaf04151694f26a48-KANARIAGEMS": Collection {
+      "block": 5,
+      "changes": Array [],
+      "id": "8eaf04151694f26a48-KANARIAGEMS",
+      "issuer": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIAGEMS",
+    },
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
       "changes": Array [],
@@ -302,10 +311,10 @@ Object {
       "burned": "",
       "changes": Array [
         Object {
-          "block": 6,
+          "block": 7,
           "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
           "field": "owner",
-          "new": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
+          "new": "6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999",
           "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
           "opType": "SEND",
         },
@@ -315,7 +324,7 @@ Object {
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
-      "owner": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
+      "owner": "6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999",
       "pending": true,
       "priority": Array [],
       "properties": Object {},
@@ -326,8 +335,8 @@ Object {
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": Object {
-      "block": 5,
+    "6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999": Object {
+      "block": 6,
       "burned": "",
       "changes": Array [],
       "children": Array [
@@ -337,9 +346,9 @@ Object {
           "pending": true,
         },
       ],
-      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "collection": "8eaf04151694f26a48-KANARIAGEMS",
       "forsale": 0n,
-      "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
+      "id": "6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999",
       "metadata": undefined,
       "owner": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
       "pending": false,
