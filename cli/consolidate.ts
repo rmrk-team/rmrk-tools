@@ -27,7 +27,7 @@ const consolidate = async () => {
   const file = args["--json"];
   const collectionFilter = args["--collection"];
   if (!file) {
-    console.error("File path must be provided");
+    console.error("File path must be provided through --json arg");
     process.exit(1);
   }
 
