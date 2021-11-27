@@ -258,7 +258,7 @@ export const getBlockCallsFromSignedBlock = async (
             } as BlockCall);
           } else {
             const isBalanceTransfer =
-              `${el.section}.${el.method}` === `balance.transfer`;
+              `${el.section}.${el.method}` === `balances.transfer`;
 
             const extraCall = {
               call: `${el.section}.${el.method}`,
