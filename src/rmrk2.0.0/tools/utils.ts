@@ -253,6 +253,7 @@ export const getBlockCallsFromSignedBlock = async (
 
         const batchRoot = [] as BlockCall[];
         const batchExtras: BlockCall[] = [];
+        const batchBuyExtras: BlockCall[] = [];
         batchArgs.forEach((el, i) => {
           if (isSystemRemark(el, prefixes)) {
             batchRoot.push({
@@ -261,11 +262,20 @@ export const getBlockCallsFromSignedBlock = async (
               caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
             } as BlockCall);
           } else {
-            batchExtras.push({
+            const isBalanceTransfer =
+                `${el.section}.${el.method}` === `balances.transfer`;
+
+            const extraCall = {
               call: `${el.section}.${el.method}`,
               value: el.args.toString(),
               caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
-            } as BlockCall);
+            } as BlockCall;
+
+            if (isBalanceTransfer) {
+              batchBuyExtras.push(extraCall);
+            } else {
+              batchExtras.push(extraCall);
+            }
           }
         });
 
@@ -273,6 +283,11 @@ export const getBlockCallsFromSignedBlock = async (
           batchRoot.forEach((el, i) => {
             batchRoot[i].extras = batchExtras;
           });
+        }
+
+        // Only 1 NFT can be purchased in a batch
+        if (batchBuyExtras.length) {
+          batchRoot[0].extras = batchBuyExtras;
         }
 
         blockCalls = blockCalls.concat(batchRoot);
