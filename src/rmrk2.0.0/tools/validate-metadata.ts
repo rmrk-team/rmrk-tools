@@ -20,12 +20,7 @@ const MetadataStruct = type({
   name: optional(string()),
   description: optional(string()),
   image: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
-  animation_url: optional(
-    pattern(string(), new RegExp("^(https?|ipfs)://.*$"))
-  ),
   image_data: optional(string()),
-  background_color: optional(string()),
-  youtube_url: optional(pattern(string(), new RegExp("^https://.*$"))),
   properties: any(),
   external_url: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
@@ -110,8 +105,8 @@ export const validateMetadata = (
 ) => {
   assert(metadata, MetadataStruct);
 
-  if (!metadata.image && !(metadata as NFTMetadata).animation_url) {
-    throw new Error("image or animation_url is missing");
+  if (!metadata.image) {
+    throw new Error("image is missing");
   }
 
   validateAttributes(metadata.properties);

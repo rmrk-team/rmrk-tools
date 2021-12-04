@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { AcceptEntityType } from "./accept";
 import { isValidEmoji } from "../tools/validate-emoji";
 import { EMOTE_NAMESPACES } from "./emote";
-import { IAttribute, IProperties } from "../tools/types";
+import { IProperties } from "../tools/types";
 import { Theme } from "./base";
 
 interface INftInstanceProps {
@@ -281,9 +281,6 @@ export interface NFTMetadata {
   description?: string;
   name?: string;
   properties?: IProperties;
-  background_color?: string;
-  animation_url?: string;
-  youtube_url?: string;
 }
 
 export interface ResourceMetadata {
