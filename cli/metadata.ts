@@ -17,11 +17,10 @@ const validateMetadataSeedFields = (metadataSeed: MetadataSeedItem[]) => {
       name,
       external_url,
       description,
-      background_color,
     } = metadata.metadataFields;
-    if (!name || !external_url || !description || !background_color) {
+    if (!name || !external_url || !description) {
       throw new Error(
-        "provided metadata has 1 or more fields missing (!name || !external_url || !description || !background_color)"
+        "provided metadata has 1 or more fields missing (!name || !external_url || !description)"
       );
     }
   });
