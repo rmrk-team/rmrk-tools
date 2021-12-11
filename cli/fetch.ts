@@ -66,14 +66,12 @@ const fetch = async () => {
           readStream.pipe(parseStream);
 
           readStream.on("finish", async () => {
-            console.log("FINISH");
             const lastBlock = appendFileStream.pop();
             from = lastBlock.block + 1;
             resolve(appendFileStream);
           });
 
           readStream.on("end", async () => {
-            console.log("END", appendFileStream);
             const lastBlock = appendFileStream.pop();
             if (!lastBlock) {
               reject(new Error("No blocks found"));
