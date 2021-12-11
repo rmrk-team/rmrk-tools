@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 import fs from "fs";
-import JsonAdapter from "../src/tools/consolidator/adapters/json";
 import {
   CollectionConsolidated,
   Consolidator,
@@ -8,8 +7,16 @@ import {
   NFTConsolidated,
 } from "../src/tools/consolidator/consolidator";
 import arg from "arg";
-import { getApi, prefixToArray } from "../src/tools/utils";
-import { compose, filter, map, values } from "ramda";
+import {
+  appendPromise,
+  filterBlocksByCollection,
+  getApi,
+  getRemarksFromBlocks,
+  prefixToArray,
+} from "../src/tools/utils";
+import { filter, map, values } from "ramda";
+import { BlockCalls } from "../src/tools/types";
+import { Remark } from "../src/tools/consolidator/remark";
 
 /**
  * Create lightweight dump by excluding burned NFTs and emotes.
@@ -34,6 +41,18 @@ const getLiteDump = (result: ConsolidatorReturnType) => {
     result.collections
   );
   return result;
+};
+
+const getRemarks = (
+  inputData: any,
+  prefixes: string[],
+  collectionFilter?: string
+): Remark[] => {
+  let blocks = inputData;
+  if (collectionFilter) {
+    blocks = filterBlocksByCollection(blocks, collectionFilter, prefixes);
+  }
+  return getRemarksFromBlocks(blocks, prefixes);
 };
 
 const consolidate = async () => {
@@ -75,8 +94,15 @@ const consolidate = async () => {
     console.error("File is not readable. Are you providing the right path?");
     process.exit(1);
   }
-  const ja = new JsonAdapter(file, prefixes, collectionFilter, toBlock);
-  const remarks = ja.getRemarks();
+  let rawdata = await appendPromise(file);
+  if (toBlock) {
+    rawdata = rawdata.filter((obj: BlockCalls) => obj.block <= Number(toBlock));
+    console.log(`Take blocks to: ${toBlock}`);
+  }
+
+  console.log(`Loaded ${rawdata.length} blocks with remark calls`);
+
+  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
   const consolidator = new Consolidator(ss58Format);
   let result = await consolidator.consolidate(remarks);
 
@@ -90,9 +116,10 @@ const consolidate = async () => {
     result = getLiteDump(result);
   }
 
+  const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
   fs.writeFileSync(
     out ? `consolidated-from-${out}` : `consolidated-from-${file}`,
-    JSON.stringify({ ...result, lastBlock: ja.getLastBlock() })
+    JSON.stringify({ ...result, lastBlock })
   );
   process.exit(0);
 };

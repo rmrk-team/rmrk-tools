@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 import {
+  appendPromise,
   filterBlocksByCollection,
   getApi,
   getLatestBlock,
@@ -50,48 +51,12 @@ const fetch = async () => {
     console.log("Will append to " + append);
     fs.appendFileSync(append, "");
 
-    const appendPromise = (): Promise<any[]> =>
-      new Promise((resolve, reject) => {
-        try {
-          console.log("start");
-          let appendFileStream: any[] = [];
-          const readStream = fs.createReadStream(append);
-          const parseStream = JSONStream.parse();
-          parseStream.on("data", (fileContent: any[]) => {
-            if (fileContent && fileContent.length) {
-              appendFileStream = appendFileStream.concat(fileContent);
-            }
-          });
-
-          readStream.pipe(parseStream);
-
-          readStream.on("finish", async () => {
-            const lastBlock = appendFileStream.pop();
-            from = lastBlock.block + 1;
-            resolve(appendFileStream);
-          });
-
-          readStream.on("end", async () => {
-            const lastBlock = appendFileStream.pop();
-            if (!lastBlock) {
-              reject(new Error("No blocks found"));
-            }
-            from = lastBlock.block + 1;
-            resolve(appendFileStream);
-          });
-
-          // readStream.on("e")
-
-          readStream.on("error", (error) => {
-            reject(error);
-          });
-        } catch (error: any) {
-          console.error(error);
-          reject(error);
-        }
-      });
     try {
-      appendFile = await appendPromise();
+      appendFile = await appendPromise(append);
+      const lastBlock = appendFile.pop();
+      if (lastBlock) {
+        from = lastBlock.block + 1;
+      }
     } catch (e) {
       console.error(e);
       process.exit(1);
