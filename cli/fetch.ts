@@ -14,6 +14,7 @@ import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 // @ts-ignore
 import JSONStream from "JSONStream";
+import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
 
 const fetch = async () => {
   const args = arg({
@@ -45,20 +46,14 @@ const fetch = async () => {
   const ss58Format = args["--ss58Format"] || (chainSs58Format as number) || 2;
 
   // Grab FROM from append file
-  let appendFile = [];
+  let appendFile: any[] = [];
   if (append) {
     console.log("Will append to " + append);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    fs.appendFileSync(append, "");
     try {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const fileContent = fs.readFileSync(append).toString();
-      if (fileContent) {
-        appendFile = JSON.parse(fileContent);
-        if (appendFile.length) {
-          const lastBlock = appendFile.pop();
-          from = lastBlock.block + 1;
-        }
+      appendFile = await appendPromise(append);
+      const lastBlock = appendFile.pop();
+      if (lastBlock) {
+        from = lastBlock.block + 1;
       }
     } catch (e) {
       console.error(e);

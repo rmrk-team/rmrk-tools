@@ -1,9 +1,28 @@
 #! /usr/bin/env node
 import fs from "fs";
-import JsonAdapter from "../src/rmrk2.0.0/tools/consolidator/adapters/json";
 import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
-import { getApi, prefixToArray } from "../src/rmrk2.0.0/tools/utils";
+import {
+  filterBlocksByCollection,
+  getApi,
+  getRemarksFromBlocks,
+  prefixToArray,
+} from "../src/rmrk2.0.0/tools/utils";
+import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
+import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
+import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
+
+const getRemarks = (
+  inputData: any,
+  prefixes: string[],
+  collectionFilter?: string
+): Remark[] => {
+  let blocks = inputData;
+  if (collectionFilter) {
+    blocks = filterBlocksByCollection(blocks, prefixes, collectionFilter);
+  }
+  return getRemarksFromBlocks(blocks, prefixes);
+};
 
 const consolidate = async () => {
   const args = arg({
@@ -40,8 +59,15 @@ const consolidate = async () => {
     console.error("File is not readable. Are you providing the right path?");
     process.exit(1);
   }
-  const ja = new JsonAdapter(file, prefixes, collectionFilter, toBlock);
-  const remarks = ja.getRemarks();
+  let rawdata = await appendPromise(file);
+  if (toBlock) {
+    rawdata = rawdata.filter((obj: BlockCalls) => obj.block <= Number(toBlock));
+    console.log(`Take blocks to: ${toBlock}`);
+  }
+
+  console.log(`Loaded ${rawdata.length} blocks with remark calls`);
+
+  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
   const con = new Consolidator(ss58Format);
   const ret = await con.consolidate(remarks);
 
@@ -50,9 +76,10 @@ const consolidate = async () => {
     return this.toString();
   };
 
+  const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
   fs.writeFileSync(
     `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock: ja.getLastBlock() })
+    JSON.stringify({ ...ret, lastBlock })
   );
   process.exit(0);
 };
