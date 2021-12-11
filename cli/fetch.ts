@@ -45,21 +45,55 @@ const fetch = async () => {
   const ss58Format = args["--ss58Format"] || (chainSs58Format as number) || 2;
 
   // Grab FROM from append file
-  let appendFile = [];
+  let appendFile: any[] = [];
   if (append) {
     console.log("Will append to " + append);
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
     fs.appendFileSync(append, "");
-    try {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
-      const fileContent = fs.readFileSync(append).toString();
-      if (fileContent) {
-        appendFile = JSON.parse(fileContent);
-        if (appendFile.length) {
-          const lastBlock = appendFile.pop();
-          from = lastBlock.block + 1;
+
+    const appendPromise = (): Promise<any[]> =>
+      new Promise((resolve, reject) => {
+        try {
+          console.log("start");
+          let appendFileStream: any[] = [];
+          const readStream = fs.createReadStream(append);
+          const parseStream = JSONStream.parse();
+          parseStream.on("data", (fileContent: any[]) => {
+            if (fileContent && fileContent.length) {
+              appendFileStream = appendFileStream.concat(fileContent);
+            }
+          });
+
+          readStream.pipe(parseStream);
+
+          readStream.on("finish", async () => {
+            console.log("FINISH");
+            const lastBlock = appendFileStream.pop();
+            from = lastBlock.block + 1;
+            resolve(appendFileStream);
+          });
+
+          readStream.on("end", async () => {
+            console.log("END", appendFileStream);
+            const lastBlock = appendFileStream.pop();
+            if (!lastBlock) {
+              reject(new Error("No blocks found"));
+            }
+            from = lastBlock.block + 1;
+            resolve(appendFileStream);
+          });
+
+          // readStream.on("e")
+
+          readStream.on("error", (error) => {
+            reject(error);
+          });
+        } catch (error: any) {
+          console.error(error);
+          reject(error);
         }
-      }
+      });
+    try {
+      appendFile = await appendPromise();
     } catch (e) {
       console.error(e);
       process.exit(1);
