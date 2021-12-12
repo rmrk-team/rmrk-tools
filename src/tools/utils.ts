@@ -18,10 +18,10 @@ export const appendPromise = (appendFilePath: string): Promise<any[]> =>
     try {
       let appendFileStream: any[] = [];
       const readStream = fs.createReadStream(appendFilePath);
-      const parseStream = JSONStream.parse();
-      parseStream.on("data", (fileContent: any[]) => {
-        if (fileContent && fileContent.length) {
-          appendFileStream = appendFileStream.concat(fileContent);
+      const parseStream = JSONStream.parse("*");
+      parseStream.on("data", (fileChunk: object) => {
+        if (fileChunk) {
+          appendFileStream.push(fileChunk);
         }
       });
 
