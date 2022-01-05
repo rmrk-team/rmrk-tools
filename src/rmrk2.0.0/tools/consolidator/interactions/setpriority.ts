@@ -32,7 +32,7 @@ export const setPriorityInteraction = async (
   }
 
   if (
-    !nft.resources.every((resource) =>
+    !nft.resources.filter(resource => !resource.pending).every((resource) =>
       setPriorityEntity.priority.includes(resource.id)
     )
   ) {
