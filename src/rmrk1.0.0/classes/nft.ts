@@ -62,6 +62,7 @@ export class NFT {
     if (this.block) {
       throw new Error("An already existing NFT cannot be minted!");
     }
+
     return `${PREFIX}::${OP_TYPES.MINTNFT}::${VERSION}::${encodeURIComponent(
       JSON.stringify({
         collection: this.collection,
