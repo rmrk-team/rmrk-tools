@@ -8,7 +8,7 @@ jobs:
       - name: Run unit tests
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
       - run: yarn install
       - run: yarn test
 

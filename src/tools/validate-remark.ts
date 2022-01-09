@@ -133,7 +133,13 @@ export const validateNFT = (remark: string): any => {
 
 export const validateList = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, price] = remark.split("::");
+  const [_prefix, _op_type, _version, ...listArgs] = remark.split("::");
+
+  const id = remark.slice(
+    remark.indexOf(listArgs[0]),
+    remark.lastIndexOf("::")
+  );
+  const price = listArgs.at(-1) || "";
 
   try {
     validateBase(remark, OP_TYPES.LIST);
@@ -147,7 +153,13 @@ export const validateList = (remark: string): any => {
 
 export const validateSend = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
+  const [_prefix, _op_type, _version, ...sendArgs] = remark.split("::");
+
+  const id = remark.slice(
+    remark.indexOf(sendArgs[0]),
+    remark.lastIndexOf("::")
+  );
+  const recipient = sendArgs.at(-1) || "";
 
   try {
     validateBase(remark, OP_TYPES.SEND);
@@ -166,7 +178,13 @@ export const validateSend = (remark: string): any => {
 
 export const validateEmote = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
+  const [_prefix, _op_type, _version, ...emoteArgs] = remark.split("::");
+
+  const id = remark.slice(
+    remark.indexOf(emoteArgs[0]),
+    remark.lastIndexOf("::")
+  );
+  const unicode = emoteArgs.at(-1) || "";
 
   try {
     validateBase(remark, OP_TYPES.EMOTE);
@@ -180,7 +198,13 @@ export const validateEmote = (remark: string): any => {
 
 export const validateChangeIssuer = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, issuer] = remark.split("::");
+  const [_prefix, _op_type, _version, ...changeIssuerArgs] = remark.split("::");
+
+  const id = remark.slice(
+    remark.indexOf(changeIssuerArgs[0]),
+    remark.lastIndexOf("::")
+  );
+  const issuer = changeIssuerArgs.at(-1) || "";
 
   try {
     validateBase(remark, OP_TYPES.CHANGEISSUER);
@@ -194,7 +218,11 @@ export const validateChangeIssuer = (remark: string): any => {
 
 export const validateBuy = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id] = remark.split("::");
+  const [_prefix, _op_type, _version, ...rest] = remark.split("::");
+  const id = remark.slice(
+    remark.indexOf(rest[0]),
+    rest.length > 1 ? remark.lastIndexOf("::") : remark.length
+  );
 
   try {
     validateBase(remark, OP_TYPES.BUY);
@@ -208,8 +236,11 @@ export const validateBuy = (remark: string): any => {
 
 export const validateConsume = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id] = remark.split("::");
-
+  const [_prefix, _op_type, _version, ...rest] = remark.split("::");
+  const id = remark.slice(
+    remark.indexOf(rest[0]),
+    rest.length > 1 ? remark.lastIndexOf("::") : remark.length
+  );
   try {
     validateBase(remark, OP_TYPES.CONSUME);
     return assert({ id }, CONSUMEStruct);
