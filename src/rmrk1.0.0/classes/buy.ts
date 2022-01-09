@@ -10,7 +10,11 @@ export class Buy {
   static fromRemark(remark: string): Buy | string {
     try {
       validateBuy(remark);
-      const [_prefix, _op_type, _version, id] = remark.split("::");
+      const [_prefix, _op_type, _version, ...rest] = remark.split("::");
+      const id = remark.slice(
+        remark.indexOf(rest[0]),
+        rest.length > 1 ? remark.lastIndexOf("::") : remark.length
+      );
       return new Buy(id);
     } catch (e: any) {
       console.error(e.message);
