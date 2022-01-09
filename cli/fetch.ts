@@ -13,6 +13,7 @@ import arg from "arg";
 import { BlockCalls } from "../src/tools/types";
 import { hexToString } from "@polkadot/util";
 import { VERSION } from "../src/tools/constants";
+import "@polkadot/api-augment";
 // @ts-ignore
 import JSONStream from "JSONStream";
 
