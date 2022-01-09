@@ -13,7 +13,14 @@ export class Emote {
   static fromRemark(remark: string): Emote | string {
     try {
       validateEmote(remark);
-      const [_prefix, _op_type, _version, id, unicode] = remark.split("::");
+      const [_prefix, _op_type, _version, ...emoteArgs] = remark.split("::");
+
+      const id = remark.slice(
+        remark.indexOf(emoteArgs[0]),
+        remark.lastIndexOf("::")
+      );
+      const unicode = emoteArgs.at(-1) || "";
+
       return new Emote(id, unicode);
     } catch (e: any) {
       console.error(e.message);

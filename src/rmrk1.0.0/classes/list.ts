@@ -12,7 +12,14 @@ export class List {
   static fromRemark(remark: string): List | string {
     try {
       validateList(remark);
-      const [_prefix, _op_type, _version, id, price] = remark.split("::");
+      const [_prefix, _op_type, _version, ...listArgs] = remark.split("::");
+
+      const id = remark.slice(
+        remark.indexOf(listArgs[0]),
+        remark.lastIndexOf("::")
+      );
+      const price = listArgs.at(-1) || "";
+
       return new List(id, BigInt(price));
     } catch (e: any) {
       console.error(e.message);

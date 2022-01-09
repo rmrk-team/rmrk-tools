@@ -12,7 +12,13 @@ export class Send {
   static fromRemark(remark: string): Send | string {
     try {
       validateSend(remark);
-      const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
+      const [_prefix, _op_type, _version, ...sendArgs] = remark.split("::");
+      const id = remark.slice(
+        remark.indexOf(sendArgs[0]),
+        remark.lastIndexOf("::")
+      );
+      const recipient = sendArgs.at(-1) || "";
+
       return new Send(id, recipient);
     } catch (e: any) {
       console.error(e.message);
