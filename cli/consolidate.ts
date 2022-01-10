@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import fs from "fs";
 import {
   CollectionConsolidated,
