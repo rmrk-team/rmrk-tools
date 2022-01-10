@@ -218,11 +218,8 @@ export const validateChangeIssuer = (remark: string): any => {
 
 export const validateBuy = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, ...rest] = remark.split("::");
-  const id = remark.slice(
-    remark.indexOf(rest[0]),
-    rest.length > 1 ? remark.lastIndexOf("::") : remark.length
-  );
+  const [_prefix, _op_type, _version, ...idParts] = remark.split("::");
+  const id = remark.slice(remark.indexOf(idParts[0]), remark.length);
 
   try {
     validateBase(remark, OP_TYPES.BUY);
@@ -236,11 +233,9 @@ export const validateBuy = (remark: string): any => {
 
 export const validateConsume = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, ...rest] = remark.split("::");
-  const id = remark.slice(
-    remark.indexOf(rest[0]),
-    rest.length > 1 ? remark.lastIndexOf("::") : remark.length
-  );
+  const [_prefix, _op_type, _version, ...idParts] = remark.split("::");
+  const id = remark.slice(remark.indexOf(idParts[0]), remark.length);
+
   try {
     validateBase(remark, OP_TYPES.CONSUME);
     return assert({ id }, CONSUMEStruct);
