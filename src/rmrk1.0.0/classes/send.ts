@@ -17,7 +17,7 @@ export class Send {
         remark.indexOf(sendArgs[0]),
         remark.lastIndexOf("::")
       );
-      const recipient = sendArgs.at(-1) || "";
+      const recipient = sendArgs[sendArgs.length - 1] || "";
 
       return new Send(id, recipient);
     } catch (e: any) {

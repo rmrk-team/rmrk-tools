@@ -19,7 +19,7 @@ export class Emote {
         remark.indexOf(emoteArgs[0]),
         remark.lastIndexOf("::")
       );
-      const unicode = emoteArgs.at(-1) || "";
+      const unicode = emoteArgs[emoteArgs.length - 1] || "";
 
       return new Emote(id, unicode);
     } catch (e: any) {

@@ -139,7 +139,7 @@ export const validateList = (remark: string): any => {
     remark.indexOf(listArgs[0]),
     remark.lastIndexOf("::")
   );
-  const price = listArgs.at(-1) || "";
+  const price = listArgs[listArgs.length - 1] || "";
 
   try {
     validateBase(remark, OP_TYPES.LIST);
@@ -159,7 +159,7 @@ export const validateSend = (remark: string): any => {
     remark.indexOf(sendArgs[0]),
     remark.lastIndexOf("::")
   );
-  const recipient = sendArgs.at(-1) || "";
+  const recipient = sendArgs[sendArgs.length - 1] || "";
 
   try {
     validateBase(remark, OP_TYPES.SEND);
@@ -184,7 +184,7 @@ export const validateEmote = (remark: string): any => {
     remark.indexOf(emoteArgs[0]),
     remark.lastIndexOf("::")
   );
-  const unicode = emoteArgs.at(-1) || "";
+  const unicode = emoteArgs[emoteArgs.length - 1] || "";
 
   try {
     validateBase(remark, OP_TYPES.EMOTE);
@@ -204,7 +204,7 @@ export const validateChangeIssuer = (remark: string): any => {
     remark.indexOf(changeIssuerArgs[0]),
     remark.lastIndexOf("::")
   );
-  const issuer = changeIssuerArgs.at(-1) || "";
+  const issuer = changeIssuerArgs[changeIssuerArgs.length - 1] || "";
 
   try {
     validateBase(remark, OP_TYPES.CHANGEISSUER);

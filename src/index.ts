@@ -1,4 +1,4 @@
-import '@polkadot/api-augment';
+import "@polkadot/api-augment";
 import { validateBase } from "./tools/validate-remark";
 
 export { Consolidator } from "./tools/consolidator/consolidator";

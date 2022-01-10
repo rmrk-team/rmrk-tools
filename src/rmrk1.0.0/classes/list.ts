@@ -18,7 +18,7 @@ export class List {
         remark.indexOf(listArgs[0]),
         remark.lastIndexOf("::")
       );
-      const price = listArgs.at(-1) || "";
+      const price = listArgs[listArgs.length - 1] || "";
 
       return new List(id, BigInt(price));
     } catch (e: any) {
