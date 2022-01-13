@@ -68,10 +68,8 @@ const consolidate = async () => {
 
   console.log(`Loaded ${rawdata.length} blocks with remark calls`);
 
-  const remarks = rawdata;
+  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
   const con = new Consolidator(ss58Format);
-
-
 
   const ret = await con.consolidate(remarks);
 
