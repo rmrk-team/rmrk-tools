@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import { NFT as N100 } from "../src/rmrk2.0.0/classes/nft";
 import { deeplog } from "../src/rmrk2.0.0/tools/utils";
 import { OP_TYPES } from "../src/rmrk2.0.0/tools/constants";

@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import { deeplog, getApi } from "../src/rmrk2.0.0/tools/utils";
 import arg from "arg";
 

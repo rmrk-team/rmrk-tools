@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import { RemarkListener } from "../src/rmrk2.0.0/listener";
 import { getApi } from "../src/rmrk2.0.0/tools/utils";
 import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";

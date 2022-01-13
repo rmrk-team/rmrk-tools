@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import fs from "fs";
 import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
@@ -67,8 +68,11 @@ const consolidate = async () => {
 
   console.log(`Loaded ${rawdata.length} blocks with remark calls`);
 
-  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
+  const remarks = rawdata;
   const con = new Consolidator(ss58Format);
+
+
+
   const ret = await con.consolidate(remarks);
 
   //@ts-ignore

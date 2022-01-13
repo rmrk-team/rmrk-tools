@@ -1,3 +1,4 @@
+import "@polkadot/api-augment";
 export { Consolidator } from "./tools/consolidator/consolidator";
 export { Collection } from "./classes/collection";
 export { NFT } from "./classes/nft";

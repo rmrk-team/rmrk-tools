@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import { getApi } from "../src/rmrk2.0.0/tools/utils";
 // import { Seeder } from "../test/seed/2.0.0/seeder";
 import readline from "readline";

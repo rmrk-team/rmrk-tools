@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import "@polkadot/api-augment";
 import { uploadRMRKMetadata } from "../src/rmrk2.0.0/tools/metadata-to-ipfs";
 import arg from "arg";
 import fs from "fs";
