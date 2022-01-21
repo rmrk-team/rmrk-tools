@@ -117,6 +117,10 @@ const CHANGEISSUERStruct = type({
   issuer: string(),
 });
 
+const LOCKStruct = type({
+  id: string()
+});
+
 const EQUIPPABLEStruct = type({
   id: string(),
   slot: string(),
@@ -339,6 +343,20 @@ export const validateChangeIssuer = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.CHANGEISSUER);
     return assert({ id, issuer }, CHANGEISSUERStruct);
+  } catch (error: any) {
+    throw new Error(
+      error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateLock = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.LOCK);
+    return assert({ id }, LOCKStruct);
   } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"

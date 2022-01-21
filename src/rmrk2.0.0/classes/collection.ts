@@ -55,6 +55,10 @@ export class Collection {
     return `${PREFIX}::${OP_TYPES.CHANGEISSUER}::${VERSION}::${this.id}::${address}`;
   }
 
+  public lock(id: string): string {
+    return `${PREFIX}::${OP_TYPES.LOCK}::${VERSION}::${this.id}`;
+  }
+
   public addChange(c: Change): Collection {
     this.changes.push(c);
     return this;

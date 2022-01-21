@@ -25,6 +25,13 @@ describe("rmrk2.0.0 Collection: Create", () => {
   });
 });
 
+describe("rmrk2.0.0 Collection: Lock", () => {
+  test.only("should match snapshot", async () => {
+    const collection = createCollectionMock();
+    expect(collection.lock("d43593c715a56da27d-KANARIABIRDS")).toMatchSnapshot();
+  });
+});
+
 describe("rmrk2.0.0 Collection: Change issuer", () => {
   it("should match snapshot", async () => {
     const collection = createCollectionMock(1);
