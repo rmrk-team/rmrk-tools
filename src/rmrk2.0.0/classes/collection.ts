@@ -44,6 +44,17 @@ export class Collection {
     )}`;
   }
 
+  public destroy(): string {
+    if (this.block === 0) {
+      throw new Error(
+        "This collection is new" +
+          " If it has been deployed on chain, load the existing " +
+          "collection as a new instance first, then destroy it."
+      );
+    }
+    return `${PREFIX}::${OP_TYPES.DESTROY}::${VERSION}::${this.id}`;
+  }
+
   public change_issuer(address: string): string {
     if (this.block === 0) {
       throw new Error(

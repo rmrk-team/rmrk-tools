@@ -94,6 +94,10 @@ const BURNStruct = type({
   id: string(),
 });
 
+const DESTROYStruct = type({
+  id: string(),
+});
+
 const SENDStruct = type({
   id: string(),
   recipient: string(),
@@ -367,6 +371,21 @@ export const validateBurn = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.BURN);
     return assert({ id }, BURNStruct);
+  } catch (error: any) {
+    console.log("StructError is:", error);
+    throw new Error(
+      error?.message || "Something went wrong during remark validation"
+    );
+  }
+};
+
+export const validateDestroy = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.DESTROY);
+    return assert({ id }, DESTROYStruct);
   } catch (error: any) {
     console.log("StructError is:", error);
     throw new Error(

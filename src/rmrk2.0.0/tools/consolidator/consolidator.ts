@@ -35,7 +35,8 @@ import {
   consolidatedCollectionToInstance,
   consolidatedNFTtoInstance,
   invalidateIfRecursion,
-  isValidAddressPolkadotAddress, validateMinBlockBetweenEvents,
+  isValidAddressPolkadotAddress,
+  validateMinBlockBetweenEvents,
 } from "./utils";
 import { getBaseFromRemark } from "./interactions/base";
 import { BaseType, IProperties } from "../types";
@@ -54,6 +55,8 @@ import { Setproperty } from "../../classes/setproperty";
 import { setPropertyInteraction } from "./interactions/setproperty";
 import { Themeadd } from "../../classes/themeadd";
 import { themeAddInteraction } from "./interactions/themeadd";
+import { Destroy } from "../../classes/destroy";
+import { destroyInteraction } from "./interactions/destroy";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -281,6 +284,52 @@ export class Consolidator {
     }
 
     return false;
+  }
+
+  /**
+   * The DESTROY interaction destroys a Collection
+   * You can only destroy a collection with no unburned NFTs
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/destroy.md
+   */
+  private async destroy(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.DESTROY, remark).bind(
+      this
+    );
+
+    const destroyEntity = Destroy.fromRemark(remark.remark);
+    // Check if burn is valid
+    if (typeof destroyEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.DESTROY}] Dead before instantiation: ${destroyEntity}`
+      );
+      return true;
+    }
+
+    // Find the Collection in state
+    const consolidatedCollection = await this.dbAdapter.getCollectionById(
+      destroyEntity.id
+    );
+    const collection = consolidatedCollectionToInstance(consolidatedCollection);
+    try {
+      await destroyInteraction(
+        remark,
+        destroyEntity,
+        this.dbAdapter,
+        collection
+      );
+      if (collection) {
+        await this.dbAdapter.updateCollectionDestroy(collection);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.DESTROY]: collection.id });
+        }
+      }
+    } catch (e: any) {
+      invalidate(destroyEntity.id, e.message);
+      return true;
+    }
+
+    return true;
   }
 
   /**
@@ -932,6 +981,12 @@ export class Consolidator {
           }
           break;
 
+        case OP_TYPES.DESTROY:
+          if (await this.destroy(remark)) {
+            continue;
+          }
+          break;
+
         case OP_TYPES.MINT:
           if (await this.mint(remark)) {
             continue;
@@ -1041,9 +1096,7 @@ export class Consolidator {
     // );
     // console.log(`${this.invalidCalls.length} invalid calls.`);
     const result: ConsolidatorReturnType = {
-      nfts: this.dbAdapter.getAllNFTs
-        ? await this.dbAdapter.getAllNFTs()
-        : {},
+      nfts: this.dbAdapter.getAllNFTs ? await this.dbAdapter.getAllNFTs() : {},
       collections: this.dbAdapter.getAllCollections
         ? await this.dbAdapter.getAllCollections()
         : {},

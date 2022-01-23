@@ -179,6 +179,10 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
     return (this.collections[collection.id] = collection);
   }
 
+  public async updateCollectionDestroy(collection: CollectionConsolidated) {
+    return delete this.collections[collection.id];
+  }
+
   public async updateBase(base: Base) {
     return (this.bases[base.getId()] = {
       ...base,
@@ -216,6 +220,12 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       issuer: base?.issuer,
       changes: base?.changes,
     };
+  }
+
+  public async getNFTsByCollection(collectionId: string) {
+    return Object.values(this.nfts).filter(
+      (nft) => collectionId === collectionId
+    );
   }
 
   public async getNFTById(id: string) {

@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rmrk2.0.0 Consolidator: DESTROY Should DESTROY a Collection 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {},
+  "invalid": Array [],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "true",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "burned",
+          "new": "true",
+          "old": "",
+          "opType": "BURN",
+        },
+        Object {
+          "block": 4,
+          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "field": "forsale",
+          "new": 0n,
+          "old": 0n,
+          "opType": "BURN",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "equipped": "",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  },
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: DESTROY Should not DESTROY a Collection if it has unburned nft 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  },
+  "invalid": Array [
+    Object {
+      "block": 4,
+      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "message": "[DESTROY] Collection with unburned nfts cannot be destroyed d43593c715a56da27d-KANARIABIRDS",
+      "object_id": "d43593c715a56da27d-KANARIABIRDS",
+      "op_type": "DESTROY",
+    },
+  ],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  },
+}
+`;
