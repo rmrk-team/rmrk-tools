@@ -129,6 +129,10 @@ const THEMEADDStruct = type({
   theme: record(string(), union([string(), boolean()])),
 });
 
+const LOCKStruct = type({
+  id: string(),
+});
+
 export const validateRemarkBase = (remark: string, opType: OP_TYPES) => {
   const [prefix, op_type, version] = remark.split("::");
   if (prefix.toUpperCase() !== PREFIX) {
@@ -401,6 +405,21 @@ export const validateEquip = (remark: string): any => {
     console.log("StructError is:", error);
     throw new Error(
       error?.message || "Something went wrong during EQUIP remark validation"
+    );
+  }
+};
+
+export const validateLock = (remark: string): any => {
+  // With array destructuring it's important to not remove unused destructured variables, as order is important
+  const [_prefix, _op_type, _version, id] = remark.split("::");
+
+  try {
+    validateRemarkBase(remark, OP_TYPES.LOCK);
+    return assert({ id }, LOCKStruct);
+  } catch (error: any) {
+    console.log("StructError is:", error);
+    throw new Error(
+      error?.message || "Something went wrong during remark validation"
     );
   }
 };
