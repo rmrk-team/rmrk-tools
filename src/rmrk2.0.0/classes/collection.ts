@@ -55,6 +55,17 @@ export class Collection {
     return `${PREFIX}::${OP_TYPES.CHANGEISSUER}::${VERSION}::${this.id}::${address}`;
   }
 
+  public lock(): string {
+    if (this.block === 0) {
+      throw new Error(
+        "This collection is new" +
+          " If it has been deployed on chain, load the existing " +
+          "collection as a new instance first, then lock it."
+      );
+    }
+    return `${PREFIX}::${OP_TYPES.LOCK}::${VERSION}::${this.id}`;
+  }
+
   public addChange(c: Change): Collection {
     this.changes.push(c);
     return this;

@@ -28,6 +28,7 @@ export interface IConsolidatorAdapter {
   updateSetPriority(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateSetAttribute(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
+  updateCollectionLock(collection: CollectionConsolidated): Promise<any>;
   updateBase(base: Base): Promise<any>;
   updateBaseEquippable(
     base: Base,
@@ -50,6 +51,9 @@ export interface IConsolidatorAdapter {
   getCollectionById(id: string): Promise<CollectionConsolidated | undefined>;
   getBaseById(id: string): Promise<BaseConsolidated | undefined>;
   getNFTByIdUnique(id: string): Promise<NFTConsolidated | undefined>;
+  getNFTsByCollection(
+    collectionId: string
+  ): Promise<NFTConsolidated[] | undefined>;
   getAllNFTs?: () => Promise<Record<string, NFTConsolidated>>;
   getAllCollections?: () => Promise<Record<string, CollectionConsolidated>>;
   getAllBases?: () => Promise<Record<string, BaseConsolidated>>;
