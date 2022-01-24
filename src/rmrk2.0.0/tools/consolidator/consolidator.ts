@@ -57,6 +57,8 @@ import { Themeadd } from "../../classes/themeadd";
 import { themeAddInteraction } from "./interactions/themeadd";
 import { Destroy } from "../../classes/destroy";
 import { destroyInteraction } from "./interactions/destroy";
+import { Lock } from "../../classes/lock";
+import { lockInteraction } from "./interactions/lock";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -302,13 +304,13 @@ export class Consolidator {
       invalidate(
         remark.remark,
         `[${OP_TYPES.DESTROY}] Dead before instantiation: ${destroyEntity}`
-      );
+        );
       return true;
     }
 
     // Find the Collection in state
     const consolidatedCollection = await this.dbAdapter.getCollectionById(
-      destroyEntity.id
+       destroyEntity.id
     );
     const collection = consolidatedCollectionToInstance(consolidatedCollection);
     try {
@@ -326,6 +328,45 @@ export class Consolidator {
       }
     } catch (e: any) {
       invalidate(destroyEntity.id, e.message);
+      return true;
+    }
+
+    return true;
+  }
+
+  /**
+   * The Lock interaction sets max on a Collection to current nft count
+   * https://github.com/rmrk-team/rmrk-spec/blob/master/standards/rmrk2.0.0/interactions/lock.md
+   */
+  private async lock(remark: Remark): Promise<boolean> {
+    const invalidate = this.updateInvalidCalls(OP_TYPES.LOCK, remark).bind(
+      this
+    );
+
+    const lockEntity = Lock.fromRemark(remark.remark);
+    if (typeof lockEntity === "string") {
+      invalidate(
+        remark.remark,
+        `[${OP_TYPES.LOCK}] Dead before instantiation: ${lockEntity}`
+      );
+      return true;
+    }
+
+    // Find the Collection in state
+    const consolidatedCollection = await this.dbAdapter.getCollectionById(
+      lockEntity.id
+    );
+    const collection = consolidatedCollectionToInstance(consolidatedCollection);
+    try {
+      await lockInteraction(remark, lockEntity, this.dbAdapter, collection);
+      if (collection) {
+        await this.dbAdapter.updateCollectionLock(collection);
+        if (this.emitInteractionChanges) {
+          this.interactionChanges.push({ [OP_TYPES.LOCK]: collection.id });
+        }
+      }
+    } catch (e: any) {
+      invalidate(lockEntity.id, e.message);
       return true;
     }
 
@@ -983,6 +1024,12 @@ export class Consolidator {
 
         case OP_TYPES.DESTROY:
           if (await this.destroy(remark)) {
+            continue;
+          }
+          break;
+          
+        case OP_TYPES.LOCK:
+          if (await this.lock(remark)) {
             continue;
           }
           break;

@@ -9,7 +9,7 @@ Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec
 > Note: NodeJS 14+ is required. Please install with [NVM](https://nvm.sh).
 
 ```bash 
-yarn install rmrk-tools
+yarn add rmrk-tools
 ```
 
 ## Usage

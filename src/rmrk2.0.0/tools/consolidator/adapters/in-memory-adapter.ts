@@ -182,6 +182,14 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   public async updateCollectionDestroy(collection: CollectionConsolidated) {
     return delete this.collections[collection.id];
   }
+  
+  public async updateCollectionLock(collection: CollectionConsolidated) {
+    const nfts = await this.getNFTsByCollection(collection.id);
+    return (this.collections[collection.id] = {
+      ...collection,
+      max: (nfts || []).filter((nft) => nft.burned === "").length,
+    });
+  }
 
   public async updateBase(base: Base) {
     return (this.bases[base.getId()] = {
