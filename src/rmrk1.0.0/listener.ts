@@ -1,7 +1,8 @@
 import "isomorphic-fetch";
+import "@polkadot/api-augment";
 import { ApiPromise } from "@polkadot/api";
 import { Observable, Subscriber } from "rxjs";
-import { RpcPromiseResult } from "@polkadot/api/types";
+import { PromiseRpcResult } from "@polkadot/api/types";
 import { Header } from "@polkadot/types/interfaces/runtime";
 import { BlockCalls } from "./tools/types";
 import {
@@ -149,7 +150,7 @@ export class RemarkListener {
     returns polkadot api latest block head listener
   */
   private async getHeadSubscrber(): Promise<
-    RpcPromiseResult<() => Observable<Header>>
+    PromiseRpcResult<() => Observable<Header>>
   > {
     return this.apiPromise.rpc.chain.subscribeNewHeads;
   }
@@ -158,7 +159,7 @@ export class RemarkListener {
     returns polkadot api latest unfinalised block head listener
   */
   private async getFinalisedHeadSubscrber(): Promise<
-    RpcPromiseResult<() => Observable<Header>>
+    PromiseRpcResult<() => Observable<Header>>
   > {
     return this.apiPromise.rpc.chain.subscribeFinalizedHeads;
   }
