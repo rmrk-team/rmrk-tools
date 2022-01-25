@@ -51,6 +51,27 @@ class LocalStorageProvider implements IStorageProvider {
   };
 }
 
+/**
+ * RMRK listener storage provider to save latest block
+ */
+class StorageProvider implements IStorageProvider {
+  readonly storageKey: string = "latestBlock";
+  public latestBlock = 0;
+
+  constructor(storageKey = "latestBlock", blockNum = 0) {
+    this.storageKey = storageKey;
+    this.latestBlock = blockNum;
+  }
+
+  public set = async (latestBlock: number) => {
+    this.latestBlock = latestBlock;
+  };
+
+  public get = async () => {
+    return this.latestBlock;
+  };
+}
+
 export class RemarkListener {
   private apiPromise: ApiPromise;
   private missingBlockCalls: BlockCalls[];
@@ -90,8 +111,7 @@ export class RemarkListener {
     this.missingBlockCallsFetched = false;
     this.prefixes = prefixes || [];
     this.consolidateFunction = consolidateFunction;
-    this.storageProvider =
-      storageProvider || new LocalStorageProvider(storageKey);
+    this.storageProvider = storageProvider || new StorageProvider(storageKey);
   }
 
   private initialize = async () => {
