@@ -109,7 +109,7 @@ export class RemarkListener {
     this.observerUnfinalised = null;
     this.initialised = false;
     this.missingBlockCallsFetched = false;
-    this.prefixes = prefixes || [];
+    this.prefixes = prefixes || ["0x726d726b", "0x524d524b"];
     this.consolidateFunction = consolidateFunction;
     this.storageProvider = storageProvider || new StorageProvider(storageKey);
   }
@@ -244,9 +244,11 @@ export class RemarkListener {
         this.prefixes,
         this.apiPromise
       );
+
       const filteredCalls = calls.filter((call) => {
         return hexToString(call.value).includes(`::${VERSION}::`);
       });
+
       if (finalised) {
         this.currentBlockNum = header.number.toNumber();
       }
