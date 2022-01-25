@@ -28,6 +28,7 @@ export interface IConsolidatorAdapter {
   updateSetPriority(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateSetAttribute(nft: NFT, consolidatedNFT: NFTConsolidated): Promise<any>;
   updateCollectionMint(collection: CollectionConsolidated): Promise<any>;
+  updateCollectionDestroy(collection: CollectionConsolidated): Promise<any>;
   updateCollectionLock(collection: CollectionConsolidated): Promise<any>;
   updateBase(base: Base): Promise<any>;
   updateBaseEquippable(
