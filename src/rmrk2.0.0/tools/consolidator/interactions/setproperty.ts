@@ -43,6 +43,12 @@ export const setPropertyInteraction = async (
         );
       }
 
+      if (existingProperty.type === "royalty") {
+        throw new Error(
+          `[${OP_TYPES.SETPROPERTY}] Attempting to mutate an attribute of type 'royalty'.`
+        );
+      }
+
       if (existingProperty._mutation.with?.opType) {
         if (!remark.extra_ex || remark.extra_ex.length < 1) {
           throw new Error(
