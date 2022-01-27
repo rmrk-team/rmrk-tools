@@ -6,12 +6,14 @@ import { findRealOwner } from "../utils";
 import { Setproperty } from "../../../classes/setproperty";
 import { validateRemarkBase } from "../../validate-remark";
 import { hexToString } from "@polkadot/util";
+import { Collection } from "../../../classes/collection";
 
 export const setPropertyInteraction = async (
   remark: Remark,
   setPropertyEntity: Setproperty,
   dbAdapter: IConsolidatorAdapter,
-  nft?: NFT
+  nft?: NFT,
+  collection?: Collection
 ): Promise<void> => {
   if (!nft) {
     throw new Error(
@@ -43,9 +45,12 @@ export const setPropertyInteraction = async (
         );
       }
 
-      if (existingProperty.type === "royalty") {
+      if (
+        existingProperty.type === "royalty" &&
+        nft.rootowner !== collection?.issuer
+      ) {
         throw new Error(
-          `[${OP_TYPES.SETPROPERTY}] Attempting to mutate an attribute of type 'royalty'.`
+          `[${OP_TYPES.SETPROPERTY}] Only issuer can mutate an attribute of type 'royalty'.`
         );
       }
 

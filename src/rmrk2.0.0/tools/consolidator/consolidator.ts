@@ -304,13 +304,13 @@ export class Consolidator {
       invalidate(
         remark.remark,
         `[${OP_TYPES.DESTROY}] Dead before instantiation: ${destroyEntity}`
-        );
+      );
       return true;
     }
 
     // Find the Collection in state
     const consolidatedCollection = await this.dbAdapter.getCollectionById(
-       destroyEntity.id
+      destroyEntity.id
     );
     const collection = consolidatedCollectionToInstance(consolidatedCollection);
     try {
@@ -946,12 +946,19 @@ export class Consolidator {
     );
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
+    // Find the Collection in state
+    const consolidatedCollection = await this.dbAdapter.getCollectionById(
+      nft?.collection || ""
+    );
+    const collection = consolidatedCollectionToInstance(consolidatedCollection);
+
     try {
       await setPropertyInteraction(
         remark,
         setPropertyEntity,
         this.dbAdapter,
-        nft
+        nft,
+        collection
       );
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateSetAttribute(nft, consolidatedNFT);
@@ -1027,7 +1034,7 @@ export class Consolidator {
             continue;
           }
           break;
-          
+
         case OP_TYPES.LOCK:
           if (await this.lock(remark)) {
             continue;

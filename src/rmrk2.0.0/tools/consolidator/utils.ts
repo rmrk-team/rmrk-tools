@@ -37,7 +37,7 @@ export const validateMinBlockBetweenEvents = (
  * @param address
  */
 export const isValidAddressPolkadotAddress = (address: string) => {
-  return !address.includes("-");
+  return address && !address.includes("-");
 };
 
 export const findRealOwner = async (

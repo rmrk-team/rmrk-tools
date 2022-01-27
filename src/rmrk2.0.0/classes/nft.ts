@@ -8,6 +8,7 @@ import { isValidEmoji } from "../tools/validate-emoji";
 import { EMOTE_NAMESPACES } from "./emote";
 import { IProperties } from "../tools/types";
 import { Theme } from "./base";
+import { isValidAddressPolkadotAddress } from "../tools/consolidator/utils";
 
 interface INftInstanceProps {
   block: number;
@@ -17,6 +18,7 @@ interface INftInstanceProps {
   sn: string;
   metadata?: string;
   owner?: string;
+  rootowner?: string;
   properties?: IProperties;
 }
 
@@ -49,7 +51,7 @@ export class NFT {
     this.priority = [];
     this.children = [];
     this.owner = nftInstance.owner || "";
-    this.rootowner = "";
+    this.rootowner = nftInstance.rootowner || "";
     this.reactions = {};
     this.forsale = BigInt(0);
     this.burned = "";
@@ -131,6 +133,9 @@ export class NFT {
         sn: obj.sn,
         metadata: obj.metadata,
         owner: recipient,
+        rootowner: isValidAddressPolkadotAddress(recipient)
+          ? recipient
+          : undefined,
         properties: obj.properties || {},
       });
     } catch (e: any) {

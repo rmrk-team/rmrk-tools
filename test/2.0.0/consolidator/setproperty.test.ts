@@ -237,7 +237,7 @@ describe("rmrk2.0.0 Consolidator: SETPROPERTY", () => {
     );
   });
 
-  it("should not allow to mutate royalty ", async () => {
+  it("should allow to mutate royalty if owner is an issuer", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftWithProperties().mint()),
@@ -250,8 +250,28 @@ describe("rmrk2.0.0 Consolidator: SETPROPERTY", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(
+      consolidatedResult.nfts[mintNftWithProperties(4).getId()].properties
+        ?.royaltyInfo?.value?.royaltyPercentFloat
+    ).toEqual(0.3);
+  });
+
+  it("should not allow to mutate royalty ", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftWithProperties().mint(getBobKey().address)),
+      ...getBlockCallsMock(
+        mintNftWithProperties(4).setproperty("royaltyInfo", {
+          receiver: "xxx",
+          royaltyPercentFloat: 0.3,
+        }),
+        getBobKey().address
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult.invalid[0].message).toEqual(
-      "[SETPROPERTY] Attempting to mutate an attribute of type 'royalty'."
+      "[SETPROPERTY] Only issuer can mutate an attribute of type 'royalty'."
     );
   });
 });
