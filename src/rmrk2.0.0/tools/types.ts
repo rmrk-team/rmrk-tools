@@ -5,7 +5,7 @@ import { Emote } from "../classes/emote";
 import { ChangeIssuer } from "../classes/changeissuer";
 import { OP_TYPES } from "./constants";
 
-export type IProperties = Record<string, IAttribute>;
+export type IProperties = Record<string, IAttribute | IRoyaltyAttribute>;
 
 export interface IAttribute {
   _mutation?: {
@@ -15,8 +15,19 @@ export interface IAttribute {
       condition?: string;
     };
   };
-  type: "array" | "object" | "int" | "float" | "string";
+  type: "array" | "object" | "int" | "float" | "string" | "royalty";
   value: any;
+}
+
+export interface IRoyaltyAttribute extends IAttribute {
+  _mutation: IAttribute["_mutation"] & {
+    allowed: false;
+  };
+  type: "royalty";
+  value: {
+    receiver: string;
+    royaltyPercentFloat: number;
+  };
 }
 
 export type Options = {
