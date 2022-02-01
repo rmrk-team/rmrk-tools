@@ -20,9 +20,6 @@ export interface IAttribute {
 }
 
 export interface IRoyaltyAttribute extends IAttribute {
-  _mutation: IAttribute["_mutation"] & {
-    allowed: false;
-  };
   type: "royalty";
   value: {
     receiver: string;

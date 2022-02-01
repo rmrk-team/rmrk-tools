@@ -29,7 +29,7 @@ export const setPropertyInteraction = async (
 
   const existingProperty = nft.properties?.[setPropertyEntity.key];
   if (existingProperty) {
-    if (!existingProperty?._mutation?.allowed) {
+    if (!existingProperty?._mutation?.allowed && existingProperty.type !== "royalty") {
       throw new Error(
         `[${OP_TYPES.SETPROPERTY}] Attempting to set property on immutable property ${setPropertyEntity.key}`
       );
