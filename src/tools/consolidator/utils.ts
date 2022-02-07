@@ -7,6 +7,22 @@ import {
 import { Remark } from "./remark";
 import { ChangeIssuer } from "../../rmrk1.0.0/classes/changeissuer";
 import { OP_TYPES } from "../constants";
+import { encodeAddress, decodeAddress } from "@polkadot/keyring";
+import { hexToU8a, isHex } from "@polkadot/util";
+
+/**
+ * Validate polkadot address
+ * @param address
+ */
+export const isValidAddressPolkadotAddress = (address: string) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export const validateMinBlockBetweenEvents = (
   opType: OP_TYPES,

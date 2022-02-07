@@ -2,7 +2,7 @@ import { OP_TYPES } from "../../constants";
 import { Change } from "../../../rmrk1.0.0/changelog";
 import { Remark } from "../remark";
 import { Send } from "../../../rmrk1.0.0/classes/send";
-import { NFT } from "../../..";
+import { isValidAddressPolkadotAddress, NFT } from "../../..";
 
 export const sendInteraction = (
   remark: Remark,
@@ -31,6 +31,13 @@ export const sendInteraction = (
   if (nft.transferable === 0 || nft.transferable >= remark.block) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${sendEntity.id}.`
+    );
+  }
+
+  const isValidAddress = isValidAddressPolkadotAddress(sendEntity.recipient);
+  if (!isValidAddress) {
+    throw new Error(
+      `[${OP_TYPES.SEND}] Attempting to send to an invalid address ${sendEntity.recipient}.`
     );
   }
 
