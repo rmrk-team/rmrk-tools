@@ -3,22 +3,18 @@ import "@polkadot/api-augment";
 import { uploadRMRKMetadata } from "../src/rmrk2.0.0/tools/metadata-to-ipfs";
 import arg from "arg";
 import fs from "fs";
-import { NFTMetadata } from "../src/rmrk2.0.0/classes/nft";
+import { Metadata } from "../src/rmrk2.0.0/tools/types";
 
 const fsPromises = fs.promises;
 
 interface MetadataSeedItem {
-  metadataFields: NFTMetadata;
+  metadataFields: Metadata;
   imagePath?: string;
 }
 
 const validateMetadataSeedFields = (metadataSeed: MetadataSeedItem[]) => {
   metadataSeed.forEach((metadata) => {
-    const {
-      name,
-      external_url,
-      description,
-    } = metadata.metadataFields;
+    const { name, external_url, description } = metadata.metadataFields;
     if (!name || !external_url || !description) {
       throw new Error(
         "provided metadata has 1 or more fields missing (!name || !external_url || !description)"
