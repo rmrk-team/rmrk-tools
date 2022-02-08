@@ -118,12 +118,3 @@ export class Collection {
     }
   }
 }
-
-export interface CollectionMetadata {
-  name?: string;
-  description?: string;
-  properties: IProperties;
-  external_url?: string;
-  image?: string;
-  image_data?: string;
-}

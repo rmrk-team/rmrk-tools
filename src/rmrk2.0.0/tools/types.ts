@@ -15,7 +15,7 @@ export interface IAttribute {
       condition?: string;
     };
   };
-  type: "array" | "object" | "int" | "float" | "string" | "royalty";
+  type: "array" | "object" | "int" | "float" | "number" | "string" | "royalty";
   value: any;
 }
 
@@ -25,6 +25,27 @@ export interface IRoyaltyAttribute extends IAttribute {
     receiver: string;
     royaltyPercentFloat: number;
   };
+}
+
+export interface Metadata {
+  mediaUri?: string;
+  thumbnailUri?: string;
+  externalUri?: string;
+  description?: string;
+  name?: string;
+  license?: string;
+  licenseUri?: string;
+  type?: string;
+  locale?: string;
+  properties?: IProperties;
+  /** @deprecated deprecated in favour of `externalUri` field */
+  external_url?: string;
+  /** @deprecated deprecated in favour of `mediaUri` or `thumbnailUri` field */
+  image?: string;
+  /** @deprecated */
+  image_data?: string;
+  /** @deprecated deprecated in favour of `mediaUri` field */
+  animation_url?: string;
 }
 
 export type Options = {

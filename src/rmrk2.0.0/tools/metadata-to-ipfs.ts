@@ -1,7 +1,7 @@
 import fs from "fs";
 // @ts-ignore
 import pinataSDK from "@pinata/sdk";
-import { NFTMetadata } from "../classes/nft";
+import { Metadata } from "./types";
 
 const pinata = pinataSDK(process.env.PINATA_KEY, process.env.PINATA_SECRET);
 
@@ -24,7 +24,7 @@ export const pinToIpfs = async (filePath: string, name?: string) => {
 
 export const uploadRMRKMetadata = async (
   imagePath: string,
-  metadataFields: NFTMetadata
+  metadataFields: Metadata
 ): Promise<string> => {
   const options = {
     ...defaultOptions,

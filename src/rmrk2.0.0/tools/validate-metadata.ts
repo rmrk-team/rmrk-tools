@@ -1,5 +1,3 @@
-import { NFTMetadata } from "../classes/nft";
-import { CollectionMetadata } from "../classes/collection";
 import {
   optional,
   pattern,
@@ -13,7 +11,7 @@ import {
   literal,
   boolean,
 } from "superstruct";
-import { IProperties } from "./types";
+import { IProperties, Metadata } from "./types";
 import { OP_TYPES } from "./constants";
 
 const MetadataStruct = type({
@@ -100,9 +98,7 @@ export const validateAttributes = (properties?: IProperties) => {
  * https://docs.opensea.io/docs/metadata-standards
  * @param metadata
  */
-export const validateMetadata = (
-  metadata: NFTMetadata | CollectionMetadata
-) => {
+export const validateMetadata = (metadata: Metadata) => {
   assert(metadata, MetadataStruct);
 
   if (!metadata.image) {

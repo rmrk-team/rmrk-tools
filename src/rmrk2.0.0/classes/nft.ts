@@ -279,21 +279,6 @@ export class NFT {
   }
 }
 
-export interface NFTMetadata {
-  external_url?: string;
-  image?: string;
-  image_data?: string;
-  description?: string;
-  name?: string;
-  properties?: IProperties;
-}
-
-export interface ResourceMetadata {
-  external_url?: string;
-  description?: string;
-  name?: string;
-}
-
 export interface Reactionmap {
   [unicode: string]: string[];
 }
