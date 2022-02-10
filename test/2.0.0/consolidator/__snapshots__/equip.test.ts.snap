@@ -124,6 +124,125 @@ Object {
 }
 `;
 
+exports[`rmrk2.0.0 Consolidator: EQUIP Should Equip NFT with * slot whitelisting 1`] = `
+Object {
+  "bases": Object {
+    "base-4-KBASE777": Object {
+      "block": 4,
+      "changes": Array [],
+      "id": "base-4-KBASE777",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "parts": Array [
+        Object {
+          "equippable": "*",
+          "id": "background",
+          "type": "slot",
+          "z": 0,
+        },
+        Object {
+          "equippable": Array [
+            "d43593c715a56da27d-KANARIABIRDS",
+          ],
+          "id": "backpack",
+          "type": "slot",
+          "z": 1,
+        },
+        Object {
+          "id": "tail",
+          "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
+          "type": "fixed",
+          "z": 2,
+        },
+      ],
+      "symbol": "KBASE777",
+      "themes": Object {
+        "themeOne": Object {
+          "_inherit": true,
+          "primary": "#fff",
+        },
+      },
+      "type": "svg",
+    },
+  },
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  },
+  "invalid": Array [],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [],
+      "children": Array [
+        Object {
+          "equipped": "base-4-KBASE777.background",
+          "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+          "pending": false,
+        },
+      ],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [
+        "xXhhR",
+      ],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [
+        Object {
+          "base": "base-4-KBASE777",
+          "id": "xXhhR",
+          "pending": false,
+        },
+      ],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+    "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+      "block": 6,
+      "burned": "",
+      "changes": Array [],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "6-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+      "metadata": undefined,
+      "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "pending": false,
+      "priority": Array [
+        "jXhhR",
+      ],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [
+        Object {
+          "id": "jXhhR",
+          "pending": false,
+          "slot": "base-4-KBASE777.background",
+        },
+      ],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000888",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  },
+}
+`;
+
 exports[`rmrk2.0.0 Consolidator: EQUIP Should fail to Equip NFT on a non-existent parent NFT 1`] = `
 Object {
   "bases": Object {},
