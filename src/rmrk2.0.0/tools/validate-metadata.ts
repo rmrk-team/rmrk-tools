@@ -71,7 +71,7 @@ export const validateAttributes = (properties?: IProperties) => {
       }
     }
 
-    if (type === "int" || type === "float") {
+    if (type === "int" || type === "float" || type === "number") {
       if (typeof value !== "number") {
         throw new Error("for type 'number' 'value' has to be a number");
       }
