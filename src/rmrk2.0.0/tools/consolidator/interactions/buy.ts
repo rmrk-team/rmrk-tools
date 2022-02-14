@@ -69,6 +69,8 @@ export const buyInteraction = async (
     }
   }
 
+  const extraTransfers = getExtraBalanceTransfers(remark, nft, ss58Format);
+
   nft.addChange({
     field: "owner",
     old: nft.owner,
@@ -76,7 +78,7 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
-    extraTransfers: getExtraBalanceTransfers(remark, nft, ss58Format),
+    ...(extraTransfers ? { extraTransfers } : {}),
   } as Change);
   nft.owner = buyEntity.recipient || remark.caller;
   nft.rootowner = buyEntity.recipient || remark.caller;
@@ -88,7 +90,7 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
-    extraTransfers: getExtraBalanceTransfers(remark, nft, ss58Format),
+    ...(extraTransfers ? { extraTransfers } : {}),
   } as Change);
   nft.forsale = BigInt(0);
 };
@@ -97,7 +99,7 @@ const getExtraBalanceTransfers = (
   remark: Remark,
   nft: NFT,
   ss58Format?: number
-): ChangeExtraBalanceTransfer[] => {
+): ChangeExtraBalanceTransfer[] | undefined => {
   const extraTransfers: ChangeExtraBalanceTransfer[] = [];
 
   remark.extra_ex?.forEach((el: BlockCall) => {
@@ -117,7 +119,7 @@ const getExtraBalanceTransfers = (
     }
   });
 
-  return extraTransfers;
+  return extraTransfers.length > 0 ? extraTransfers : undefined;
 };
 
 const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
