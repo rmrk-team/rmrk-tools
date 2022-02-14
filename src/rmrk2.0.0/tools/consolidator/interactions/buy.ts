@@ -1,7 +1,7 @@
 import { Buy } from "../../../classes/buy";
 import { OP_TYPES } from "../../constants";
 import { BlockCall } from "../../types";
-import { Change } from "../../../changelog";
+import { Change, ChangeExtraBalanceTransfer } from "../../../changelog";
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
@@ -76,6 +76,7 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
+    extraTransfers: getExtraBalanceTransfers(remark, nft, ss58Format),
   } as Change);
   nft.owner = buyEntity.recipient || remark.caller;
   nft.rootowner = buyEntity.recipient || remark.caller;
@@ -87,8 +88,36 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
+    extraTransfers: getExtraBalanceTransfers(remark, nft, ss58Format),
   } as Change);
   nft.forsale = BigInt(0);
+};
+
+const getExtraBalanceTransfers = (
+  remark: Remark,
+  nft: NFT,
+  ss58Format?: number
+): ChangeExtraBalanceTransfer[] => {
+  const extraTransfers: ChangeExtraBalanceTransfer[] = [];
+
+  remark.extra_ex?.forEach((el: BlockCall) => {
+    if (el.call === "balances.transfer") {
+      const [owner, forsale] = el.value.split(",");
+      const ownerEncoded = ss58Format
+        ? encodeAddress(owner, ss58Format)
+        : owner;
+      // Only record 'extra' transfers and not the main balance transfer
+      const transferValue = [ownerEncoded, forsale].join(",");
+      if (transferValue !== `${nft.rootowner},${nft.forsale}`) {
+        extraTransfers.push({
+          receiver: ownerEncoded,
+          amount: forsale,
+        });
+      }
+    }
+  });
+
+  return extraTransfers;
 };
 
 const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
