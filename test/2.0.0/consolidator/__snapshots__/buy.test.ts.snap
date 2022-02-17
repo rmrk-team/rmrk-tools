@@ -435,12 +435,6 @@ Object {
         Object {
           "block": 7,
           "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-          "extraTransfers": Array [
-            Object {
-              "amount": "100000000000",
-              "receiver": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            },
-          ],
           "field": "owner",
           "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
           "old": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",

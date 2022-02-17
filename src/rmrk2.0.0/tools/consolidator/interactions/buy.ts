@@ -78,7 +78,6 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
-    ...(extraTransfers ? { extraTransfers } : {}),
   } as Change);
   nft.owner = buyEntity.recipient || remark.caller;
   nft.rootowner = buyEntity.recipient || remark.caller;
