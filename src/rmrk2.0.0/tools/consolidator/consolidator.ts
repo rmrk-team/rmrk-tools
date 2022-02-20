@@ -108,7 +108,7 @@ export interface BaseConsolidated {
   symbol: string;
   issuer: string;
   id: string;
-  type: BaseType;
+  type?: BaseType;
   parts?: IBasePart[];
   changes: Change[];
   themes?: Record<string, Theme>;
