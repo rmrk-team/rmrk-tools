@@ -7,7 +7,7 @@ import { Change } from "../changelog";
 export class Base {
   readonly block: number;
   readonly symbol: string;
-  readonly type: BaseType;
+  readonly type?: BaseType;
   readonly parts?: IBasePart[];
   issuer: string;
   changes: Change[] = [];
@@ -17,13 +17,13 @@ export class Base {
     block: number,
     symbol: string,
     issuer: string,
-    type: BaseType,
+    type?: BaseType,
     parts?: IBasePart[],
     themes?: Record<string, Theme>
   ) {
     this.block = block;
     this.symbol = symbol;
-    this.type = type;
+    this.type = type || undefined;
     this.issuer = issuer;
     this.parts = parts || undefined;
     this.themes = themes || undefined;

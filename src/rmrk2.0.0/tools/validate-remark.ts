@@ -111,7 +111,7 @@ const EMOTEStruct = type({
 
 const BaseStruct = type({
   issuer: string(),
-  type: enums(["svg"]),
+  type: optional(string()),
   symbol: string(),
   parts: array(PartStruct),
 });
