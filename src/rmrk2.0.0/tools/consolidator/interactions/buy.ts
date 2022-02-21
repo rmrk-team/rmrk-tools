@@ -73,7 +73,7 @@ export const buyInteraction = async (
 
   nft.addChange({
     field: "owner",
-    old: nft.owner,
+    old: nft.rootowner,
     new: buyEntity.recipient || remark.caller,
     caller: remark.caller,
     block: remark.block,
@@ -170,7 +170,7 @@ const validate = (
       );
     case !transferValid:
       throw new Error(
-        `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
+        `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.rootowner},${nft.forsale}, is ${transferValue}.`
       );
   }
 };
