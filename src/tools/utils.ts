@@ -117,6 +117,16 @@ export type Block = {
   calls: Call[];
 };
 
+const validateDecode = (value: string) => {
+  try {
+    const decoded = decodeURI(value);
+    return true;
+  } catch (error: any) {
+    console.log(error, value);
+    return false;
+  }
+};
+
 export const getRemarksFromBlocks = (
   blocks: Block[],
   prefixes: string[]
@@ -126,7 +136,9 @@ export const getRemarksFromBlocks = (
     for (const call of row.calls) {
       if (call.call !== "system.remark") continue;
       const str = hexToString(call.value);
+      const isValid = validateDecode(str);
       if (
+        !isValid ||
         !prefixes.some((word) => str.startsWith(hexToString(word))) ||
         !str.includes(`::${VERSION}::`)
       ) {
