@@ -92,7 +92,9 @@ export const getRemarksFromBlocks = (
     for (const call of row.calls) {
       if (call.call !== "system.remark") continue;
       const str = hexToString(call.value);
+      const isValid = validateDecode(str);
       if (
+        !isValid ||
         !prefixes.some((word) => str.startsWith(hexToString(word))) ||
         !str.includes(`::${VERSION}::`)
       ) {
@@ -146,6 +148,16 @@ export const isBatchInterrupted = async (
   );
 
   return Boolean(events.length);
+};
+
+export const validateDecode = (value: string) => {
+  try {
+    const decoded = decodeURI(value);
+    return true;
+  } catch (error: any) {
+    console.log(error, value);
+    return false;
+  }
 };
 
 export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
@@ -263,7 +275,7 @@ export const getBlockCallsFromSignedBlock = async (
             } as BlockCall);
           } else {
             const isBalanceTransfer =
-                `${el.section}.${el.method}` === `balances.transfer`;
+              `${el.section}.${el.method}` === `balances.transfer`;
 
             const extraCall = {
               call: `${el.section}.${el.method}`,
