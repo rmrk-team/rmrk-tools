@@ -181,7 +181,9 @@ export class RemarkListener {
       const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
+      console.log("Started consolidating at: ", this.currentBlockNum);
       const consolidatedFinal = await this.consolidateFunction(remarks);
+      console.log("Finished consolidating at: ", this.currentBlockNum);
       await this.storageProvider.set(this.currentBlockNum);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
@@ -229,6 +231,7 @@ export class RemarkListener {
 
       if (finalised) {
         this.currentBlockNum = header.number.toNumber();
+        console.log("New finalised block", header.number.toNumber());
       }
 
       // Update local db latestBlock
