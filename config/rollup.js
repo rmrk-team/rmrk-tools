@@ -39,9 +39,9 @@ export default {
       extensions: [".ts"],
     }),
 
-    strip({
-      include: ["**/*.(mjs|js|ts)"],
-    }),
+    // strip({
+    //   include: ["**/*.(mjs|js|ts)"],
+    // }),
 
     json(),
   ],
