@@ -271,8 +271,8 @@ export class RemarkListener {
           // Fetch all the missing blocks and save their remarks for next consolidation.
           this.missingBlockCallsFetched = false;
           this.missingBlockCalls = await this.fetchMissingBlockCalls(
-            latestSavedBlock - 1,
-            latestFinalisedBlockNum
+            latestSavedBlock,
+            latestFinalisedBlockNum - 1
           );
           this.missingBlockCallsFetched = true;
         }
