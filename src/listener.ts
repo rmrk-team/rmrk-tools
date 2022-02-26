@@ -211,8 +211,7 @@ export class RemarkListener {
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
       const consolidatedFinal = await this.consolidateFunction(remarks);
-      const latestBlock = await this.storageProvider.get();
-      await this.storageProvider.set(this.currentBlockNum || latestBlock);
+      await this.storageProvider.set(this.currentBlockNum);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
     }
@@ -260,9 +259,10 @@ export class RemarkListener {
       const latestFinalisedBlockNum = header.number.toNumber();
 
       if (finalised) {
-        const latestSavedBlock = await this.storageProvider.get();
+        const latestSavedBlock = this.currentBlockNum;
         // Compare block sequence order to see if there's a skipped finalised block
         if (
+          latestSavedBlock &&
           latestSavedBlock + 1 < latestFinalisedBlockNum &&
           this.missingBlockCallsFetched
         ) {
