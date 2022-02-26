@@ -174,12 +174,16 @@ export class RemarkListener {
           latestBlock + 1
         } and ${to}`
       );
-      return await fetchRemarks(
+      const remarks = await fetchRemarks(
         this.apiPromise,
         latestBlock + 1,
         to,
         this.prefixes
       );
+
+      this.logger(`Found ${remarks.length} remarks`);
+
+      return remarks;
     } catch (error: any) {
       console.log(error);
       return [];
@@ -308,6 +312,10 @@ export class RemarkListener {
         } catch (e: any) {
           console.error(e);
         }
+      }
+
+      if (filteredCalls.length < 1 && this.missingBlockCalls.length > 0) {
+        await this.consolidate();
       }
 
       if (filteredCalls.length > 0) {
