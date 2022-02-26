@@ -25,6 +25,7 @@ interface IProps {
   consolidateFunction: (remarks: Remark[]) => Promise<ConsolidatorReturnType>;
   storageProvider?: IStorageProvider;
   storageKey?: string;
+  loggerEnabled?: boolean;
 }
 
 export interface IStorageProvider {
@@ -61,6 +62,7 @@ export class RemarkListener {
   private missingBlockCallsFetched: boolean;
   private prefixes: string[];
   private currentBlockNum: number;
+  private loggerEnabled: boolean;
   public storageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
@@ -72,6 +74,7 @@ export class RemarkListener {
     consolidateFunction,
     storageProvider,
     storageKey,
+    loggerEnabled = false,
   }: IProps) {
     if (!polkadotApi) {
       throw new Error(
@@ -91,6 +94,7 @@ export class RemarkListener {
     this.consolidateFunction = consolidateFunction;
     this.storageProvider =
       storageProvider || new LocalStorageProvider(storageKey);
+    this.loggerEnabled = loggerEnabled;
   }
 
   private initialize = async () => {
@@ -105,6 +109,12 @@ export class RemarkListener {
       this.missingBlockCalls = await this.fetchMissingBlockCalls(latestBlock);
       this.missingBlockCallsFetched = true;
       this.consolidate();
+    }
+  };
+
+  private logger = (message: string) => {
+    if (this.loggerEnabled) {
+      console.log(message);
     }
   };
 
@@ -132,9 +142,18 @@ export class RemarkListener {
   /*
    Fetch blocks between last block in dump and last block on chain
    */
-  public async fetchMissingBlockCalls(latestBlock: number): Promise<Block[]> {
+  public async fetchMissingBlockCalls(
+    latestBlock: number,
+    toBlock?: number
+  ): Promise<Block[]> {
     try {
-      const to = await getLatestFinalizedBlock(this.apiPromise);
+      const to = toBlock || (await getLatestFinalizedBlock(this.apiPromise));
+
+      this.logger(
+        `Fetching missing or skipped blocks between ${
+          latestBlock + 1
+        } and ${to}`
+      );
       return await fetchRemarks(
         this.apiPromise,
         latestBlock + 1,
@@ -178,12 +197,20 @@ export class RemarkListener {
         ...this.latestBlockCallsFinalised,
       ];
 
+      // Logging
+      if (blockCalls.length > 0 && this.loggerEnabled) {
+        const blockNums = blockCalls.map((blockCall) => blockCall.block);
+        this.logger(
+          `Consolidating block range between: ${blockNums[0]} and ${
+            blockNums[blockNums.length - 1]
+          }`
+        );
+      }
+
       const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
-      console.log("Started consolidating at: ", this.currentBlockNum);
       const consolidatedFinal = await this.consolidateFunction(remarks);
-      console.log("Finished consolidating at: ", this.currentBlockNum);
       await this.storageProvider.set(this.currentBlockNum);
       // Fire event to a subscriber
       this.observer.next(consolidatedFinal);
@@ -229,9 +256,25 @@ export class RemarkListener {
         return hexToString(call.value).includes(`::${VERSION}::`);
       });
 
+      const latestFinalisedBlockNum = header.number.toNumber();
+
       if (finalised) {
-        this.currentBlockNum = header.number.toNumber();
-        console.log("New finalised block", header.number.toNumber());
+        const latestSavedBlock = this.currentBlockNum;
+        // Compare block sequence order to see if there's a skipped finalised block
+        if (
+          latestSavedBlock &&
+          latestSavedBlock + 1 < latestFinalisedBlockNum &&
+          this.missingBlockCallsFetched
+        ) {
+          // Fetch all the missing blocks and save their remarks for next consolidation.
+          this.missingBlockCallsFetched = false;
+          this.missingBlockCalls = await this.fetchMissingBlockCalls(
+            latestSavedBlock,
+            latestFinalisedBlockNum - 1
+          );
+          this.missingBlockCallsFetched = true;
+        }
+        this.currentBlockNum = latestFinalisedBlockNum;
       }
 
       // Update local db latestBlock
@@ -241,7 +284,7 @@ export class RemarkListener {
         filteredCalls.length === 0
       ) {
         try {
-          await this.storageProvider.set(header.number.toNumber());
+          await this.storageProvider.set(latestFinalisedBlockNum);
         } catch (e: any) {
           console.error(e);
         }
@@ -249,7 +292,7 @@ export class RemarkListener {
 
       if (filteredCalls.length > 0) {
         const blockCalls: BlockCalls = {
-          block: header.number.toNumber(),
+          block: latestFinalisedBlockNum,
           calls: filteredCalls,
         };
 
