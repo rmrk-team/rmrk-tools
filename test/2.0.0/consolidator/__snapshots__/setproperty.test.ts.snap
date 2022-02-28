@@ -147,6 +147,70 @@ Object {
 }
 `;
 
+exports[`rmrk2.0.0 Consolidator: SETPROPERTY should not allow to mutate royalty to an invalid value 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+    "d43593c715a56da27d-KANARIAGEMS": Collection {
+      "block": 3,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIAGEMS",
+      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIAGEMS",
+    },
+  },
+  "invalid": Array [],
+  "nfts": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 4,
+      "burned": "",
+      "changes": Array [],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {
+        "royaltyInfo": Object {
+          "_mutation": Object {
+            "allowed": true,
+          },
+          "type": "royalty",
+          "value": Object {
+            "receiver": "xxx",
+            "royaltyPercentFloat": 101,
+          },
+        },
+        "test": Object {
+          "type": "string",
+          "value": "foo",
+        },
+      },
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 1,
+    },
+  },
+}
+`;
+
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should throw if we are trying to mutate property with no matching extra call condition 1`] = `
 Object {
   "bases": Object {},

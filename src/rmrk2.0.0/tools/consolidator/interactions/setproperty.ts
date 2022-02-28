@@ -4,7 +4,7 @@ import { OP_TYPES } from "../../constants";
 import { IConsolidatorAdapter } from "../adapters/types";
 import { findRealOwner } from "../utils";
 import { Setproperty } from "../../../classes/setproperty";
-import { validateRemarkBase } from "../../validate-remark";
+import {validateRemarkBase, validateRoyaltiesPropertyValue} from "../../validate-remark";
 import { hexToString } from "@polkadot/util";
 import { Collection } from "../../../classes/collection";
 
@@ -106,6 +106,10 @@ export const setPropertyInteraction = async (
 
   if (!nft.properties) {
     nft.properties = {};
+  }
+
+  if (nft.properties) {
+    validateRoyaltiesPropertyValue(nft.properties);
   }
 
   if (

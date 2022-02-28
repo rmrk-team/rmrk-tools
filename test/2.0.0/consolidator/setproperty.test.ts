@@ -274,4 +274,20 @@ describe("rmrk2.0.0 Consolidator: SETPROPERTY", () => {
       "[SETPROPERTY] Only issuer can mutate an attribute of type 'royalty'."
     );
   });
+
+  it("should not allow to mutate royalty to an invalid value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftWithProperties().mint()),
+      ...getBlockCallsMock(
+        mintNftWithProperties(4).setproperty("royaltyInfo", {
+          receiver: "xxx",
+          royaltyPercentFloat: 101,
+        })
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult).toMatchSnapshot();
+  });
 });
