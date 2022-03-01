@@ -16,11 +16,17 @@ import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
 const getRemarks = (
   inputData: any,
   prefixes: string[],
-  collectionFilter?: string
+  collectionFilter?: string,
+  ss58Format?: number
 ): Remark[] => {
   let blocks = inputData;
   if (collectionFilter) {
-    blocks = filterBlocksByCollection(blocks, prefixes, collectionFilter);
+    blocks = filterBlocksByCollection(
+      blocks,
+      prefixes,
+      collectionFilter,
+      ss58Format
+    );
   }
   return getRemarksFromBlocks(blocks, prefixes);
 };
@@ -68,7 +74,7 @@ const consolidate = async () => {
 
   console.log(`Loaded ${rawdata.length} blocks with remark calls`);
 
-  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
+  const remarks = getRemarks(rawdata, prefixes, collectionFilter, ss58Format);
   const con = new Consolidator(ss58Format);
 
   const ret = await con.consolidate(remarks);

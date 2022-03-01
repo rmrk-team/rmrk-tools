@@ -41,7 +41,7 @@ const runListener = async () => {
     prefixes: ["0x726d726b", "0x524d524b"],
     consolidateFunction,
     storageProvider,
-    loggerEnabled: true
+    loggerEnabled: true,
   });
   const subscriber = listener.initialiseObservable();
   subscriber.subscribe((val) => console.log(val));

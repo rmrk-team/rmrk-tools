@@ -26,6 +26,7 @@ interface IProps {
   storageProvider?: IStorageProvider;
   storageKey?: string;
   loggerEnabled?: boolean;
+  ss58Format?: number;
 }
 
 export interface IStorageProvider {
@@ -84,6 +85,7 @@ export class RemarkListener {
   private prefixes: string[];
   private currentBlockNum: number;
   private loggerEnabled: boolean;
+  private ss58Format: number;
   public storageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
@@ -96,12 +98,14 @@ export class RemarkListener {
     storageProvider,
     storageKey,
     loggerEnabled = false,
+    ss58Format = 2,
   }: IProps) {
     if (!polkadotApi) {
       throw new Error(
         `"providerInterface" is missing. Please provide polkadot.js provider interface (i.e. websocket)`
       );
     }
+    this.ss58Format = ss58Format;
     this.currentBlockNum = 0;
     this.apiPromise = polkadotApi;
     this.missingBlockCalls = [];
@@ -178,7 +182,8 @@ export class RemarkListener {
         this.apiPromise,
         latestBlock + 1,
         to,
-        this.prefixes
+        this.prefixes,
+        this.ss58Format
       );
 
       this.logger(`Found ${remarks.length} remarks`);
@@ -231,7 +236,11 @@ export class RemarkListener {
         );
       }
 
-      const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
+      const remarks = getRemarksFromBlocks(
+        blockCalls,
+        this.prefixes,
+        this.ss58Format
+      );
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
       const consolidatedFinal = await this.consolidateFunction(remarks);
@@ -243,7 +252,8 @@ export class RemarkListener {
     if (this.observerUnfinalised) {
       const remarks = getRemarksFromBlocks(
         [...this.missingBlockCalls, ...this.latestBlockCalls],
-        this.prefixes
+        this.prefixes,
+        this.ss58Format
       );
       // Fire event to a subscriber
       this.observerUnfinalised.next(remarks);
@@ -346,7 +356,8 @@ export class RemarkListener {
           if (this.observerUnfinalised) {
             const remarks = getRemarksFromBlocks(
               [...this.latestBlockCalls],
-              this.prefixes
+              this.prefixes,
+              this.ss58Format
             );
             this.observerUnfinalised.next(remarks);
           }
