@@ -111,9 +111,9 @@ export const consolidatedCollectionToInstance = (
 };
 export const getChangeIssuerEntity = (
   remark: Remark,
-  ss58format?: number
+  ss58Format?: number
 ): ChangeIssuer => {
-  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark, ss58format);
+  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark, ss58Format);
 
   if (typeof changeIssuerEntity === "string") {
     throw new Error(
