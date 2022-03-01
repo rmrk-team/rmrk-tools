@@ -5,8 +5,11 @@ import { Remark } from "../remark";
 import { ChangeIssuer } from "../../../classes/changeissuer";
 import { Base } from "../../../classes/base";
 
-export const getChangeIssuerEntity = (remark: Remark): ChangeIssuer => {
-  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark);
+export const getChangeIssuerEntity = (
+  remark: Remark,
+  ss58Format?: number
+): ChangeIssuer => {
+  const changeIssuerEntity = ChangeIssuer.fromRemark(remark.remark, ss58Format);
 
   if (typeof changeIssuerEntity === "string") {
     throw new Error(

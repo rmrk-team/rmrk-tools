@@ -381,7 +381,7 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
-    const nft = NFT.fromRemark(remark.remark, remark.block);
+    const nft = NFT.fromRemark(remark.remark, remark.block, this.ss58Format);
 
     if (typeof nft === "string") {
       invalidate(
@@ -439,7 +439,7 @@ export class Consolidator {
       this
     );
 
-    const sendEntity = Send.fromRemark(remark.remark);
+    const sendEntity = Send.fromRemark(remark.remark, this.ss58Format);
 
     if (typeof sendEntity === "string") {
       invalidate(
@@ -672,7 +672,7 @@ export class Consolidator {
 
     let changeIssuerEntity: ChangeIssuer;
     try {
-      changeIssuerEntity = getChangeIssuerEntity(remark);
+      changeIssuerEntity = getChangeIssuerEntity(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
