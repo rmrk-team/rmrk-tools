@@ -138,7 +138,7 @@ export class Consolidator {
 
     let collection;
     try {
-      collection = getCollectionFromRemark(remark);
+      collection = getCollectionFromRemark(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;

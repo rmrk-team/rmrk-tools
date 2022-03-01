@@ -122,8 +122,11 @@ export const getChangeIssuerEntity = (
   }
   return changeIssuerEntity;
 };
-export const getCollectionFromRemark = (remark: Remark) => {
-  const collection = C100.fromRemark(remark.remark, remark.block);
+export const getCollectionFromRemark = (
+  remark: Remark,
+  ss58Format?: number
+) => {
+  const collection = C100.fromRemark(remark.remark, remark.block, ss58Format);
   if (typeof collection === "string") {
     throw new Error(
       `[${OP_TYPES.MINT}] Dead before instantiation: ${collection}`

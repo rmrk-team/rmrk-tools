@@ -101,7 +101,8 @@ const fetch = async () => {
     extracted = filterBlocksByCollection(
       extracted,
       collectionFilter,
-      prefixToArray(args["--prefixes"] || "")
+      prefixToArray(args["--prefixes"] || ""),
+      ss58Format
     );
   }
 

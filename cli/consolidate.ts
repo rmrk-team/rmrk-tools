@@ -47,13 +47,19 @@ const getLiteDump = (result: ConsolidatorReturnType) => {
 const getRemarks = (
   inputData: any,
   prefixes: string[],
-  collectionFilter?: string
+  collectionFilter?: string,
+  ss58Format?: number
 ): Remark[] => {
   let blocks = inputData;
   if (collectionFilter) {
-    blocks = filterBlocksByCollection(blocks, collectionFilter, prefixes);
+    blocks = filterBlocksByCollection(
+      blocks,
+      collectionFilter,
+      prefixes,
+      ss58Format
+    );
   }
-  return getRemarksFromBlocks(blocks, prefixes);
+  return getRemarksFromBlocks(blocks, prefixes, ss58Format);
 };
 
 const consolidate = async () => {
@@ -103,7 +109,7 @@ const consolidate = async () => {
 
   console.log(`Loaded ${rawdata.length} blocks with remark calls`);
 
-  const remarks = getRemarks(rawdata, prefixes, collectionFilter);
+  const remarks = getRemarks(rawdata, prefixes, collectionFilter, ss58Format);
   const consolidator = new Consolidator(ss58Format);
   let result = await consolidator.consolidate(remarks);
 

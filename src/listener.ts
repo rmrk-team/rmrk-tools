@@ -26,6 +26,7 @@ interface IProps {
   storageProvider?: IStorageProvider;
   storageKey?: string;
   loggerEnabled?: boolean;
+  ss58Format?: number;
 }
 
 export interface IStorageProvider {
@@ -63,6 +64,7 @@ export class RemarkListener {
   private prefixes: string[];
   private currentBlockNum: number;
   private loggerEnabled: boolean;
+  private ss58Format: number;
   public storageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
@@ -75,12 +77,14 @@ export class RemarkListener {
     storageProvider,
     storageKey,
     loggerEnabled = false,
+    ss58Format = 2,
   }: IProps) {
     if (!polkadotApi) {
       throw new Error(
         `"providerInterface" is missing. Please provide polkadot.js provider interface (i.e. websocket)`
       );
     }
+    this.ss58Format = ss58Format;
     this.currentBlockNum = 0;
     this.apiPromise = polkadotApi;
     this.missingBlockCalls = [];
