@@ -3,6 +3,7 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { BaseType } from "../tools/types";
 import { Change } from "../changelog";
+import { encodeAddress } from "@polkadot/keyring";
 
 export class Base {
   readonly block: number;
@@ -133,7 +134,11 @@ export class Base {
     return this.changes;
   }
 
-  static fromRemark(remark: string, block?: number): Base | string {
+  static fromRemark(
+    remark: string,
+    block?: number,
+    ss58Format?: number
+  ): Base | string {
     if (!block) {
       block = 0;
     }
@@ -144,7 +149,7 @@ export class Base {
       return new this(
         block,
         obj.symbol,
-        obj.issuer,
+        encodeAddress(obj.issuer, ss58Format),
         obj.type,
         obj.parts,
         obj.themes

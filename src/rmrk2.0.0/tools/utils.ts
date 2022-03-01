@@ -85,7 +85,8 @@ export type Block = {
 
 export const getRemarksFromBlocks = (
   blocks: Block[],
-  prefixes: string[]
+  prefixes: string[],
+  ss58Format = 2
 ): Remark[] => {
   const remarks: Remark[] = [];
   for (const row of blocks) {
@@ -121,7 +122,7 @@ export const getRemarksFromBlocks = (
 
       const r: Remark = {
         block: row.block,
-        caller: call.caller,
+        caller: encodeAddress(call.caller, ss58Format),
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
@@ -329,10 +330,11 @@ export const getRemarkData = (dataString: string) => {
 export const filterBlocksByCollection = (
   blockCalls: BlockCalls[],
   prefixes: string[],
-  collectionFilter?: string
+  collectionFilter?: string,
+  ss58Format?: number
 ): BlockCalls[] =>
   blockCalls.filter((block) =>
-    getRemarksFromBlocks([block], prefixes).some(
+    getRemarksFromBlocks([block], prefixes, ss58Format).some(
       (rmrk) =>
         (collectionFilter && rmrk.remark.includes(collectionFilter)) ||
         !collectionFilter

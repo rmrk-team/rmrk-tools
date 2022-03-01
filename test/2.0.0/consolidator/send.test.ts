@@ -158,7 +158,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send non-owned NFT 6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999, real owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+      "[SEND] Attempting to send non-owned NFT 6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999, real owner: FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP"
     );
   });
 

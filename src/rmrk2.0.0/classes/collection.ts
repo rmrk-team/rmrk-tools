@@ -3,6 +3,7 @@ import { validateCollection } from "../tools/validate-remark";
 import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { IProperties } from "../tools/types";
+import { encodeAddress } from "@polkadot/keyring";
 
 export class Collection {
   readonly block: number;
@@ -98,7 +99,11 @@ export class Collection {
     );
   }
 
-  static fromRemark(remark: string, block = 0): Collection | string {
+  static fromRemark(
+    remark: string,
+    block = 0,
+    ss58Format?: number
+  ): Collection | string {
     try {
       validateCollection(remark);
       const [prefix, op_type, version, dataString] = remark.split("::");
@@ -106,7 +111,7 @@ export class Collection {
       return new this(
         block,
         obj.max,
-        obj.issuer,
+        encodeAddress(obj.issuer, ss58Format),
         obj.symbol,
         obj.id,
         obj.metadata

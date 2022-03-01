@@ -116,7 +116,7 @@ describe("rmrk2.0.0 Consolidator: SETPROPERTY", () => {
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
     expect(consolidatedResult.invalid[0].message).toEqual(
-      "[SETPROPERTY] Attempting to set property on a non-owned NFT. Expected 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty but received 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+      "[SETPROPERTY] Attempting to set property on a non-owned NFT. Expected FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP but received HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F"
     );
   });
 
