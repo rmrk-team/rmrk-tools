@@ -73,14 +73,29 @@ export const buyInteraction = async (
 
   nft.addChange({
     field: "owner",
-    old: nft.rootowner,
+    old: nft.owner,
     new: buyEntity.recipient || remark.caller,
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
   } as Change);
+
+  const newRootOwner =
+    buyEntity.recipient && isValidAddressPolkadotAddress(buyEntity.recipient)
+      ? buyEntity.recipient
+      : remark.caller;
+
+  nft.addChange({
+    field: "rootowner",
+    old: nft.rootowner,
+    new: newRootOwner,
+    caller: remark.caller,
+    block: remark.block,
+    opType: OP_TYPES.BUY,
+  } as Change);
+
   nft.owner = buyEntity.recipient || remark.caller;
-  nft.rootowner = buyEntity.recipient || remark.caller;
+  nft.rootowner = newRootOwner;
 
   nft.addChange({
     field: "forsale",
