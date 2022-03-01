@@ -232,7 +232,7 @@ export class Consolidator {
       this
     );
 
-    const sendEntity = Send.fromRemark(remark.remark);
+    const sendEntity = Send.fromRemark(remark.remark, this.ss58Format);
 
     if (typeof sendEntity === "string") {
       invalidate(
@@ -446,7 +446,7 @@ export class Consolidator {
 
     let changeIssuerEntity: ChangeIssuer;
     try {
-      changeIssuerEntity = getChangeIssuerEntity(remark);
+      changeIssuerEntity = getChangeIssuerEntity(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;

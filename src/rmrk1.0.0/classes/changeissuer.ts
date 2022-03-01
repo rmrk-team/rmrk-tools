@@ -1,4 +1,6 @@
 import { validateChangeIssuer } from "../../tools/validate-remark";
+import { isValidAddressPolkadotAddress } from "../../tools/consolidator/utils";
+import { encodeAddress } from "@polkadot/keyring";
 
 export class ChangeIssuer {
   issuer: string;
@@ -9,12 +11,19 @@ export class ChangeIssuer {
     this.id = id;
   }
 
-  static fromRemark(remark: string): ChangeIssuer | string {
+  static fromRemark(
+    remark: string,
+    ss58Format?: number
+  ): ChangeIssuer | string {
     const exploded = remark.split("::");
     try {
       validateChangeIssuer(remark);
       const [prefix, op_type, version, id, issuer] = remark.split("::");
-      return new ChangeIssuer(issuer, id);
+      let encodedIssuer = issuer;
+      if (isValidAddressPolkadotAddress(issuer)) {
+        encodedIssuer = encodeAddress(issuer, ss58Format);
+      }
+      return new ChangeIssuer(encodedIssuer, id);
     } catch (e: any) {
       console.error(e.message);
       console.log(`CHANGEISSUER error: full input was ${remark}`);
