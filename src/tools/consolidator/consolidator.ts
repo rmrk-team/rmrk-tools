@@ -90,7 +90,7 @@ export class Consolidator {
    * @param emitInteractionChanges return interactions changes ( OP_TYPE: id )
    */
   constructor(
-    ss58Format?: number,
+    ss58Format = 2,
     dbAdapter?: IConsolidatorAdapter,
     emitEmoteChanges?: boolean,
     emitInteractionChanges?: boolean
