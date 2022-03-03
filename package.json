@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "2.0.54",
+  "version": "2.0.54-beta.02",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
