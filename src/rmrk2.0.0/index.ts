@@ -1,4 +1,5 @@
 import "@polkadot/api-augment";
+export * from './tools/types'
 export * from "./tools/consolidator/consolidator";
 export * from "./classes/collection";
 export * from "./classes/nft";
