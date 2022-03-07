@@ -10,7 +10,6 @@ import {
   findRealOwner,
   isValidAddressPolkadotAddress,
 } from "../utils";
-import { uploadRMRKMetadata } from "../../metadata-to-ipfs";
 
 export const sendInteraction = async (
   remark: Remark,

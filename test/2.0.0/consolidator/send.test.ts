@@ -54,6 +54,15 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
+  it("Should convert recipient according to passed ss58Format", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2(4).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator(0);
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
   it("Should set NFT as pending if sent from non parent owner", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
@@ -140,14 +149,16 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
         getBobKey().address
       ),
       ...getBlockCallsMock(
-        mintNftMock3(6, createCollectionMock2(0, getBobKey()).id).send(mintNftMock(3).getId())
+        mintNftMock3(6, createCollectionMock2(0, getBobKey()).id).send(
+          mintNftMock(3).getId()
+        )
       ), // Send to another NFT first
       ...getBlockCallsMock(nftMock.send(getBobKey().address)), // Send to Bob
     ]);
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to send non-owned NFT 6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999, real owner: 5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+      "[SEND] Attempting to send non-owned NFT 6-8eaf04151694f26a48-KANARIAGEMS-KANR-00000999, real owner: FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP"
     );
   });
 

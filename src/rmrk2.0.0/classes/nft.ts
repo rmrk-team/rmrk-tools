@@ -9,6 +9,7 @@ import { EMOTE_NAMESPACES } from "./emote";
 import { IProperties } from "../tools/types";
 import { Theme } from "./base";
 import { isValidAddressPolkadotAddress } from "../tools/consolidator/utils";
+import { encodeAddress } from "@polkadot/keyring";
 
 interface INftInstanceProps {
   block: number;
@@ -112,7 +113,11 @@ export class NFT {
     return `${PREFIX}::${OP_TYPES.BURN}::${VERSION}::${id}`;
   }
 
-  static fromRemark(remark: string, block?: number): NFT | string {
+  static fromRemark(
+    remark: string,
+    block?: number,
+    ss58Format?: number
+  ): NFT | string {
     if (!block) {
       block = 0;
     }
@@ -121,6 +126,10 @@ export class NFT {
       const [prefix, op_type, version, dataString, recipient] = remark.split(
         "::"
       );
+      let recipientEncoded = recipient;
+      if (isValidAddressPolkadotAddress(recipient)) {
+        recipientEncoded = encodeAddress(recipient, ss58Format);
+      }
       const obj = getRemarkData(dataString);
       return new this({
         block,
@@ -132,9 +141,9 @@ export class NFT {
             : parseInt(obj.transferable, 10),
         sn: obj.sn,
         metadata: obj.metadata,
-        owner: recipient,
-        rootowner: isValidAddressPolkadotAddress(recipient)
-          ? recipient
+        owner: recipientEncoded,
+        rootowner: isValidAddressPolkadotAddress(recipientEncoded)
+          ? recipientEncoded
           : undefined,
         properties: obj.properties || {},
       });

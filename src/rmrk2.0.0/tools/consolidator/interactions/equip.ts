@@ -88,7 +88,7 @@ export const equipInteraction = async (
       );
     }
 
-    if (!basepart.equippable?.includes(nft.collection)) {
+    if (!basepart.equippable?.includes(nft.collection) && !basepart.equippable?.includes("*")) {
       throw new Error(
         `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it's base ${base} slot ${slot} doesn't allow it's collection ${nft.collection}`
       );

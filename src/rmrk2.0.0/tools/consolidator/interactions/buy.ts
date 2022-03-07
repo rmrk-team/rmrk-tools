@@ -1,7 +1,7 @@
 import { Buy } from "../../../classes/buy";
 import { OP_TYPES } from "../../constants";
 import { BlockCall } from "../../types";
-import { Change } from "../../../changelog";
+import { Change, ChangeExtraBalanceTransfer } from "../../../changelog";
 import { Remark } from "../remark";
 import { NFT } from "../../../classes/nft";
 import { encodeAddress } from "@polkadot/keyring";
@@ -69,6 +69,8 @@ export const buyInteraction = async (
     }
   }
 
+  const extraTransfers = getExtraBalanceTransfers(remark, nft, ss58Format);
+
   nft.addChange({
     field: "owner",
     old: nft.owner,
@@ -77,8 +79,23 @@ export const buyInteraction = async (
     block: remark.block,
     opType: OP_TYPES.BUY,
   } as Change);
+
+  const newRootOwner =
+    buyEntity.recipient && isValidAddressPolkadotAddress(buyEntity.recipient)
+      ? buyEntity.recipient
+      : remark.caller;
+
+  nft.addChange({
+    field: "rootowner",
+    old: nft.rootowner,
+    new: newRootOwner,
+    caller: remark.caller,
+    block: remark.block,
+    opType: OP_TYPES.BUY,
+  } as Change);
+
   nft.owner = buyEntity.recipient || remark.caller;
-  nft.rootowner = buyEntity.recipient || remark.caller;
+  nft.rootowner = newRootOwner;
 
   nft.addChange({
     field: "forsale",
@@ -87,8 +104,36 @@ export const buyInteraction = async (
     caller: remark.caller,
     block: remark.block,
     opType: OP_TYPES.BUY,
+    ...(extraTransfers ? { extraTransfers } : {}),
   } as Change);
   nft.forsale = BigInt(0);
+};
+
+const getExtraBalanceTransfers = (
+  remark: Remark,
+  nft: NFT,
+  ss58Format?: number
+): ChangeExtraBalanceTransfer[] | undefined => {
+  const extraTransfers: ChangeExtraBalanceTransfer[] = [];
+
+  remark.extra_ex?.forEach((el: BlockCall) => {
+    if (el.call === "balances.transfer") {
+      const [owner, forsale] = el.value.split(",");
+      const ownerEncoded = ss58Format
+        ? encodeAddress(owner, ss58Format)
+        : owner;
+      // Only record 'extra' transfers and not the main balance transfer
+      const transferValue = [ownerEncoded, forsale].join(",");
+      if (transferValue !== `${nft.rootowner},${nft.forsale}`) {
+        extraTransfers.push({
+          receiver: ownerEncoded,
+          amount: forsale,
+        });
+      }
+    }
+  });
+
+  return extraTransfers.length > 0 ? extraTransfers : undefined;
 };
 
 const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
@@ -140,7 +185,7 @@ const validate = (
       );
     case !transferValid:
       throw new Error(
-        `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.owner},${nft.forsale}, is ${transferValue}.`
+        `[${OP_TYPES.BUY}] Transfer for the purchase of NFT ID ${buyEntity.id} not valid. Recipient, amount should be ${nft.rootowner},${nft.forsale}, is ${transferValue}.`
       );
   }
 };

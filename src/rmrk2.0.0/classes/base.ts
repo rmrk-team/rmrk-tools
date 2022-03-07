@@ -3,11 +3,12 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { BaseType } from "../tools/types";
 import { Change } from "../changelog";
+import { encodeAddress } from "@polkadot/keyring";
 
 export class Base {
   readonly block: number;
   readonly symbol: string;
-  readonly type: BaseType;
+  readonly type?: BaseType;
   readonly parts?: IBasePart[];
   issuer: string;
   changes: Change[] = [];
@@ -17,13 +18,13 @@ export class Base {
     block: number,
     symbol: string,
     issuer: string,
-    type: BaseType,
+    type?: BaseType,
     parts?: IBasePart[],
     themes?: Record<string, Theme>
   ) {
     this.block = block;
     this.symbol = symbol;
-    this.type = type;
+    this.type = type || undefined;
     this.issuer = issuer;
     this.parts = parts || undefined;
     this.themes = themes || undefined;
@@ -133,7 +134,11 @@ export class Base {
     return this.changes;
   }
 
-  static fromRemark(remark: string, block?: number): Base | string {
+  static fromRemark(
+    remark: string,
+    block?: number,
+    ss58Format?: number
+  ): Base | string {
     if (!block) {
       block = 0;
     }
@@ -144,7 +149,7 @@ export class Base {
       return new this(
         block,
         obj.symbol,
-        obj.issuer,
+        encodeAddress(obj.issuer, ss58Format),
         obj.type,
         obj.parts,
         obj.themes

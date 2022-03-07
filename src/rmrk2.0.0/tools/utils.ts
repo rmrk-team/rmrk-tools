@@ -85,14 +85,17 @@ export type Block = {
 
 export const getRemarksFromBlocks = (
   blocks: Block[],
-  prefixes: string[]
+  prefixes: string[],
+  ss58Format = 2
 ): Remark[] => {
   const remarks: Remark[] = [];
   for (const row of blocks) {
     for (const call of row.calls) {
       if (call.call !== "system.remark") continue;
       const str = hexToString(call.value);
+      const isValid = validateDecode(str);
       if (
+        !isValid ||
         !prefixes.some((word) => str.startsWith(hexToString(word))) ||
         !str.includes(`::${VERSION}::`)
       ) {
@@ -119,7 +122,7 @@ export const getRemarksFromBlocks = (
 
       const r: Remark = {
         block: row.block,
-        caller: call.caller,
+        caller: encodeAddress(call.caller, ss58Format),
         interaction_type: meta.type,
         version: meta.version,
         remark: remark,
@@ -146,6 +149,16 @@ export const isBatchInterrupted = async (
   );
 
   return Boolean(events.length);
+};
+
+export const validateDecode = (value: string) => {
+  try {
+    const decoded = decodeURI(value);
+    return true;
+  } catch (error: any) {
+    console.log(error, value);
+    return false;
+  }
 };
 
 export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
@@ -263,7 +276,7 @@ export const getBlockCallsFromSignedBlock = async (
             } as BlockCall);
           } else {
             const isBalanceTransfer =
-                `${el.section}.${el.method}` === `balances.transfer`;
+              `${el.section}.${el.method}` === `balances.transfer`;
 
             const extraCall = {
               call: `${el.section}.${el.method}`,
@@ -317,10 +330,11 @@ export const getRemarkData = (dataString: string) => {
 export const filterBlocksByCollection = (
   blockCalls: BlockCalls[],
   prefixes: string[],
-  collectionFilter?: string
+  collectionFilter?: string,
+  ss58Format?: number
 ): BlockCalls[] =>
   blockCalls.filter((block) =>
-    getRemarksFromBlocks([block], prefixes).some(
+    getRemarksFromBlocks([block], prefixes, ss58Format).some(
       (rmrk) =>
         (collectionFilter && rmrk.remark.includes(collectionFilter)) ||
         !collectionFilter

@@ -4,8 +4,15 @@ import { u8aToHex } from "@polkadot/util";
 import { Remark } from "../remark";
 import { OP_TYPES } from "../../constants";
 
-export const getCollectionFromRemark = (remark: Remark) => {
-  const collection = Collection.fromRemark(remark.remark, remark.block);
+export const getCollectionFromRemark = (
+  remark: Remark,
+  ss58Format?: number
+) => {
+  const collection = Collection.fromRemark(
+    remark.remark,
+    remark.block,
+    ss58Format
+  );
   if (typeof collection === "string") {
     throw new Error(
       `[${OP_TYPES.CREATE}] Dead before instantiation: ${collection}`

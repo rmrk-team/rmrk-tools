@@ -59,6 +59,7 @@ import { Destroy } from "../../classes/destroy";
 import { destroyInteraction } from "./interactions/destroy";
 import { Lock } from "../../classes/lock";
 import { lockInteraction } from "./interactions/lock";
+import {encodeAddress} from "@polkadot/keyring";
 
 type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
 
@@ -108,7 +109,7 @@ export interface BaseConsolidated {
   symbol: string;
   issuer: string;
   id: string;
-  type: BaseType;
+  type?: BaseType;
   parts?: IBasePart[];
   changes: Change[];
   themes?: Record<string, Theme>;
@@ -167,7 +168,7 @@ export class Consolidator {
    * @param emitInteractionChanges return interactions changes ( OP_TYPE: id )
    */
   constructor(
-    ss58Format?: number,
+    ss58Format = 2,
     dbAdapter?: IConsolidatorAdapter,
     emitEmoteChanges?: boolean,
     emitInteractionChanges?: boolean
@@ -190,7 +191,7 @@ export class Consolidator {
     const invalidCallBase: Partial<InvalidCall> = {
       op_type,
       block: remark.block,
-      caller: remark.caller,
+      caller: encodeAddress(remark.caller, this.ss58Format),
     };
     return function update(
       this: Consolidator,
@@ -216,7 +217,7 @@ export class Consolidator {
 
     let base;
     try {
-      base = getBaseFromRemark(remark);
+      base = getBaseFromRemark(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
@@ -256,7 +257,7 @@ export class Consolidator {
 
     let collection;
     try {
-      collection = getCollectionFromRemark(remark);
+      collection = getCollectionFromRemark(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;
@@ -381,7 +382,7 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.MINT, remark).bind(
       this
     );
-    const nft = NFT.fromRemark(remark.remark, remark.block);
+    const nft = NFT.fromRemark(remark.remark, remark.block, this.ss58Format);
 
     if (typeof nft === "string") {
       invalidate(
@@ -439,7 +440,7 @@ export class Consolidator {
       this
     );
 
-    const sendEntity = Send.fromRemark(remark.remark);
+    const sendEntity = Send.fromRemark(remark.remark, this.ss58Format);
 
     if (typeof sendEntity === "string") {
       invalidate(
@@ -672,7 +673,7 @@ export class Consolidator {
 
     let changeIssuerEntity: ChangeIssuer;
     try {
-      changeIssuerEntity = getChangeIssuerEntity(remark);
+      changeIssuerEntity = getChangeIssuerEntity(remark, this.ss58Format);
     } catch (e: any) {
       invalidate(remark.remark, e.message);
       return true;

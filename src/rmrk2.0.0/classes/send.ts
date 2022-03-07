@@ -1,4 +1,6 @@
 import { validateSend } from "../tools/validate-remark";
+import { isValidAddressPolkadotAddress } from "../tools/consolidator/utils";
+import { encodeAddress } from "@polkadot/keyring";
 
 export class Send {
   recipient: string;
@@ -9,11 +11,15 @@ export class Send {
     this.id = id;
   }
 
-  static fromRemark(remark: string): Send | string {
+  static fromRemark(remark: string, ss58Format?: number): Send | string {
     try {
       validateSend(remark);
       const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
-      return new Send(id, recipient);
+      let recipientEncoded = recipient;
+      if (isValidAddressPolkadotAddress(recipient)) {
+        recipientEncoded = encodeAddress(recipient, ss58Format);
+      }
+      return new Send(id, recipientEncoded);
     } catch (e: any) {
       console.error(e.message);
       console.log(`SEND error: full input was ${remark}`);

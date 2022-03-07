@@ -8,15 +8,15 @@ Object {
       "changes": Array [
         Object {
           "block": 3,
-          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "issuer",
-          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "CHANGEISSUER",
         },
       ],
       "id": "base-2-KBASE777",
-      "issuer": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "issuer": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "parts": Array [
         Object {
           "equippable": Array [],
@@ -64,15 +64,15 @@ Object {
       "changes": Array [
         Object {
           "block": 4,
-          "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "issuer",
-          "new": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-          "old": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "CHANGEISSUER",
         },
       ],
       "id": "d43593c715a56da27d-KANARIABIRDS",
-      "issuer": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "issuer": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "max": 0,
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
@@ -89,13 +89,13 @@ Object {
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
-      "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
       "priority": Array [],
       "properties": Object {},
       "reactions": Object {},
       "resources": Array [],
-      "rootowner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
@@ -111,7 +111,7 @@ Object {
   "invalid": Array [
     Object {
       "block": 2,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "This CHANGEISSUER remark is invalid - no such base with ID base-3-KBASE777 found before block 2!",
       "object_id": "base-3-KBASE777",
       "op_type": "CHANGEISSUER",
@@ -128,14 +128,14 @@ Object {
   "invalid": Array [
     Object {
       "block": 2,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "This CHANGEISSUER remark is invalid - no such base with ID base-3-KBASE777 found before block 2!",
       "object_id": "base-3-KBASE777",
       "op_type": "CHANGEISSUER",
     },
     Object {
       "block": 2,
-      "caller": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "This CHANGEISSUER remark is invalid - no such collection with ID d43593c715a56da27d-KANARIABIRDS found before block 2!",
       "object_id": "d43593c715a56da27d-KANARIABIRDS",
       "op_type": "CHANGEISSUER",
@@ -153,7 +153,7 @@ Object {
       "block": 2,
       "changes": Array [],
       "id": "d43593c715a56da27d-KANARIABIRDS",
-      "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+      "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "max": 0,
       "metadata": "https://some.url",
       "symbol": "KANARIABIRDS",
@@ -162,7 +162,7 @@ Object {
   "invalid": Array [
     Object {
       "block": 3,
-      "caller": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+      "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "Attempting to change issuer of collection d43593c715a56da27d-KANARIABIRDS when not issuer!",
       "object_id": "d43593c715a56da27d-KANARIABIRDS",
       "op_type": "CHANGEISSUER",

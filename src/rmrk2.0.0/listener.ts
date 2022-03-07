@@ -1,5 +1,4 @@
 import "isomorphic-fetch";
-import "@polkadot/api-augment";
 import { ApiPromise } from "@polkadot/api";
 import { Observable, Subscriber } from "rxjs";
 import { Header } from "@polkadot/types/interfaces/runtime";
@@ -16,7 +15,7 @@ import { ConsolidatorReturnType } from "./tools/consolidator/consolidator";
 import fetchRemarks from "./tools/fetchRemarks";
 import { hexToString } from "@polkadot/util";
 import { VERSION } from "./tools/constants";
-import { PromiseRpcResult } from "@polkadot/api/types";
+import { PromiseRpcResult } from "@polkadot/api-base/types/rpc";
 
 interface IProps {
   polkadotApi: ApiPromise | null;
@@ -26,6 +25,8 @@ interface IProps {
   consolidateFunction: (remarks: Remark[]) => Promise<ConsolidatorReturnType>;
   storageProvider?: IStorageProvider;
   storageKey?: string;
+  loggerEnabled?: boolean;
+  ss58Format?: number;
 }
 
 export interface IStorageProvider {
@@ -83,6 +84,8 @@ export class RemarkListener {
   private missingBlockCallsFetched: boolean;
   private prefixes: string[];
   private currentBlockNum: number;
+  private loggerEnabled: boolean;
+  private ss58Format: number;
   public storageProvider: IStorageProvider;
   private consolidateFunction: (
     remarks: Remark[]
@@ -94,12 +97,15 @@ export class RemarkListener {
     consolidateFunction,
     storageProvider,
     storageKey,
+    loggerEnabled = false,
+    ss58Format = 2,
   }: IProps) {
     if (!polkadotApi) {
       throw new Error(
         `"providerInterface" is missing. Please provide polkadot.js provider interface (i.e. websocket)`
       );
     }
+    this.ss58Format = ss58Format;
     this.currentBlockNum = 0;
     this.apiPromise = polkadotApi;
     this.missingBlockCalls = [];
@@ -112,6 +118,7 @@ export class RemarkListener {
     this.prefixes = prefixes || ["0x726d726b", "0x524d524b"];
     this.consolidateFunction = consolidateFunction;
     this.storageProvider = storageProvider || new StorageProvider(storageKey);
+    this.loggerEnabled = loggerEnabled;
   }
 
   private initialize = async () => {
@@ -126,6 +133,12 @@ export class RemarkListener {
       this.missingBlockCalls = await this.fetchMissingBlockCalls(latestBlock);
       this.missingBlockCallsFetched = true;
       this.consolidate();
+    }
+  };
+
+  private logger = (message: string) => {
+    if (this.loggerEnabled) {
+      console.log(message);
     }
   };
 
@@ -153,15 +166,29 @@ export class RemarkListener {
   /*
    Fetch blocks between last block in dump and last block on chain
    */
-  public async fetchMissingBlockCalls(latestBlock: number): Promise<Block[]> {
+  public async fetchMissingBlockCalls(
+    latestBlock: number,
+    toBlock?: number
+  ): Promise<Block[]> {
     try {
-      const to = await getLatestFinalizedBlock(this.apiPromise);
-      return await fetchRemarks(
+      const to = toBlock || (await getLatestFinalizedBlock(this.apiPromise));
+
+      this.logger(
+        `Fetching missing or skipped blocks between ${
+          latestBlock + 1
+        } and ${to}`
+      );
+      const remarks = await fetchRemarks(
         this.apiPromise,
         latestBlock + 1,
         to,
-        this.prefixes
+        this.prefixes,
+        this.ss58Format
       );
+
+      this.logger(`Found ${remarks.length} remarks`);
+
+      return remarks;
     } catch (error: any) {
       console.log(error);
       return [];
@@ -199,7 +226,21 @@ export class RemarkListener {
         ...this.latestBlockCallsFinalised,
       ];
 
-      const remarks = getRemarksFromBlocks(blockCalls, this.prefixes);
+      // Logging
+      if (blockCalls.length > 0 && this.loggerEnabled) {
+        const blockNums = blockCalls.map((blockCall) => blockCall.block);
+        this.logger(
+          `Consolidating block range between: ${blockNums[0]} and ${
+            blockNums[blockNums.length - 1]
+          }`
+        );
+      }
+
+      const remarks = getRemarksFromBlocks(
+        blockCalls,
+        this.prefixes,
+        this.ss58Format
+      );
       this.latestBlockCallsFinalised = [];
       this.missingBlockCalls = [];
       const consolidatedFinal = await this.consolidateFunction(remarks);
@@ -211,7 +252,8 @@ export class RemarkListener {
     if (this.observerUnfinalised) {
       const remarks = getRemarksFromBlocks(
         [...this.missingBlockCalls, ...this.latestBlockCalls],
-        this.prefixes
+        this.prefixes,
+        this.ss58Format
       );
       // Fire event to a subscriber
       this.observerUnfinalised.next(remarks);
@@ -222,7 +264,7 @@ export class RemarkListener {
     Subscribe to latest block heads, (finalised, and un-finalised)
     Save them to 2 separate arrays, and once block is finalised, remove it from unfinalised array
     this.latestBlockCalls is array of unfinalised blocks,
-    we keep it for reference in case burnr wants to disable remarks that are being interacted with
+    we keep it for reference in case burner wants to disable remarks that are being interacted with
    */
   private async initialiseListener({ finalised }: { finalised: boolean }) {
     const headSubscriber = finalised
@@ -244,13 +286,29 @@ export class RemarkListener {
         this.prefixes,
         this.apiPromise
       );
-
       const filteredCalls = calls.filter((call) => {
         return hexToString(call.value).includes(`::${VERSION}::`);
       });
 
+      const latestFinalisedBlockNum = header.number.toNumber();
+
       if (finalised) {
-        this.currentBlockNum = header.number.toNumber();
+        const latestSavedBlock = this.currentBlockNum;
+        // Compare block sequence order to see if there's a skipped finalised block
+        if (
+          latestSavedBlock &&
+          latestSavedBlock + 1 < latestFinalisedBlockNum &&
+          this.missingBlockCallsFetched
+        ) {
+          // Fetch all the missing blocks and save their remarks for next consolidation.
+          this.missingBlockCallsFetched = false;
+          this.missingBlockCalls = await this.fetchMissingBlockCalls(
+            latestSavedBlock,
+            latestFinalisedBlockNum - 1
+          );
+          this.missingBlockCallsFetched = true;
+        }
+        this.currentBlockNum = latestFinalisedBlockNum;
       }
 
       // Update local db latestBlock
@@ -260,15 +318,19 @@ export class RemarkListener {
         filteredCalls.length === 0
       ) {
         try {
-          await this.storageProvider.set(header.number.toNumber());
+          await this.storageProvider.set(latestFinalisedBlockNum);
         } catch (e: any) {
           console.error(e);
         }
       }
 
+      if (filteredCalls.length < 1 && this.missingBlockCalls.length > 0) {
+        await this.consolidate();
+      }
+
       if (filteredCalls.length > 0) {
         const blockCalls: BlockCalls = {
-          block: header.number.toNumber(),
+          block: latestFinalisedBlockNum,
           calls: filteredCalls,
         };
 
@@ -276,19 +338,26 @@ export class RemarkListener {
         if (finalised) {
           this.latestBlockCallsFinalised.push(blockCalls);
           // Now that block has been finalised,
-          // remove remarks that we found in it from unfinalised blockCalls array that we keep in memory
+          // remove remarks that we found in it from unfinalised blockCalls array that we keep in memory or stalled blocks (more than 10 blocks)
           this.latestBlockCalls = this.latestBlockCalls.filter(
-            (item) => item?.block !== blockCalls.block
+            (item) =>
+              item?.block !== blockCalls.block ||
+              blockCalls.block - item.block > 20
           );
           // Call consolidate to re-consolidate and fire subscription event back to subscriber
           await this.consolidate();
         } else {
+          // Filter stalled blocks (20 blocks) to free up memory
+          this.latestBlockCalls = this.latestBlockCalls.filter(
+            (item) => blockCalls.block - item.block > 20
+          );
           this.latestBlockCalls.push(blockCalls);
           /* If someone is listening to unfinalised blocks, return them here */
           if (this.observerUnfinalised) {
             const remarks = getRemarksFromBlocks(
               [...this.latestBlockCalls],
-              this.prefixes
+              this.prefixes,
+              this.ss58Format
             );
             this.observerUnfinalised.next(remarks);
           }

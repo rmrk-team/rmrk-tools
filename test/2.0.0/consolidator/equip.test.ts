@@ -183,6 +183,42 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     expect(consolidatedResult).toMatchSnapshot();
   });
 
+  it("Should Equip NFT with * slot whitelisting", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock().mint()),
+      ...getBlockCallsMock(createBaseMock().base()),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd({ base: createBaseMock(4).getId(), id: resid2 })
+      ),
+      ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(
+        mintNftMock2(6).resadd({
+          slot: `${createBaseMock(4).getId()}.${
+            createBaseMock(4).parts?.[0].id
+          }`,
+          id: resid,
+        })
+      ),
+      ...getBlockCallsMock(
+        createBaseMock(4).equippable({
+          slot: createBaseMock(4).parts?.[0].id || "",
+          collections: ["*"],
+          operator: "+",
+        })
+      ),
+      ...getBlockCallsMock(
+        mintNftMock2(6).equip(
+          `${createBaseMock(4).getId()}.${createBaseMock(4).parts?.[0].id}`
+        )
+      ),
+    ]);
+
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult).toMatchSnapshot();
+  });
+
   it("Should fail to Equip NFT while base is still pending accept", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),

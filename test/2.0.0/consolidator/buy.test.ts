@@ -179,4 +179,27 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
+
+  it("Should correctly save changes when commission is paid", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(mintNftMock3().mint(mintNftMock2(4).getId())),
+      ...getBlockCallsMock(mintNftMock3(5).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock3(5).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(0.1e12).toString()}`,
+          caller: getAliceKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
 });

@@ -20,6 +20,7 @@ import {
 import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
 import { PropertiesStruct } from "./validate-metadata";
+import { IProperties, IRoyaltyAttribute } from "./types";
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -111,7 +112,7 @@ const EMOTEStruct = type({
 
 const BaseStruct = type({
   issuer: string(),
-  type: enums(["svg"]),
+  type: optional(string()),
   symbol: string(),
   parts: array(PartStruct),
 });
@@ -170,6 +171,27 @@ export const validateCollection = (remark: string): any => {
   }
 };
 
+export const validateRoyaltiesPropertyValue = (
+  properties: IProperties | undefined
+) => {
+  if (properties as IProperties | undefined) {
+
+    const royalties = Object.values(properties as IProperties).find(
+      (property) => property && property.type === "royalty"
+    );
+
+    // Royalties cannot be more than 100 and less than 0
+    if (
+      (royalties as IRoyaltyAttribute)?.value?.royaltyPercentFloat &&
+      ((royalties as IRoyaltyAttribute)?.value?.royaltyPercentFloat < 0 ||
+        (royalties as IRoyaltyAttribute)?.value?.royaltyPercentFloat > 100)
+    ) {
+      throw new Error("Royalty percentage value have to be between 0 and 100");
+    }
+  }
+  return true;
+};
+
 export const validateNFT = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
   const [_prefix, _op_type, _version, dataString] = remark.split("::");
@@ -177,6 +199,9 @@ export const validateNFT = (remark: string): any => {
   try {
     validateRemarkBase(remark, OP_TYPES.MINT);
     const obj = getRemarkData(dataString);
+
+    validateRoyaltiesPropertyValue(obj?.properties);
+
     return assert(obj, NFTStruct);
   } catch (error: any) {
     throw new Error(
@@ -264,6 +289,8 @@ export const validateSetAttribute = (remark: string): any => {
       throw new Error("No NFT id specified for SETPROPERTY");
     }
     const obj = getRemarkData(property);
+
+    validateRoyaltiesPropertyValue({ [key]: obj });
     return assert(obj, any());
   } catch (error: any) {
     throw new Error(

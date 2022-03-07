@@ -4,6 +4,7 @@ import { OP_TYPES } from "../../constants";
 import { Collection } from "../../../classes/collection";
 import { IConsolidatorAdapter } from "../adapters/types";
 import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
+import { validateRoyaltiesPropertyValue } from "../../validate-remark";
 
 export const validateMintNFT = async (
   remark: Remark,
@@ -45,6 +46,10 @@ export const validateMintNFT = async (
 
       nft.pending = rootowner !== remark.caller;
     }
+  }
+
+  if (nft.properties) {
+    validateRoyaltiesPropertyValue(nft.properties);
   }
 
   // nft.owner can be already set if mint remark has recipient field that allows to mint directly onto another nft
