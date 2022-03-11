@@ -108,19 +108,24 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
   public async updateNFTChildrenRootOwner(
     nft: NFT | NFTConsolidated,
     rootowner?: string,
-    level?: number
+    level?: number,
+    children: string[] = []
   ) {
+    const updatedChildren = [...children];
     if ((level || 1) < 10 && nft.children && nft.children.length > 0) {
       const promises = nft.children.map(async (child) => {
         if (
           this.nfts[child.id]?.children &&
           this.nfts[child.id]?.children.length > 0
         ) {
-          await this.updateNFTChildrenRootOwner(
+          updatedChildren.push(child.id);
+          const updatedGrandChildren = await this.updateNFTChildrenRootOwner(
             this.nfts[child.id],
             rootowner || nft.rootowner,
             (level || 1) + 1
           );
+
+          updatedChildren.concat(updatedGrandChildren);
         }
         this.nfts[child.id] = {
           ...this.nfts[child.id],
@@ -131,6 +136,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
 
       await Promise.all(promises);
     }
+
+    return updatedChildren;
   }
 
   public async updateNFTBuy(nft: NFT, consolidatedNFT: NFTConsolidated) {

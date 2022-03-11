@@ -50,8 +50,9 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
       ...getBlockCallsMock(mintNftMock3().mint(mintNftMock2(4).getId())),
       ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
     ]);
-    const consolidator = new Consolidator();
-    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+    const consolidator = new Consolidator(2, undefined, false, true);
+    const result = await consolidator.consolidate(remarks);
+    expect(result).toMatchSnapshot();
   });
 
   it("Should convert recipient according to passed ss58Format", async () => {

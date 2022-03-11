@@ -59,9 +59,13 @@ import { Destroy } from "../../classes/destroy";
 import { destroyInteraction } from "./interactions/destroy";
 import { Lock } from "../../classes/lock";
 import { lockInteraction } from "./interactions/lock";
-import {encodeAddress} from "@polkadot/keyring";
+import { encodeAddress } from "@polkadot/keyring";
 
-type InteractionChanges = Partial<Record<OP_TYPES, string>>[];
+type InteractionChange = Partial<Record<OP_TYPES, string>> & {
+  CHILDREN?: string[];
+};
+
+type InteractionChanges = InteractionChange[];
 
 export type ConsolidatorReturnType = {
   nfts: Record<string, NFTConsolidated>;
@@ -468,9 +472,14 @@ export class Consolidator {
       await sendInteraction(remark, sendEntity, this.dbAdapter, nft);
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTSend(nft, consolidatedNFT);
-        await this.dbAdapter.updateNFTChildrenRootOwner(nft);
+        const updatedChildrenIds = await this.dbAdapter.updateNFTChildrenRootOwner(
+          nft
+        );
         if (this.emitInteractionChanges) {
-          this.interactionChanges.push({ [OP_TYPES.SEND]: nft.getId() });
+          this.interactionChanges.push({
+            [OP_TYPES.SEND]: nft.getId(),
+            CHILDREN: updatedChildrenIds,
+          });
         }
       }
     } catch (e: any) {
@@ -609,9 +618,14 @@ export class Consolidator {
       );
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNFTBuy(nft, consolidatedNFT);
-        await this.dbAdapter.updateNFTChildrenRootOwner(nft);
+        const updatedChildrenIds = await this.dbAdapter.updateNFTChildrenRootOwner(
+          nft
+        );
         if (this.emitInteractionChanges) {
-          this.interactionChanges.push({ [OP_TYPES.BUY]: nft.getId() });
+          this.interactionChanges.push({
+            [OP_TYPES.BUY]: nft.getId(),
+            CHILDREN: updatedChildrenIds,
+          });
         }
       }
     } catch (e: any) {
