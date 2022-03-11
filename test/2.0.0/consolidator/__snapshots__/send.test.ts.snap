@@ -409,6 +409,26 @@ Object {
 exports[`rmrk2.0.0 Consolidator: Send NFT to other NFT rootowner should be updated recursivly 1`] = `
 Object {
   "bases": Object {},
+  "changes": Array [
+    Object {
+      "CREATE": "d43593c715a56da27d-KANARIABIRDS",
+    },
+    Object {
+      "MINT": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+    },
+    Object {
+      "MINT": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+    },
+    Object {
+      "MINT": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
+    },
+    Object {
+      "CHILDREN": Array [
+        "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
+      ],
+      "SEND": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+    },
+  ],
   "collections": Object {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
