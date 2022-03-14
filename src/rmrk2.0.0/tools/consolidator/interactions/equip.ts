@@ -88,7 +88,10 @@ export const equipInteraction = async (
       );
     }
 
-    if (!basepart.equippable?.includes(nft.collection) && !basepart.equippable?.includes("*")) {
+    if (
+      !basepart.equippable?.includes(nft.collection) &&
+      !basepart.equippable?.includes("*")
+    ) {
       throw new Error(
         `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because it's base ${base} slot ${slot} doesn't allow it's collection ${nft.collection}`
       );
@@ -107,6 +110,15 @@ export const equipInteraction = async (
     if (baseResource.pending) {
       throw new Error(
         `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because parent's base is pending`
+      );
+    }
+
+    const occupiedSlotChild = parentNft.children.find(
+      (child) => child.equipped === equipEntity.baseslot
+    );
+    if (Boolean(occupiedSlotChild)) {
+      throw new Error(
+        `[${OP_TYPES.EQUIP}] Cannot equip NFT ${equipEntity.id} because the slot "${equipEntity.baseslot}" is already occupied by NFT "${occupiedSlotChild?.id}"`
       );
     }
 

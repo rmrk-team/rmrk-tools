@@ -7,6 +7,7 @@ import {
   getRemarksFromBlocksMock,
   mintNftMock,
   mintNftMock2,
+  mintNftMock3,
 } from "../mocks";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -102,6 +103,29 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
       ...getBlockCallsMock(mintNftMock2().mint(getBobKey().address)),
       ...getBlockCallsMock(mintNftMock(3).send(mintNftMock2(4).getId())),
       ...getBlockCallsMock(mintNftMock(3).equip("base-test.test")),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult).toMatchSnapshot();
+  });
+
+  it("Should fail to Equip in occupied slot", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock3().mint(mintNftMock(3).getId())),
+      ...getBlockCallsMock(
+        mintNftMock3(9).resadd({
+          slot: `${createBaseMock(4).getId()}.${
+            createBaseMock(4).parts?.[1].id
+          }`,
+          id: resid,
+        })
+      ),
+      ...getBlockCallsMock(
+        mintNftMock3(9).equip(
+          `${createBaseMock(4).getId()}.${createBaseMock(4).parts?.[1].id}`
+        )
+      ),
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
