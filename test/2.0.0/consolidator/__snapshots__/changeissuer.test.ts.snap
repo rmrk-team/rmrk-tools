@@ -17,6 +17,7 @@ Object {
       ],
       "id": "base-2-KBASE777",
       "issuer": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "metadata": undefined,
       "parts": Array [
         Object {
           "equippable": Array [],

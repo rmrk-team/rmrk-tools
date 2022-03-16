@@ -117,6 +117,7 @@ export interface BaseConsolidated {
   parts?: IBasePart[];
   changes: Change[];
   themes?: Record<string, Theme>;
+  metadata?: string;
 }
 
 const invalidateIfParentIsForsale = async (

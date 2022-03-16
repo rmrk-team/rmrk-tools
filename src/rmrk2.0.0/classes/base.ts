@@ -10,6 +10,7 @@ export class Base {
   readonly symbol: string;
   readonly type?: BaseType;
   readonly parts?: IBasePart[];
+  readonly metadata?: string;
   issuer: string;
   changes: Change[] = [];
   themes?: Record<string, Theme>;
@@ -20,7 +21,8 @@ export class Base {
     issuer: string,
     type?: BaseType,
     parts?: IBasePart[],
-    themes?: Record<string, Theme>
+    themes?: Record<string, Theme>,
+    metadata?: string
   ) {
     this.block = block;
     this.symbol = symbol;
@@ -28,6 +30,7 @@ export class Base {
     this.issuer = issuer;
     this.parts = parts || undefined;
     this.themes = themes || undefined;
+    this.metadata = metadata;
   }
 
   public base(): string {
@@ -41,6 +44,7 @@ export class Base {
         issuer: this.issuer,
         parts: this.parts,
         themes: this.themes,
+        metadata: this.metadata,
       })
     )}`;
   }
@@ -152,7 +156,8 @@ export class Base {
         encodeAddress(obj.issuer, ss58Format),
         obj.type,
         obj.parts,
-        obj.themes
+        obj.themes,
+        obj.metadata
       );
     } catch (e: any) {
       console.error(e.message);

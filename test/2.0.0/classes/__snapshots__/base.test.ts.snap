@@ -14,6 +14,7 @@ Base {
     },
   ],
   "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+  "metadata": undefined,
   "parts": Array [
     Object {
       "equippable": Array [],
