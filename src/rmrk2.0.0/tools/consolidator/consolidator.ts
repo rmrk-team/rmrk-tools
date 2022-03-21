@@ -878,7 +878,7 @@ export class Consolidator {
         remark,
         equipEntity,
         this.dbAdapter,
-        nft,
+        consolidatedNFT,
         parentNft
       );
       if (parentNft && consolidatedParentNFT) {

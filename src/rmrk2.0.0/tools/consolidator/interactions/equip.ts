@@ -1,15 +1,16 @@
 import { Remark } from "../remark";
-import { NFT } from "../../../classes/nft";
+import { NFT, Resource } from "../../../classes/nft";
 import { OP_TYPES } from "../../constants";
 import { IConsolidatorAdapter } from "../adapters/types";
 import { findRealOwner, isValidAddressPolkadotAddress } from "../utils";
 import { Equip } from "../../../classes/equip";
+import { NFTConsolidated } from "../consolidator";
 
 export const equipInteraction = async (
   remark: Remark,
   equipEntity: Equip,
   dbAdapter: IConsolidatorAdapter,
-  nft?: NFT,
+  nft?: NFTConsolidated,
   parentNft?: NFT
 ): Promise<void> => {
   if (!nft) {
@@ -53,7 +54,7 @@ export const equipInteraction = async (
     );
   }
 
-  const child = parentNft.children.find((child) => child.id === nft.getId());
+  const child = parentNft.children.find((child) => child.id === nft.id);
 
   if (!child) {
     throw new Error(
@@ -98,18 +99,26 @@ export const equipInteraction = async (
     }
 
     /* If an NFT has multiple resources for the same baseslot then pick the one with highest priority index */
-    const baseResources = parentNft.resources.filter(
-      (resource) => resource.base === base
-    );
-    let baseResource = baseResources[0];
-    nft.priority.forEach((resId) => {
+    const baseResources = nft.equipped
+      ? nft.resources.filter(
+          (resource) =>
+            `${resource.base}.${resource.slot}` === equipEntity.baseslot
+        )
+      : nft.resources;
+
+    let baseResource: Resource | undefined;
+    (nft.priority || []).forEach((resId: string) => {
       const priorityResource = baseResources.find(
         (resource) => resource.id === resId
       );
-      if (priorityResource) {
+      if (!baseResource && priorityResource) {
         baseResource = priorityResource;
       }
     });
+
+    if (!baseResource) {
+      baseResource = baseResources?.[0];
+    }
 
     if (!baseResource) {
       throw new Error(
