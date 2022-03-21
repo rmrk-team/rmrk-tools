@@ -18,6 +18,7 @@ beforeAll(async () => {
 describe("rmrk2.0.0 Consolidator: EQUIP", () => {
   const resid = "jXhhR";
   const resid2 = "xXhhR";
+  const resid3 = "xXhhT";
   const getSetupRemarks = () => [
     ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
@@ -54,6 +55,30 @@ describe("rmrk2.0.0 Consolidator: EQUIP", () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftMock2(6).equip("")),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult).toMatchSnapshot();
+  });
+
+  it("Equip NFT with the highest priority on another NFT successfully", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2(6).equip("")),
+      ...getBlockCallsMock(
+        mintNftMock2(6).resadd({
+          slot: `${createBaseMock(4).getId()}.${
+            createBaseMock(4).parts?.[1].id
+          }`,
+          id: resid3,
+        })
+      ),
+      ...getBlockCallsMock(mintNftMock2(6).setpriority([resid3, resid])),
+      ...getBlockCallsMock(
+        mintNftMock2(6).equip(
+          `${createBaseMock(4).getId()}.${createBaseMock(4).parts?.[1].id}`
+        )
+      ),
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);

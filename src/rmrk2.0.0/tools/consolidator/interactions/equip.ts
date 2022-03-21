@@ -97,9 +97,19 @@ export const equipInteraction = async (
       );
     }
 
-    const baseResource = parentNft.resources.find(
+    /* If an NFT has multiple resources for the same baseslot then pick the one with highest priority index */
+    const baseResources = parentNft.resources.filter(
       (resource) => resource.base === base
     );
+    let baseResource = baseResources[0];
+    nft.priority.forEach((resId) => {
+      const priorityResource = baseResources.find(
+        (resource) => resource.id === resId
+      );
+      if (priorityResource) {
+        baseResource = priorityResource;
+      }
+    });
 
     if (!baseResource) {
       throw new Error(
