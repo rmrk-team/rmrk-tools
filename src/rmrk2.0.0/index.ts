@@ -46,3 +46,4 @@ export * from "./tools/constants";
 export * from "./tools/validate-remark";
 export * from "./tools/validate-metadata";
 export * from "./tools/consolidator/utils";
+export * from "./tools/types";
