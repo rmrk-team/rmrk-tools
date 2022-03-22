@@ -99,26 +99,9 @@ export const equipInteraction = async (
     }
 
     /* If an NFT has multiple resources for the same baseslot then pick the one with highest priority index */
-    const baseResources = nft.equipped
-      ? nft.resources.filter(
-          (resource) =>
-            `${resource.base}.${resource.slot}` === equipEntity.baseslot
-        )
-      : [];
-
-    let baseResource: Resource | undefined;
-    (nft.priority || []).forEach((resId: string) => {
-      const priorityResource = baseResources.find(
-        (resource) => resource.id === resId
-      );
-      if (!baseResource && priorityResource) {
-        baseResource = priorityResource;
-      }
-    });
-
-    if (!baseResource) {
-      baseResource = baseResources?.[0];
-    }
+    const baseResource = parentNft.resources.find(
+      (resource) => resource.base === base
+    );
 
     if (!baseResource) {
       throw new Error(
