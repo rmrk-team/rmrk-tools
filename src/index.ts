@@ -15,6 +15,8 @@ export {
   getLatestFinalizedBlock,
   getRemarksFromBlocks,
   getBlockCallsFromSignedBlock,
+  getRemarkData,
+  getLatestBlock,
 } from "./tools/utils";
 export * from "./tools/consolidator/utils";
 export { RemarkListener } from "./listener";
