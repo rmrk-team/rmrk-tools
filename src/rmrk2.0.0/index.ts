@@ -22,6 +22,7 @@ export {
   getLatestFinalizedBlock,
   getRemarksFromBlocks,
   getBlockCallsFromSignedBlock,
+  getRemarkData,
 } from "./tools/utils";
 export { validateMintNFT } from "./tools/consolidator/interactions/mint";
 export {

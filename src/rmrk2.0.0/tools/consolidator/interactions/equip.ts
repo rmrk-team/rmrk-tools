@@ -104,7 +104,7 @@ export const equipInteraction = async (
           (resource) =>
             `${resource.base}.${resource.slot}` === equipEntity.baseslot
         )
-      : nft.resources;
+      : [];
 
     let baseResource: Resource | undefined;
     (nft.priority || []).forEach((resId: string) => {
