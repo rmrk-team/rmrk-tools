@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "1.0.46",
+  "version": "1.0.48",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
@@ -61,6 +61,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-strip": "^2.0.0",
+    "@types/emoji-regex": "^9.2.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^17.0.8",
     "@types/ramda": "^0.27.45",
