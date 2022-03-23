@@ -1951,6 +1951,13 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
 
+"@types/emoji-regex@^9.2.0":
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/@types/emoji-regex/-/emoji-regex-9.2.0.tgz#2e117de04f5fa561c5dcbe43a860ecd856517525"
+  integrity sha512-Q2BaUWiokKV2ZWk15twerRiNIex/VOGIz3pAgPMk6JZAeuGT9oAm/kA2Ri9InUtPc84bY0UQZzn/Pd2yUd33Ig==
+  dependencies:
+    emoji-regex "*"
+
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.0.tgz#4792816e31119ebd506902a482caec4951fabd86"
@@ -3693,6 +3700,11 @@ emittery@^0.7.1:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.7.2.tgz#25595908e13af0f5674ab419396e2fb394cdfa82"
   integrity sha512-A8OG5SR/ij3SsJdWDJdkkSYUjQdCUx6APQXem0SaEePBSRg4eymGYwBkKo1Y6DU+af/Jn2dBQqDBvjnr9Vi8nQ==
+
+emoji-regex@*:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-10.0.1.tgz#77180edb279b99510a21b79b19e1dc283d8f3991"
+  integrity sha512-cLuZzriSWVE+rllzeq4zpUEoCPfYEbQ6ZVhIq+ed6ynWST7Bw9XnOr+bKWgCup4paq72DI21gw9M3aaFkm4HAw==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
