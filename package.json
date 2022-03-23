@@ -1,6 +1,6 @@
 {
   "name": "rmrk-tools",
-  "version": "2.0.63",
+  "version": "2.0.65",
   "description": "Suite of libraries implementing RMRK.app specs",
   "repository": {
     "type": "git",
@@ -64,6 +64,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-strip": "^2.0.0",
+    "@types/emoji-regex": "^9.2.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
