@@ -10,6 +10,10 @@ export const attributesMockNumberValid = {
     type: "int",
     value: 2,
   },
+  date: {
+    type: "datetime",
+    value: 1648209269044,
+  },
 };
 
 export const attributesMockFloatValid = {
@@ -19,10 +23,21 @@ export const attributesMockFloatValid = {
   },
 };
 
+export const attributesMockBooleanValid = {
+  test: {
+    type: "boolean",
+    value: true,
+  },
+};
+
 export const attributesMockValueValid = {
   test: {
     type: "string",
     value: "2",
+  },
+  bool: {
+    type: "boolean",
+    value: true,
   },
 };
 
@@ -42,7 +57,6 @@ export const metadataMockAllValid2 = {
   properties: attributesMockBoostNumberValid,
 };
 
-
 export const metadataMockAllValid4 = {
   image: "ipfs://ipfs/12345",
   properties: attributesMockNumberValid,
@@ -52,3 +66,4 @@ export const metadataMockAllValid6 = {
   image: "ipfs://ipfs/12345",
   properties: attributesMockValueValid,
 };
+
