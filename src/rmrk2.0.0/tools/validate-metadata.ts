@@ -25,7 +25,15 @@ const MetadataStruct = type({
 
 export const PropertiesStruct = object({
   value: any(),
-  type: enums(["string", "array", "object", "int", "float"]),
+  type: enums([
+    "string",
+    "array",
+    "object",
+    "int",
+    "boolean",
+    "datetime",
+    "float",
+  ]),
   _mutation: optional(
     object({
       allowed: boolean(),
@@ -71,9 +79,15 @@ export const validateAttributes = (properties?: IProperties) => {
       }
     }
 
-    if (type === "int" || type === "float" || type === "number") {
+    if (type === "int" || type === "float" || type === "number" || type === "datetime") {
       if (typeof value !== "number") {
         throw new Error("for type 'number' 'value' has to be a number");
+      }
+    }
+
+    if (type === "boolean") {
+      if (typeof value !== "boolean") {
+        throw new Error("for type 'boolean' 'value' has to be a boolean");
       }
     }
 
