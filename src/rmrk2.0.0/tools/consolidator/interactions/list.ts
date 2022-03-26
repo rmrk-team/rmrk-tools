@@ -44,7 +44,7 @@ export const listForSaleInteraction = async (
     );
   }
 
-  if (nft.transferable === 0 || (((nft.transferable > remark.block) && (nft.transferable > 0)) && (listEntity.price != 0)) || ((((nft.block - nft.transferable) < remark.block) && (nft.transferable < 0)) && (listEntity.price != 0))) {
+  if (nft.transferable === 0 || ((nft.transferable >= remark.block) && (listEntity.price != 0)) || ((((nft.block - nft.transferable) < remark.block) && (nft.transferable < 0)) && (listEntity.price != 0))) {
     throw new Error(
       `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${listEntity.id}.`
     );
