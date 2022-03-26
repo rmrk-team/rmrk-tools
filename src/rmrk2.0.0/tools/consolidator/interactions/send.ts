@@ -49,7 +49,7 @@ export const sendInteraction = async (
     );
   }
 
-  if (nft.transferable === 0 || ((nft.transferable > remark.block) && (nft.transferable > 0)) || (((nft.block - nft.transferable) < remark.block) && (nft.transferable < 0))) {
+  if (nft.transferable === 0 || nft.transferable >= remark.block || (((nft.block - nft.transferable) < remark.block) && (nft.transferable < 0))) {
     throw new Error(
       `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${sendEntity.id}.`
     );
