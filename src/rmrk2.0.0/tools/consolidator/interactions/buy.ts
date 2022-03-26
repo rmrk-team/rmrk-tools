@@ -175,7 +175,7 @@ const validate = (
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
       );
-    case nft.transferable === 0 || nft.transferable >= remark.block:
+    case nft.transferable === 0 || ((nft.transferable > remark.block) && (nft.transferable > 0)) || (((nft.block - nft.transferable) < remark.block) && (nft.transferable < 0)):
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
       );
