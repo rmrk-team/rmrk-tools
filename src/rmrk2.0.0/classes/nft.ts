@@ -202,7 +202,7 @@ export class NFT {
     }::${VERSION}::${namespace}::${this.getId()}::${unicode}`;
   }
 
-  public resadd(resource: Resource): string {
+  public resadd(resource: RessAddResouce): string {
     if (!this.block) {
       throw new Error(
         "You can only add resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
@@ -292,17 +292,20 @@ export interface Reactionmap {
   [unicode: string]: string[];
 }
 
-export interface Resource {
+export interface RessAddResouce {
   id?: string;
   base?: string;
   src?: string;
   parts?: string[];
   metadata?: string;
   slot?: string;
-  pending?: boolean;
   thumb?: string;
   theme?: Theme;
   themeId?: string;
+}
+
+export interface Resource extends RessAddResouce {
+  pending?: boolean;
 }
 
 export interface IResourceConsolidated {
