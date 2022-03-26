@@ -50,7 +50,7 @@ const NFTStruct = type({
 const ResourceStruct = type({
   base: optional(pattern(string(), new RegExp("^base-"))),
   src: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
-  slot: optional(pattern(string(), new RegExp(/^base-\S+\.{1}\S+$/))),
+  slot: optional(pattern(string(), new RegExp(/^base-\S+\.{1}(.+)$/))),
   metadata: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
   thumb: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
@@ -83,7 +83,7 @@ const EQUIPStruct = type({
   id: string(),
   baseslot: union([
     pattern(string(), new RegExp(/^$/)),
-    pattern(string(), new RegExp(/^base-\S+\.{1}\S+$/)),
+    pattern(string(), new RegExp(/^base-\S+\.{1}(.+)$/)),
   ]), // Allow only 1 dot
 });
 
