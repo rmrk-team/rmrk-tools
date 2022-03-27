@@ -25,7 +25,6 @@ export interface IAttribute {
     | "boolean"
     | "datetime"
     | "royalty";
-  name?: string;
   value: any;
 }
 
