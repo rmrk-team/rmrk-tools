@@ -103,8 +103,8 @@
   },
   "peerDependency": {
     "@polkadot/api": "^7.x",
-    "@polkadot/keyring": "^7.x",
-    "@polkadot/util-crypto": "^7.x",
-    "@polkadot/util": "^7.x"
+    "@polkadot/keyring": "^8.x",
+    "@polkadot/util-crypto": "^8.x",
+    "@polkadot/util": "^8.x"
   }
 }
