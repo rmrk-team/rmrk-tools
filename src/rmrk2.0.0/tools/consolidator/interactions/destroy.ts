@@ -16,7 +16,7 @@ export const destroyInteraction = async (
     );
   }
 
-  if (remark.caller !== destroyEntity.issuer) {
+  if (remark.caller !== collection.issuer) {
     throw new Error(
       `Attempting to destroy collection ${destroyEntity.id} when not issuer!`
     );
