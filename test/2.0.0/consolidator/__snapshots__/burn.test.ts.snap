@@ -226,13 +226,7 @@ Object {
       "block": 4,
       "burned": "",
       "changes": Array [],
-      "children": Array [
-        Object {
-          "equipped": "",
-          "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
-          "pending": false,
-        },
-      ],
+      "children": Array [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
