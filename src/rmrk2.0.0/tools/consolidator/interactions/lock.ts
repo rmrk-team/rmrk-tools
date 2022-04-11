@@ -15,4 +15,10 @@ export const lockInteraction = async (
       `[${OP_TYPES.LOCK}] Attempting to lock a non-existent Collection ${lockEntity.id}`
     );
   }
+
+  if (remark.caller !== lockEntity.issuer) {
+    throw new Error(
+      `Attempting to lock collection ${lockEntity.id} when not issuer!`
+    );
+  }
 };
