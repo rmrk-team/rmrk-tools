@@ -51,4 +51,21 @@ describe("rmrk2.0.0 Consolidator: BURN", () => {
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
+
+  it("Should remove BURN nft from parent's chioldren array", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(mintNftMock2().mint()),
+      ...getBlockCallsMock(mintNftMock(3).send(mintNftMock2(4).getId())),
+      ...getBlockCallsMock(mintNftMock(3).burn(), getAliceKey().address, [
+        {
+          call: "system.remark",
+          value: "0x484f554f55",
+          caller: getAliceKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
 });
