@@ -16,6 +16,7 @@ export const lockInteraction = async (
     );
   }
 
+  // TODO: add unit tests
   if (remark.caller !== collection.issuer) {
     throw new Error(
       `Attempting to lock collection ${lockEntity.id} when not issuer!`

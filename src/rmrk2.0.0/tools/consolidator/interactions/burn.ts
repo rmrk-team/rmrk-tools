@@ -82,7 +82,8 @@ export const burnInteraction = async (
     );
   }
 
-  if (!isValidAddressPolkadotAddress(nft.owner)) {
+  // TODO: add unit tests for non-transferable case
+  if (!isValidAddressPolkadotAddress(nft.owner) && nft.transferable === 1) {
     //Owner is nft, remove current nft from owner's children
     const owner = await dbAdapter.getNFTById(nft.owner);
     const childIndex = owner
@@ -91,6 +92,8 @@ export const burnInteraction = async (
     if (owner && childIndex > -1) {
       owner.children.splice(childIndex, 1);
     }
+
+    nft.owner = nft.rootowner;
   }
 
   // Burn and note reason
