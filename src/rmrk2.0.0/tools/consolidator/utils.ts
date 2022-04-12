@@ -34,7 +34,7 @@ export const validateTransferability = (
     }
 
     if (nft.transferable < 0) {
-      errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}. It will become transferable after block ${
+      errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}. It was transferable until block ${
         nft.block - nft.transferable
       } but tx made at block ${remark.block}`;
     }
