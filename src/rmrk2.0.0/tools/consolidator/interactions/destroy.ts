@@ -16,6 +16,13 @@ export const destroyInteraction = async (
     );
   }
 
+  // TODO: add unit tests
+  if (remark.caller !== collection.issuer) {
+    throw new Error(
+      `Attempting to destroy collection ${destroyEntity.id} when not issuer!`
+    );
+  }
+
   const nfts = await dbAdapter.getNFTsByCollection(destroyEntity.id);
   const unburnedNfts = nfts ? nfts.filter((nft) => nft.burned === "") : [];
 

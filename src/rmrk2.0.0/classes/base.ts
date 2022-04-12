@@ -174,6 +174,7 @@ export interface IBasePart {
   unequip?: "unequip" | "burn";
   z?: number;
   src?: string;
+  metadata?: string;
 }
 
 export type Theme = Record<string, string | boolean>;

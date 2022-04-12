@@ -15,4 +15,11 @@ export const lockInteraction = async (
       `[${OP_TYPES.LOCK}] Attempting to lock a non-existent Collection ${lockEntity.id}`
     );
   }
+
+  // TODO: add unit tests
+  if (remark.caller !== collection.issuer) {
+    throw new Error(
+      `Attempting to lock collection ${lockEntity.id} when not issuer!`
+    );
+  }
 };

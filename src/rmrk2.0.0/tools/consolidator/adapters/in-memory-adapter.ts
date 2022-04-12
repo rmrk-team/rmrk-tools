@@ -169,6 +169,7 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       burned: nft?.burned,
       changes: nft?.changes,
       equipped: "",
+      owner: nft?.owner,
       forsale: BigInt(nft.forsale) > BigInt(0) ? BigInt(0) : nft.forsale,
     };
   }
