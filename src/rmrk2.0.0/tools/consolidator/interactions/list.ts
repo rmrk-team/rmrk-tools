@@ -7,7 +7,6 @@ import {
   consolidatedNFTtoInstance,
   findRealOwner,
   isValidAddressPolkadotAddress,
-  isNftTransferable,
   validateTransferability,
 } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
