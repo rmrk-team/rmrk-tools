@@ -12,6 +12,10 @@ import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 
+export const isNftTransferable = (nft: NFT, remark: Remark) => {
+  return nft.transferable < 0 && nft.block - nft.transferable >= remark.block;
+}
+
 export const validateMinBlockBetweenEvents = (
   opType: OP_TYPES,
   nft: NFTConsolidated,
