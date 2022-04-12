@@ -203,7 +203,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     );
   });
 
-  it("Should allow SEND after elapsed block number passed as a NEGATIVE transferable value", async () => {
+  it("Should allow SEND until elapsed block number passed as a NEGATIVE transferable value", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock(0, { transferable: -2 }).mint()),
