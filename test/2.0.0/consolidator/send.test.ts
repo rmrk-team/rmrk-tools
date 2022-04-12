@@ -199,7 +199,7 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     const consolidator = new Consolidator();
     const consolidated = await consolidator.consolidate(remarks);
     expect(consolidated.invalid[0].message).toEqual(
-      "[SEND] Attempting to SEND non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It will become transferable after block 4 but tx made at block 5"
+      "[SEND] Attempting to SEND non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It was transferable until block 4 but tx made at block 5"
     );
   });
 
