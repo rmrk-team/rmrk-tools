@@ -8,7 +8,8 @@ import { encodeAddress } from "@polkadot/keyring";
 import {
   consolidatedNFTtoInstance,
   findRealOwner,
-  isValidAddressPolkadotAddress, validateTransferability
+  isValidAddressPolkadotAddress,
+  validateTransferability,
 } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
