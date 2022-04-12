@@ -82,18 +82,15 @@ export const burnInteraction = async (
     );
   }
 
-  // TODO: add unit tests for non-transferable case
   if (!isValidAddressPolkadotAddress(nft.owner) && nft.transferable === 1) {
-    //Owner is nft, remove current nft from owner's children
+    //Owner is nft, unequip it
     const owner = await dbAdapter.getNFTById(nft.owner);
     const childIndex = owner
       ? owner.children.findIndex((child) => child.id === nft.getId())
       : -1;
     if (owner && childIndex > -1) {
-      owner.children.splice(childIndex, 1);
+      owner.children[childIndex].equipped = "";
     }
-
-    nft.owner = nft.rootowner;
   }
 
   // Burn and note reason

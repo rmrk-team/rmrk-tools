@@ -52,7 +52,7 @@ describe("rmrk2.0.0 Consolidator: BURN", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 
-  it("Should remove BURN nft from parent's chioldren array", async () => {
+  it("Should unequip BURNed nft from parent's children array", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
       ...getBlockCallsMock(mintNftMock2().mint()),
