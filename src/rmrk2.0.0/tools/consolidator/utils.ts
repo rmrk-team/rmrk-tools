@@ -13,8 +13,37 @@ import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 
 export const isNftTransferable = (nft: NFT, remark: Remark) => {
-  return nft.transferable < 0 && nft.block - nft.transferable >= remark.block;
-}
+  return (
+    nft.transferable === 1 ||
+    (nft.transferable < 0 && nft.block - nft.transferable >= remark.block) ||
+    (nft.transferable > 1 && remark.block >= nft.transferable)
+  );
+};
+
+export const validateTransferability = (
+  nft: NFT,
+  remark: Remark,
+  opType: OP_TYPES
+) => {
+  if (!isNftTransferable(nft, remark)) {
+    let errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}.`;
+    if (nft.transferable > 1) {
+      errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}. It will become transferable after block ${
+        nft.transferable
+      } but tx made at block ${remark.block}`;
+    }
+
+    if (nft.transferable < 0) {
+      errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}. It will become transferable after block ${
+        nft.block - nft.transferable
+      } but tx made at block ${remark.block}`;
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  return true;
+};
 
 export const validateMinBlockBetweenEvents = (
   opType: OP_TYPES,

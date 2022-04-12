@@ -7,7 +7,7 @@ import {
   consolidatedNFTtoInstance,
   findRealOwner,
   isValidAddressPolkadotAddress,
-  isNftTransferable,
+  isNftTransferable, validateTransferability
 } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
@@ -45,11 +45,7 @@ export const listForSaleInteraction = async (
     );
   }
 
-  if (nft.transferable === 0 || nft.transferable >= remark.block || !isNftTransferable(nft,remark) && listEntity.price != 0) {
-    throw new Error(
-      `[${OP_TYPES.LIST}] Attempting to list non-transferable NFT ${listEntity.id}.`
-    );
-  }
+  validateTransferability(nft, remark, OP_TYPES.LIST);
 
   if (nft.children && nft.children.length > 0) {
     const promises = nft.children.map(async (child) => {

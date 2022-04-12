@@ -11,7 +11,7 @@ import { Theme } from "./base";
 import { isValidAddressPolkadotAddress } from "../tools/consolidator/utils";
 import { encodeAddress } from "@polkadot/keyring";
 
-interface INftInstanceProps {
+export interface INftInstanceProps {
   block: number;
   collection: string;
   symbol: string;
