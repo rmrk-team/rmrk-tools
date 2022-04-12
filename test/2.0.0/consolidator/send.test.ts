@@ -175,4 +175,52 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
       "[SEND] Attempting to send NFT to a non existing NFT 5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777."
     );
   });
+
+  it("Should invalidate SEND to before elapsed block number passed as transferable value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: 5 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "[SEND] Attempting to SEND non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It will become transferable after block 5 but tx made at block 4"
+    );
+  });
+
+  it("Should invalidate SEND to before elapsed block number passed as a NEGATIVE transferable value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -1 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "[SEND] Attempting to SEND non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It was transferable until block 4 but tx made at block 5"
+    );
+  });
+
+  it("Should allow SEND until elapsed block number passed as a NEGATIVE transferable value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -2 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("Should allow SEND if transferable block reached", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: 4 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).send(getBobKey().address)),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
 });

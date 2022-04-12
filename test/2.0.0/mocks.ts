@@ -7,6 +7,7 @@ import { Base } from "../../src/rmrk2.0.0/classes/base";
 import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
 import { BlockCall } from "../../src/rmrk2.0.0/tools/types";
 import { KeyringPair } from "@polkadot/keyring/types";
+import { INftInstanceProps } from "../../src/rmrk2.0.0/classes/nft";
 
 let block = 1;
 
@@ -54,7 +55,10 @@ export const createCollectionMock2 = (
   );
 };
 
-export const mintNftMock = (block?: number): NFT =>
+export const mintNftMock = (
+  block?: number,
+  nftInstanceProps?: Partial<INftInstanceProps>
+): NFT =>
   new NFT({
     block: block || 0,
     collection: createCollectionMock().id,
@@ -62,9 +66,13 @@ export const mintNftMock = (block?: number): NFT =>
     sn: "777".padStart(8, "0"),
     transferable: 1,
     owner: getAliceKey().address,
+    ...(nftInstanceProps || {}),
   });
 
-export const mintNftMock2 = (block?: number): NFT =>
+export const mintNftMock2 = (
+  block?: number,
+  nftInstanceProps?: Partial<INftInstanceProps>
+): NFT =>
   new NFT({
     block: block || 0,
     collection: createCollectionMock().id,
@@ -72,6 +80,7 @@ export const mintNftMock2 = (block?: number): NFT =>
     sn: "888".padStart(8, "0"),
     transferable: 1,
     owner: getAliceKey().address,
+    ...(nftInstanceProps || {}),
   });
 
 export const mintNftMock3 = (block?: number, collectionId?: string): NFT =>

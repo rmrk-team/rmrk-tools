@@ -9,6 +9,7 @@ import {
   consolidatedNFTtoInstance,
   findRealOwner,
   isValidAddressPolkadotAddress,
+  validateTransferability,
 } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
@@ -166,6 +167,8 @@ const validate = (
     ss58Format
   );
 
+  validateTransferability(nft, remark, OP_TYPES.BUY);
+
   switch (true) {
     case Boolean(nft.burned):
       throw new Error(
@@ -174,10 +177,6 @@ const validate = (
     case nft.forsale <= BigInt(0):
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
-      );
-    case nft.transferable === 0 || nft.transferable >= remark.block:
-      throw new Error(
-        `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
       );
     case remark.extra_ex?.length === 0:
       throw new Error(

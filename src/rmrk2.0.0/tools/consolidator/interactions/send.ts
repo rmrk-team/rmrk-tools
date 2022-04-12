@@ -9,6 +9,7 @@ import {
   doesRecipientExists,
   findRealOwner,
   isValidAddressPolkadotAddress,
+  validateTransferability
 } from "../utils";
 
 export const sendInteraction = async (
@@ -49,11 +50,7 @@ export const sendInteraction = async (
     );
   }
 
-  if (nft.transferable === 0 || nft.transferable >= remark.block) {
-    throw new Error(
-      `[${OP_TYPES.SEND}] Attempting to send non-transferable NFT ${sendEntity.id}.`
-    );
-  }
+  validateTransferability(nft, remark, OP_TYPES.SEND);
 
   const rootNewOwner = await findRealOwner(sendEntity.recipient, dbAdapter);
 
