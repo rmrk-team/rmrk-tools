@@ -82,7 +82,7 @@ export const burnInteraction = async (
     );
   }
 
-  if (!isValidAddressPolkadotAddress(nft.owner) && nft.transferable === 1) {
+  if (!isValidAddressPolkadotAddress(nft.owner)) {
     //Owner is nft, unequip it
     const owner = await dbAdapter.getNFTById(nft.owner);
     const childIndex = owner
