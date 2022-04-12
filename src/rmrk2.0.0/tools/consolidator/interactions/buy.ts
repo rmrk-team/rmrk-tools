@@ -9,7 +9,6 @@ import {
   consolidatedNFTtoInstance,
   findRealOwner,
   isValidAddressPolkadotAddress,
-  isNftTransferable,
 } from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 
@@ -176,7 +175,7 @@ const validate = (
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy not-for-sale NFT ${buyEntity.id}`
       );
-    case nft.transferable === 0 || nft.transferable >= remark.block || !isNftTransferable(nft,remark):
+    case nft.transferable === 0 || nft.transferable >= remark.block:
       throw new Error(
         `[${OP_TYPES.BUY}] Attempting to buy non-transferable NFT ${buyEntity.id}.`
       );
