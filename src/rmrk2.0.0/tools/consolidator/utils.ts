@@ -14,14 +14,17 @@ import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 
 export const isNftTransferable = (nft: NFT, remark: Remark, opType: OP_TYPES) => {
-  if (opType == "LIST" && List.fromRemark(remark.remark).price != 0 || opType != "BUY") {
+  //check transferability if not buy or delist interactions
+  if (opType === "LIST" && List.fromRemark(remark.remark).price !== 0 || opType !== "BUY") {
     return (
       nft.transferable === 1 ||
       (nft.transferable < 0 && nft.block - nft.transferable >= remark.block) ||
       (nft.transferable > 1 && remark.block >= nft.transferable)
     );
+  //if set to be transferable for x block return true for delist and buy
   } else if (nft.transferable < 0) {
     return true;
+  //check whether buy and delist are allowed
   } else {
     return (
       nft.transferable === 1 ||
