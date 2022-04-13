@@ -100,4 +100,18 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
+  
+  it("Should invalidate LIST after transferable block number passed", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -1 }).mint()),
+      ...getBlockCallsMock(mintNftMock2().mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "[LIST] Attempting to LIST non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It was transferable until block 4 but tx made at block 5"
+    );
+  });
 });
