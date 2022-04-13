@@ -1,5 +1,224 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`rmrk2.0.0 Consolidator: BUY Should allow BUYing NFT after transferable block reached with positive transfer value 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  },
+  "invalid": Array [],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "field": "forsale",
+          "new": 1000000000000n,
+          "old": 0n,
+          "opType": "LIST",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "owner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "rootowner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "forsale",
+          "new": 0n,
+          "old": 1000000000000n,
+          "opType": "BUY",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": 3,
+    },
+  },
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: BUY Should allow BUYing NFT even after transferable block passed with negative transfer value 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  },
+  "invalid": Array [],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "field": "forsale",
+          "new": 1000000000000n,
+          "old": 0n,
+          "opType": "LIST",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "owner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "rootowner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "forsale",
+          "new": 0n,
+          "old": 1000000000000n,
+          "opType": "BUY",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": -1,
+    },
+  },
+}
+`;
+
+exports[`rmrk2.0.0 Consolidator: BUY Should allow BUYing NFT if transferable block not passed with negative transfer value 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {
+    "d43593c715a56da27d-KANARIABIRDS": Collection {
+      "block": 2,
+      "changes": Array [],
+      "id": "d43593c715a56da27d-KANARIABIRDS",
+      "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+      "max": 0,
+      "metadata": "https://some.url",
+      "symbol": "KANARIABIRDS",
+    },
+  },
+  "invalid": Array [],
+  "nfts": Object {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+      "block": 3,
+      "burned": "",
+      "changes": Array [
+        Object {
+          "block": 4,
+          "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "field": "forsale",
+          "new": 1000000000000n,
+          "old": 0n,
+          "opType": "LIST",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "owner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "rootowner",
+          "new": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+          "opType": "BUY",
+        },
+        Object {
+          "block": 5,
+          "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+          "field": "forsale",
+          "new": 0n,
+          "old": 1000000000000n,
+          "opType": "BUY",
+        },
+      ],
+      "children": Array [],
+      "collection": "d43593c715a56da27d-KANARIABIRDS",
+      "forsale": 0n,
+      "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
+      "metadata": undefined,
+      "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "pending": false,
+      "priority": Array [],
+      "properties": Object {},
+      "reactions": Object {},
+      "resources": Array [],
+      "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
+      "sn": "00000777",
+      "symbol": "KANR",
+      "transferable": -4,
+    },
+  },
+}
+`;
+
 exports[`rmrk2.0.0 Consolidator: BUY Should allow you to BUY listed NFT for someone else 1`] = `
 Object {
   "bases": Object {},
