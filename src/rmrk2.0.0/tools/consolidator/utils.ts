@@ -25,7 +25,7 @@ export const isNftTransferable = (nft: NFT, remark: Remark, opType: OP_TYPES) =>
   } else {
     return (
       nft.transferable === 1 ||
-      (nft.transferable > 1 && remark.block >= nft.transferable) ||
+      (nft.transferable > 1 && remark.block >= nft.transferable)
     );
   }
 };
