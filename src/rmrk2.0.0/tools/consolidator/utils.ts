@@ -7,17 +7,25 @@ import {
 import { Collection } from "../../classes/collection";
 import { IConsolidatorAdapter } from "./adapters/types";
 import { Base } from "../../classes/base";
+import { List } from "../../classes/list";
 import { changeIssuerInteraction } from "./interactions/changeIssuer";
 import { ChangeIssuer } from "../../classes/changeissuer";
 import { Remark } from "./remark";
 import { OP_TYPES } from "../constants";
 
-export const isNftTransferable = (nft: NFT, remark: Remark) => {
-  return (
-    nft.transferable === 1 ||
-    (nft.transferable < 0 && nft.block - nft.transferable >= remark.block) ||
-    (nft.transferable > 1 && remark.block >= nft.transferable)
-  );
+export const isNftTransferable = (nft: NFT, remark: Remark, opType: OP_TYPES) => {
+  if (opType == "LIST" && List.fromRemark(remark.remark).price != 0 || opType != "BUY") {
+    return (
+      nft.transferable === 1 ||
+      (nft.transferable < 0 && nft.block - nft.transferable >= remark.block) ||
+      (nft.transferable > 1 && remark.block >= nft.transferable)
+    );
+  } else {
+    return (
+      nft.transferable === 1 ||
+      (nft.transferable > 1 && remark.block >= nft.transferable)
+    );
+  }
 };
 
 export const validateTransferability = (
@@ -25,7 +33,7 @@ export const validateTransferability = (
   remark: Remark,
   opType: OP_TYPES
 ) => {
-  if (!isNftTransferable(nft, remark)) {
+  if (!isNftTransferable(nft, remark, opType)) {
     let errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}.`;
     if (nft.transferable > 1) {
       errorMessage = `[${opType}] Attempting to ${opType} non-transferable NFT ${nft.getId()}. It will become transferable after block ${
