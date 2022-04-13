@@ -203,10 +203,44 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
   
-  it("Should allow BUYing NFT even after transferable block passed", async () => {
+  it("Should allow BUYing NFT even after transferable block passed with negative transfer value", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock(0, { transferable: -1 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+  
+  it("Should allow BUYing NFT if transferable block not passed with negative transfer value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -4 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+  
+  it("Should allow BUYing NFT after transferable block reached with positive transfer value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: 3 }).mint()),
       ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
       ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
         {
