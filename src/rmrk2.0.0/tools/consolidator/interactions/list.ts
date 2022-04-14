@@ -44,9 +44,11 @@ export const listForSaleInteraction = async (
       `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real rootowner: ${rootowner}`
     );
   }
-
-  validateTransferability(nft, remark, OP_TYPES.LIST);
-
+  
+  if (listEntity.price !== BigInt(0)) {
+    validateTransferability(nft, remark, OP_TYPES.LIST);
+  }
+  
   if (nft.children && nft.children.length > 0) {
     const promises = nft.children.map(async (child) => {
       const childNftConsolidated = await dbAdapter.getNFTById(child.id);
