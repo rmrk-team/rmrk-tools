@@ -166,9 +166,9 @@ const validate = (
     nft,
     ss58Format
   );
-
+  
   validateTransferability(nft, remark, OP_TYPES.BUY);
-
+  
   switch (true) {
     case Boolean(nft.burned):
       throw new Error(

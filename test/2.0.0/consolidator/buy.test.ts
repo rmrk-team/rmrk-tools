@@ -202,4 +202,58 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
+  
+  it("Should prevent BUYing NFT after transferable block passed with negative transfer value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -1 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "[BUY] Attempting to BUY non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It was transferable until block 4 but tx made at block 5"
+    );
+  });
+  
+  it("Should allow BUYing NFT if transferable block not passed with negative transfer value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: -4 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+  
+  it("Should allow BUYing NFT after transferable block reached with positive transfer value", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...getBlockCallsMock(mintNftMock(0, { transferable: 3 }).mint()),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(1e12))),
+      ...getBlockCallsMock(mintNftMock(3).buy(), getBobKey().address, [
+        {
+          call: "balances.transfer",
+          value: `${getAliceKey().address},${BigInt(1e12).toString()}`,
+          caller: getBobKey().address,
+        },
+      ]),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
 });
