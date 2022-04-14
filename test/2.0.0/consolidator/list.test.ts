@@ -126,7 +126,7 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
-      ...getBlockCallsMock(mintNftMock(3).list(0)),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(0))),
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
@@ -153,7 +153,7 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
-      ...getBlockCallsMock(mintNftMock(3).list(0)),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(0))),
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
@@ -193,7 +193,7 @@ describe("rmrk2.0.0 Consolidator: LIST", () => {
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
       ...getBlockCallsMock(mintNftMock2().mint()),
-      ...getBlockCallsMock(mintNftMock(3).list(0)),
+      ...getBlockCallsMock(mintNftMock(3).list(BigInt(0))),
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
