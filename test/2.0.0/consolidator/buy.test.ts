@@ -203,7 +203,7 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
   
-  it("Should allow BUYing NFT even after transferable block passed with negative transfer value", async () => {
+  it("Should prevent BUYing NFT after transferable block passed with negative transfer value", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),
       ...getBlockCallsMock(mintNftMock(0, { transferable: -1 }).mint()),
@@ -217,7 +217,10 @@ describe("rmrk2.0.0 Consolidator: BUY", () => {
       ]),
     ]);
     const consolidator = new Consolidator();
-    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+    const consolidated = await consolidator.consolidate(remarks);
+    expect(consolidated.invalid[0].message).toEqual(
+      "[BUY] Attempting to BUY non-transferable NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777. It was transferable until block 4 but tx made at block 5"
+    );
   });
   
   it("Should allow BUYing NFT if transferable block not passed with negative transfer value", async () => {
