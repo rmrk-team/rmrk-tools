@@ -167,9 +167,7 @@ const validate = (
     ss58Format
   );
   
-  if (nft.transferable >= 0) {
-    validateTransferability(nft, remark, OP_TYPES.BUY);
-  }
+  validateTransferability(nft, remark, OP_TYPES.BUY);
   
   switch (true) {
     case Boolean(nft.burned):
