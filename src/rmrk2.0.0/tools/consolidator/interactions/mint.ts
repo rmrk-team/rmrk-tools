@@ -26,7 +26,7 @@ export const validateMintNFT = async (
   
   const nfts = await dbAdapter.getNFTsByCollection(nftParentCollection.id);
   const unburnedNfts = nfts ? nfts.filter((nft) => nft.burned === "") : [];
-  if (nftParentCollection.max === unburnedNfts.length && nftParentCollection.max !== 0) {
+  if (nftParentCollection.max <= unburnedNfts.length && nftParentCollection.max !== 0) {
     throw new Error(
       `Attempted to mint into maxed out collection ${nftParentCollection.id}`
     );
