@@ -607,9 +607,6 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      if (nft?.owner) {
-        await invalidateIfParentIsForsale(nft.owner, this.dbAdapter);
-      }
       await buyInteraction(
         remark,
         buyEntity,
