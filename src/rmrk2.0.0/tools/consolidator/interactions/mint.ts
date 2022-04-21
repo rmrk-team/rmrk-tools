@@ -23,6 +23,14 @@ export const validateMintNFT = async (
       `Attempted issue of NFT in non-owned collection. Issuer: ${nftParentCollection.issuer}, caller: ${remark.caller}`
     );
   }
+  
+  const nfts = await dbAdapter.getNFTsByCollection(nftParentCollection.id);
+  const unburnedNfts = nfts ? nfts.filter((nft) => nft.burned === "") : [];
+  if (nftParentCollection.max <= unburnedNfts.length && nftParentCollection.max !== 0) {
+    throw new Error(
+      `Attempted to mint into maxed out collection ${nftParentCollection.id}`
+    );
+  }
 
   if (nft.owner) {
     if (!isValidAddressPolkadotAddress(nft.owner)) {
