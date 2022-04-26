@@ -189,9 +189,10 @@ export const consolidatedCollectionToInstance = (
     id,
     metadata
   );
-  const { changes } = rest;
+  const { changes, count } = rest;
 
   collectionInstance.changes = changes;
+  collectionInstance.count = count;
   return collectionInstance;
 };
 

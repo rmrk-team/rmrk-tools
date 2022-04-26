@@ -106,6 +106,7 @@ export interface CollectionConsolidated {
   id: string;
   metadata: string;
   changes: Change[];
+  count: number;
 }
 
 export interface BaseConsolidated {

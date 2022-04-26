@@ -13,6 +13,7 @@ export class Collection {
   readonly id: string;
   readonly metadata: string;
   changes: Change[] = [];
+  count = 0;
 
   constructor(
     block: number,

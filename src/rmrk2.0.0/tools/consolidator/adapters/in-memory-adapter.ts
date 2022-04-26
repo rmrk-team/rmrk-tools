@@ -171,6 +171,9 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       equipped: "",
       forsale: BigInt(nft.forsale) > BigInt(0) ? BigInt(0) : nft.forsale,
     };
+
+    this.collections[consolidatedNFT.collection].count =
+      this.collections[consolidatedNFT.collection].count - 1;
   }
 
   public async updateNFTMint(nft: NFT) {
@@ -179,6 +182,8 @@ export class InMemoryAdapter implements IConsolidatorAdapter {
       symbol: nft.symbol,
       id: nft.getId(),
     };
+    this.collections[nft.collection].count =
+      this.collections[nft.collection].count + 1;
   }
 
   public async updateCollectionMint(collection: CollectionConsolidated) {
