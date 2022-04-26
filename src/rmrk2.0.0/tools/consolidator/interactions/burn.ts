@@ -5,7 +5,10 @@ import { Remark } from "../remark";
 import { Burn } from "../../../classes/burn";
 import { NFT } from "../../../classes/nft";
 import { hexToString } from "@polkadot/util";
-import { isValidAddressPolkadotAddress } from "../utils";
+import {
+  consolidatedCollectionToInstance,
+  isValidAddressPolkadotAddress,
+} from "../utils";
 import { IConsolidatorAdapter } from "../adapters/types";
 import { NFTConsolidated } from "../consolidator";
 
