@@ -9,6 +9,9 @@ import { Call as TCall } from "@polkadot/types/interfaces";
 import { BlockHash } from "@polkadot/types/interfaces/chain";
 import { encodeAddress } from "@polkadot/keyring";
 import { deriveMultisigAddress } from "./deriveMultisigAddress";
+import { sleep } from "./get-polkadot-api-with-reconnect";
+
+const MAX_RETRIES = 5;
 
 export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   const wsProvider = new WsProvider(wsEndpoint);
@@ -16,21 +19,53 @@ export const getApi = async (wsEndpoint: string): Promise<ApiPromise> => {
   return api;
 };
 
-export const getLatestBlock = async (api: ApiPromise): Promise<number> => {
-  const header = await api.rpc.chain.getHeader();
-  return header.number.toNumber();
+export const getLatestBlock = async (
+  api: ApiPromise,
+  retry = 0
+): Promise<number> => {
+  try {
+    const header = await api.rpc.chain.getHeader();
+    return header.number.toNumber();
+  } catch (error: any) {
+    console.log(
+      `getLatestFinalizedBlock error. "${error.message}". Retry #${retry} of ${MAX_RETRIES}`
+    );
+    if (retry < MAX_RETRIES) {
+      await sleep(2000);
+      return await getLatestBlock(api, retry + 1);
+    } else {
+      console.error("Unable to get latest block");
+      process.exit(1);
+    }
+  }
 };
 
 export const getLatestFinalizedBlock = async (
-  api: ApiPromise
+  api: ApiPromise,
+  retry = 0
 ): Promise<number> => {
-  const hash = await api.rpc.chain.getFinalizedHead();
-  const header = await api.rpc.chain.getHeader(hash);
-  if (header.number.toNumber() === 0) {
-    console.error("Unable to retrieve finalized head - returned genesis block");
-    process.exit(1);
+  try {
+    const hash = await api.rpc.chain.getFinalizedHead();
+    const header = await api.rpc.chain.getHeader(hash);
+    if (header.number.toNumber() === 0) {
+      console.error(
+        "Unable to retrieve finalized head - returned genesis block"
+      );
+      process.exit(1);
+    }
+    return header.number.toNumber();
+  } catch (error: any) {
+    console.log(
+      `getLatestFinalizedBlock error. "${error.message}". Retry #${retry} of ${MAX_RETRIES}`
+    );
+    if (retry < MAX_RETRIES) {
+      await sleep(2000);
+      return await getLatestFinalizedBlock(api, retry + 1);
+    } else {
+      console.error("Unable to retrieve finalized head");
+      process.exit(1);
+    }
   }
-  return header.number.toNumber();
 };
 
 export const deeplog = function (obj: any): void {
