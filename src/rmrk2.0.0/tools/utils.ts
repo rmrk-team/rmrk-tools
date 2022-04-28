@@ -28,7 +28,7 @@ export const getLatestBlock = async (
     return header.number.toNumber();
   } catch (error: any) {
     console.log(
-      `getLatestFinalizedBlock error. "${error.message}". Retry #${retry} of ${MAX_RETRIES}`
+      `getLatestBlock error. "${error.message}". Retry #${retry} of ${MAX_RETRIES}`
     );
     if (retry < MAX_RETRIES) {
       await sleep(2000);
