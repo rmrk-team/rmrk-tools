@@ -2,7 +2,6 @@
 import "@polkadot/api-augment";
 import {
   filterBlocksByCollection,
-  getApi,
   getLatestBlock,
   getLatestFinalizedBlock,
   prefixToArray,
@@ -16,11 +15,13 @@ import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 // @ts-ignore
 import JSONStream from "JSONStream";
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
+import { getApiWithReconnect } from "../src/rmrk2.0.0/tools/get-polkadot-api-with-reconnect";
 
 const fetch = async () => {
   const args = arg({
     // Types
     "--ws": String, // Optional websocket url
+    "--backupws": String, // Optional backup websocket url
     "--append": String, // Path to append new remarks to, will auto-detect last block and use it as FROM. Overrides FROM. If file does not exist, it will be created and FROM will default to 0.
     "--from": Number, // The starting block
     "--to": Number, // The starting block
@@ -32,8 +33,10 @@ const fetch = async () => {
   });
 
   console.log(args);
-  const ws = args["--ws"] || "ws://127.0.0.1:9944";
-  const api = await getApi(ws);
+  const ws = args["--ws"];
+  const backupws = args["--backupws"] || "ws://127.0.0.1:9944";
+  const WS_ENDPOINTS = ws ? [ws, backupws] : undefined;
+  const api = await getApiWithReconnect(WS_ENDPOINTS);
   const append = args["--append"];
   console.log("Connecting to " + ws);
   let from = args["--from"] || 0;
