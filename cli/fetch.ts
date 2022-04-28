@@ -15,7 +15,10 @@ import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 // @ts-ignore
 import JSONStream from "JSONStream";
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
-import { getApiWithReconnect } from "../src/rmrk2.0.0/tools/get-polkadot-api-with-reconnect";
+import {
+  getApiWithReconnect,
+  PUBLIC_KUSAMA_WS_ENDPOINTS,
+} from "../src/rmrk2.0.0/tools/get-polkadot-api-with-reconnect";
 
 const fetch = async () => {
   const args = arg({
@@ -33,9 +36,10 @@ const fetch = async () => {
   });
 
   console.log(args);
-  const ws = args["--ws"];
+  const ws = args["--ws"] || "ws://127.0.0.1:9944";
   const backupws = args["--backupws"] || "ws://127.0.0.1:9944";
-  const WS_ENDPOINTS = ws ? [ws, backupws] : undefined;
+  const WS_ENDPOINTS =
+    ws === "kusama" ? PUBLIC_KUSAMA_WS_ENDPOINTS : [ws, backupws];
   const api = await getApiWithReconnect(WS_ENDPOINTS);
   const append = args["--append"];
   console.log("Connecting to " + ws);

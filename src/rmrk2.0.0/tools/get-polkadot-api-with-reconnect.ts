@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
-const WS_ENDPOINTS = [
+export const PUBLIC_KUSAMA_WS_ENDPOINTS = [
   "wss://kusama-rpc.polkadot.io",
   "wss://kusama.api.onfinality.io/public-ws",
   "wss://kusama-rpc.dwellir.com",
@@ -90,7 +90,7 @@ const getProvider = async (wsEndpoints: string[]) => {
  * @param retry - retry count
  */
 export const getApiWithReconnect = async (
-  wsEndpoints: string[] = WS_ENDPOINTS,
+  wsEndpoints: string[] = PUBLIC_KUSAMA_WS_ENDPOINTS,
   retry = 0
 ): Promise<ApiPromise> => {
   if (wsProvider && polkadotApi && polkadotApi.isConnected) return polkadotApi;
