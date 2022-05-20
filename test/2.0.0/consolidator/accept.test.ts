@@ -39,6 +39,37 @@ describe("rmrk2.0.0 Consolidator: ACCEPT", () => {
     ).toBeFalsy();
   });
 
+  it("Replace a resource on Accept", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(
+        mintNftMock(3).accept(resid, "RES"),
+        getBobKey().address
+      ),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd(
+          {
+            metadata: "ipfs://ipfs/125",
+            id: "foo",
+          },
+          resid
+        )
+      ),
+      ...getBlockCallsMock(
+        mintNftMock(3).accept("foo", "RES"),
+        getBobKey().address
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeFalsy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
+    ).toEqual(resid);
+  });
+
   it("Accept a child NFT on a NFT", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getBlockCallsMock(createCollectionMock().create()),

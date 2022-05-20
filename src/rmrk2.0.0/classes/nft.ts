@@ -202,7 +202,7 @@ export class NFT {
     }::${VERSION}::${namespace}::${this.getId()}::${unicode}`;
   }
 
-  public resadd(resource: Resource): string {
+  public resadd(resource: Resource, replace?: string): string {
     if (!this.block) {
       throw new Error(
         "You can only add resource to an existing NFT. If you just minted this, please load a new, separate instance as the block number is an important part of an NFT's ID."
@@ -217,7 +217,7 @@ export class NFT {
       OP_TYPES.RESADD
     }::${VERSION}::${this.getId()}::${encodeURIComponent(
       JSON.stringify({ ...resource, id: resource.id || nanoid(8) })
-    )}`;
+    )}${replace ? "::" + replace : ""}`;
   }
 
   /**
@@ -303,6 +303,7 @@ export interface Resource {
   thumb?: string;
   theme?: Theme;
   themeId?: string;
+  replace?: string;
 }
 
 export interface IResourceConsolidated {
@@ -316,6 +317,7 @@ export interface IResourceConsolidated {
   pending: boolean;
   theme?: Theme;
   themeId?: string;
+  replace?: string;
 }
 
 export interface NFTChild {

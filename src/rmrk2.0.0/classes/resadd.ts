@@ -16,8 +16,9 @@ export class Resadd {
   id: string;
   nftId: string;
   pending: boolean;
+  replace?: string;
 
-  constructor(nftId: string, resource: Resource) {
+  constructor(nftId: string, resource: Resource, replaceId?: string) {
     this.base = resource.base;
     this.src = resource.src;
     this.thumb = resource.thumb;
@@ -29,14 +30,22 @@ export class Resadd {
     this.pending = resource.pending || true;
     this.nftId = nftId;
     this.id = resource.id || nanoid(8);
+    this.replace = replaceId;
   }
 
   static fromRemark(remark: string): Resadd | string {
     try {
       validateResadd(remark);
-      const [_prefix, _op_type, _version, nftId, resource] = remark.split("::");
+      const [
+        _prefix,
+        _op_type,
+        _version,
+        nftId,
+        resource,
+        replaceId,
+      ] = remark.split("::");
       const resourceObj: Resource = getRemarkData(resource);
-      return new this(nftId, resourceObj);
+      return new this(nftId, resourceObj, replaceId);
     } catch (e: any) {
       console.error(e.message);
       console.log(`RESADD error: full input was ${remark}`);
