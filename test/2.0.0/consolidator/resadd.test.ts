@@ -27,10 +27,35 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
-    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending).toBeFalsy();
-    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata).toEqual(
-      "ipfs://ipfs/123"
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeFalsy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata
+    ).toEqual("ipfs://ipfs/123");
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority[0]).toEqual(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
     );
+  });
+
+  it("Replace existing resource on an NFT", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd({ metadata: "ipfs://ipfs/123", id: "foo" })
+      ),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd({ metadata: "ipfs://ipfs/125", id: "foo" })
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeFalsy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata
+    ).toEqual("ipfs://ipfs/125");
     expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority[0]).toEqual(
       consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
     );
@@ -61,6 +86,8 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     ]);
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
-    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending).toBeTruthy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeTruthy();
   });
 });

@@ -31,7 +31,8 @@ export const resAddInteraction = async (
   }
 
   // If NFT owner is adding this resource then immediatly accept it
-  const rootowner = nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
+  const rootowner =
+    nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));
 
   const accepted = rootowner === remark.caller;
   resaddEntity.pending = !accepted;
@@ -60,6 +61,7 @@ export const resAddInteraction = async (
     themeId,
     theme,
   };
+
   // Remove undefines
   Object.keys(resource).forEach((resKey) => {
     if (resource[resKey as keyof IResourceConsolidated] === undefined) {
@@ -67,7 +69,16 @@ export const resAddInteraction = async (
     }
   });
 
-  nft.resources.push(resource);
+  const existingResourceIndex = nft.resources.findIndex(
+    (res) => res.id === resource.id
+  );
+  // Replace existing resource
+  if (existingResourceIndex > -1) {
+    nft.resources[existingResourceIndex] = resource;
+  } else {
+    nft.resources.push(resource);
+  }
+
   // If this is the first resource being added and is immediatly accepted, set default priority array
   if (accepted) {
     if (!nft.priority.includes(resaddEntity.id)) {
