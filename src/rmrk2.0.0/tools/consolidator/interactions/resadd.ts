@@ -47,6 +47,7 @@ export const resAddInteraction = async (
     thumb,
     themeId,
     theme,
+    replace,
   } = resaddEntity;
 
   const resource: IResourceConsolidated = {
@@ -60,6 +61,7 @@ export const resAddInteraction = async (
     thumb,
     themeId,
     theme,
+    replace
   };
 
   // Remove undefines
@@ -69,20 +71,23 @@ export const resAddInteraction = async (
     }
   });
 
-  const existingResourceIndex = nft.resources.findIndex(
-    (res) => res.id === resource.id
-  );
+  const existingResourceIndex = resaddEntity.replace
+    ? nft.resources.findIndex((res) => res.id === resaddEntity.replace)
+    : -1;
   // Replace existing resource
-  if (existingResourceIndex > -1) {
-    nft.resources[existingResourceIndex] = resource;
+  if (existingResourceIndex > -1 && accepted && resaddEntity.replace) {
+    nft.resources[existingResourceIndex] = {
+      ...resource,
+      id: resaddEntity.replace,
+    };
   } else {
     nft.resources.push(resource);
   }
 
   // If this is the first resource being added and is immediatly accepted, set default priority array
   if (accepted) {
-    if (!nft.priority.includes(resaddEntity.id)) {
-      nft.priority.push(resaddEntity.id);
+    if (!nft.priority.includes(resaddEntity.replace || resaddEntity.id)) {
+      nft.priority.push(resaddEntity.replace || resaddEntity.id);
     }
   }
 };

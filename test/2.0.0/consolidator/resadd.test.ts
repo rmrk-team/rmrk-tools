@@ -45,7 +45,13 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
         mintNftMock(3).resadd({ metadata: "ipfs://ipfs/123", id: "foo" })
       ),
       ...getBlockCallsMock(
-        mintNftMock(3).resadd({ metadata: "ipfs://ipfs/125", id: "foo" })
+        mintNftMock(3).resadd(
+          {
+            metadata: "ipfs://ipfs/125",
+            id: "bar",
+          },
+          "foo"
+        )
       ),
     ]);
     const consolidator = new Consolidator();

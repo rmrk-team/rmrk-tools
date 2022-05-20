@@ -57,8 +57,19 @@ export const acceptInteraction = async (
     );
     if (resourceIndex > -1 && nft.resources?.[resourceIndex]?.pending) {
       nft.resources[resourceIndex].pending = false;
-      if (!nft.priority.includes(acceptEntity.id)) {
-        nft.priority.push(acceptEntity.id);
+      const { replace, ...resource } = nft.resources[resourceIndex];
+
+      if (!nft.priority.includes(replace || acceptEntity.id)) {
+        nft.priority.push(replace || acceptEntity.id);
+      }
+
+      const existingResourceIndex = replace
+        ? nft.resources.findIndex((res) => res.id === replace)
+        : -1;
+      // Replace existing resource
+      if (existingResourceIndex > -1 && replace) {
+        nft.resources[existingResourceIndex] = { ...resource, id: replace };
+        nft.resources.splice(resourceIndex, 1);
       }
     }
   }
