@@ -5,12 +5,17 @@ import { IConsolidatorAdapter } from "../adapters/types";
 import { Accept } from "../../../classes/accept";
 import { findRealOwner } from "../utils";
 
+interface ReturnObject {
+  RESOURCES: string[];
+  CHILDREN: string[];
+}
+
 export const acceptInteraction = async (
   remark: Remark,
   acceptEntity: Accept,
   dbAdapter: IConsolidatorAdapter,
   nft?: NFT
-): Promise<void> => {
+): Promise<ReturnObject> => {
   if (!nft) {
     throw new Error(
       `[${OP_TYPES.ACCEPT}] Attempting to accept ${acceptEntity.entity} on a non-existant NFT ${acceptEntity.nftId}`
@@ -32,6 +37,11 @@ export const acceptInteraction = async (
     );
   }
 
+  const returnObject: ReturnObject = {
+    RESOURCES: [],
+    CHILDREN: [],
+  };
+
   if (acceptEntity.entity === "NFT") {
     const pendingNft = await dbAdapter.getNFTById(acceptEntity.id);
     if (!pendingNft) {
@@ -45,6 +55,7 @@ export const acceptInteraction = async (
     );
     if (childIndex > -1) {
       nft.children[childIndex].pending = false;
+      returnObject.CHILDREN.push(acceptEntity.id);
     }
 
     const childNft = await dbAdapter.getNFTById(acceptEntity.id);
@@ -57,6 +68,7 @@ export const acceptInteraction = async (
     );
     if (resourceIndex > -1 && nft.resources?.[resourceIndex]?.pending) {
       nft.resources[resourceIndex].pending = false;
+      returnObject.RESOURCES.push(acceptEntity.id);
       const { replace, ...resource } = nft.resources[resourceIndex];
 
       if (!nft.priority.includes(replace || acceptEntity.id)) {
@@ -70,7 +82,10 @@ export const acceptInteraction = async (
       if (existingResourceIndex > -1 && replace) {
         nft.resources[existingResourceIndex] = { ...resource, id: replace };
         nft.resources.splice(resourceIndex, 1);
+        returnObject.RESOURCES.push(replace);
       }
     }
   }
+
+  return returnObject;
 };

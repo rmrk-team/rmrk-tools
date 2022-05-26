@@ -63,6 +63,7 @@ import { encodeAddress } from "@polkadot/keyring";
 
 type InteractionChange = Partial<Record<OP_TYPES, string>> & {
   CHILDREN?: string[];
+  RESOURCES?: string[];
 };
 
 type InteractionChanges = InteractionChange[];
@@ -826,7 +827,12 @@ export class Consolidator {
     const nft = consolidatedNFTtoInstance(consolidatedNFT);
 
     try {
-      await acceptInteraction(remark, acceptEntity, this.dbAdapter, nft);
+      const { CHILDREN, RESOURCES } = await acceptInteraction(
+        remark,
+        acceptEntity,
+        this.dbAdapter,
+        nft
+      );
       if (nft && consolidatedNFT) {
         await this.dbAdapter.updateNftAccept(
           nft,
@@ -834,7 +840,11 @@ export class Consolidator {
           acceptEntity.entity
         );
         if (this.emitInteractionChanges) {
-          this.interactionChanges.push({ [OP_TYPES.ACCEPT]: nft.getId() });
+          this.interactionChanges.push({
+            [OP_TYPES.ACCEPT]: nft.getId(),
+            RESOURCES,
+            CHILDREN,
+          });
         }
       }
     } catch (e: any) {
