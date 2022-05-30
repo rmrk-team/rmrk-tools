@@ -81,6 +81,6 @@ export type BlockCall = {
   extras?: BlockCall[];
 };
 
-export type BaseType = "svg" | "png" | string;
+export type BaseType = "svg" | "png" | "glb" | string;
 
 export type Interaction = Send | Buy | List | Emote | ChangeIssuer;

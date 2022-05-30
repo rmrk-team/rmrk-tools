@@ -173,7 +173,8 @@ export interface IBasePart {
   equippable?: string[] | "*";
   unequip?: "unequip" | "burn";
   z?: number;
-  src?: string;
+  loc?: number[];
+  src?: string[];
   metadata?: string;
 }
 
