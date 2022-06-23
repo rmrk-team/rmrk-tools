@@ -774,7 +774,7 @@ export class Consolidator {
     const invalidate = this.updateInvalidCalls(OP_TYPES.RESADD, remark).bind(
       this
     );
-    const resaddEntity = Resadd.fromRemark(remark.remark);
+    const resaddEntity = Resadd.fromRemark(remark.remark, remark.block);
     if (typeof resaddEntity === "string") {
       invalidate(
         remark.remark,
