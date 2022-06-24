@@ -111,7 +111,7 @@ const EMOTEStruct = type({
 });
 
 const BaseStruct = type({
-  issuer: string(),
+  issuer: optional(string()),
   type: optional(string()),
   symbol: string(),
   parts: array(PartStruct),
