@@ -131,7 +131,7 @@ export class NFT {
         recipientEncoded = encodeAddress(recipient, ss58Format);
       } else {
         const splitRecipient = String(recipientEncoded).split("-");
-        if (splitRecipient[0] === 0) {
+        if (splitRecipient[0] === "0") {
           splitRecipient[0] = block;
           recipientEncoded = splitRecipient.join("-");
         }
