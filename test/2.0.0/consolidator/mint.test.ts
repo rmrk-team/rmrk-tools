@@ -1,6 +1,7 @@
 import { Consolidator, NFT } from "../../../src/rmrk2.0.0";
 import {
   createCollectionMock,
+  createBatchMock,
   getBlockCallsMock,
   getAliceKey,
   getBobKey,
@@ -116,5 +117,14 @@ describe("rmrk2.0.0 Consolidator: MINT", () => {
     expect(consolidated.invalid[0].message).toEqual(
       "Attempted to mint into maxed out collection d43593c715a56da27d-KANARIABIRDS"
     );
+  });
+
+  it("Should allow minting another NFT into a NFT minted in the same block", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...createBatchMock(mintNftMock().mint(), mintNftMock2().mint("0-d43593c715a56da27d-KANARIABIRDS-KANR-00000777")),
+    ]);
+    const consolidator = new Consolidator();
+    expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
   });
 });
