@@ -3,7 +3,6 @@ import { getRemarkData } from "../tools/utils";
 import { OP_TYPES, PREFIX, VERSION } from "../tools/constants";
 import { BaseType } from "../tools/types";
 import { Change } from "../changelog";
-import { encodeAddress } from "@polkadot/keyring";
 
 export class Base {
   readonly block: number;
@@ -41,7 +40,6 @@ export class Base {
       JSON.stringify({
         symbol: this.symbol,
         type: this.type,
-        issuer: this.issuer,
         parts: this.parts,
         themes: this.themes,
         metadata: this.metadata,
@@ -140,8 +138,8 @@ export class Base {
 
   static fromRemark(
     remark: string,
-    block?: number,
-    ss58Format?: number
+    issuer: string,
+    block?: number
   ): Base | string {
     if (!block) {
       block = 0;
@@ -153,7 +151,7 @@ export class Base {
       return new this(
         block,
         obj.symbol,
-        encodeAddress(obj.issuer, ss58Format),
+        issuer,
         obj.type,
         obj.parts,
         obj.themes,
