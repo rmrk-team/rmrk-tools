@@ -53,8 +53,8 @@ export class Resadd {
       const resourceObj: Resource = getRemarkData(resource);
       let the_nftId = nftId;
       const splitNftId = String(nftId).split("-");
-      if (splitNftId[0] === 0 && remark.block) {
-        splitNftId[0] = remark.block;
+      if (splitNftId[0] === "0") {
+        splitNftId[0] = block;
         the_nftId = splitNftId.join("-");
       }
       return new this(the_nftId, resourceObj, replaceId);
