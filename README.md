@@ -265,7 +265,7 @@ Takes as input a JSON file and processes all remarks within it to reach a final 
 
 Todo:
 
-- [ ] Write adapter interface
+- [x] Write adapter interface
 - [ ] Support multiple adapters apart from JSON (SQL?)
 - [ ] Write exporters for SQL (ready-to-execute, or even direct to DB)
 - [ ] Write class for a single RMRK entry so it's easy to iterate through across these different adapters and consolidators
