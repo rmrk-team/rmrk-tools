@@ -128,6 +128,34 @@ export const createBaseMock = (block?: number): Base =>
     { themeOne: { _inherit: true, primary: "#fff" } }
   );
 
+export const createBaseMock2 = (block?: number): Base =>
+  new Base(
+    block || 0,
+    "KBASE777",
+    getAliceKey().address,
+    "svg",
+    [
+      {
+        id: "background",
+        type: "slot",
+        equippable: [],
+        z: 0,
+      },
+      {
+        id: "background",
+        type: "slot",
+        equippable: [
+          Collection.generateId(
+            u8aToHex(getAliceKey().publicKey),
+            "KANARIABIRDS"
+          ),
+        ],
+        z: 1,
+      },
+    ],
+    { themeOne: { _inherit: true, primary: "#fff" } }
+  );
+
 export const getBlockCallsMock = (
   remark: string,
   caller: string = getAliceKey().address,
