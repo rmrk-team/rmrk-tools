@@ -12,6 +12,7 @@ import {
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
+import { JsonStreamStringify } from "json-stream-stringify";
 
 const getRemarks = (
   inputData: any,
@@ -87,11 +88,20 @@ const consolidate = async () => {
   };
 
   const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
-  fs.writeFileSync(
-    `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock })
-  );
-  process.exit(0);
+
+  let str = "";
+  new JsonStreamStringify({ ...ret, lastBlock })
+    .on("data", (data) => {
+      str += data.toString();
+    })
+    .once("end", () => {
+      fs.writeFileSync(`consolidated-from-${file}`, str);
+      process.exit(0);
+    })
+    .once("error", (err) => {
+      console.log("ERROR creating consolidated dump", err);
+      process.exit(0);
+    });
 };
 
 consolidate();
