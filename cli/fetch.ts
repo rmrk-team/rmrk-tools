@@ -131,7 +131,7 @@ const fetch = async () => {
     return this.toString();
   };
 
-  const writeStream = fs.createWriteStream(outputFileName, "UTF8");
+  const writeStream = fs.createWriteStream(`full-${outputFileName}`, "UTF8");
 
   new JsonStreamStringify(extracted)
     .on("data", (chunk) => {
