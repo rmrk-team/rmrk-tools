@@ -84,7 +84,6 @@ const fetch = async () => {
 
   //0x3a3a322e302e303a3a
 
-  console.log(`Processing block range from ${from} to ${to}.`);
   let extracted = await fetchRemarks(
     api,
     from,
@@ -132,48 +131,20 @@ const fetch = async () => {
     return this.toString();
   };
 
-  const buffers: any[] = [];
-  let len = 0;
+  const writeStream = fs.createWriteStream(outputFileName, "UTF8");
 
   new JsonStreamStringify(extracted)
-    .on("data", (data) => {
-      buffers.push(data);
-      len += data.length;
+    .on("data", (chunk) => {
+      writeStream.write(chunk);
     })
     .once("end", () => {
-      const wholeBuffer = Buffer.concat(buffers, len);
-      console.log("writing out dump");
-      console.log({
-        numberOfBuffers: buffers.length,
-        bytes: len,
-        wholeBufferBytes: wholeBuffer.length,
-      });
-
-      fs.writeFileSync(`${outputFileName}`, wholeBuffer.toString());
+      console.log("SUCCESS writing dump");
       process.exit(0);
     })
     .once("error", (err) => {
       console.log("ERROR writing dump", err);
       process.exit(0);
     });
-
-  // const transformStream = JSONStream.stringify();
-  //
-  // const writeStream = fs.createWriteStream(outputFileName);
-  // transformStream.pipe(writeStream);
-  // extracted.forEach(transformStream.write);
-  // transformStream.end();
-  //
-  // writeStream.on("finish", async () => {
-  //   await api.disconnect();
-  //   process.exit(0);
-  // });
-  //
-  // writeStream.on("error", async (error: any) => {
-  //   console.error("Fetch blocks error", error);
-  //   await api.disconnect();
-  //   process.exit(0);
-  // });
 };
 
 fetch();
