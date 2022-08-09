@@ -117,7 +117,7 @@ const fetch = async () => {
       : `remarks-${from}-${to}-${args["--prefixes"] || ""}.json`;
   console.log(`Will write to file ${outputFileName}`);
   if (append) {
-    // extracted = appendFile.concat(extracted);
+    extracted = appendFile.concat(extracted);
     console.log(`Appending ${appendFile.length} remarks found. Full set:`);
     outputFileName = append;
   }
