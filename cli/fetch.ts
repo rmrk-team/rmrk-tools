@@ -132,14 +132,24 @@ const fetch = async () => {
     return this.toString();
   };
 
-  let str = "";
-  new JsonStreamStringify({ ...extracted })
+  const buffers: any[] = [];
+  let len = 0;
+
+  new JsonStreamStringify(extracted)
     .on("data", (data) => {
-      str += data.toString();
+      buffers.push(data);
+      len += data.length;
     })
     .once("end", () => {
+      const wholeBuffer = Buffer.concat(buffers, len);
       console.log("writing out dump");
-      fs.writeFileSync(`${outputFileName}`, str);
+      console.log({
+        numberOfBuffers: buffers.length,
+        bytes: len,
+        wholeBufferBytes: wholeBuffer.length,
+      });
+
+      fs.writeFileSync(`${outputFileName}`, wholeBuffer.toString());
       process.exit(0);
     })
     .once("error", (err) => {
