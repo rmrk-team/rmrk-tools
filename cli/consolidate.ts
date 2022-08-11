@@ -89,17 +89,18 @@ const consolidate = async () => {
 
   const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
 
-  let str = "";
+  const writeStream = fs.createWriteStream(`consolidated-from-${file}`, "UTF8");
+
   new JsonStreamStringify({ ...ret, lastBlock })
-    .on("data", (data) => {
-      str += data.toString();
+    .on("data", (chunk) => {
+      writeStream.write(chunk);
     })
     .once("end", () => {
-      fs.writeFileSync(`consolidated-from-${file}`, str);
+      console.log("SUCCESS writing dump");
       process.exit(0);
     })
     .once("error", (err) => {
-      console.log("ERROR creating consolidated dump", err);
+      console.log("ERROR writing dump", err);
       process.exit(0);
     });
 };
