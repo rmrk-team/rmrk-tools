@@ -96,7 +96,10 @@ const fetch = async () => {
     const filteredRemark: BlockCalls = { ...remark, calls: [] };
     if (remark && remark?.calls) {
       filteredRemark.calls = remark.calls.filter((call) => {
-        return hexToString(call.value).includes(`::${VERSION}::`);
+        return (
+          call.value !== "0x4e41" &&
+          hexToString(call.value).includes(`::${VERSION}::`)
+        );
       });
     }
 
