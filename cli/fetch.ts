@@ -92,10 +92,15 @@ const fetch = async () => {
     ss58Format
   );
 
+  let NAcounter = 0;
+
   extracted = extracted.filter((remark) => {
     const filteredRemark: BlockCalls = { ...remark, calls: [] };
     if (remark && remark?.calls) {
       filteredRemark.calls = remark.calls.filter((call) => {
+        if (call.value !== "0x4e41") {
+          NAcounter++;
+        }
         return (
           call.value !== "0x4e41" &&
           hexToString(call.value).includes(`::${VERSION}::`)
@@ -142,6 +147,7 @@ const fetch = async () => {
     })
     .once("end", () => {
       console.log("SUCCESS writing dump");
+      console.log("NA count", NAcounter);
       process.exit(0);
     })
     .once("error", (err) => {
