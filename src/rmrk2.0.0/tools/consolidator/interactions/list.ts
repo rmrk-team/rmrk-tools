@@ -44,31 +44,9 @@ export const listForSaleInteraction = async (
       `[${OP_TYPES.LIST}] Attempting to list non-owned NFT ${listEntity.id}, real rootowner: ${rootowner}`
     );
   }
-  
+
   if (listEntity.price !== BigInt(0)) {
     validateTransferability(nft, remark, OP_TYPES.LIST);
-  }
-  
-  if (nft.children && nft.children.length > 0) {
-    const promises = nft.children.map(async (child) => {
-      const childNftConsolidated = await dbAdapter.getNFTById(child.id);
-      const childNft = consolidatedNFTtoInstance(childNftConsolidated);
-      if (childNft?.forsale && childNftConsolidated) {
-        childNft.addChange({
-          field: "forsale",
-          old: childNft.forsale,
-          new: BigInt(0),
-          caller: remark.caller,
-          block: remark.block,
-          opType: OP_TYPES.LIST,
-        } as Change);
-        childNft.forsale = BigInt(0);
-        await dbAdapter.updateNFTList(childNft, childNftConsolidated);
-      }
-      return childNft;
-    });
-
-    await Promise.all(promises);
   }
 
   if (listEntity.price !== nft.forsale) {

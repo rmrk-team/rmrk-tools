@@ -321,13 +321,16 @@ export const getBlockCallsFromSignedBlock = async (
 
             if (isBalanceTransfer) {
               batchBuyExtras.push(extraCall);
-            } else {
+            } else if (batchExtras.length < 3) {
+              // Cap batchExtras to 3 items to prevent dump abuse.
               batchExtras.push(extraCall);
             }
           }
         });
 
         if (batchExtras.length) {
+          // Trim batchExtras array to only have 3 items to prevent abuse.
+          batchExtras.splice(2, 3);
           batchRoot.forEach((el, i) => {
             batchRoot[i].extras = batchExtras;
           });
