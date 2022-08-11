@@ -196,16 +196,11 @@ export const validateDecode = (value: string) => {
   }
 };
 
-export const isSystemRemark = (call: TCall, prefixes: string[]): boolean => {
-  console.log("prefixes", prefixes, call.args.toString());
-
-  return (
-    call.section === "system" &&
-    call.method === "remark" &&
-    (prefixes.length < 1 ||
-      prefixes.some((word) => call.args.toString().startsWith(word)))
-  );
-};
+export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
+  call.section === "system" &&
+  call.method === "remark" &&
+  (prefixes.length < 1 ||
+    prefixes.some((word) => call.args.toString().startsWith(word)));
 
 export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
