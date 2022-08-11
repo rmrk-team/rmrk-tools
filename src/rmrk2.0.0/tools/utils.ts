@@ -196,11 +196,16 @@ export const validateDecode = (value: string) => {
   }
 };
 
-export const isSystemRemark = (call: TCall, prefixes: string[]): boolean =>
-  call.section === "system" &&
-  call.method === "remark" &&
-  (prefixes.length < 1 ||
-    prefixes.some((word) => call.args.toString().startsWith(word)));
+export const isSystemRemark = (call: TCall, prefixes: string[]): boolean => {
+  console.log("prefixes", prefixes, call.args.toString());
+
+  return (
+    call.section === "system" &&
+    call.method === "remark" &&
+    (prefixes.length < 1 ||
+      prefixes.some((word) => call.args.toString().startsWith(word)))
+  );
+};
 
 export const isUtilityBatch = (call: TCall) =>
   call.section === "utility" &&
@@ -321,13 +326,16 @@ export const getBlockCallsFromSignedBlock = async (
 
             if (isBalanceTransfer) {
               batchBuyExtras.push(extraCall);
-            } else {
+            } else if (batchExtras.length < 3) {
+              // Cap batchExtras to 3 items to prevent dump abuse.
               batchExtras.push(extraCall);
             }
           }
         });
 
         if (batchExtras.length) {
+          // Trim batchExtras array to only have 3 items to prevent abuse.
+          batchExtras.splice(2, 3);
           batchRoot.forEach((el, i) => {
             batchRoot[i].extras = batchExtras;
           });
