@@ -13,12 +13,18 @@ import { hexToString, stringToHex } from "@polkadot/util";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 // @ts-ignore
+import JSONStream from "JSONStream";
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
 import {
   getApiWithReconnect,
   PUBLIC_KUSAMA_WS_ENDPOINTS,
 } from "../src/rmrk2.0.0/tools/get-polkadot-api-with-reconnect";
-import { JsonStreamStringify } from "json-stream-stringify";
+// @ts-ignore
+import ndjson from "ndjson";
+import readLastLines from "read-last-lines";
+
+// @ts-ignore
+import mergeFiles from "merge-files";
 
 const fetch = async () => {
   const args = arg({
@@ -58,8 +64,10 @@ const fetch = async () => {
   if (append) {
     console.log("Will append to " + append);
     try {
-      appendFile = await appendPromise(append);
-      const lastBlock = appendFile.pop();
+      // appendFile = await appendPromise(append);
+      const lastBlock = JSON.parse(await readLastLines.read(append, 1));
+      console.log("lastBlock", lastBlock);
+
       if (lastBlock) {
         from = lastBlock.block + 1;
       }
@@ -77,6 +85,8 @@ const fetch = async () => {
   const to =
     typeof args["--to"] === "number" ? args["--to"] : latestProgrammatic;
 
+  // const to = 13859000;
+
   if (from > to) {
     console.error("Starting block must be less than ending block.");
     process.exit(1);
@@ -84,6 +94,7 @@ const fetch = async () => {
 
   //0x3a3a322e302e303a3a
 
+  console.log(`Processing block range from ${from} to ${to}.`);
   let extracted = await fetchRemarks(
     api,
     from,
@@ -119,7 +130,7 @@ const fetch = async () => {
   if (append) {
     extracted = appendFile.concat(extracted);
     console.log(`Appending ${appendFile.length} remarks found. Full set:`);
-    outputFileName = append;
+    outputFileName = "tmp.ndjson";
   }
   extracted.push({
     block: to,
@@ -131,20 +142,31 @@ const fetch = async () => {
     return this.toString();
   };
 
-  const writeStream = fs.createWriteStream(`full-${outputFileName}`, "UTF8");
+  const transformStream = ndjson.stringify();
 
-  new JsonStreamStringify(extracted)
-    .on("data", (chunk) => {
-      writeStream.write(chunk);
-    })
-    .once("end", () => {
-      console.log("SUCCESS writing dump");
-      process.exit(0);
-    })
-    .once("error", (err) => {
-      console.log("ERROR writing dump", err);
-      process.exit(0);
-    });
+  const writeStream = fs.createWriteStream(outputFileName);
+  transformStream.pipe(writeStream);
+  extracted.forEach(function iterator(record) {
+    transformStream.write(record);
+  });
+  transformStream.end();
+
+  writeStream.on("finish", async () => {
+    await api.disconnect();
+    console.log("merge files");
+    const outputPath = "result.ndjson";
+
+    const inputPathList = ["latest.ndjson", "tmp.ndjson"];
+    await mergeFiles(inputPathList, outputPath);
+
+    process.exit(0);
+  });
+
+  writeStream.on("error", async (error: any) => {
+    console.error("Fetch blocks error", error);
+    await api.disconnect();
+    process.exit(0);
+  });
 };
 
 fetch();

@@ -96,7 +96,10 @@
     "isomorphic-fetch": "^3.0.0",
     "it-all": "^1.0.5",
     "json-stream-stringify": "^3.0.0",
+    "merge-files": "^0.1.2",
     "nanoid": "^3.1.23",
+    "ndjson": "^2.0.0",
+    "read-last-lines": "^1.8.0",
     "superstruct": "^0.14.2",
     "uint8arrays": "^2.1.3",
     "winston": "^3.3.3"
