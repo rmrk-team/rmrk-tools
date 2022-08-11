@@ -13,12 +13,12 @@ import { hexToString, stringToHex } from "@polkadot/util";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 import { VERSION } from "../src/rmrk2.0.0/tools/constants";
 // @ts-ignore
+import JSONStream from "JSONStream";
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
 import {
   getApiWithReconnect,
   PUBLIC_KUSAMA_WS_ENDPOINTS,
 } from "../src/rmrk2.0.0/tools/get-polkadot-api-with-reconnect";
-import { JsonStreamStringify } from "json-stream-stringify";
 
 const fetch = async () => {
   const args = arg({
@@ -84,6 +84,7 @@ const fetch = async () => {
 
   //0x3a3a322e302e303a3a
 
+  console.log(`Processing block range from ${from} to ${to}.`);
   let extracted = await fetchRemarks(
     api,
     from,
@@ -92,19 +93,11 @@ const fetch = async () => {
     ss58Format
   );
 
-  let NAcounter = 0;
-
   extracted = extracted.filter((remark) => {
     const filteredRemark: BlockCalls = { ...remark, calls: [] };
     if (remark && remark?.calls) {
       filteredRemark.calls = remark.calls.filter((call) => {
-        if (call.value !== "0x4e41") {
-          NAcounter++;
-        }
-        return (
-          call.value !== "0x4e41" &&
-          hexToString(call.value).includes(`::${VERSION}::`)
-        );
+        return hexToString(call.value).includes(`::${VERSION}::`);
       });
     }
 
@@ -139,21 +132,23 @@ const fetch = async () => {
     return this.toString();
   };
 
-  const writeStream = fs.createWriteStream(`full-${outputFileName}`, "UTF8");
+  const transformStream = JSONStream.stringify();
 
-  new JsonStreamStringify(extracted)
-    .on("data", (chunk) => {
-      writeStream.write(chunk);
-    })
-    .once("end", () => {
-      console.log("SUCCESS writing dump");
-      console.log("NA count", NAcounter);
-      process.exit(0);
-    })
-    .once("error", (err) => {
-      console.log("ERROR writing dump", err);
-      process.exit(0);
-    });
+  const writeStream = fs.createWriteStream(outputFileName);
+  transformStream.pipe(writeStream);
+  extracted.forEach(transformStream.write);
+  transformStream.end();
+
+  writeStream.on("finish", async () => {
+    await api.disconnect();
+    process.exit(0);
+  });
+
+  writeStream.on("error", async (error: any) => {
+    console.error("Fetch blocks error", error);
+    await api.disconnect();
+    process.exit(0);
+  });
 };
 
 fetch();
