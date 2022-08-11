@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import "@polkadot/api-augment";
-import fs from "fs";
+import fs, { WriteStream } from "fs";
 import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
 import {
@@ -91,13 +91,24 @@ const consolidate = async () => {
 
   const writeStream = fs.createWriteStream(`consolidated-from-${file}`, "UTF8");
 
+  const waitForStreamClose = (stream: WriteStream): Promise<void> => {
+    stream.end();
+    return new Promise((resolve) => {
+      stream.once("finish", () => {
+        resolve();
+      });
+    });
+  };
+
   new JsonStreamStringify({ ...ret, lastBlock })
     .on("data", (chunk) => {
       writeStream.write(chunk);
     })
     .once("end", () => {
       console.log("SUCCESS writing dump");
-      process.exit(0);
+      waitForStreamClose(writeStream).then(() => {
+        process.exit(0);
+      });
     })
     .once("error", (err) => {
       console.log("ERROR writing dump", err);
