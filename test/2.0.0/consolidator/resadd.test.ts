@@ -1,6 +1,7 @@
 import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
   createCollectionMock,
+  createBatchMock,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
@@ -95,5 +96,23 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
     expect(
       consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
     ).toBeTruthy();
+  });
+
+  it("Should allow adding a resource to a NFT in the same block it was minted", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock().create()),
+      ...createBatchMock(mintNftMock().mint(), "RMRK::RESADD::2.0.0::0-d43593c715a56da27d-KANARIABIRDS-KANR-00000777::%7B%22id%22%3A%22foo%22%2C%22metadata%22%3A%22ipfs%3A%2F%2Fipfs%2F123%22%7D"),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
+    ).toBeFalsy();
+    expect(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata
+    ).toEqual("ipfs://ipfs/123");
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority[0]).toEqual(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
+    );
   });
 });

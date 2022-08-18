@@ -129,6 +129,12 @@ export class NFT {
       let recipientEncoded = recipient;
       if (isValidAddressPolkadotAddress(recipient)) {
         recipientEncoded = encodeAddress(recipient, ss58Format);
+      } else {
+        const splitRecipient = String(recipientEncoded).split("-");
+        if (splitRecipient[0] === "0") {
+          splitRecipient[0] = block;
+          recipientEncoded = splitRecipient.join("-");
+        }
       }
       const obj = getRemarkData(dataString);
       return new this({

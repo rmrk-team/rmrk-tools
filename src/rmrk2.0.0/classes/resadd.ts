@@ -33,7 +33,13 @@ export class Resadd {
     this.replace = replaceId;
   }
 
-  static fromRemark(remark: string): Resadd | string {
+  static fromRemark(
+    remark: string,
+    block?: number
+  ): Resadd | string {
+    if (!block) {
+      block = 0;
+    }
     try {
       validateResadd(remark);
       const [
@@ -45,7 +51,13 @@ export class Resadd {
         replaceId,
       ] = remark.split("::");
       const resourceObj: Resource = getRemarkData(resource);
-      return new this(nftId, resourceObj, replaceId);
+      let the_nftId = nftId;
+      const splitNftId = String(nftId).split("-");
+      if (splitNftId[0] === "0") {
+        splitNftId[0] = block;
+        the_nftId = splitNftId.join("-");
+      }
+      return new this(the_nftId, resourceObj, replaceId);
     } catch (e: any) {
       console.error(e.message);
       console.log(`RESADD error: full input was ${remark}`);

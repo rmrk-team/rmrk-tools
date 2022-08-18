@@ -154,6 +154,38 @@ export const getBlockCallsMock = (
   return blockCall;
 };
 
+export const createBatchMock = (
+  remark1: string,
+  remark2: string,
+  caller: string = getAliceKey().address,
+  extras?: BlockCall[]
+): Block[] => {
+  block = block + 1;
+  const blockCall: Block[] = [
+    {
+      block: block,
+      calls: [
+        {
+          call: "system.remark",
+          value: stringToHex(remark1),
+          caller: caller,
+        },
+        {
+          call: "system.remark",
+          value: stringToHex(remark2),
+          caller: caller,
+        },
+      ],
+    },
+  ];
+
+  if (extras) {
+    blockCall[0].calls[0].extras = extras;
+  }
+
+  return blockCall;
+};
+
 export const getRemarksFromBlocksMock = (blockCalls: Block[]): Remark[] => {
   block = 1;
   return getRemarksFromBlocks(blockCalls, ["0x726d726b", "0x524d524b"]);
