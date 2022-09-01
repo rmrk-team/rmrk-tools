@@ -78,8 +78,10 @@ const consolidate = async () => {
   const con = new Consolidator(ss58Format);
 
   const ret = await con.consolidate(remarks);
+  // Optimisation: return last 500 invalid items
+  ret.invalid = ret.invalid.slice(ret.invalid.length - 500);
 
-  //@ts-ignore
+  // @ts-ignore
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
