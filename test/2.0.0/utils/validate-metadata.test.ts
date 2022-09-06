@@ -1,5 +1,4 @@
 import { validateMetadata } from "../../../src/rmrk2.0.0/tools/validate-metadata";
-import { NFTMetadata } from "../../../src/rmrk2.0.0/classes/nft";
 import {
   attributesMockBoostNumberValid,
   metadataMockAllValid,
@@ -7,6 +6,7 @@ import {
   metadataMockAllValid4,
   metadataMockAllValid6,
 } from "../mocks/metadata-valid";
+import {Metadata} from "../../../src/rmrk2.0.0";
 
 export const attributesMockDateInvalid = [
   {
@@ -27,25 +27,25 @@ export const metadataMockAllInvalid = {
 describe("validation: validateMetadata with valid mocks", () => {
   it("should be valid", () => {
     expect(() =>
-      validateMetadata(metadataMockAllValid as NFTMetadata)
+      validateMetadata(metadataMockAllValid as Metadata)
     ).not.toThrow();
   });
 
   it("should be valid2", () => {
     expect(() =>
-      validateMetadata(metadataMockAllValid2 as NFTMetadata)
+      validateMetadata(metadataMockAllValid2 as Metadata)
     ).not.toThrow();
   });
 
   it("should be valid4", () => {
     expect(() =>
-      validateMetadata(metadataMockAllValid4 as NFTMetadata)
+      validateMetadata(metadataMockAllValid4 as Metadata)
     ).not.toThrow();
   });
 
   it("should be valid6", () => {
     expect(() =>
-      validateMetadata(metadataMockAllValid6 as NFTMetadata)
+      validateMetadata(metadataMockAllValid6 as Metadata)
     ).not.toThrow();
   });
 });
@@ -54,45 +54,33 @@ describe("validation: validateMetadata with invalid mocks", () => {
   it("should be invalid", () => {
     expect(() =>
       validateMetadata({
-        image: "file://dfsdf",
-      } as NFTMetadata)
+        mediaUri: "file://dfsdf",
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         name: 1,
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         description: 1,
-      } as NFTMetadata)
-    ).toThrow();
-
-    expect(() =>
-      validateMetadata({
-        background_color: 1,
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
         image: 1,
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
       validateMetadata({
-        name: "Mock",
-      } as NFTMetadata)
-    ).toThrow();
-    
-    expect(() =>
-      validateMetadata({
         image: "ipfs://dfsdf",
-        external_url: "Mock",
-      } as NFTMetadata)
+        externalUri: "Mock",
+      } as Metadata)
     ).toThrow();
   });
 
@@ -101,7 +89,7 @@ describe("validation: validateMetadata with invalid mocks", () => {
       validateMetadata({
         image: "ipfs://dfsdf",
         properties: { test: { value: 123, type: "string" } },
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
@@ -113,7 +101,7 @@ describe("validation: validateMetadata with invalid mocks", () => {
             value: "123",
           },
         },
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
@@ -125,7 +113,7 @@ describe("validation: validateMetadata with invalid mocks", () => {
             value: 123,
           },
         },
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
 
     expect(() =>
@@ -137,7 +125,7 @@ describe("validation: validateMetadata with invalid mocks", () => {
             value: 123,
           },
         },
-      } as NFTMetadata)
+      } as Metadata)
     ).toBeTruthy();
 
     expect(() =>
@@ -149,7 +137,7 @@ describe("validation: validateMetadata with invalid mocks", () => {
             value: "123",
           },
         },
-      } as NFTMetadata)
+      } as Metadata)
     ).toThrow();
   });
 });
