@@ -55,6 +55,8 @@ export interface Metadata {
   image_data?: string;
   /** @deprecated deprecated in favour of `mediaUri` field */
   animation_url?: string;
+  /* Allow any other arbitrary key value pairs */
+  [key: string]: any;
 }
 
 export type Options = {

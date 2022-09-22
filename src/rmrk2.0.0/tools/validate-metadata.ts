@@ -17,10 +17,11 @@ import { OP_TYPES } from "./constants";
 const MetadataStruct = type({
   name: optional(string()),
   description: optional(string()),
+  mediaUri: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+  thumbnailUri: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
   image: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
-  image_data: optional(string()),
   properties: any(),
-  external_url: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
+  externalUri: optional(pattern(string(), new RegExp("^(https?|ipfs)://.*$"))),
 });
 
 export const PropertiesStruct = object({
@@ -108,16 +109,11 @@ export const validateAttributes = (properties?: IProperties) => {
 };
 
 /**
- * Validate Metadata according to OpenSea docs
- * https://docs.opensea.io/docs/metadata-standards
+ * Validate Metadata
  * @param metadata
  */
 export const validateMetadata = (metadata: Metadata) => {
   assert(metadata, MetadataStruct);
-
-  if (!metadata.image) {
-    throw new Error("image is missing");
-  }
 
   validateAttributes(metadata.properties);
   return true;
