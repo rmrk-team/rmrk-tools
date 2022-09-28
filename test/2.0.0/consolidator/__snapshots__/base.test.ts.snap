@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`rmrk2.0.0 Consolidator: CREATE BASE Should prevent creating a Base with duplicate part ids 1`] = `
+Object {
+  "bases": Object {},
+  "collections": Object {},
+  "invalid": Array [
+    Object {
+      "block": 2,
+      "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
+      "message": "[BASE] Duplicate base part id found: background",
+      "object_id": "RMRK::BASE::2.0.0::{\\"symbol\\"%3A\\"KBASE777\\"%2C\\"type\\"%3A\\"svg\\"%2C\\"issuer\\"%3A\\"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY\\"%2C\\"parts\\"%3A[{\\"id\\"%3A\\"background\\"%2C\\"type\\"%3A\\"slot\\"%2C\\"equippable\\"%3A[]%2C\\"z\\"%3A0}%2C{\\"id\\"%3A\\"background\\"%2C\\"type\\"%3A\\"slot\\"%2C\\"equippable\\"%3A[\\"d43593c715a56da27d-KANARIABIRDS\\"]%2C\\"z\\"%3A1}]%2C\\"themes\\"%3A{\\"themeOne\\"%3A{\\"_inherit\\"%3Atrue%2C\\"primary\\"%3A\\"%23fff\\"}}}",
+      "op_type": "BASE",
+    },
+  ],
+  "nfts": Object {},
+}
+`;
+
 exports[`rmrk2.0.0 Consolidator: CREATE BASE should correctly create a Base 1`] = `
 Object {
   "bases": Object {

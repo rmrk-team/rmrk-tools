@@ -30,6 +30,14 @@ export const resAddInteraction = async (
     );
   }
 
+  for (let i = 0; i < nft.resources.length; i++) {
+    if (nft.resources[i].id === resaddEntity.id) {
+      throw new Error(
+        `[${OP_TYPES.RESADD}] Attempting to add resource with already existing id ${resaddEntity.id} to NFT ${resaddEntity.nftId}`
+      );
+    }
+  }
+
   // If NFT owner is adding this resource then immediatly accept it
   const rootowner =
     nft.rootowner || (await findRealOwner(nft.owner, dbAdapter));

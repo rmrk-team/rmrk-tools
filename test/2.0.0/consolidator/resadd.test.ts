@@ -96,4 +96,29 @@ describe("rmrk2.0.0 Consolidator: RESADD", () => {
       consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].pending
     ).toBeTruthy();
   });
+
+  it("Should prevent adding a resource with already existing id to an NFT", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getSetupRemarks(),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd({ metadata: "ipfs://ipfs/123", id: "Test" })
+      ),
+      ...getBlockCallsMock(
+        mintNftMock(3).resadd({ metadata: "ipfs://ipfs/456", id: "Test" })
+      ),
+    ]);
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources.length).toEqual(1);
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].metadata).toEqual(
+      "ipfs://ipfs/123"
+    );
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority[0]).toEqual(
+      consolidatedResult.nfts[mintNftMock(3).getId()].resources[0].id
+    );
+    expect(consolidatedResult.nfts[mintNftMock(3).getId()].priority.length).toEqual(1);
+    expect(consolidatedResult.invalid[0].message).toEqual(
+      "[RESADD] Attempting to add resource with already existing id Test to NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777"
+    );
+  });
 });
