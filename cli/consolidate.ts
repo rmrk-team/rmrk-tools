@@ -89,7 +89,9 @@ const consolidate = async () => {
 
   const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
 
-  const writeStream = fs.createWriteStream(`consolidated-from-${file}`, "UTF8");
+  const writeStream = fs.createWriteStream(`consolidated-from-${file}`, {
+    encoding: "utf8",
+  });
 
   const waitForStreamClose = (stream: WriteStream): Promise<void> => {
     stream.end();

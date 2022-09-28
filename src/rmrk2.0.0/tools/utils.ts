@@ -174,16 +174,16 @@ export const isBatchInterrupted = async (
   blockHash: BlockHash,
   extrinsicIndex: number
 ): Promise<boolean> => {
-  const records = await api.query.system.events.at(blockHash);
-  const events = records.filter(
-    ({ phase, event }) =>
-      phase.isApplyExtrinsic &&
-      phase.asApplyExtrinsic.eq(extrinsicIndex) &&
-      (event.method.toString() === "BatchInterrupted" ||
-        event.method.toString() === "ExtrinsicFailed")
-  );
+  const records = await api.at(blockHash);
+  const batchInterrupted =
+    records.events.utility.BatchInterrupted.meta.index.toNumber() ===
+    extrinsicIndex;
+  const batchFailed =
+    records.events.utility.BatchInterrupted.meta.index.toNumber() ===
+    extrinsicIndex;
+  records.events.utility.ItemFailed.meta.index.toNumber() === extrinsicIndex;
 
-  return Boolean(events.length);
+  return batchInterrupted || batchFailed;
 };
 
 export const validateDecode = (value: string) => {
