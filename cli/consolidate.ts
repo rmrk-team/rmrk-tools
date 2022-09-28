@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import "@polkadot/api-augment";
-import fs from "fs";
+import fs, { WriteStream } from "fs";
 import { Consolidator } from "../src/rmrk2.0.0/tools/consolidator/consolidator";
 import arg from "arg";
 import {
@@ -12,6 +12,7 @@ import {
 import { appendPromise } from "../test/2.0.0/utils/append-json-stream";
 import { BlockCalls } from "../src/rmrk2.0.0/tools/types";
 import { Remark } from "../src/rmrk2.0.0/tools/consolidator/remark";
+import { JsonStreamStringify } from "json-stream-stringify";
 
 const getRemarks = (
   inputData: any,
@@ -87,11 +88,32 @@ const consolidate = async () => {
   };
 
   const lastBlock = rawdata[rawdata.length - 1]?.block || 0;
-  fs.writeFileSync(
-    `consolidated-from-${file}`,
-    JSON.stringify({ ...ret, lastBlock })
-  );
-  process.exit(0);
+
+  const writeStream = fs.createWriteStream(`consolidated-from-${file}`, "UTF8");
+
+  const waitForStreamClose = (stream: WriteStream): Promise<void> => {
+    stream.end();
+    return new Promise((resolve) => {
+      stream.once("finish", () => {
+        resolve();
+      });
+    });
+  };
+
+  new JsonStreamStringify({ ...ret, lastBlock })
+    .on("data", (chunk) => {
+      writeStream.write(chunk);
+    })
+    .once("end", () => {
+      console.log("SUCCESS writing dump");
+      waitForStreamClose(writeStream).then(() => {
+        process.exit(0);
+      });
+    })
+    .once("error", (err) => {
+      console.log("ERROR writing dump", err);
+      process.exit(0);
+    });
 };
 
 consolidate();
