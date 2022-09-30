@@ -179,9 +179,9 @@ export const isBatchInterrupted = async (
     records.events.utility.BatchInterrupted.meta.index.toNumber() ===
     extrinsicIndex;
   const batchFailed =
-    records.events.utility.BatchInterrupted.meta.index.toNumber() ===
-    extrinsicIndex;
-  records.events.utility.ItemFailed.meta.index.toNumber() === extrinsicIndex;
+    records.events.utility.BatchCompletedWithErrors.meta.index.toNumber() ===
+      extrinsicIndex ||
+    records.events.utility.ItemFailed.meta.index.toNumber() === extrinsicIndex;
 
   return batchInterrupted || batchFailed;
 };
