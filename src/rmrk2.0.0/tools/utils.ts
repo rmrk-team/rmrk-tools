@@ -174,16 +174,30 @@ export const isBatchInterrupted = async (
   blockHash: BlockHash,
   extrinsicIndex: number
 ): Promise<boolean> => {
-  const records = await api.at(blockHash);
-  const batchInterrupted =
-    records.events.utility.BatchInterrupted.meta.index.toNumber() ===
-    extrinsicIndex;
-  const batchFailed =
-    records.events.utility.BatchCompletedWithErrors.meta.index.toNumber() ===
-      extrinsicIndex ||
-    records.events.utility.ItemFailed.meta.index.toNumber() === extrinsicIndex;
+  const blockAt = await api.rpc.chain.getBlock(blockHash);
+  const extrinsics = blockAt.block.extrinsics;
+  const isBatchAll =
+    extrinsics[extrinsicIndex]?.meta.name.toString() === "batch_all";
 
-  return batchInterrupted || batchFailed;
+  if (isBatchAll) {
+    const records = await api
+      .at(blockHash)
+      .then((apiAt) => apiAt.query.system.events());
+
+    const events = records.filter((rec) => {
+      const { phase, event } = rec;
+      return (
+        phase.isApplyExtrinsic &&
+        phase.asApplyExtrinsic.eq(extrinsicIndex) &&
+        (event.method.toString() === "BatchInterrupted" ||
+          event.method.toString() === "ExtrinsicFailed")
+      );
+    });
+
+    return Boolean(events.length);
+  }
+
+  return false;
 };
 
 export const validateDecode = (value: string) => {
