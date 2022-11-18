@@ -1,7 +1,7 @@
 import "@polkadot/api-augment";
-export { Consolidator } from "./tools/consolidator/consolidator";
+export { Consolidator, NFTConsolidated, CollectionConsolidated, BaseConsolidated, ConsolidatorReturnType } from "./tools/consolidator/consolidator";
 export { Collection } from "./classes/collection";
-export { NFT } from "./classes/nft";
+export { NFT, IResourceConsolidated } from "./classes/nft";
 export { Base } from "./classes/base";
 export { List } from "./classes/list";
 export { Burn } from "./classes/burn";
@@ -16,7 +16,6 @@ export { Equip } from "./classes/equip";
 export { Equippable } from "./classes/equippable";
 export { Setpriority } from "./classes/setpriority";
 export { default as fetchRemarks } from "./tools/fetchRemarks";
-export * from "./tools/consolidator/utils";
 export { RemarkListener } from "./listener";
 export {
   getLatestFinalizedBlock,
