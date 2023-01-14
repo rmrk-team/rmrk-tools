@@ -66,7 +66,7 @@
     "@rollup/plugin-strip": "^2.0.0",
     "@types/emoji-regex": "^9.2.0",
     "@types/jest": "^26.0.20",
-    "@types/node": "^16.11.62",
+    "@types/node": "^16.10.0",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "arg": "^5.0.0",
