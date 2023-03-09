@@ -43,7 +43,7 @@ export const setPriorityInteraction = async (
 
   if (
     !setPriorityEntity.priority.every((resourceId) =>
-      Boolean(nft.resources.find((resource) => resource.id === resourceId))
+      nft.resources.map((resource) => resource.id).includes(resourceId)
     )
   ) {
     throw new Error(
