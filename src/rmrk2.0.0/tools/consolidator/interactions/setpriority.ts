@@ -32,12 +32,22 @@ export const setPriorityInteraction = async (
   }
 
   if (
-    !nft.resources.filter(resource => !resource.pending).every((resource) =>
-      setPriorityEntity.priority.includes(resource.id)
-    )
+    !nft.resources
+      .filter((resource) => !resource.pending)
+      .every((resource) => setPriorityEntity.priority.includes(resource.id))
   ) {
     throw new Error(
       `[${OP_TYPES.SETPRIORITY}] New priority resource ids are missing some of the resource ids on this NFT ${setPriorityEntity.id}`
+    );
+  }
+
+  if (
+    !setPriorityEntity.priority.every((resourceId) =>
+      nft.resources.find((resource) => resource.id === resourceId)
+    )
+  ) {
+    throw new Error(
+      `[${OP_TYPES.SETPRIORITY}] one of the NFT resources doesn't contain resource with id from new priority array`
     );
   }
 
