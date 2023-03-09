@@ -6,8 +6,8 @@ exports[`rmrk2.0.0 Nft: Add change should match snapshot 1`] = `
 NFT {
   "block": 0,
   "burned": "",
-  "changes": Array [
-    Object {
+  "changes": [
+    {
       "block": 0,
       "caller": "",
       "field": "",
@@ -16,16 +16,16 @@ NFT {
       "opType": "CHANGEISSUER",
     },
   ],
-  "children": Array [],
+  "children": [],
   "collection": "d43593c715a56da27d-KANARIABIRDS",
   "forsale": 0n,
   "metadata": undefined,
   "owner": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
   "pending": false,
-  "priority": Array [],
+  "priority": [],
   "properties": undefined,
-  "reactions": Object {},
-  "resources": Array [],
+  "reactions": {},
+  "resources": [],
   "rootowner": "",
   "sn": "00000777",
   "symbol": "KANR",

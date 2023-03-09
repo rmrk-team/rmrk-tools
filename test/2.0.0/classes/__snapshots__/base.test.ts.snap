@@ -3,8 +3,8 @@
 exports[`rmrk2.0.0 Base: Add change should match snapshot 1`] = `
 Base {
   "block": 0,
-  "changes": Array [
-    Object {
+  "changes": [
+    {
       "block": 0,
       "caller": "",
       "field": "",
@@ -15,22 +15,22 @@ Base {
   ],
   "issuer": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
   "metadata": undefined,
-  "parts": Array [
-    Object {
-      "equippable": Array [],
+  "parts": [
+    {
+      "equippable": [],
       "id": "background",
       "type": "slot",
       "z": 0,
     },
-    Object {
-      "equippable": Array [
+    {
+      "equippable": [
         "d43593c715a56da27d-KANARIABIRDS",
       ],
       "id": "backpack",
       "type": "slot",
       "z": 1,
     },
-    Object {
+    {
       "id": "tail",
       "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
       "type": "fixed",
@@ -38,8 +38,8 @@ Base {
     },
   ],
   "symbol": "KBASE777",
-  "themes": Object {
-    "themeOne": Object {
+  "themes": {
+    "themeOne": {
       "_inherit": true,
       "primary": "#fff",
     },
@@ -55,8 +55,8 @@ exports[`rmrk2.0.0 Base: Change issuer should match snapshot 1`] = `"RMRK::CHANG
 exports[`rmrk2.0.0 Base: Equippable should match snapshot 1`] = `"RMRK::EQUIPPABLE::2.0.0::base-1-KBASE777::gemslot2::+d43593c715a56da27d-KANARIAPARTS2"`;
 
 exports[`rmrk2.0.0 Base: Get changes should match snapshot 1`] = `
-Array [
-  Object {
+[
+  {
     "block": 0,
     "caller": "",
     "field": "",

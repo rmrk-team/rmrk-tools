@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rmrk2.0.0 Consolidator: LOCK Should LOCK a Collection 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
-    "d43593c715a56da27d-KANARIABIRDS": Object {
+{
+  "bases": {},
+  "collections": {
+    "d43593c715a56da27d-KANARIABIRDS": {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -15,13 +15,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "true",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "burned",
@@ -29,7 +29,7 @@ Object {
           "old": "",
           "opType": "BURN",
         },
-        Object {
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -38,7 +38,7 @@ Object {
           "opType": "BURN",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "equipped": "",
       "forsale": 0n,
@@ -46,30 +46,30 @@ Object {
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",

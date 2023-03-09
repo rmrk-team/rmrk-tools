@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rmrk2.0.0 Consolidator: MINT Should allow to mint NFT with royalties 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -15,31 +15,31 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "royaltyInfo": Object {
+      "priority": [],
+      "properties": {
+        "royaltyInfo": {
           "type": "royalty",
-          "value": Object {
+          "value": {
             "receiver": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
             "royaltyPercentFloat": 2.3,
           },
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000999",
       "symbol": "KANR",
@@ -50,12 +50,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: MINT Should mint a NFT and make another NFT an owner 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 2,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -64,43 +64,43 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "pending": true,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
@@ -111,12 +111,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: MINT Should mint a NFT and make another account owner 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -125,23 +125,23 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
@@ -152,12 +152,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: MINT Should not allow to mint NFT with invalid royalties 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -166,25 +166,25 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 3,
       "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "[MINT] Dead before instantiation: Royalty percentage value have to be between 0 and 100",
-      "object_id": "RMRK::MINT::2.0.0::{\\"collection\\"%3A\\"d43593c715a56da27d-KANARIABIRDS\\"%2C\\"symbol\\"%3A\\"KANR\\"%2C\\"transferable\\"%3A1%2C\\"sn\\"%3A\\"00000999\\"%2C\\"properties\\"%3A{\\"royaltyInfo\\"%3A{\\"type\\"%3A\\"royalty\\"%2C\\"value\\"%3A{\\"royaltyPercentFloat\\"%3A101%2C\\"receiver\\"%3A\\"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty\\"}}}}",
+      "object_id": "RMRK::MINT::2.0.0::{"collection"%3A"d43593c715a56da27d-KANARIABIRDS"%2C"symbol"%3A"KANR"%2C"transferable"%3A1%2C"sn"%3A"00000999"%2C"properties"%3A{"royaltyInfo"%3A{"type"%3A"royalty"%2C"value"%3A{"royaltyPercentFloat"%3A101%2C"receiver"%3A"5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"}}}}",
       "op_type": "MINT",
     },
   ],
-  "nfts": Object {},
+  "nfts": {},
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: MINT Should not allow to mint a NFT without a calss 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {},
-  "invalid": Array [
-    Object {
+{
+  "bases": {},
+  "collections": {},
+  "invalid": [
+    {
       "block": 2,
       "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "NFT referencing non-existant parent collection d43593c715a56da27d-KANARIABIRDS",
@@ -192,6 +192,6 @@ Object {
       "op_type": "MINT",
     },
   ],
-  "nfts": Object {},
+  "nfts": {},
 }
 `;

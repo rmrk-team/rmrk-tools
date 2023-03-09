@@ -1,32 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Add new Collection id to Base slot equippable 1`] = `
-Object {
-  "bases": Object {
-    "base-3-KBASE777": Object {
+{
+  "bases": {
+    "base-3-KBASE777": {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "id": "base-3-KBASE777",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "metadata": undefined,
-      "parts": Array [
-        Object {
-          "equippable": Array [
+      "parts": [
+        {
+          "equippable": [
             "d43593c715a56da27d-KANARIABIRDS",
           ],
           "id": "background",
           "type": "slot",
           "z": 0,
         },
-        Object {
-          "equippable": Array [
+        {
+          "equippable": [
             "d43593c715a56da27d-KANARIABIRDS",
           ],
           "id": "backpack",
           "type": "slot",
           "z": 1,
         },
-        Object {
+        {
           "id": "tail",
           "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
           "type": "fixed",
@@ -34,8 +34,8 @@ Object {
         },
       ],
       "symbol": "KBASE777",
-      "themes": Object {
-        "themeOne": Object {
+      "themes": {
+        "themeOne": {
           "_inherit": true,
           "primary": "#fff",
         },
@@ -43,10 +43,10 @@ Object {
       "type": "svg",
     },
   },
-  "collections": Object {
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -55,34 +55,34 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {},
+  "invalid": [],
+  "nfts": {},
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Remove new Collection id to Base slot equippable 1`] = `
-Object {
-  "bases": Object {
-    "base-3-KBASE777": Object {
+{
+  "bases": {
+    "base-3-KBASE777": {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "id": "base-3-KBASE777",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "metadata": undefined,
-      "parts": Array [
-        Object {
-          "equippable": Array [],
+      "parts": [
+        {
+          "equippable": [],
           "id": "background",
           "type": "slot",
           "z": 0,
         },
-        Object {
-          "equippable": Array [],
+        {
+          "equippable": [],
           "id": "backpack",
           "type": "slot",
           "z": 1,
         },
-        Object {
+        {
           "id": "tail",
           "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
           "type": "fixed",
@@ -90,8 +90,8 @@ Object {
         },
       ],
       "symbol": "KBASE777",
-      "themes": Object {
-        "themeOne": Object {
+      "themes": {
+        "themeOne": {
           "_inherit": true,
           "primary": "#fff",
         },
@@ -99,10 +99,10 @@ Object {
       "type": "svg",
     },
   },
-  "collections": Object {
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -111,34 +111,34 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {},
+  "invalid": [],
+  "nfts": {},
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: EQUIPPABLE Replace a Collection id to Base slot equippable 1`] = `
-Object {
-  "bases": Object {
-    "base-3-KBASE777": Object {
+{
+  "bases": {
+    "base-3-KBASE777": {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "id": "base-3-KBASE777",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "metadata": undefined,
-      "parts": Array [
-        Object {
-          "equippable": Array [],
+      "parts": [
+        {
+          "equippable": [],
           "id": "background",
           "type": "slot",
           "z": 0,
         },
-        Object {
+        {
           "equippable": "*",
           "id": "backpack",
           "type": "slot",
           "z": 1,
         },
-        Object {
+        {
           "id": "tail",
           "src": "ipfs://ipfs/QmcEuigDVCScMLs2dcrJ8qU4Q265xGisUyKeYdnnGFn6AE/var3_tail.svg",
           "type": "fixed",
@@ -146,8 +146,8 @@ Object {
         },
       ],
       "symbol": "KBASE777",
-      "themes": Object {
-        "themeOne": Object {
+      "themes": {
+        "themeOne": {
           "_inherit": true,
           "primary": "#fff",
         },
@@ -155,10 +155,10 @@ Object {
       "type": "svg",
     },
   },
-  "collections": Object {
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -167,7 +167,7 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {},
+  "invalid": [],
+  "nfts": {},
 }
 `;

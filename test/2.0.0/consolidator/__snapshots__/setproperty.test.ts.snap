@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow if we are trying to mutate property with matching mutation condition 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -16,7 +16,7 @@ Object {
     },
     "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIAGEMS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -25,25 +25,25 @@ Object {
       "symbol": "KANARIAGEMS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+  "invalid": [],
+  "nfts": {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "test": Object {
-          "_mutation": Object {
+      "priority": [],
+      "properties": {
+        "test": {
+          "_mutation": {
             "allowed": true,
-            "with": Object {
+            "with": {
               "condition": "d43593c715a56da27d-KANARIAGEMS",
               "opType": "BURN",
             },
@@ -52,28 +52,28 @@ Object {
           "value": "bar",
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIAGEMS-KANGEM-00000111": Object {
+    "5-d43593c715a56da27d-KANARIAGEMS-KANGEM-00000111": {
       "block": 5,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIAGEMS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIAGEMS-KANGEM-00000111",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000111",
       "symbol": "KANGEM",
@@ -84,12 +84,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should allow to mutate property if owner _mutator match 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -99,7 +99,7 @@ Object {
     },
     "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIAGEMS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -108,13 +108,13 @@ Object {
       "symbol": "KANARIAGEMS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 4,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "owner",
@@ -123,25 +123,25 @@ Object {
           "opType": "SEND",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "test": Object {
-          "_mutation": Object {
+      "priority": [],
+      "properties": {
+        "test": {
+          "_mutation": {
             "allowed": true,
           },
           "type": "string",
           "value": "bar",
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
@@ -152,12 +152,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should not allow to mutate royalty to an invalid value 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -167,7 +167,7 @@ Object {
     },
     "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIAGEMS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -176,38 +176,38 @@ Object {
       "symbol": "KANARIAGEMS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "royaltyInfo": Object {
-          "_mutation": Object {
+      "priority": [],
+      "properties": {
+        "royaltyInfo": {
+          "_mutation": {
             "allowed": true,
           },
           "type": "royalty",
-          "value": Object {
+          "value": {
             "receiver": "xxx",
             "royaltyPercentFloat": 101,
           },
         },
-        "test": Object {
+        "test": {
           "type": "string",
           "value": "foo",
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
@@ -218,12 +218,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: SETPROPERTY should throw if we are trying to mutate property with no matching extra call condition 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 2,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -233,7 +233,7 @@ Object {
     },
     "d43593c715a56da27d-KANARIAGEMS": Collection {
       "block": 3,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIAGEMS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -242,8 +242,8 @@ Object {
       "symbol": "KANARIAGEMS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 6,
       "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "message": "[SETPROPERTY] Attempting to mutate an property but it's mutation condition doesn't match",
@@ -251,24 +251,24 @@ Object {
       "op_type": "SETPROPERTY",
     },
   ],
-  "nfts": Object {
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+  "nfts": {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "test": Object {
-          "_mutation": Object {
+      "priority": [],
+      "properties": {
+        "test": {
+          "_mutation": {
             "allowed": true,
-            "with": Object {
+            "with": {
               "condition": "d43593c715a56da27d-KANARIAGEMS",
               "opType": "BURN",
             },
@@ -277,36 +277,36 @@ Object {
           "value": "foo",
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 5,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {
-        "test": Object {
-          "_mutation": Object {
+      "priority": [],
+      "properties": {
+        "test": {
+          "_mutation": {
             "allowed": true,
           },
           "type": "string",
           "value": "foo",
         },
       },
-      "reactions": Object {},
-      "resources": Array [],
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",

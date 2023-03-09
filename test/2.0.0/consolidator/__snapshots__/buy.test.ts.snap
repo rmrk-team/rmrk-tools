@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`rmrk2.0.0 Consolidator: BUY Should allow BUYing NFT after transferable block reached with positive transfer value 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -15,13 +15,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -29,7 +29,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -37,7 +37,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -45,7 +45,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -54,17 +54,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
@@ -75,12 +75,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should allow BUYing NFT if transferable block not passed with negative transfer value 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -89,13 +89,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -103,7 +103,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -111,7 +111,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -119,7 +119,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -128,17 +128,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
@@ -149,12 +149,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should allow you to BUY listed NFT for someone else 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -163,13 +163,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -177,7 +177,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -185,7 +185,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -193,7 +193,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -202,17 +202,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "5Cafn1kueAGQnrcvN2uHFQ5NaMznSMyrfeUzuDHDQsMRSsN6",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "5Cafn1kueAGQnrcvN2uHFQ5NaMznSMyrfeUzuDHDQsMRSsN6",
       "sn": "00000777",
       "symbol": "KANR",
@@ -223,12 +223,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should allow you to BUY listed NFT for yourself 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -237,13 +237,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -251,7 +251,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -259,7 +259,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -267,7 +267,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 5,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -276,17 +276,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
@@ -297,12 +297,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should correctly change rootowner of all child NFTs 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 3,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -311,13 +311,13 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 6,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -325,7 +325,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -333,7 +333,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -341,7 +341,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -350,8 +350,8 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [
-        Object {
+      "children": [
+        {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "pending": false,
@@ -363,21 +363,21 @@ Object {
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [
-        Object {
+      "changes": [],
+      "children": [
+        {
           "equipped": "",
           "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
           "pending": false,
@@ -389,30 +389,30 @@ Object {
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": Object {
+    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": {
       "block": 5,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
       "metadata": undefined,
       "owner": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000999",
       "symbol": "KANR",
@@ -423,12 +423,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should correctly change rootowner when child NFT is sold 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 3,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -437,14 +437,14 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [
-        Object {
+      "changes": [],
+      "children": [
+        {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "pending": false,
@@ -456,40 +456,40 @@ Object {
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": Object {
+    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": {
       "block": 5,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 6,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -497,7 +497,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -505,7 +505,7 @@ Object {
           "old": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -513,7 +513,7 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "forsale",
@@ -522,17 +522,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000999",
       "symbol": "KANR",
@@ -543,12 +543,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should correctly save changes when commission is paid 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 3,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -557,14 +557,14 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "invalid": [],
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [
-        Object {
+      "changes": [],
+      "children": [
+        {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "pending": false,
@@ -576,40 +576,40 @@ Object {
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": Object {
+    "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999": {
       "block": 5,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 6,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -617,7 +617,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "owner",
@@ -625,7 +625,7 @@ Object {
           "old": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
           "field": "rootowner",
@@ -633,11 +633,11 @@ Object {
           "old": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "opType": "BUY",
         },
-        Object {
+        {
           "block": 7,
           "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
-          "extraTransfers": Array [
-            Object {
+          "extraTransfers": [
+            {
               "amount": "100000000000",
               "receiver": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
             },
@@ -648,17 +648,17 @@ Object {
           "opType": "BUY",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "5-d43593c715a56da27d-KANARIABIRDS-KANR-00000999",
       "metadata": undefined,
       "owner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "sn": "00000999",
       "symbol": "KANR",
@@ -669,12 +669,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing NFT with incorrect balance transfer 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -683,8 +683,8 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 5,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Transfer for the purchase of NFT ID 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777 not valid. Recipient, amount should be HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F,1000000000000, is HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F,2000000000000.",
@@ -692,12 +692,12 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -706,17 +706,17 @@ Object {
           "opType": "LIST",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 1000000000000n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
@@ -727,12 +727,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing NFT without a balance transfer 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -741,8 +741,8 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 5,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Transfer for the purchase of NFT ID 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777 not valid. Recipient, amount should be HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F,1000000000000, is .",
@@ -750,12 +750,12 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -764,17 +764,17 @@ Object {
           "opType": "LIST",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 1000000000000n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
@@ -785,12 +785,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing burned NFT 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 0,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -799,8 +799,8 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 6,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Attempting to buy burned NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
@@ -808,12 +808,12 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "true",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 4,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -821,7 +821,7 @@ Object {
           "old": 0n,
           "opType": "LIST",
         },
-        Object {
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "burned",
@@ -829,7 +829,7 @@ Object {
           "old": "",
           "opType": "BURN",
         },
-        Object {
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -838,7 +838,7 @@ Object {
           "opType": "BURN",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "equipped": "",
       "forsale": 0n,
@@ -846,10 +846,10 @@ Object {
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
@@ -860,12 +860,12 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing child NFT with incorrect balance transfer 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 2,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -874,8 +874,8 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 6,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Attempting to buy not-for-sale NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
@@ -883,13 +883,13 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [
-        Object {
+      "changes": [],
+      "children": [
+        {
           "equipped": "",
           "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
           "pending": false,
@@ -901,20 +901,20 @@ Object {
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",
       "transferable": 1,
     },
-    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": Object {
+    "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888": {
       "block": 4,
       "burned": "",
-      "changes": Array [
-        Object {
+      "changes": [
+        {
           "block": 5,
           "caller": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
           "field": "forsale",
@@ -923,17 +923,17 @@ Object {
           "opType": "LIST",
         },
       ],
-      "children": Array [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 1000000000000n,
       "id": "4-d43593c715a56da27d-KANARIABIRDS-KANR-00000888",
       "metadata": undefined,
       "owner": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000888",
       "symbol": "KANR",
@@ -944,11 +944,11 @@ Object {
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing non existent NFT 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {},
-  "invalid": Array [
-    Object {
+{
+  "bases": {},
+  "collections": {},
+  "invalid": [
+    {
       "block": 2,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Attempting to buy non-existant NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
@@ -956,17 +956,17 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {},
+  "nfts": {},
 }
 `;
 
 exports[`rmrk2.0.0 Consolidator: BUY Should prevent you from BUYing unlisted NFT 1`] = `
-Object {
-  "bases": Object {},
-  "collections": Object {
+{
+  "bases": {},
+  "collections": {
     "d43593c715a56da27d-KANARIABIRDS": Collection {
       "block": 2,
-      "changes": Array [],
+      "changes": [],
       "count": 1,
       "id": "d43593c715a56da27d-KANARIABIRDS",
       "issuer": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
@@ -975,8 +975,8 @@ Object {
       "symbol": "KANARIABIRDS",
     },
   },
-  "invalid": Array [
-    Object {
+  "invalid": [
+    {
       "block": 4,
       "caller": "FoQJpPyadYccjavVdTWxpxU7rUEaYhfLCPwXgkfD6Zat9QP",
       "message": "[BUY] Attempting to buy not-for-sale NFT 3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
@@ -984,22 +984,22 @@ Object {
       "op_type": "BUY",
     },
   ],
-  "nfts": Object {
-    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": Object {
+  "nfts": {
+    "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777": {
       "block": 3,
       "burned": "",
-      "changes": Array [],
-      "children": Array [],
+      "changes": [],
+      "children": [],
       "collection": "d43593c715a56da27d-KANARIABIRDS",
       "forsale": 0n,
       "id": "3-d43593c715a56da27d-KANARIABIRDS-KANR-00000777",
       "metadata": undefined,
       "owner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "pending": false,
-      "priority": Array [],
-      "properties": Object {},
-      "reactions": Object {},
-      "resources": Array [],
+      "priority": [],
+      "properties": {},
+      "reactions": {},
+      "resources": [],
       "rootowner": "HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F",
       "sn": "00000777",
       "symbol": "KANR",

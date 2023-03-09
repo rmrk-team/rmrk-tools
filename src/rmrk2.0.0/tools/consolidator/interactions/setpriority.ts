@@ -41,10 +41,13 @@ export const setPriorityInteraction = async (
     );
   }
 
-  const resourceIds = nft.resources.map((resource) => resource.id);
+  const priorityDiff = setPriorityEntity.priority.filter(
+    (x) => !nft.priority.includes(x)
+  );
+
   if (
-    !setPriorityEntity.priority.every((resourceId) =>
-      resourceIds.includes(resourceId)
+    !priorityDiff.every((resourceId) =>
+      Boolean(nft.resources.find((resource) => resource.id === resourceId))
     )
   ) {
     throw new Error(
