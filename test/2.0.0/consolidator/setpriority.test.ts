@@ -16,7 +16,7 @@ describe("rmrk2.0.0 Consolidator: SETPRIORITY", () => {
     ...getBlockCallsMock(createCollectionMock().create()),
     ...getBlockCallsMock(mintNftMock().mint()),
     ...getBlockCallsMock(
-      mintNftMock(3).resadd({ metadata: "ipfs://ipfs/123" })
+      mintNftMock(3).resadd({ metadata: "ipfs://ipfs/123", id: 'foo' })
     ),
   ];
 
@@ -32,14 +32,14 @@ describe("rmrk2.0.0 Consolidator: SETPRIORITY", () => {
   it("Should not allow to set priority of a resource that doesn't exist", async () => {
     const remarks = getRemarksFromBlocksMock([
       ...getSetupRemarks(),
-      ...getBlockCallsMock(mintNftMock(3).setpriority(["foo"])),
+      ...getBlockCallsMock(mintNftMock(3).setpriority(["bar", "foo"])),
     ]);
 
     const consolidator = new Consolidator();
     const consolidatedResult = await consolidator.consolidate(remarks);
 
     expect(
-      consolidatedResult.nfts[mintNftMock(3).getId()].priority.includes("foo")
+      consolidatedResult.nfts[mintNftMock(3).getId()].priority.includes("bar")
     ).toBeFalsy();
   });
 });
