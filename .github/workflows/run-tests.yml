@@ -10,6 +10,6 @@ jobs:
         with:
           node-version: '16'
       - run: yarn install
-      - run: yarn test
+      - run: yarn test:2.0.0
 
 
