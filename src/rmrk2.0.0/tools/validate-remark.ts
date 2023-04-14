@@ -18,6 +18,7 @@ import {
   boolean,
 } from "superstruct";
 import { getRemarkData } from "./utils";
+import { isValidAddressPolkadotAddress } from "./consolidator/utils";
 import { collectionRegexPattern } from "../classes/equippable";
 import { PropertiesStruct } from "./validate-metadata";
 import { IProperties, IRoyaltyAttribute } from "./types";
@@ -302,14 +303,12 @@ export const validateSetAttribute = (remark: string): any => {
 
 export const validateSend = (remark: string): any => {
   // With array destructuring it's important to not remove unused destructured variables, as order is important
-  const [_prefix, _op_type, _version, id, recipient] = remark.split("::");
+  let [_prefix, _op_type, _version, id, recipient] = remark.split("::");
 
   try {
     validateRemarkBase(remark, OP_TYPES.SEND);
-    if (/\s/g.test(recipient)) {
-      throw new Error(
-        "Invalid remark - No whitespaces are allowed in recipient"
-      );
+    if (!isValidAddressPolkadotAddress(recipient)) {
+      recipient = decodeURIComponent(recipient);
     }
     return assert({ id, recipient }, SENDStruct);
   } catch (error: any) {
