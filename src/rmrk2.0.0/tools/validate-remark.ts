@@ -307,6 +307,7 @@ export const validateSend = (remark: string): any => {
 
   try {
     validateRemarkBase(remark, OP_TYPES.SEND);
+    id = decodeURIComponent(id);
     if (!isValidAddressPolkadotAddress(recipient)) {
       recipient = decodeURIComponent(recipient);
     }
