@@ -307,11 +307,10 @@ export const validateSend = (remark: string): any => {
 
   try {
     validateRemarkBase(remark, OP_TYPES.SEND);
-    id = decodeURIComponent(id);
     if (!isValidAddressPolkadotAddress(recipient)) {
       recipient = decodeURIComponent(recipient);
     }
-    return assert({ id, recipient }, SENDStruct);
+    return assert({ decodeURIComponent(id), recipient }, SENDStruct);
   } catch (error: any) {
     throw new Error(
       error?.message || "Something went wrong during remark validation"
