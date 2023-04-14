@@ -1,8 +1,8 @@
 import { getRemarksFromBlocks, NFT, Collection } from "../../src/rmrk2.0.0";
-import { stringToHex, u8aToHex } from "@polkadot/util";
+import { stringToHex, u8aToHex, stringToU8a } from "@polkadot/util";
 import { Remark } from "../../src/rmrk2.0.0/tools/consolidator/remark";
 import { Block } from "../../src/rmrk2.0.0/tools/utils";
-import { encodeAddress, Keyring } from "@polkadot/keyring";
+import { Keyring } from "@polkadot/keyring";
 import { Base } from "../../src/rmrk2.0.0/classes/base";
 import { OP_TYPES } from "../../src/rmrk2.0.0/tools/constants";
 import { BlockCall } from "../../src/rmrk2.0.0/tools/types";
@@ -31,7 +31,7 @@ export const createCollectionMock = (
     address || getAliceKey().address,
     "KANARIABIRDS",
     Collection.generateId(
-      u8aToHex(address || getAliceKey().publicKey),
+      u8aToHex(address ? stringToU8a(address) : getAliceKey().publicKey),
       "KANARIABIRDS"
     ),
     "https://some.url"
@@ -50,6 +50,23 @@ export const createCollectionMock2 = (
     Collection.generateId(
       u8aToHex(keyring?.publicKey || getAliceKey().publicKey),
       "KANARIAGEMS"
+    ),
+    "https://some.url"
+  );
+};
+
+export const createCollectionMock3 = (
+  block?: number,
+  keyring?: KeyringPair
+): Collection => {
+  return new Collection(
+    block || 0,
+    0,
+    keyring?.address || getAliceKey().address,
+    "GAMMA GANG",
+    Collection.generateId(
+      u8aToHex(keyring?.publicKey || getAliceKey().publicKey),
+      "GAMMA GANG"
     ),
     "https://some.url"
   );
@@ -87,6 +104,16 @@ export const mintNftMock3 = (block?: number, collectionId?: string): NFT =>
   new NFT({
     block: block || 0,
     collection: collectionId || createCollectionMock().id,
+    symbol: "KANR",
+    sn: "999".padStart(8, "0"),
+    transferable: 1,
+    owner: getBobKey().address,
+  });
+
+export const mintNftMock4 = (block?: number, collectionId?: string): NFT =>
+  new NFT({
+    block: block || 0,
+    collection: collectionId || createCollectionMock3().id,
     symbol: "KANR",
     sn: "999".padStart(8, "0"),
     transferable: 1,

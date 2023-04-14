@@ -2,12 +2,14 @@ import { Consolidator } from "../../../src/rmrk2.0.0";
 import {
   createCollectionMock,
   createCollectionMock2,
+  createCollectionMock3,
   getBlockCallsMock,
   getBobKey,
   getRemarksFromBlocksMock,
   mintNftMock,
   mintNftMock2,
   mintNftMock3,
+  mintNftMock4,
 } from "../mocks";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
@@ -222,5 +224,26 @@ describe("rmrk2.0.0 Consolidator: Send NFT to other NFT", () => {
     ]);
     const consolidator = new Consolidator();
     expect(await consolidator.consolidate(remarks)).toMatchSnapshot();
+  });
+
+  it("Should allow SEND if collection id has space", async () => {
+    const remarks = getRemarksFromBlocksMock([
+      ...getBlockCallsMock(createCollectionMock3().create()),
+      ...getBlockCallsMock(mintNftMock3(0, createCollectionMock3(0).id).mint()),
+      ...getBlockCallsMock(mintNftMock4(0, createCollectionMock3(0).id).mint()),
+      ...getBlockCallsMock(
+        mintNftMock4(4, createCollectionMock3(0).id).send(
+          mintNftMock4(3, createCollectionMock3(0).id).getId()
+        )
+      ),
+    ]);
+
+    const consolidator = new Consolidator();
+    const consolidatedResult = await consolidator.consolidate(remarks);
+
+    const nft = Object.values(consolidatedResult.nfts)[1];
+    expect(nft.owner).toEqual(
+      mintNftMock4(3, createCollectionMock3(0).id).getId()
+    );
   });
 });

@@ -21,6 +21,7 @@ import { getRemarkData } from "./utils";
 import { collectionRegexPattern } from "../classes/equippable";
 import { PropertiesStruct } from "./validate-metadata";
 import { IProperties, IRoyaltyAttribute } from "./types";
+import {isValidAddressPolkadotAddress} from "./consolidator/utils";
 
 const PartStruct = type({
   type: enums(["slot", "fixed"]),
@@ -306,7 +307,7 @@ export const validateSend = (remark: string): any => {
 
   try {
     validateRemarkBase(remark, OP_TYPES.SEND);
-    if (/\s/g.test(recipient)) {
+    if (isValidAddressPolkadotAddress(recipient) && /\s/g.test(recipient)) {
       throw new Error(
         "Invalid remark - No whitespaces are allowed in recipient"
       );
