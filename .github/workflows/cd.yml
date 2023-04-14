@@ -30,7 +30,7 @@ jobs:
       # upgrade npm version in package.json to the tag used in the release.
       - run: yarn version --new-version ${{ github.event.release.tag_name }}
       # run tests just in case
-      - run: yarn test
+      - run: yarn test:2.0.0
       # publish to NPM -> there is one caveat, continue reading for the fix
       - run: npm publish
         env:
