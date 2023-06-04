@@ -1,5 +1,7 @@
 # RMRK Tools
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 Typescript implementation of the [RMRK spec](https://github.com/Swader/rmrk-spec/) using Substrate's `system.remark` extrinsics.
 
 Note that there are also [EVM](https://github.com/rmrk-team/evm) and [Substrate pallet](https://github.com/rmrk-team/rmrk-substrate) implementations of [RMRK spec](https://github.com/rmrk-team/rmrk-spec)
