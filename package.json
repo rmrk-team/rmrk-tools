@@ -26,7 +26,7 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "cli:fetch": "ts-node --project tsconfig.cli.json cli/fetch.ts",
-    "cli:consolidate": "NODE_OPTIONS='--max-old-space-size=12000' ts-node --project tsconfig.cli.json cli/consolidate",
+    "cli:consolidate": "NODE_OPTIONS='--max-old-space-size=38000' ts-node --project tsconfig.cli.json cli/consolidate",
     "cli:seed": "ts-node --project tsconfig.cli.json cli/seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/getevents",
     "cli:validate": "ts-node --project tsconfig.cli.json src/validate",
@@ -55,10 +55,10 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
     "@pinata/sdk": "^1.1.13",
-    "@polkadot/api": "^10.3.2",
-    "@polkadot/keyring": "^11.1.3",
-    "@polkadot/util-crypto": "^11.1.3",
-    "@polkadot/x-randomvalues": "^11.1.3",
+    "@polkadot/api": "^10.11.2",
+    "@polkadot/keyring": "^12.6.2",
+    "@polkadot/util-crypto": "^12.6.2",
+    "@polkadot/x-randomvalues": "^12.6.2",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
@@ -89,13 +89,13 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
-    "@polkadot/api-augment": "^10.3.2",
+    "@polkadot/api-augment": "^10.11.2",
     "JSONStream": "^1.3.5",
     "chalk": "^4.1.0",
     "emoji-regex": "^9.2.2",
     "isomorphic-fetch": "^3.0.0",
     "it-all": "^1.0.5",
-    "json-stream-stringify": "^3.0.1",
+    "json-stream-stringify": "^3.1.1",
     "nanoid": "^3.1.23",
     "superstruct": "^0.14.2",
     "uint8arrays": "^2.1.3",
@@ -103,8 +103,8 @@
   },
   "peerDependency": {
     "@polkadot/api": "^10.x",
-    "@polkadot/keyring": "^11.x",
-    "@polkadot/util-crypto": "^11.x",
-    "@polkadot/util": "^11.x"
+    "@polkadot/keyring": "^12.x",
+    "@polkadot/util-crypto": "^12.x",
+    "@polkadot/util": "^12.x"
   }
 }
