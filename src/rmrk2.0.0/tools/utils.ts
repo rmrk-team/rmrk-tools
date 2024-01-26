@@ -315,8 +315,10 @@ export const getBlockCallsFromSignedBlock = async (
               caller: encodeAddress(extrinsic.signer.toString(), ss58Format),
             } as BlockCall);
           } else {
-            const isBalanceTransfer =
-              `${el.section}.${el.method}` === `balances.transfer`;
+            const isBalanceTransfer = [
+              `balances.transfer_keep_alive`,
+              `balances.transfer`,
+            ].includes(`${el.section}.${el.method}`);
 
             const extraCall = {
               call: `${el.section}.${el.method}`,
