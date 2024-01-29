@@ -316,7 +316,7 @@ export const getBlockCallsFromSignedBlock = async (
             } as BlockCall);
           } else {
             const isBalanceTransfer = [
-              `balances.transfer_keep_alive`,
+              `balances.transferKeepAlive`,
               `balances.transfer`,
             ].includes(`${el.section}.${el.method}`);
 

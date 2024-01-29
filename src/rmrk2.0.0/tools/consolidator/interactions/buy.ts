@@ -118,7 +118,7 @@ const getExtraBalanceTransfers = (
   const extraTransfers: ChangeExtraBalanceTransfer[] = [];
 
   remark.extra_ex?.forEach((el: BlockCall) => {
-    if (el.call === "balances.transfer" || el.call === "balances.transfer_keep_alive") {
+    if (el.call === "balances.transfer" || el.call === "balances.transferKeepAlive") {
       const [owner, forsale] = el.value.split(",");
       const ownerEncoded = ss58Format
         ? encodeAddress(owner, ss58Format)
@@ -141,7 +141,7 @@ const isTransferValid = (remark: Remark, nft: NFT, ss58Format?: number) => {
   let transferValid = false;
   let transferValue = "";
   remark.extra_ex?.forEach((el: BlockCall) => {
-    if (el.call === "balances.transfer" || el.call === "balances.transfer_keep_alive") {
+    if (el.call === "balances.transfer" || el.call === "balances.transferKeepAlive") {
       const [owner, forsale] = el.value.split(",");
       const ownerEncoded = ss58Format
         ? encodeAddress(owner, ss58Format)

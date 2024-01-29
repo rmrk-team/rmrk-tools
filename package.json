@@ -25,7 +25,7 @@
     "clean": "rm -rf build",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "cli:fetch": "ts-node --project tsconfig.cli.json cli/fetch.ts",
+    "cli:fetch": "NODE_OPTIONS='--max-old-space-size=38000' ts-node --project tsconfig.cli.json cli/fetch.ts",
     "cli:consolidate": "NODE_OPTIONS='--max-old-space-size=38000' ts-node --project tsconfig.cli.json cli/consolidate",
     "cli:seed": "ts-node --project tsconfig.cli.json cli/seed",
     "cli:getevents": "ts-node --project tsconfig.cli.json cli/getevents",
